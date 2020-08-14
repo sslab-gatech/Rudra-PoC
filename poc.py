@@ -54,6 +54,20 @@ def read_metadata(id):
     return None
 
 
+def prepare_cargo_cmd(metadata, subcommand):
+    result = ["cargo"]
+
+    if "cargo_toolchain" in metadata["test"]:
+        result.append("+" + metadata["test"]["cargo_toolchain"])
+
+    result.append(subcommand)
+
+    if "cargo_flags" in metadata["test"]:
+        result.append(*metadata["test"]["cargo_flags"])
+
+    return result
+
+
 def cmd_add(args):
     for poc_id_num in range(10000):
         poc_id_str = str(poc_id_num).rjust(4, '0')
@@ -96,7 +110,7 @@ def cmd_run(args):
 
     with tempfile.TemporaryDirectory() as tmpdir:
         with open(f"{tmpdir}/Cargo.toml", "w") as manifest_file:
-            manifest_file.write(f"""[package]
+            manifest_content = f"""[package]
 name = "crux-poc-{poc_id}"
 version = "0.1.0"
 authors = ["Yechan Bae <yechan@gatech.edu>"]
@@ -106,14 +120,18 @@ edition = "2018"
 
 [dependencies]
 {metadata["target"]["crate"]} = "={metadata["target"]["version"]}"
-""")
+"""
+
+            if "peer" in metadata["target"]:
+                for crate in metadata["target"]["peer"]:
+                    manifest_content += f'''{crate["crate"]} = "={crate["version"]}"\n'''
+
+            manifest_file.write(manifest_content)
 
         os.mkdir(f"{tmpdir}/src")
         shutil.copyfile(f"poc/{poc_name}", f"{tmpdir}/src/main.rs")
 
-        cmd = ["cargo", "run"]
-        if "cargo_flags" in metadata["test"]:
-            cmd.append(*metadata["test"]["cargo_flags"])
+        cmd = prepare_cargo_cmd(metadata, "run")
 
         subprocess.run(cmd, cwd=tmpdir)
 
