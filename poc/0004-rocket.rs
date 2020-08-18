@@ -29,6 +29,7 @@ issue_date = 2020-05-27
 patched = [">= 0.4.5"]
 unaffected = ["< 0.4.0"]
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/320"
+rustsec_id = "RUSTSEC-2020-0028"
 ```
 !*/
 
