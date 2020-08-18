@@ -21,6 +21,7 @@ parser_add.add_argument("version", help="target crate version")
 
 parser_run = subparsers.add_parser("run")
 parser_run.add_argument("id", help="poc ID (4 digits)")
+parser_run.add_argument("--copy", action="store_true", help="saves the PoC directory to `poc-debug` if set")
 
 args = parser.parse_args()
 
@@ -38,6 +39,13 @@ for name in os.listdir("poc"):
 
 # Override rustc to enable the build cache
 os.environ["RUSTC_WRAPPER"] = "sccache"
+
+# Set LD_LIBRARY_PATH
+link_path = os.path.abspath("dependencies")
+if "LD_LIBRARY_PATH" in os.environ:
+    os.environ["LD_LIBRARY_PATH"] += ":" + link_path
+else:
+    os.environ["LD_LIBRARY_PATH"] = link_path
 
 
 def read_metadata(id):
@@ -91,6 +99,8 @@ title = "issue title"
 description = \"\"\"
 issue description\"\"\"
 code_snippets = []
+patched = []
+informational = "unsound"
 ```
 !*/
 
@@ -115,6 +125,7 @@ name = "crux-poc-{poc_id}"
 version = "0.1.0"
 authors = ["Yechan Bae <yechan@gatech.edu>"]
 edition = "2018"
+build = "build.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -128,12 +139,21 @@ edition = "2018"
 
             manifest_file.write(manifest_content)
 
+        with open(f"{tmpdir}/build.rs", "w") as build_file:
+            build_file.write(f"""fn main() {{
+    println!("cargo:rustc-link-search={link_path}");
+}}""")
+
         os.mkdir(f"{tmpdir}/src")
         shutil.copyfile(f"poc/{poc_name}", f"{tmpdir}/src/main.rs")
 
         cmd = prepare_cargo_cmd(metadata, "run")
 
         subprocess.run(cmd, cwd=tmpdir)
+
+        if args.copy:
+            shutil.rmtree("./poc-debug", ignore_errors=True)
+            shutil.copytree(tmpdir, "./poc-debug")
 
 # TODO: cmd_report_original
 # TODO: cmd_report_rustsec

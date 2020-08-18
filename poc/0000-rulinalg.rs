@@ -17,9 +17,9 @@ it should be bounded by `'self` lifetime instead of `'a`.
 The current definition allows safe Rust code to trigger data race.
 """
 code_snippets = []
+patched = []
 issue_url = "https://github.com/AtheMathmo/rulinalg/issues/201"
 issue_date = 2020-07-29
-patched = []
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/319"
 rustsec_id = "RUSTSEC-2020-0023"
 ```

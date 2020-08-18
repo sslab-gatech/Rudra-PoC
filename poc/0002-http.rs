@@ -21,9 +21,9 @@ to cause a potential denial of service (DoS).
 
 The flaw was corrected in 0.1.20 release of `http` crate."""
 code_snippets = ["https://github.com/hyperium/http/blob/9c05e391e00474abaa8c14a86bcb0fc5eff1120e/src/header/map.rs#L622-L640"]
+patched = [">= 0.1.20"]
 issue_url = "https://github.com/hyperium/http/issues/352"
 issue_date = 2019-11-16
-patched = [">= 0.1.20"]
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/217"
 rustsec_id = "RUSTSEC-2019-0033"
 ```

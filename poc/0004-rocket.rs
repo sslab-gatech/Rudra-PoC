@@ -24,10 +24,11 @@ The affected version of `rocket` contains a `Clone` trait implementation of
 This causes data race in rare combinations of APIs if the original and the
 cloned objects are modified at the same time."""
 code_snippets = ["https://github.com/SergioBenitez/Rocket/blob/ca4d1572d408fd8dd13db103926ad96da878126d/core/lib/src/local/request.rs#L477-L487"]
-issue_url = "https://github.com/SergioBenitez/Rocket/issues/1312"
-issue_date = 2020-05-27
 patched = [">= 0.4.5"]
 unaffected = ["< 0.4.0"]
+informational = "unsound"
+issue_url = "https://github.com/SergioBenitez/Rocket/issues/1312"
+issue_date = 2020-05-27
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/320"
 rustsec_id = "RUSTSEC-2020-0028"
 ```
