@@ -12,6 +12,7 @@ import tempfile
 import toml
 
 from subprocess import PIPE, STDOUT
+from urllib.parse import urlparse
 
 # https://man7.org/linux/man-pages/man7/signal.7.html
 SIGNAL_MAP = {
@@ -81,6 +82,12 @@ user_name = config["name"]
 user_email = config["email"]
 user_token = config["token"]
 rustsec_fork_url = config["rustsec_fork_url"]
+
+GITHUB_CLIENT_HEADERS = {
+    "Accept": "application/vnd.github.v3+json",
+    "User-Agent": user_name,
+    "Authorization": f"token {user_token}",
+}
 
 # Check the environment
 os_version = subprocess.check_output(["lsb_release", "-sd"]).decode().strip()
@@ -284,6 +291,14 @@ def prepare_cargo_cmd(metadata, subcommand):
     return result
 
 
+# Parse GitHub URL and returns (owner, repository) pair
+def parse_repository_url(repository_url):
+    result = urlparse(repository_url)
+    assert result.scheme == "https"
+    assert result.netloc == "github.com"
+    return result.path.split("/")[1:3]
+
+
 def cmd_add(args):
     for poc_id_num in range(10000):
         poc_id_str = str(poc_id_num).rjust(4, '0')
@@ -359,7 +374,6 @@ def cmd_report_crate_repo(poc_id, report):
 
     if "repository" in crate_metadata["crate"]:
         repository_url = crate_metadata["crate"]["repository"]
-        print(f"Reporting to: {repository_url}")
     else:
         repository_url = None
 
@@ -368,16 +382,32 @@ def cmd_report_crate_repo(poc_id, report):
     elif not repository_url.startswith("https://github.com/"):
         print("Automatic reporting is only supported for GitHub")
     else:
-        # TODO: Use GitHub API to report the bug
-        pass
+        (owner, repo) = parse_repository_url(repository_url)
+        print(f"Reporting to {owner}/{repo}")
 
-    # Save metadata to the file
-    """
-    append_metadata(poc_id, {
-        "issue_url": "TODO",
-        "issue_date": datetime.date.today()
-    })
-    """
+        # Use GitHub API to report the bug
+        url = f"https://api.github.com/repos/{owner}/{repo}/issues"
+        result = requests.post(url, headers=GITHUB_CLIENT_HEADERS, data={
+            "title": report["title"],
+            "body": report["description"],
+        })
+
+        if result.status_code == 201:
+            result_json = result.json()
+            issue_url = result_json["html_url"]
+            print(f"Successfully created an issue: {issue_url}")
+            append_metadata(poc_id, {
+                "issue_url": issue_url,
+                "issue_date": datetime.date.today()
+            })
+        elif result.status_code == 410:
+            print("Issue tracker is disabled; Reporting was skipped")
+            append_metadata(poc_id, {
+                "issue_date": datetime.date.today()
+            })
+        else:
+            print(f"Unknown error {result.status_code}")
+            print(result.json())
 
 
 def cmd_report_rustsec(poc_id, report):
