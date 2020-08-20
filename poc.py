@@ -358,7 +358,7 @@ def cmd_report_crate_repo(poc_id, report):
 
     print(f"Reporting {poc_name} to the crate repository")
 
-    # Check if it was already reported
+    # Check if the bug was already reported
     if "issue_date" in metadata["report"]:
         issue_date = metadata["report"]["issue_date"]
         print(f"Already reported on {issue_date}")
@@ -387,7 +387,7 @@ def cmd_report_crate_repo(poc_id, report):
 
         # Use GitHub API to report the bug
         url = f"https://api.github.com/repos/{owner}/{repo}/issues"
-        result = requests.post(url, headers=GITHUB_CLIENT_HEADERS, data={
+        result = requests.post(url, headers=GITHUB_CLIENT_HEADERS, json={
             "title": report["title"],
             "body": report["description"],
         })
