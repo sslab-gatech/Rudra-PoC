@@ -13,6 +13,41 @@ import toml
 
 from subprocess import PIPE, STDOUT
 
+# https://man7.org/linux/man-pages/man7/signal.7.html
+SIGNAL_MAP = {
+    1: "SIGHUP",
+    2: "SIGINT",
+    3: "SIGQUIT",
+    4: "SIGILL",
+    5: "SIGTRAP",
+    6: "SIGABRT",
+    7: "SIGBUS",
+    8: "SIGFPE",
+    9: "SIGKILL",
+    10: "SIGUSR1",
+    11: "SIGSEGV",
+    12: "SIGUSR2",
+    13: "SIGPIPE",
+    14: "SIGALRM",
+    15: "SIGTERM",
+    16: "SIGSTKFLT",
+    17: "SIGCHLD",
+    18: "SIGCONT",
+    19: "SIGSTOP",
+    20: "SIGTSTP",
+    21: "SIGTTIN",
+    22: "SIGTTOU",
+    23: "SIGURG",
+    24: "SIGXCPU",
+    25: "SIGXFSZ",
+    26: "SIGVTALRM",
+    27: "SIGPROF",
+    28: "SIGWINCH",
+    29: "SIGIO",
+    30: "SIGPWR",
+    31: "SIGSYS",
+}
+
 parser = argparse.ArgumentParser()
 
 subparsers = parser.add_subparsers(dest="cmd")
@@ -27,7 +62,7 @@ parser_run.add_argument("--copy", action="store_true", help="saves the PoC direc
 
 parser_report = subparsers.add_parser("report")
 parser_report.add_argument("id", help="poc ID (4 digits)")
-parser_report.add_argument("--preview", action="store_true", help="prints the report before reporting")
+parser_report.add_argument("--preview", action="store_true", help="prints the report content without reporting")
 parser_report.add_argument("--crate_repo", action="store_true", help="reports the issue to the crate's repository")
 parser_report.add_argument("--rustsec", action="store_true", help="reports the issue to RustSec advisory")
 
@@ -160,6 +195,13 @@ def prepare_report(poc_id):
         exec_output = exec_result.stdout.decode().strip()
         exit_code = exec_result.returncode
 
+        # > A negative value `-N` indicates that the child was terminated by signal `N` (POSIX only).
+        # https://docs.python.org/3.6/library/subprocess.html#subprocess.CompletedProcess.returncode
+        if exit_code < 0:
+            exit_code_str = f"{exit_code} ({SIGNAL_MAP[-exit_code]})"
+        else:
+            exit_code_str = str(exit_code)
+
     report_content = "".join(
         map(lambda s: s + "\n\n", code_snippets)
     )
@@ -182,7 +224,7 @@ Output:
 {exec_output}
 ```
 
-Return Code: {exit_code}
+Return Code: {exit_code_str}
 """
 
     return {
@@ -351,6 +393,7 @@ def cmd_report(args):
     report = prepare_report(poc_id)
     if args.preview:
         print(f"Title:\n{report['title']}\n\nDescription:\n{report['description']}")
+        return
 
     if args.crate_repo:
         cmd_report_crate_repo(poc_id, report)
