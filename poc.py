@@ -402,9 +402,6 @@ def cmd_report(args):
         cmd_report_rustsec(poc_id, report)
 
 
-# TODO: cmd_generate
-
-
 action_dict = {
     "add": cmd_add,
     "run": cmd_run,
