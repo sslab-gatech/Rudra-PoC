@@ -1,0 +1,7 @@
+name = "John Doe"
+email = "john@example.com"
+# Generate your GitHub personal access token at: https://github.com/settings/tokens
+# Make sure to enable "repo" permission
+token = "abcdef123456"
+# Fork RustSec repository (https://github.com/RustSec/advisory-db) and provide git URL here
+rustsec_fork_url = "git@github.com:john/advisory-db.git"

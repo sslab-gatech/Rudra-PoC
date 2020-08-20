@@ -2,7 +2,9 @@
 
 ## Prerequisites
 
-- Python 3
+- Python 3.6+
+  - [requests](https://pypi.org/project/requests/)
+  - [toml](https://pypi.org/project/toml/)
 - [Miri](https://github.com/rust-lang/miri)
 - [Crux](https://github.gatech.edu/ybae38/Crux)
 - [sccache](https://github.com/mozilla/sccache)
@@ -10,19 +12,23 @@
   - `sccache` should be on `PATH`
 - `./setup.sh`
 
+## Configuration
+
+Copy `config.toml.template` to `config.toml` and fill it with your own data.
+
 ## Metadata Format
 
 ### target
 
 - **crate**: (string) the name of the crate
 - **version**: (string) the version to test the poc
-- **peer**: (object array) peer dependencies, follows the same pattern with target. See `./poc/0004-rocket.rs` for an example.
+- **peer**: (object array) peer dependencies, follows the same pattern with target. See `./poc/0004-rocket.rs` for an example. (optional)
 
 ### test
 
 - **analyzers**: (string array) an array of analyzers that are expected to report bugs for this crate
 - **cargo_flags**: (string array) Cargo flags to append, for example `["--release"]` (optional)
-- **cargo_toolchain**: (string) Specify the compiler toolchain if necessary
+- **cargo_toolchain**: (string) Specify the compiler toolchain if necessary (optional)
 
 ### report
 
@@ -56,15 +62,18 @@ Fill in the metadata section and complete the PoC code.
 ### 3. Issue reporting (WIP)
 
 ```shell
-# reports to both the original repository and RustSec
+# Reporting can be done at once...
+# reports the issue both to the crate's repository and RustSec
 ./poc.py report <PoC ID>
-# reports only to the original repository
-./poc.py report --original <PoC ID>
+
+# ... or separately
+# reports the issue only to the crate's repository
+./poc.py report --crate_repo <PoC ID>
 # and then later reports to RustSec
 ./poc.py report --rustsec <PoC ID>
 ```
 
 Reporting Guideline:
 
-- If the crate seems unmaintained, reports both to the original repository and RustSec
-- Otherwise, report to the original repository first and wait for the developer to confirm
+- If the crate seems unmaintained, reports both to the crate's repository and RustSec
+- Otherwise, report to the crate's repository first and wait for the developer to confirm

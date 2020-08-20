@@ -6,7 +6,7 @@ version = "0.1.19"
 
 [test]
 analyzers = ["manual"]
-cargo_flags = ["--release"]
+# cargo_flags = ["--release"]
 
 [report]
 title = "Integer Overflow in HeaderMap::reserve() can cause Denial of Service"
@@ -28,6 +28,7 @@ rustsec_url = "https://github.com/RustSec/advisory-db/pull/217"
 rustsec_id = "RUSTSEC-2019-0033"
 ```
 !*/
+#![forbid(unsafe_code)]
 
 use http::header::{HeaderMap, HOST};
 
@@ -37,11 +38,11 @@ fn main() {
     // map size becomes larger than MAX_SIZE
     map.reserve(50000);
     dbg!(map.capacity());
-    // map size becomes 0 (in release mode)
+    // debug mode: panics with integer overflow
+    // release mode: the map size silently overflows to 0
     map.reserve(std::usize::MAX - 100000);
-    dbg!(map.capacity());
 
     map.insert("host", 42);
     // this calls grow(0), which causes infinite loop
-    // map.reserve(std::usize::MAX - 100000);
+    map.reserve(std::usize::MAX - 100000);
 }

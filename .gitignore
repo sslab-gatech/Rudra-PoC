@@ -1,2 +1,6 @@
 .vscode/
 poc-debug/
+
+# local files
+advisory-db
+config.toml

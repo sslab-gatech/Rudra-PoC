@@ -33,6 +33,7 @@ rustsec_url = "https://github.com/RustSec/advisory-db/pull/320"
 rustsec_id = "RUSTSEC-2020-0028"
 ```
 !*/
+#![forbid(unsafe_code)]
 
 use rocket::http::Header;
 use rocket::local::Client;

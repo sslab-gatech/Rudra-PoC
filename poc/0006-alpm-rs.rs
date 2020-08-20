@@ -17,13 +17,14 @@ patched = []
 informational = "unsound"
 ```
 !*/
+#![forbid(unsafe_code)]
 
 use alpm_rs::macros::StrcCtx;
 
 fn main() {
     let mut v1: Vec<i8> = vec![1, 2, 3, 0];
     let _ = StrcCtx {
-        ptr: v1.as_mut_ptr()
+        ptr: v1.as_mut_ptr(),
     };
 
     // use-after-free in v1

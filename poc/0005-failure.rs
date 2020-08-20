@@ -22,6 +22,7 @@ rustsec_url = "https://github.com/RustSec/advisory-db/pull/318"
 rustsec_id = "RUSTSEC-2019-0036"
 ```
 !*/
+#![forbid(unsafe_code)]
 
 use std::any::TypeId;
 use std::fmt::{self, Display};
@@ -30,7 +31,7 @@ use failure::Fail;
 
 #[derive(Debug)]
 struct Error1 {
-    name: String
+    name: String,
 }
 
 impl Display for Error1 {
@@ -54,7 +55,9 @@ struct Error2 {
 }
 
 fn main() {
-    let e1: Box<dyn Fail> = Box::new(Error1{ name: "test".to_owned() });
+    let e1: Box<dyn Fail> = Box::new(Error1 {
+        name: "test".to_owned(),
+    });
     let e2: Option<&Error2> = e1.downcast_ref();
     dbg!(e2);
 }

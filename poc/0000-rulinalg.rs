@@ -14,8 +14,7 @@ The current definition of `raw_slice()` and `raw_slice_mut()` creates `'a` bound
 Since the returned slice is created from a stored pointer in `&self`,
 it should be bounded by `'self` lifetime instead of `'a`.
 
-The current definition allows safe Rust code to trigger data race.
-"""
+The current definition allows safe Rust code to trigger data race."""
 code_snippets = []
 patched = []
 issue_url = "https://github.com/AtheMathmo/rulinalg/issues/201"
@@ -24,6 +23,7 @@ rustsec_url = "https://github.com/RustSec/advisory-db/pull/319"
 rustsec_id = "RUSTSEC-2020-0023"
 ```
 !*/
+#![forbid(unsafe_code)]
 
 use rulinalg::matrix;
 use rulinalg::matrix::BaseMatrixMut;
