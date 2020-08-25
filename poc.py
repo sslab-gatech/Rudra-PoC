@@ -183,6 +183,11 @@ def prepare_report(poc_id):
     description = metadata["report"]["description"]
     code_snippets = metadata["report"]["code_snippets"]
 
+    cargo_flags_str = ""
+    if "cargo_flags" in metadata["test"]:
+        cargo_flags_str = "* Cargo flags: "
+        cargo_flags_str += " ".join(metadata["test"]["cargo_flags"]) + "\n"
+
     # Add `--quiet` flag
     if "cargo_flags" in metadata["test"]:
         metadata["test"]["cargo_flags"].append("--quiet")
@@ -218,11 +223,11 @@ def prepare_report(poc_id):
 
 # Demonstration
 
-Crate: {target_crate}
-Version: {target_version}
-OS: {os_version}
-Rust: {rustc_version}
-
+* Crate: {target_crate}
+* Version: {target_version}
+* OS: {os_version}
+* Rust: {rustc_version}
+{cargo_flags_str}
 ```rust
 {code}
 ```
