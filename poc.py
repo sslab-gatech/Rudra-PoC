@@ -299,6 +299,8 @@ def prepare_cargo_cmd(metadata, subcommand):
 
 # Parse GitHub URL and returns (owner, repository) pair
 def parse_repository_url(repository_url):
+    if repository_url.endswith(".git"):
+        repository_url = repository_url[:-4]
     result = urlparse(repository_url)
     assert result.scheme == "https"
     assert result.netloc == "github.com"
@@ -520,7 +522,7 @@ Original issue report: {url_value}"""
         # Use GitHub API to report the bug
         url = f"https://api.github.com/repos/RustSec/advisory-db/pulls"
         result = requests.post(url, headers=GITHUB_CLIENT_HEADERS, json={
-            "title": report["title"],
+            "title": crate_name + ": "+ report["title"],
             "head": f"{user_github_id}:{branch_name}",
             "base": "master",
             "body": report_body,

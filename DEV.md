@@ -27,6 +27,7 @@ Copy `config.toml.template` to `config.toml` and fill it with your own data.
 ### test
 
 - **analyzers**: (string array) an array of analyzers that are expected to report bugs for this crate
+  - manual, UnsafeDestructor
 - **cargo_flags**: (string array) Cargo flags to append, for example `["--release"]` (optional)
 - **cargo_toolchain**: (string) Specify the compiler toolchain if necessary (optional)
 
