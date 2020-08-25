@@ -80,12 +80,13 @@ with open("config.toml") as config_file:
 
 user_name = config["name"]
 user_email = config["email"]
+user_github_id = config["github_id"]
 user_token = config["token"]
 rustsec_fork_url = config["rustsec_fork_url"]
 
 GITHUB_CLIENT_HEADERS = {
     "Accept": "application/vnd.github.v3+json",
-    "User-Agent": user_name,
+    "User-Agent": user_github_id,
     "Authorization": f"token {user_token}",
 }
 
@@ -411,7 +412,125 @@ def cmd_report_crate_repo(poc_id, report):
 
 
 def cmd_report_rustsec(poc_id, report):
-    pass
+    poc_name = poc_id_to_name[poc_id]
+    metadata = read_metadata(poc_id)
+
+    # Prepare report data
+    crate_name = metadata["target"]["crate"]
+    report_title = metadata["report"]["title"]
+    report_description = metadata["report"]["description"]
+
+    informational_str = ""
+    if "informational" in metadata["report"]:
+        informational_value = metadata["report"]["informational"]
+        informational_str = f'informational = "{informational_value}"\n'
+
+    url_value = None
+    url_str = ""
+    if "issue_url" in metadata["report"]:
+        url_value = metadata["report"]["issue_url"]
+        url_str = f'url = "{url_value}"\n'
+
+    version_dict = {"patched": metadata["report"]["patched"]}
+    if "unaffected" in metadata["report"]:
+        version_dict["unaffected"] = metadata["report"]["unaffected"]
+
+    version_str = toml.dumps(version_dict)
+
+
+    def run_in_advisory_db(args, silent=False):
+        if silent:
+            return subprocess.run(
+                args,
+                cwd="advisory-db",
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=True,
+            )
+        else:
+            return subprocess.run(args, cwd="advisory-db", check=True)
+
+    # Start reporting
+    print(f"Start creating a commit for {poc_name}")
+    branch_name = poc_name
+
+    # `issue_date` field is required for RustSec report
+    if not "issue_date" in metadata["report"]:
+        print("`issue_date` field does not exist in the metadata")
+        return
+
+    issue_date = metadata["report"]["issue_date"]
+    crate_dir = f"advisory-db/crates/{crate_name}"
+    os.makedirs(crate_dir, exist_ok=True)
+
+    try:
+        run_in_advisory_db(["git", "checkout", "-b", branch_name], silent=True)
+        needs_pr = True
+    except subprocess.CalledProcessError:
+        # Branch already exists
+        run_in_advisory_db(["git", "checkout", branch_name], silent=True)
+        needs_pr = False
+
+    with open(f"{crate_dir}/RUSTSEC-0000-0000.toml", "w") as rustsec_toml:
+        rustsec_toml.write(f'''[advisory]
+id = "RUSTSEC-0000-0000"
+package = "{crate_name}"
+date = "{issue_date}"
+{informational_str}title = "{report_title}"
+{url_str}description = """
+{report_description}
+"""
+
+[versions]
+{version_str}''')
+
+    if needs_pr:
+        commit_msg = f"Initial report for {poc_name}"
+    else:
+        commit_msg = f"Update {poc_name}"
+
+    run_in_advisory_db(["git", "add", "-A"], silent=True)
+    try:
+        run_in_advisory_db(["git", "commit", "-m", commit_msg])
+    except subprocess.CalledProcessError:
+        print("Empty commit, nothing to update")
+        return
+    run_in_advisory_db(["git", "push", "-u", "origin", branch_name])
+
+    if needs_pr:
+        print(f"Reporting {poc_name} to RustSec")
+
+        if "rustsec_url" in metadata["report"]:
+            rustsec_url = metadata["report"]["rustsec_url"]
+            print(f"Already reported to: {rustsec_url}")
+            return
+
+        if url_value is None:
+            report_body = report["description"]
+        else:
+            report_body = f"""{report_description}
+
+Original issue report: {url_value}"""
+
+        # Use GitHub API to report the bug
+        url = f"https://api.github.com/repos/RustSec/advisory-db/pulls"
+        result = requests.post(url, headers=GITHUB_CLIENT_HEADERS, json={
+            "title": report["title"],
+            "head": f"{user_github_id}:{branch_name}",
+            "base": "master",
+            "body": report_body,
+        })
+
+        if result.status_code == 201:
+            result_json = result.json()
+            pr_url = result_json["html_url"]
+            print(f"Successfully created PR: {pr_url}")
+            append_metadata(poc_id, {"rustsec_url": pr_url})
+        else:
+            print(f"Unknown error {result.status_code}")
+            print(result.json())
+    else:
+        print(f"PR has been updated")
 
 
 def cmd_report(args):

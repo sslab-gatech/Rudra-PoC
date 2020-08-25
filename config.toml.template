@@ -1,5 +1,6 @@
 name = "John Doe"
 email = "john@example.com"
+github_id = "john"
 # Generate your GitHub personal access token at: https://github.com/settings/tokens
 # Make sure to enable "repo" permission
 token = "abcdef123456"

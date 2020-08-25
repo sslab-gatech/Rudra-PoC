@@ -17,6 +17,7 @@ patched = []
 informational = "unsound"
 issue_url = "https://github.com/pigeonhands/rust-arch/issues/2"
 issue_date = 2020-08-20
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/360"
 ```
 !*/
 #![forbid(unsafe_code)]
