@@ -21,6 +21,7 @@ patched = []
 issue_url = "https://gitlab.com/dvshapkin/alg-ds/-/issues/1"
 issue_date = 2020-08-25
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/362"
+rustsec_id = "RUSTSEC-2020-0033"
 ```
 !*/
 #![forbid(unsafe_code)]
