@@ -18,6 +18,7 @@ informational = "unsound"
 issue_url = "https://github.com/aeplay/chunky/issues/2"
 issue_date = 2020-08-25
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/366"
+rustsec_id = "RUSTSEC-2020-0035"
 ```
 !*/
 #![forbid(unsafe_code)]

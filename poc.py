@@ -346,6 +346,8 @@ fn main() {{
 
 def cmd_run(args):
     poc_id = args.id
+    poc_name = poc_id_to_name[poc_id]
+
     metadata = read_metadata(poc_id)
 
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -358,6 +360,8 @@ def cmd_run(args):
         if args.copy:
             shutil.rmtree("./poc-debug", ignore_errors=True)
             shutil.copytree(tmpdir, "./poc-debug")
+            os.remove("./poc-debug/src/main.rs")
+            os.symlink(os.path.abspath(f"poc/{poc_name}.rs"), "./poc-debug/src/main.rs")
 
 
 def cmd_report_crate_repo(poc_id, report):
