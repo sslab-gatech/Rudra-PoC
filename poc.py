@@ -108,8 +108,9 @@ for name_with_ext in os.listdir("poc"):
     if os.path.isfile(f"poc/{name_with_ext}"):
         name = os.path.splitext(name_with_ext)[0]
         match = poc_dir_pattern.match(name)
-        poc_id = match.group(1)
-        poc_id_to_name[poc_id] = name
+        if match is not None:
+            poc_id = match.group(1)
+            poc_id_to_name[poc_id] = name
 
 # Override rustc to enable the build cache
 os.environ["RUSTC_WRAPPER"] = "sccache"
@@ -215,7 +216,9 @@ def prepare_report(poc_id):
         else:
             exit_code_str = str(exit_code)
 
-    report_content = "".join(
+    report_content = "Hello, we have noticed a soundness issue and/or a potential security vulnerability in this crate while performing a security scan on crates.io.\n\n"
+
+    report_content += "".join(
         map(lambda s: s + "\n\n", code_snippets)
     )
     report_content += "# Description\n\n" + description
@@ -263,6 +266,8 @@ build = "build.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+logging-allocator = "0.1.1"
+log = "0.4"
 {metadata["target"]["crate"]} = "={metadata["target"]["version"]}"
 """
 
@@ -278,9 +283,10 @@ build = "build.rs"
     println!("cargo:rustc-link-search={link_path}");
 }}""")
 
-    # main.rs
+    # main.rs, boilerplate.rs
     os.mkdir(f"{cargo_dir}/src")
-    shutil.copyfile(f"poc/{poc_name}.rs", f"{cargo_dir}/src/main.rs")
+    os.symlink(os.path.abspath(f"poc/{poc_name}.rs"), f"{cargo_dir}/src/main.rs")
+    os.symlink(os.path.abspath(f"poc/boilerplate.rs"), f"{cargo_dir}/src/boilerplate.rs")
 
 
 def prepare_cargo_cmd(metadata, subcommand):
@@ -339,7 +345,11 @@ informational = "unsound"
 !*/
 #![forbid(unsafe_code)]
 
+mod boilerplate;
+
 fn main() {{
+    boilerplate::init();
+
     println!("Hello, World!")
 }}
 """)
@@ -347,9 +357,6 @@ fn main() {{
     shutil.rmtree("./poc-debug", ignore_errors=True)
     os.mkdir("./poc-debug")
     prepare_cargo_dir(poc_id, "./poc-debug")
-
-    os.remove("./poc-debug/src/main.rs")
-    os.symlink(os.path.abspath(f"poc/{poc_name}.rs"), "./poc-debug/src/main.rs")
 
     print(f"Successfully Added {poc_name}")
 
@@ -369,9 +376,7 @@ def cmd_run(args):
 
         if args.copy:
             shutil.rmtree("./poc-debug", ignore_errors=True)
-            shutil.copytree(tmpdir, "./poc-debug")
-            os.remove("./poc-debug/src/main.rs")
-            os.symlink(os.path.abspath(f"poc/{poc_name}.rs"), "./poc-debug/src/main.rs")
+            shutil.copytree(tmpdir, "./poc-debug", symlinks=True)
 
 
 def cmd_report_crate_repo(poc_id, report):
