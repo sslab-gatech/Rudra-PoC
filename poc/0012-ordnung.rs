@@ -12,7 +12,7 @@ title = "Memory safety issues in `compact::Vec`"
 description = """
 `compact::Vec` contains multiple memory safety issues.
 
-1. It mishandles large capacity and causes out-of-bound access in 32-bit / allocator layout mismatch in 64-bi.
+1. It mishandles large capacity and causes out-of-bound access in 32-bit / allocator layout mismatch in 64-bit.
 2. `remove()` is not panic-safe and causes double-free when an index larger than the length is provided."""
 code_snippets = []
 patched = []
