@@ -96,6 +96,7 @@ os_version = subprocess.check_output(["lsb_release", "-sd"]).decode().strip()
 # Prepare Git repository
 if not os.path.exists("advisory-db"):
     os.system(f"git clone {rustsec_fork_url} advisory-db")
+    os.system(f"git remote add rustsec https://github.com/RustSec/advisory-db.git")
 
 # Map PoC number to PoC name
 # Note that the name doesn't contain `.rs` extension
@@ -489,6 +490,14 @@ def cmd_report_rustsec(poc_id, report):
     crate_dir = f"advisory-db/crates/{crate_name}"
     os.makedirs(crate_dir, exist_ok=True)
 
+    # Update the master branch
+    print("Updating master branch...")
+    run_in_advisory_db(["git", "checkout", "master"], silent=True)
+    run_in_advisory_db(["git", "fetch", "rustsec"], silent=True)
+    run_in_advisory_db(["git", "merge", "rustsec/master", "--ff-only"], silent=True)
+    run_in_advisory_db(["git", "push"], silent=True)
+
+    print("Switching to a poc branch...")
     try:
         run_in_advisory_db(["git", "checkout", "-b", branch_name], silent=True)
         needs_pr = True
