@@ -309,12 +309,15 @@ def parse_repository_url(repository_url):
 
 def cmd_add(args):
     for poc_id_num in range(10000):
-        poc_id_str = str(poc_id_num).rjust(4, '0')
-        if poc_id_str not in poc_id_to_name:
+        poc_id = str(poc_id_num).rjust(4, '0')
+        if poc_id not in poc_id_to_name:
             break
 
-    assert poc_id_str not in poc_id_to_name
-    new_poc_file = f"poc/{poc_id_str}-{args.crate}.rs"
+    assert poc_id not in poc_id_to_name
+    poc_name = f"{poc_id}-{args.crate}"
+    new_poc_file = f"poc/{poc_name}.rs"
+    poc_id_to_name[poc_id] = poc_name
+
     with open(new_poc_file, "w") as f:
         f.write(f"""/*!
 ```crux-poc
@@ -341,7 +344,14 @@ fn main() {{
 }}
 """)
 
-    print(f"Created `{new_poc_file}` with version {args.version}")
+    shutil.rmtree("./poc-debug", ignore_errors=True)
+    os.mkdir("./poc-debug")
+    prepare_cargo_dir(poc_id, "./poc-debug")
+
+    os.remove("./poc-debug/src/main.rs")
+    os.symlink(os.path.abspath(f"poc/{poc_name}.rs"), "./poc-debug/src/main.rs")
+
+    print(f"Successfully Added {poc_name}")
 
 
 def cmd_run(args):
