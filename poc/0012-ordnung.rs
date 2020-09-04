@@ -19,6 +19,7 @@ patched = []
 issue_url = "https://github.com/maciejhirsz/ordnung/issues/8"
 issue_date = 2020-09-03
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/374"
+rustsec_id = "RUSTSEC-2020-0038"
 ```
 !*/
 #![forbid(unsafe_code)]
