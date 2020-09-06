@@ -37,6 +37,7 @@ impl Drop for DropDetector {
         println!("Dropping {}", self.0);
     }
 }
+
 fn main() {
     boilerplate::init();
 
