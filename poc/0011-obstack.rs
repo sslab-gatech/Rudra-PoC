@@ -13,11 +13,12 @@ title = "Obstack generates unaligned references"
 description = """
 Obstack generates unaligned references for types that require a large alignment."""
 code_snippets = ["https://github.com/petertodd/rust-obstack/blob/e1dde0dbed709ebdea9bd1f79ec718e80c5d0bf6/src/lib.rs#L317-L337"]
-patched = []
+patched = [">= 0.1.4"]
 informational = "unsound"
 issue_url = "https://github.com/petertodd/rust-obstack/issues/4"
 issue_date = 2020-09-03
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/373"
+rustsec_id = "RUSTSEC-2020-0040"
 ```
 !*/
 #![forbid(unsafe_code)]

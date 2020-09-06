@@ -16,10 +16,11 @@ code_snippets = [
     "https://github.com/nathansizemore/simple-slab/blob/f1b18e1ed42b5477d43c837155998d566fdaf461/src/lib.rs#L160-L165",
     "https://github.com/nathansizemore/simple-slab/blob/f1b18e1ed42b5477d43c837155998d566fdaf461/src/lib.rs#L82-L103",
 ]
-patched = []
+patched = [">= 0.3.3"]
 issue_url = "https://github.com/nathansizemore/simple-slab/issues/2"
 issue_date = 2020-09-03
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/376"
+rustsec_id = "RUSTSEC-2020-0039"
 ```
 !*/
 #![forbid(unsafe_code)]
