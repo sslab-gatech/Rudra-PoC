@@ -1,0 +1,41 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/match_param.rs:46:1: 52:2'
+source = '''
+impl Drop for MatchParam {
+    fn drop(&mut self) {
+        unsafe {
+            onig_sys::onig_free_match_param(self.raw);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/region.rs:204:1: 210:2'
+source = '''
+impl Drop for Region {
+    fn drop(&mut self) {
+        unsafe {
+            onig_sys::onig_region_free(&mut self.raw, 0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:808:1: 814:2'
+source = '''
+impl Drop for Regex {
+    fn drop(&mut self) {
+        unsafe {
+            onig_sys::onig_free(self.raw);
+        }
+    }
+}'''

@@ -1,0 +1,211 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/auth_context.rs:88:1: 92:2'
+source = '''
+impl Drop for AuthContext {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpc_auth_context_release(self.ctx.as_ptr()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buf.rs:86:1: 92:2'
+source = '''
+impl Drop for GrpcSlice {
+    fn drop(&mut self) {
+        unsafe {
+            grpc_slice_unref(self.0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buf.rs:242:1: 246:2'
+source = '''
+impl Drop for GrpcByteBuffer {
+    fn drop(&mut self) {
+        unsafe { grpc_byte_buffer_destroy(self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buf.rs:368:1: 376:2'
+source = '''
+impl Drop for GrpcByteBufferReader {
+    fn drop(&mut self) {
+        unsafe {
+            grpc_byte_buffer_reader_destroy(&mut self.reader);
+            ManuallyDrop::drop(&mut self.slice);
+            grpc_byte_buffer_destroy(self.reader.buffer_in);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/call/server.rs:183:1: 187:2'
+source = '''
+impl Drop for RequestContext {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpcwrap_request_call_context_destroy(self.ctx) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/call/mod.rs:246:1: 250:2'
+source = '''
+impl Drop for BatchContext {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpcwrap_batch_context_destroy(self.ctx) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/call/mod.rs:438:1: 442:2'
+source = '''
+impl Drop for Call {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpc_call_unref(self.call) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/channel.rs:507:1: 511:2'
+source = '''
+impl Drop for ChannelArgs {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpcwrap_channel_args_destroy(self.args) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/channel.rs:527:1: 533:2'
+source = '''
+impl Drop for ChannelInner {
+    fn drop(&mut self) {
+        unsafe {
+            grpc_sys::grpc_channel_destroy(self.channel);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/cq.rs:104:1: 108:2'
+source = '''
+impl Drop for CompletionQueueHandle {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpc_completion_queue_destroy(self.cq) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/metadata.rs:200:1: 206:2'
+source = '''
+impl Drop for Metadata {
+    fn drop(&mut self) {
+        unsafe {
+            grpc_sys::grpcwrap_metadata_array_cleanup(&mut self.0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/quota.rs:43:1: 49:2'
+source = '''
+impl Drop for ResourceQuota {
+    fn drop(&mut self) {
+        unsafe {
+            grpc_sys::grpc_resource_quota_unref(self.raw);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/security/credentials.rs:200:1: 210:2'
+source = '''
+impl Drop for ServerCredentialsBuilder {
+    fn drop(&mut self) {
+        for pair in self.key_cert_pairs.drain(..) {
+            unsafe {
+                CString::from_raw(pair.cert_chain as *mut _);
+                let s = CString::from_raw(pair.private_key as *mut _);
+                clear_key_securely(&mut s.into_bytes_with_nul());
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/security/credentials.rs:231:1: 237:2'
+source = '''
+impl Drop for ServerCredentials {
+    fn drop(&mut self) {
+        unsafe {
+            grpc_sys::grpc_server_credentials_release(self.creds);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/security/credentials.rs:364:1: 368:2'
+source = '''
+impl Drop for ChannelCredentials {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpc_channel_credentials_release(self.creds) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/server.rs:427:1: 431:2'
+source = '''
+impl Drop for ServerCore {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpc_server_destroy(self.server) }
+    }
+}'''

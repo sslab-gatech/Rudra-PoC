@@ -1,0 +1,34 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/x11/capturer.rs:147:1: 160:2'
+source = '''
+impl Drop for Capturer {
+    fn drop(&mut self) {
+        unsafe {
+            // Process pending request.
+            self.handle_response();
+            // Detach segment from XCB.
+            xcb_shm_detach(self.display.server().raw(), self.xcbid);
+            // Detach segment from our space.
+            libc::shmdt(self.buffer as *mut _);
+            // Destroy the shared memory segment.
+            libc::shmctl(self.shmid, libc::IPC_RMID, ptr::null_mut());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/x11/server.rs:45:1: 51:2'
+source = '''
+impl Drop for Server {
+    fn drop(&mut self) {
+        unsafe {
+            xcb_disconnect(self.raw);
+        }
+    }
+}'''

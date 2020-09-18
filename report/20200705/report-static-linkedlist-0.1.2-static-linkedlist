@@ -1,0 +1,21 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:228:1: 242:2'
+source = '''
+impl<'buf, T> Drop for StaticLinkedList<'buf, T> where T: Clear {
+	fn drop(&mut self) {
+		if self.array.is_null() {
+			return;			
+		}
+
+		while self.size() > 0 {
+			self.remove_head().unwrap();
+		}
+
+		unsafe {
+			(*self.array).drop_list();
+		}
+	}
+}'''

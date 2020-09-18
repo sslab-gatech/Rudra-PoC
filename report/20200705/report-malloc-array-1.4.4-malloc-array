@@ -1,0 +1,66 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/store.rs:116:1: 129:2'
+source = '''
+impl<T> std::ops::Drop for Store<T>
+{
+    fn drop(&mut self)
+    {
+	for &mut ptr in self.pointers.iter_mut()
+	{
+	    unsafe {
+		drop(ptr::take(ptr));
+		alloc::free(ptr as VoidPointer);
+	    }
+	}
+	self.pointers.clear();
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/store.rs:191:1: 204:2'
+source = '''
+impl std::ops::Drop for DynStore
+{
+    fn drop(&mut self)
+    {
+	for &mut ptr in self.pointers.iter_mut()
+	{
+	    unsafe {
+		drop(ptr::take(ptr));
+		alloc::free(ptr);
+	    }
+	}
+	self.pointers.clear();
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:708:1: 725:2'
+source = '''
+impl<T> Drop for HeapArray<T>
+{
+    fn drop(&mut self)
+    {
+	if self.ptr != ptr::null::<T>() {
+	    if self.drop_check {
+		for i in 0..self.size
+		{
+		    unsafe {
+			drop(ptr::take(self.ptr.offset(i as isize)));
+		    }
+		}
+	    }
+	    unsafe{alloc::free(self.ptr as VoidPointer)};
+	    self.ptr = ptr::null::<T>();
+	}
+    }
+}'''

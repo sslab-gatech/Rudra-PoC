@@ -1,0 +1,18 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:820:1: 831:2'
+source = '''
+impl Drop for SmallBitVec {
+    fn drop(&mut self) {
+        if self.is_heap() {
+            unsafe {
+                let header_ptr = self.header_raw();
+                let alloc_ptr = header_ptr as *mut Storage;
+                let alloc_len = header_len() + (*header_ptr).buffer_len;
+                Vec::from_raw_parts(alloc_ptr, alloc_len, alloc_len);
+            }
+        }
+    }
+}'''

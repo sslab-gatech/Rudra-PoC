@@ -1,0 +1,77 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/packet/decoder.rs:146:1: 148:2'
+source = '''
+impl<'a, T> Drop for PacketDecoder<'a, T> {
+    fn drop(&mut self) { unsafe { pt_pkt_free_decoder(self.0) }}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/packet/encoder.rs:100:1: 102:2'
+source = '''
+impl<'a, T> Drop for Encoder<'a, T> {
+    fn drop(&mut self) { unsafe { pt_free_encoder(self.0) } }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/event/qry.rs:261:1: 263:2'
+source = '''
+impl<'a, T> Drop for QueryDecoder<'a, T> {
+    fn drop(&mut self) { unsafe { pt_qry_free_decoder(self.0) }}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/block/decoder.rs:273:1: 277:2'
+source = '''
+impl<'a, T> Drop for BlockDecoder<'a, T> {
+    fn drop(&mut self) {
+        unsafe { pt_blk_free_decoder(self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/insn/decoder.rs:268:1: 270:2'
+source = '''
+impl<'a, T> Drop for InsnDecoder<'a, T> {
+    fn drop(&mut self) { unsafe { pt_insn_free_decoder(self.0) } }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/image/image.rs:273:1: 279:2'
+source = '''
+impl<'a> Drop for Image<'a> {
+    fn drop(&mut self) {
+        if self.dealloc {
+            unsafe { pt_image_free(self.inner) }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/image/iscache.rs:171:1: 175:2'
+source = '''
+impl<'a> Drop for SectionCache<'a> {
+    fn drop(&mut self) {
+        unsafe { pt_iscache_free(self.0) }
+    }
+}'''

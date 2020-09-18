@@ -1,0 +1,41 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:3338:1: 3344:2'
+source = '''
+impl Drop for TextEdit {
+    fn drop(&mut self) {
+        unsafe {
+            nk_textedit_free(&mut self.internal);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:3715:1: 3721:2'
+source = '''
+impl Drop for Buffer {
+    fn drop(&mut self) {
+        unsafe {
+            nk_buffer_free(&mut self.internal);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:3796:1: 3802:2'
+source = '''
+impl Drop for Context {
+    fn drop(&mut self) {
+        unsafe {
+            nk_free(&mut self.internal as *mut nk_context);
+        }
+    }
+}'''

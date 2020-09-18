@@ -1,0 +1,53 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/evmap/monomap/write.rs:54:1: 100:2'
+source = '''
+impl<K, V, M, S> Drop for MonoWriteHandle<K, V, M, S>
+where
+    K: Eq + Hash + Clone,
+    S: BuildHasher + Clone,
+    V: Clone,
+    M: 'static + Clone,
+{
+    fn drop(&mut self) {
+        use std::ptr;
+
+        // first, ensure both maps are up to date
+        // (otherwise safely dropping deduplicated rows is a pain)
+        if !self.oplog.is_empty() {
+            self.refresh();
+        }
+        if !self.oplog.is_empty() {
+            self.refresh();
+        }
+        assert!(self.oplog.is_empty());
+
+        // next, grab the read handle and set it to NULL
+        let r_handle = self
+            .r_handle
+            .inner
+            .swap(ptr::null_mut(), atomic::Ordering::Release);
+
+        // now, wait for all readers to depart
+        let epochs = Arc::clone(&self.epochs);
+        let mut epochs = epochs.lock().unwrap();
+        self.wait(&mut epochs);
+
+        // ensure that the subsequent epoch reads aren't re-ordered to before the swap
+        atomic::fence(atomic::Ordering::SeqCst);
+
+        let w_handle = &mut self.w_handle.as_mut().unwrap().data;
+
+        #[cfg(not(feature = "indexed"))]
+        w_handle.drain();
+        #[cfg(feature = "indexed")]
+        w_handle.drain(..);
+
+        // then we drop r_handle, which will free all the records. this is safe, since we know that
+        // no readers are using this pointer anymore (due to the .wait() following swapping the
+        // pointer with NULL).
+        drop(unsafe { Box::from_raw(r_handle) });
+    }
+}'''

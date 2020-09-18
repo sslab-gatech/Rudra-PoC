@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/openapi/generate/crate_syn_browser/package.rs:16:1: 24:2'
+source = '''
+impl Drop for Package<'_> {
+    fn drop(&mut self) {
+        for free_me in self.dependancies_to_free.borrow_mut().iter() {
+            unsafe {
+                let _ = Box::from_raw(*free_me);
+            }
+        }
+    }
+}'''

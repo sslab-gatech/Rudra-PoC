@@ -1,0 +1,59 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/frame.rs:69:1: 76:2'
+source = '''
+impl<'core> Drop for Frame<'core> {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            API::get_cached().free_frame(&self);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/function.rs:24:1: 31:2'
+source = '''
+impl<'core> Drop for Function<'core> {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            API::get_cached().free_func(self.handle.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/map/mod.rs:109:1: 116:2'
+source = '''
+impl<'elem> Drop for OwnedMap<'elem> {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            API::get_cached().free_map(&mut self.map);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/node/mod.rs:56:1: 63:2'
+source = '''
+impl<'core> Drop for Node<'core> {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            API::get_cached().free_node(self.handle.as_ptr());
+        }
+    }
+}'''

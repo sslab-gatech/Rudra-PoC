@@ -1,0 +1,11 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/watcher.rs:120:1: 124:2'
+source = '''
+impl Drop for Watcher {
+    fn drop(&mut self) {
+        unsafe { libc::close(self.inotify_fd); }
+    }
+}'''

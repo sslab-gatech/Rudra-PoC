@@ -1,0 +1,218 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/data.rs:397:1: 608:2'
+source = '''
+impl Drop for VxDraw {
+    #[allow(clippy::cognitive_complexity)]
+    fn drop(&mut self) {
+        let _ = self.device.wait_idle();
+
+        unsafe {
+            for fence in self.frames_in_flight_fences.drain(..) {
+                self.device.destroy_fence(fence);
+            }
+            for sema in self.acquire_image_semaphores.drain(..) {
+                self.device.destroy_semaphore(sema);
+            }
+            for sema in self.present_wait_semaphores.drain(..) {
+                self.device.destroy_semaphore(sema);
+            }
+            for fb in self.framebuffers.drain(..) {
+                self.device.destroy_framebuffer(fb);
+            }
+            for iv in self.image_views.drain(..) {
+                self.device.destroy_image_view(iv);
+            }
+            self.device.destroy_semaphore(ManuallyDrop::into_inner(read(
+                &self.acquire_image_semaphore_free,
+            )));
+
+            for di in self.depth_images.drain(..) {
+                self.device.destroy_image(di);
+            }
+            for div in self.depth_image_views.drain(..) {
+                self.device.destroy_image_view(div);
+            }
+            for div in self.depth_image_memories.drain(..) {
+                self.device.free_memory(div);
+            }
+        }
+
+        unsafe {
+            {
+                let debtris = &mut self.debtris;
+                for mut posbuf in debtris.posbuf.drain(..) {
+                    posbuf.destroy(&self.device);
+                }
+                for mut colbuf in debtris.colbuf.drain(..) {
+                    colbuf.destroy(&self.device);
+                }
+                for mut tranbuf in debtris.tranbuf.drain(..) {
+                    tranbuf.destroy(&self.device);
+                }
+                for mut rotbuf in debtris.rotbuf.drain(..) {
+                    rotbuf.destroy(&self.device);
+                }
+                for mut scalebuf in debtris.scalebuf.drain(..) {
+                    scalebuf.destroy(&self.device);
+                }
+                for dsl in debtris.descriptor_set.drain(..) {
+                    self.device.destroy_descriptor_set_layout(dsl);
+                }
+                self.device
+                    .destroy_graphics_pipeline(ManuallyDrop::into_inner(read(&debtris.pipeline)));
+                self.device
+                    .destroy_pipeline_layout(ManuallyDrop::into_inner(read(
+                        &debtris.pipeline_layout,
+                    )));
+                self.device
+                    .destroy_render_pass(ManuallyDrop::into_inner(read(&debtris.render_pass)));
+            }
+
+            for mut quad in self.quads.drain(..) {
+                for mut indices in quad.indices.drain(..) {
+                    indices.destroy(&self.device);
+                }
+                for mut posbuf in quad.posbuf.drain(..) {
+                    posbuf.destroy(&self.device);
+                }
+                for mut colbuf in quad.colbuf.drain(..) {
+                    colbuf.destroy(&self.device);
+                }
+                for mut tranbuf in quad.tranbuf.drain(..) {
+                    tranbuf.destroy(&self.device);
+                }
+                for mut rotbuf in quad.rotbuf.drain(..) {
+                    rotbuf.destroy(&self.device);
+                }
+                for mut scalebuf in quad.scalebuf.drain(..) {
+                    scalebuf.destroy(&self.device);
+                }
+                for dsl in quad.descriptor_set.drain(..) {
+                    self.device.destroy_descriptor_set_layout(dsl);
+                }
+                self.device
+                    .destroy_graphics_pipeline(ManuallyDrop::into_inner(read(&quad.pipeline)));
+                self.device
+                    .destroy_pipeline_layout(ManuallyDrop::into_inner(read(&quad.pipeline_layout)));
+                self.device
+                    .destroy_render_pass(ManuallyDrop::into_inner(read(&quad.render_pass)));
+            }
+
+            self.device.destroy_command_pool(
+                ManuallyDrop::into_inner(read(&self.command_pool)).into_raw(),
+            );
+            self.device
+                .destroy_render_pass(ManuallyDrop::into_inner(read(&self.render_pass)));
+            self.device
+                .destroy_swapchain(ManuallyDrop::into_inner(read(&self.swapchain)));
+
+            for mut simple_tex in self.dyntexs.drain(..) {
+                for mut indices in simple_tex.indices.drain(..) {
+                    indices.destroy(&self.device);
+                }
+                for mut posbuf in simple_tex.posbuf.drain(..) {
+                    posbuf.destroy(&self.device);
+                }
+                for mut opacbuf in simple_tex.opacbuf.drain(..) {
+                    opacbuf.destroy(&self.device);
+                }
+                for mut uvbuf in simple_tex.uvbuf.drain(..) {
+                    uvbuf.destroy(&self.device);
+                }
+                for mut tranbuf in simple_tex.tranbuf.drain(..) {
+                    tranbuf.destroy(&self.device);
+                }
+                for mut rotbuf in simple_tex.rotbuf.drain(..) {
+                    rotbuf.destroy(&self.device);
+                }
+                for mut scalebuf in simple_tex.scalebuf.drain(..) {
+                    scalebuf.destroy(&self.device);
+                }
+                self.device.destroy_image(ManuallyDrop::into_inner(read(
+                    &simple_tex.texture_image_buffer,
+                )));
+                self.device.free_memory(ManuallyDrop::into_inner(read(
+                    &simple_tex.texture_image_memory,
+                )));
+                self.device
+                    .destroy_render_pass(ManuallyDrop::into_inner(read(&simple_tex.render_pass)));
+                self.device
+                    .destroy_pipeline_layout(ManuallyDrop::into_inner(read(
+                        &simple_tex.pipeline_layout,
+                    )));
+                self.device
+                    .destroy_graphics_pipeline(ManuallyDrop::into_inner(read(
+                        &simple_tex.pipeline,
+                    )));
+                for dsl in simple_tex.descriptor_set_layouts.drain(..) {
+                    self.device.destroy_descriptor_set_layout(dsl);
+                }
+                self.device
+                    .destroy_descriptor_pool(ManuallyDrop::into_inner(read(
+                        &simple_tex.descriptor_pool,
+                    )));
+                self.device
+                    .destroy_sampler(ManuallyDrop::into_inner(read(&simple_tex.sampler)));
+                self.device
+                    .destroy_image_view(ManuallyDrop::into_inner(read(&simple_tex.image_view)));
+            }
+
+            for mut strtex in self.strtexs.drain(..) {
+                for mut indices in strtex.indices.drain(..) {
+                    indices.destroy(&self.device);
+                }
+                for mut posbuf in strtex.posbuf.drain(..) {
+                    posbuf.destroy(&self.device);
+                }
+                for mut opacbuf in strtex.opacbuf.drain(..) {
+                    opacbuf.destroy(&self.device);
+                }
+                for mut uvbuf in strtex.uvbuf.drain(..) {
+                    uvbuf.destroy(&self.device);
+                }
+                for mut tranbuf in strtex.tranbuf.drain(..) {
+                    tranbuf.destroy(&self.device);
+                }
+                for mut rotbuf in strtex.rotbuf.drain(..) {
+                    rotbuf.destroy(&self.device);
+                }
+                for mut scalebuf in strtex.scalebuf.drain(..) {
+                    scalebuf.destroy(&self.device);
+                }
+                for image_buffer in strtex.image_buffer.drain(..) {
+                    self.device.destroy_image(image_buffer);
+                }
+                for image_memory in strtex.image_memory.drain(..) {
+                    self.device.free_memory(image_memory);
+                }
+                self.device
+                    .destroy_render_pass(ManuallyDrop::into_inner(read(&strtex.render_pass)));
+                self.device
+                    .destroy_pipeline_layout(ManuallyDrop::into_inner(read(
+                        &strtex.pipeline_layout,
+                    )));
+                self.device
+                    .destroy_graphics_pipeline(ManuallyDrop::into_inner(read(&strtex.pipeline)));
+                for dsl in strtex.descriptor_set_layouts.drain(..) {
+                    self.device.destroy_descriptor_set_layout(dsl);
+                }
+                self.device
+                    .destroy_descriptor_pool(ManuallyDrop::into_inner(read(
+                        &strtex.descriptor_pool,
+                    )));
+                self.device
+                    .destroy_sampler(ManuallyDrop::into_inner(read(&strtex.sampler)));
+                for image_view in strtex.image_view.drain(..) {
+                    self.device.destroy_image_view(image_view);
+                }
+            }
+
+            for text in self.texts.drain(..) {
+                text.destroy(&self.device);
+            }
+        }
+    }
+}'''

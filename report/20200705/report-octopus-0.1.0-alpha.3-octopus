@@ -1,0 +1,17 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/atomic.rs:191:1: 201:2'
+source = '''
+impl<T> Drop for AtomicPtr<T> {
+    fn drop(&mut self) {
+        let ptr = self.0.swap(ptr::null_mut(), Ordering::SeqCst);
+
+        if !ptr.is_null() {
+            unsafe {
+                drop(Box::from_raw(ptr));
+            }
+        }
+    }
+}'''

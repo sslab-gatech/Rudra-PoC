@@ -1,0 +1,18 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/runtime.rs:943:1: 954:2'
+source = '''
+impl<DB> Drop for RevisionGuard<DB>
+where
+    DB: Database,
+{
+    fn drop(&mut self) {
+        // Release our read-lock without using RAII. As documented in
+        // `Snapshot::new` above, this requires the unsafe keyword.
+        unsafe {
+            self.shared_state.query_lock.raw().unlock_shared();
+        }
+    }
+}'''

@@ -1,0 +1,14 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/async_fd.rs:33:1: 40:2'
+source = '''
+impl Drop for AsyncFd {
+    fn drop(&mut self) {
+        unsafe {
+            let AsyncFd(fd) = *self;
+            libc::close(fd);
+        }
+    }
+}'''

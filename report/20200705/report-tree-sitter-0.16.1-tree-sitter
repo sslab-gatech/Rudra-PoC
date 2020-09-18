@@ -1,0 +1,75 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'binding_rust/util.rs:102:1: 108:2'
+source = '''
+impl<T> Drop for CBufferIter<T> {
+    fn drop(&mut self) {
+        unsafe {
+            free_ptr(self.ptr as *mut c_void);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'binding_rust/lib.rs:607:1: 613:2'
+source = '''
+impl Drop for Parser {
+    fn drop(&mut self) {
+        self.stop_printing_dot_graphs();
+        self.set_logger(None);
+        unsafe { ffi::ts_parser_delete(self.0.as_ptr()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'binding_rust/lib.rs:667:1: 671:2'
+source = '''
+impl Drop for Tree {
+    fn drop(&mut self) {
+        unsafe { ffi::ts_tree_delete(self.0.as_ptr()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'binding_rust/lib.rs:1133:1: 1137:2'
+source = '''
+impl<'a> Drop for TreeCursor<'a> {
+    fn drop(&mut self) {
+        unsafe { ffi::ts_tree_cursor_delete(&mut self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'binding_rust/lib.rs:1670:1: 1674:2'
+source = '''
+impl Drop for Query {
+    fn drop(&mut self) {
+        unsafe { ffi::ts_query_delete(self.ptr.as_ptr()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'binding_rust/lib.rs:1676:1: 1680:2'
+source = '''
+impl Drop for QueryCursor {
+    fn drop(&mut self) {
+        unsafe { ffi::ts_query_cursor_delete(self.0.as_ptr()) }
+    }
+}'''

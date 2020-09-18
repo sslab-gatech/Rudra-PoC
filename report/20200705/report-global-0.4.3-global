@@ -1,0 +1,52 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:221:1: 230:2'
+source = '''
+impl<T: 'static> Drop for GlobalGuardMut<T> {
+    fn drop(&mut self) {
+        // Drop the guard *before* the mutex.
+        unsafe {
+            ManuallyDrop::drop(&mut self.ref_cell_guard);
+            ManuallyDrop::drop(&mut self.mutex_guard);
+            ManuallyDrop::drop(&mut self.mutex);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:266:1: 275:2'
+source = '''
+impl<T: 'static> Drop for GlobalGuard<T> {
+    fn drop(&mut self) {
+        // Drop the guard *before* the mutex.
+        unsafe {
+            ManuallyDrop::drop(&mut self.ref_cell_guard);
+            ManuallyDrop::drop(&mut self.mutex_guard);
+            ManuallyDrop::drop(&mut self.mutex);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:299:1: 310:2'
+source = '''
+impl<T> Drop for Immutable<T> {
+    fn drop(&mut self) {
+        // Can only be `New` or `Done` as we have an `&mut self` param.
+        if let parking_lot::OnceState::Done = self.once.state() {
+            drop(unsafe {
+                // The `if` above makes sure that the inner value has been
+                // initialized.
+                std::ptr::drop_in_place((*self.inner.get()).as_mut_ptr());
+            });
+        }
+    }
+}'''

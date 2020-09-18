@@ -1,0 +1,27 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/btor.rs:683:1: 691:2'
+source = '''
+impl Drop for Btor {
+    fn drop(&mut self) {
+        unsafe {
+            boolector_release_all(self.as_raw());
+            assert_eq!(boolector_get_refs(self.as_raw()) as i32, 0);
+            boolector_delete(self.as_raw());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sort.rs:78:1: 82:2'
+source = '''
+impl<R: Borrow<Btor> + Clone> Drop for Sort<R> {
+    fn drop(&mut self) {
+        unsafe { boolector_release_sort(self.btor.borrow().as_raw(), self.as_raw()) }
+    }
+}'''

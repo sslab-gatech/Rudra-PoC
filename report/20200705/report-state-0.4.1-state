@@ -1,0 +1,41 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/container.rs:393:1: 410:2'
+source = '''
+impl Drop for Container {
+    fn drop(&mut self) {
+        if !self.init.has_completed() {
+            return
+        }
+
+        unsafe {
+            let map = &mut **self.map.get();
+            for value in map.values_mut() {
+                let mut boxed_any: Box<Any> = Box::from_raw(*value);
+                drop(&mut boxed_any);
+            }
+
+            let mut boxed_map: Box<HashMap<_, _, _>> = Box::from_raw(map);
+            drop(&mut boxed_map);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/storage.rs:214:1: 223:2'
+source = '''
+impl<T: Send + Sync + 'static> Drop for Storage<T> {
+    fn drop(&mut self) {
+        if self.init.has_completed() {
+            unsafe {
+                let mut item: Box<T> = Box::from_raw(*self.item.get());
+                drop(&mut item);
+            }
+        }
+    }
+}'''

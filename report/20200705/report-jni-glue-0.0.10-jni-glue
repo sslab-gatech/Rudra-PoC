@@ -1,0 +1,41 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/refs/global.rs:62:1: 71:2'
+source = '''
+impl<Class: AsValidJObjectAndEnv> Drop for Global<Class> {
+    fn drop(&mut self) {
+        VMS.read().unwrap().use_vm(self.gen_vm, |vm|{
+            vm.with_env(|env|{
+                let env = env.as_jni_env();
+                unsafe { (**env).DeleteGlobalRef.unwrap()(env, self.global); }
+            });
+        });
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/refs/local.rs:69:1: 74:2'
+source = '''
+impl<'env, Class: AsValidJObjectAndEnv> Drop for Local<'env, Class> {
+    fn drop(&mut self) {
+        let env = self.oae.env as *mut JNIEnv;
+        unsafe { (**env).DeleteLocalRef.unwrap()(env, self.oae.object); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/string_chars.rs:70:1: 74:2'
+source = '''
+impl<'env> Drop for StringChars<'env> {
+    fn drop(&mut self) {
+        unsafe { self.env.release_string_chars(self.string, self.chars) };
+    }
+}'''

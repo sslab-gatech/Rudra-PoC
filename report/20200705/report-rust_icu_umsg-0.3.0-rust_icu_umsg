@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:144:1: 153:2'
+source = '''
+impl Drop for Rep {
+    /// Drops the content of [sys::UMessageFormat] and releases its memory.
+    ///
+    /// Implements `umsg_close`.
+    fn drop(&mut self) {
+        unsafe {
+            versioned_function!(umsg_close)(self.rep);
+        }
+    }
+}'''

@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'imgui.rs:18:1: 26:2'
+source = '''
+impl Drop for ImGuiOwner {
+    fn drop(&mut self) {
+        let mut is_alive = IMGUI_INSTANCE_ALIVE.lock().unwrap();
+        unsafe {
+            igDestroyContext(igGetCurrentContext());
+        }
+        *is_alive = false;
+    }
+}'''

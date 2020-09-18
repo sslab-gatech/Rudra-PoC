@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:157:1: 163:2'
+source = '''
+impl std::ops::Drop for Srtp {
+    fn drop(&mut self) {
+        unsafe {
+            check(sys::srtp_dealloc(self.inner)).unwrap()
+        }
+    }
+}'''

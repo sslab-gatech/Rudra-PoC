@@ -1,0 +1,25 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/mpv.rs:163:1: 167:2'
+source = '''
+impl<'a> Drop for MpvStr<'a> {
+    fn drop(&mut self) {
+        unsafe { libmpv_sys::mpv_free(self.0.as_ptr() as *mut u8 as _) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/mpv.rs:248:1: 254:2'
+source = '''
+impl Drop for Mpv {
+    fn drop(&mut self) {
+        unsafe {
+            libmpv_sys::mpv_terminate_destroy(self.ctx.as_ptr());
+        }
+    }
+}'''

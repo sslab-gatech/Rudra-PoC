@@ -1,0 +1,56 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/atomic.rs:301:1: 310:2'
+source = '''
+impl<T> Drop for AtomicBox<T> {
+    fn drop(&mut self) {
+        let guard = ::pin();
+        let inner = self.0.swap(Shared::null(), ORDERING, &guard);
+        debug_assert!(!inner.is_null());
+        if !inner.is_null() {
+            unsafe { inner.into_owned(); }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/map_inner.rs:1164:1: 1179:2'
+source = '''
+impl<'v, K, V, S> Drop for MapInner<'v, K, V, S> {
+    fn drop(&mut self) {
+        let guard = &::pin();
+        for (mut k_ptr, mut v_ptr) in self.map.drain(..) {
+            unsafe {
+                guard.defer(move || {
+                    if !k_ptr.is_tagged(&guard) {
+                        k_ptr.try_drop(&guard);
+                    }
+                    v_ptr.try_drop(&guard);
+                })
+            }
+        }
+        // Don't drop the `newer_map` ptr, because `self` could have been dropped from `promote()`.
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:279:1: 288:2'
+source = '''
+impl<'v, K, V, S> Drop for LockFreeHashMap<'v, K, V, S> {
+    fn drop(&mut self) {
+        let guard = pin();
+        // self.inner will be dropped because Drop is implemented on `AtomicBox`
+        // But if self.inner has pointers to newer maps, then those need to be explicitely dropped.
+        unsafe {
+            self.inner.load(&guard).deref().drop_newer_maps(&guard);
+        }
+    }
+}'''

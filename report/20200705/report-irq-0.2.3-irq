@@ -1,0 +1,14 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lock.rs:256:1: 263:2'
+source = '''
+impl<'a, T, P: LockPriority> Drop for LockGuard<'a, T, P> {
+    fn drop(&mut self) {
+        // Safety: We unlock only our own half of the lock, and don't access `T` anymore.
+        unsafe {
+            self.lock.unlock(P::INDEX);
+        }
+    }
+}'''

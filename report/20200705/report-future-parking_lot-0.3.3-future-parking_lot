@@ -1,0 +1,29 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/mutex.rs:70:1: 77:2'
+source = '''
+impl<R> Drop for FutureRawMutex<R> where R: RawMutex {
+    fn drop(&mut self) {
+        let v = self.wakers.load(Ordering::Relaxed);
+        if !v.is_null() {
+            unsafe { Box::from_raw(v) };
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rwlock/mod.rs:81:1: 88:2'
+source = '''
+impl<R> Drop for FutureRawRwLock<R> where R: RawRwLock {
+    fn drop(&mut self) {
+        let v = self.wakers.load(Ordering::Relaxed);
+        if !v.is_null() {
+            unsafe { Box::from_raw(v) };
+        }
+    }
+}'''

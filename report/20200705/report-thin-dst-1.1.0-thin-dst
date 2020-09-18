@@ -1,0 +1,58 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:247:9: 252:10'
+source = '''
+impl<$($a,)* Head, SliceItem> Drop for $thin<$($a,)* Head, SliceItem> {
+            fn drop(&mut self) {
+                let this = unsafe { $fat::from_raw(ThinData::$fatten(self.raw).as_ptr()) };
+                drop::<$fat<$($b,)* ThinData<Head, SliceItem>>>(this)
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:302:9: 314:10'
+source = '''
+impl<Head, SliceItem> Drop for InProgress<Head, SliceItem> {
+            fn drop(&mut self) {
+                let raw_ptr = ThinData::erase(self.raw).as_ptr();
+                unsafe {
+                    let slice = make_slice_mut(
+                        raw_ptr.add(self.slice_offset).cast::<SliceItem>(),
+                        self.written_len,
+                    );
+                    ptr::drop_in_place(slice);
+                    dealloc(raw_ptr.cast(), self.layout);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:247:9: 252:10'
+source = '''
+impl<$($a,)* Head, SliceItem> Drop for $thin<$($a,)* Head, SliceItem> {
+            fn drop(&mut self) {
+                let this = unsafe { $fat::from_raw(ThinData::$fatten(self.raw).as_ptr()) };
+                drop::<$fat<$($b,)* ThinData<Head, SliceItem>>>(this)
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:247:9: 252:10'
+source = '''
+impl<$($a,)* Head, SliceItem> Drop for $thin<$($a,)* Head, SliceItem> {
+            fn drop(&mut self) {
+                let this = unsafe { $fat::from_raw(ThinData::$fatten(self.raw).as_ptr()) };
+                drop::<$fat<$($b,)* ThinData<Head, SliceItem>>>(this)
+            }
+        }'''

@@ -1,0 +1,12 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:108:1: 113:2'
+source = '''
+impl Drop for Door {
+	fn drop(&mut self) {
+		let fd = self.descriptor;
+		unsafe { File::from_raw_fd(fd) };
+	}
+}'''

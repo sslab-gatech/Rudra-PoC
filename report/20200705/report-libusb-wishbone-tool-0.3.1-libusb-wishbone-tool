@@ -1,0 +1,77 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/context.rs:26:1: 33:2'
+source = '''
+impl Drop for Context {
+    /// Closes the `libusb` context.
+    fn drop(&mut self) {
+        unsafe {
+            libusb_exit(self.context);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/device_list.rs:16:1: 23:2'
+source = '''
+impl<'a> Drop for DeviceList<'a> {
+    /// Frees the device list.
+    fn drop(&mut self) {
+        unsafe {
+            libusb_free_device_list(self.list, 1);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/device.rs:19:1: 26:2'
+source = '''
+impl<'a> Drop for Device<'a> {
+    /// Releases the device reference.
+    fn drop(&mut self) {
+        unsafe {
+            libusb_unref_device(self.device);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/device_handle.rs:24:1: 35:2'
+source = '''
+impl<'a> Drop for DeviceHandle<'a> {
+    /// Closes the device.
+    fn drop(&mut self) {
+        unsafe {
+            for iface in self.interfaces.iter() {
+                libusb_release_interface(self.handle, iface as c_int);
+            }
+
+            libusb_close(self.handle);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/config_descriptor.rs:13:1: 19:2'
+source = '''
+impl Drop for ConfigDescriptor {
+    fn drop(&mut self) {
+        unsafe {
+            libusb_free_config_descriptor(self.descriptor);
+        }
+    }
+}'''

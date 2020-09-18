@@ -1,0 +1,47 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/wrappers/jit.rs:249:1: 253:2'
+source = '''
+impl Drop for CModule {
+    fn drop(&mut self) {
+        unsafe_torch!({ atm_free(self.c_module) })
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/wrappers/optimizer.rs:78:1: 82:2'
+source = '''
+impl Drop for COptimizer {
+    fn drop(&mut self) {
+        unsafe { torch_sys::ato_free(self.c_optimizer) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/wrappers/scalar.rs:55:1: 59:2'
+source = '''
+impl Drop for Scalar {
+    fn drop(&mut self) {
+        unsafe_torch!({ torch_sys::ats_free(self.c_scalar) })
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/wrappers/tensor.rs:436:1: 440:2'
+source = '''
+impl Drop for Tensor {
+    fn drop(&mut self) {
+        unsafe_torch!({ at_free(self.c_tensor) })
+    }
+}'''

@@ -1,0 +1,14 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:80:1: 87:2'
+source = '''
+impl Drop for UCollator {
+    /// Releases the resources taken up by a single collator.
+    ///
+    /// Implements `ucol_close`
+    fn drop(&mut self) {
+        unsafe { versioned_function!(ucol_close)(self.rep.as_ptr()) };
+    }
+}'''

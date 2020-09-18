@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:41:1: 49:2'
+source = '''
+impl Drop for BpfJitFilter {
+    fn drop(&mut self) {
+        use std::mem;
+        unsafe {
+            let ptr = mem::transmute(self.func);
+            libc::munmap(ptr, self.size);
+        }
+    }
+}'''

@@ -1,0 +1,38 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:535:9: 539:10'
+source = '''
+impl Drop for Guard {
+            fn drop(&mut self) {
+                unsafe { Toupcam_HotPlug(None, null_mut()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:617:9: 622:10'
+source = '''
+impl Drop for Guard {
+            fn drop(&mut self) {
+                // ignore errors in a destructor
+                unsafe { let _ = Toupcam_Stop(self.0); }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:1032:1: 1038:2'
+source = '''
+impl Drop for Toupcam {
+    fn drop(&mut self) {
+        unsafe {
+            Toupcam_Close(self.handle)
+        }
+    }
+}'''

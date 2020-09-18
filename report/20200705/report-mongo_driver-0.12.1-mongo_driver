@@ -1,0 +1,148 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/client.rs:107:1: 114:2'
+source = '''
+impl Drop for ClientPool {
+    fn drop(&mut self) {
+        assert!(!self.inner.is_null());
+        unsafe {
+            bindings::mongoc_client_pool_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/client.rs:318:1: 325:2'
+source = '''
+impl<'a> Drop for Client<'a> {
+    fn drop(&mut self) {
+        assert!(!self.inner.is_null());
+        unsafe {
+            self.client_pool.push(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/client.rs:396:1: 403:2'
+source = '''
+impl Drop for Uri {
+    fn drop(&mut self) {
+        assert!(!self.inner.is_null());
+        unsafe {
+            bindings::mongoc_uri_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/collection.rs:718:1: 725:2'
+source = '''
+impl<'a> Drop for Collection<'a> {
+    fn drop(&mut self) {
+        assert!(!self.inner.is_null());
+        unsafe {
+            bindings::mongoc_collection_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/collection.rs:900:1: 907:2'
+source = '''
+impl<'a> Drop for BulkOperation<'a> {
+    fn drop(&mut self) {
+        assert!(!self.inner.is_null());
+        unsafe {
+            bindings::mongoc_bulk_operation_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/cursor.rs:147:1: 154:2'
+source = '''
+impl<'a> Drop for Cursor<'a> {
+    fn drop(&mut self) {
+        assert!(!self.inner.is_null());
+        unsafe {
+            bindings::mongoc_cursor_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/database.rs:249:1: 256:2'
+source = '''
+impl<'a> Drop for Database<'a> {
+    fn drop(&mut self) {
+        assert!(!self.inner.is_null());
+        unsafe {
+            bindings::mongoc_database_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/read_prefs.rs:64:1: 71:2'
+source = '''
+impl Drop for ReadPrefs {
+    fn drop(&mut self) {
+        assert!(!self.inner.is_null());
+        unsafe {
+            bindings::mongoc_read_prefs_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/write_concern.rs:48:1: 55:2'
+source = '''
+impl Drop for WriteConcern {
+    fn drop(&mut self) {
+        assert!(!self.inner.is_null());
+        unsafe {
+            bindings::mongoc_write_concern_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bsonc.rs:116:1: 122:2'
+source = '''
+impl Drop for Bsonc {
+    fn drop(&mut self) {
+        unsafe {
+            bindings::bson_destroy(self.inner);
+        }
+    }
+}'''

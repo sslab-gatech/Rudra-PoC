@@ -1,0 +1,27 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/gl_backend/mod.rs:728:1: 748:2'
+source = '''
+impl Drop for Scene {
+    fn drop(&mut self) {
+        unsafe {
+            for &shader in &self.shaders {
+                gl::DeleteShader(shader);
+            }
+            for &program in &self.programs {
+                gl::DeleteProgram(program);
+            }
+            if self.buffers.len() > 0 {
+                gl::DeleteBuffers(self.buffers.len() as i32, &self.buffers[0]);
+            }
+            if self.textures.len() > 0 {
+                gl::DeleteTextures(self.textures.len() as i32, &self.textures[0]);
+            }
+            if self.vertex_arrays.len() > 0 {
+                gl::DeleteVertexArrays(self.vertex_arrays.len() as i32, &self.vertex_arrays[0]);
+            }
+        }
+    }
+}'''

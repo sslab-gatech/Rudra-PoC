@@ -1,0 +1,49 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:271:1: 277:2'
+source = '''
+impl<T: ChipmunkRsTypes> Drop for Space<T> {
+    fn drop(&mut self) {
+        unsafe { cpSpaceFree(self.ptr); }
+
+        // TODO free all resources (e.g. bodies, shapes, constraints, etc).
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:401:1: 405:2'
+source = '''
+impl<T: ChipmunkRsTypes> Drop for Body<T> {
+    fn drop(&mut self) {
+        unsafe { cpBodyFree(self.ptr); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:480:1: 484:2'
+source = '''
+impl<T: ChipmunkRsTypes> Drop for CircleShape<T> {
+    fn drop(&mut self) {
+        unsafe { cpShapeFree(self.to_shape()); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:517:1: 521:2'
+source = '''
+impl<T: ChipmunkRsTypes> Drop for PolyShape<T> {
+    fn drop(&mut self) {
+        unsafe { cpShapeFree(self.to_shape()); }
+    }
+}'''

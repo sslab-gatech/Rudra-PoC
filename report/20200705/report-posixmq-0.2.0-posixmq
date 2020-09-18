@@ -1,0 +1,11 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'posixmq.rs:1120:1: 1124:2'
+source = '''
+impl Drop for PosixMq {
+    fn drop(&mut self) {
+        unsafe { mq_close(self.mqd) };
+    }
+}'''

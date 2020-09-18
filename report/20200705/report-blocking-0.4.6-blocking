@@ -1,0 +1,14 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:1230:1: 1237:2'
+source = '''
+impl Drop for Pipe {
+    fn drop(&mut self) {
+        // Deallocate the byte buffer.
+        unsafe {
+            Vec::from_raw_parts(self.buffer, 0, self.cap);
+        }
+    }
+}'''

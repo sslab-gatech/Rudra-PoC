@@ -1,0 +1,12 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'gstuff.rs:845:1: 850:44'
+source = '''
+impl<T> Drop for Constructible<T> {
+  fn drop (&mut self) {
+    let v = self.value.load (Ordering::Relaxed);
+    if v == 0 {return}
+    if self.value.compare_exchange (v, 0, Ordering::Relaxed, Ordering::Relaxed) .is_err() {return}
+    unsafe {Box::from_raw (v as *mut T)};}}'''

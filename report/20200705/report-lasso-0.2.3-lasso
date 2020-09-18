@@ -1,0 +1,29 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/arena.rs:106:1: 128:2'
+source = '''
+impl<T: Sized> Drop for Bucket<T> {
+    fn drop(&mut self) {
+        // Safety: Only valid items are dropped, and then all memory is deallocated.
+        // All pointers are valid.
+        unsafe {
+            let items = self.items.as_ptr();
+
+            // Drop all initialized items
+            for i in 0..self.index {
+                ptr::drop_in_place(items.add(i));
+            }
+
+            // Deallocate all memory that the bucket allocated
+            dealloc(
+                items as *mut u8,
+                Layout::from_size_align_unchecked(
+                    mem::size_of::<T>() * self.capacity.get(),
+                    mem::align_of::<T>(),
+                ),
+            );
+        }
+    }
+}'''

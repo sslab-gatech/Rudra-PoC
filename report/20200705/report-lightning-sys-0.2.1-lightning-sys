@@ -1,0 +1,28 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/jit.rs:54:1: 61:2'
+source = '''
+impl Drop for Jit {
+    fn drop(&mut self) {
+        unsafe {
+            bindings::finish_jit();
+        }
+        JIT_MADE.store(false, atomic::Ordering::Relaxed);
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/jitstate.rs:16:1: 22:2'
+source = '''
+impl<'a> Drop for JitState<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            bindings::_jit_destroy_state(self.state);
+        }
+    }
+}'''

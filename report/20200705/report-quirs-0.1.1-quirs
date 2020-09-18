@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/decoder.rs:80:1: 86:2'
+source = '''
+impl Drop for Decoder {
+    fn drop(&mut self) {
+        unsafe {
+            quirc_destroy(self.inner);
+        }
+    }
+}'''

@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/value.rs:43:1: 49:2'
+source = '''
+impl<V> Drop for Value<V> {
+    fn drop(&mut self) {
+        unsafe {
+            ::std::ptr::drop_in_place(self.chunk.as_mut_ptr());
+        };
+    }
+}'''

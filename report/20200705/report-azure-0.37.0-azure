@@ -1,0 +1,153 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/azure_hl.rs:193:1: 199:2'
+source = '''
+impl Drop for ColorPattern {
+    fn drop(&mut self) {
+        unsafe {
+            AzReleasePattern(self.azure_color_pattern);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/azure_hl.rs:479:1: 485:2'
+source = '''
+impl Drop for DrawTarget {
+    fn drop(&mut self) {
+        unsafe {
+            AzReleaseDrawTarget(self.azure_draw_target);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/azure_hl.rs:946:1: 952:2'
+source = '''
+impl Drop for SourceSurface {
+    fn drop(&mut self) {
+        unsafe {
+            AzReleaseSourceSurface(self.azure_source_surface);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/azure_hl.rs:967:1: 973:2'
+source = '''
+impl Drop for GradientStops {
+    fn drop(&mut self) {
+        unsafe {
+            AzReleaseGradientStops(self.azure_gradient_stops);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/azure_hl.rs:1035:1: 1041:2'
+source = '''
+impl Drop for DataSourceSurface {
+    fn drop(&mut self) {
+        unsafe {
+            AzReleaseSourceSurface(self.azure_data_source_surface);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/azure_hl.rs:1102:1: 1108:2'
+source = '''
+impl Drop for Path {
+    fn drop(&mut self) {
+        unsafe {
+            AzReleasePath(self.azure_path);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/azure_hl.rs:1228:1: 1234:2'
+source = '''
+impl Drop for PathBuilder {
+    fn drop(&mut self) {
+        unsafe {
+            AzReleasePathBuilder(self.azure_path_builder);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/azure_hl.rs:1243:1: 1249:2'
+source = '''
+impl Drop for LinearGradientPattern {
+    fn drop(&mut self) {
+        unsafe {
+            AzReleasePattern(self.azure_linear_gradient_pattern);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/azure_hl.rs:1293:1: 1299:2'
+source = '''
+impl Drop for RadialGradientPattern {
+    fn drop(&mut self) {
+        unsafe {
+            AzReleasePattern(self.azure_radial_gradient_pattern);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/azure_hl.rs:1341:1: 1347:2'
+source = '''
+impl Drop for SurfacePattern {
+    fn drop(&mut self) {
+        unsafe {
+            AzReleasePattern(self.azure_surface_pattern);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/azure_hl.rs:1450:1: 1456:2'
+source = '''
+impl Drop for FilterNode {
+    fn drop(&mut self) {
+        unsafe {
+            AzReleaseFilterNode(self.azure_filter_node);
+        }
+    }
+}'''

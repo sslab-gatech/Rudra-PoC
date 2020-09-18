@@ -1,0 +1,25 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/borrow/mod.rs:93:1: 98:2'
+source = '''
+impl<'a, T: Pointer> Drop for Ref<'a, T> {
+    fn drop(&mut self) {
+        let mut ledger = self.lock.ledger.borrow_mut();
+        ledger.settle(unsafe { self.pointer.as_ptr() });
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/borrow/mod.rs:122:1: 127:2'
+source = '''
+impl<'a, T: Pointer> Drop for RefMut<'a, T> {
+    fn drop(&mut self) {
+        let mut ledger = self.lock.ledger.borrow_mut();
+        ledger.settle_mut(unsafe { self.pointer.as_mut() });
+    }
+}'''

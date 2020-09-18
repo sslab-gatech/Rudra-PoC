@@ -1,0 +1,32 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ring.rs:55:1: 60:2'
+source = '''
+impl Drop for Fd {
+    fn drop(&mut self) {
+        // Best-effort. Mac OS X deterministically errors on this (despite succeeding).
+        unsafe{ libc::close(self.raw) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ring.rs:146:1: 158:2'
+source = '''
+impl Drop for RingBuffer {
+    fn drop(&mut self) {
+        // Best-effort clean up the mappings:
+        unsafe {
+            let r = munmap(self.mmapped_region, self.size_bytes);
+            assert!(r >= 0, "Error munmapping RW {}", Error::last_os_error());
+            let r = munmap(self.mmapped_region.offset(self.size_bytes as isize), self.size_bytes);
+            assert!(r >= 0, "Error munmapping RO {}", Error::last_os_error());
+            let r = munmap(self.mmapped_region, self.size_bytes*2);
+            assert!(r >= 0, "Error munmapping Region {}", Error::last_os_error());
+        }
+    }
+}'''

@@ -1,0 +1,109 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/platform/unix/mod.rs:102:1: 111:2'
+source = '''
+impl Drop for OsIpcReceiver {
+    fn drop(&mut self) {
+        unsafe {
+            if self.fd.get() >= 0 {
+                let result = libc::close(self.fd.get());
+                assert!(thread::panicking() || result == 0);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/platform/unix/mod.rs:144:1: 151:2'
+source = '''
+impl Drop for SharedFileDescriptor {
+    fn drop(&mut self) {
+        unsafe {
+            let result = libc::close(self.0);
+            assert!(thread::panicking() || result == 0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/platform/unix/mod.rs:430:1: 439:2'
+source = '''
+impl Drop for OsIpcReceiverSet {
+    fn drop(&mut self) {
+        for &PollEntry { id: _, fd } in self.pollfds.values() {
+            let result = unsafe {
+                libc::close(fd)
+            };
+            assert!(thread::panicking() || result == 0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/platform/unix/mod.rs:581:1: 588:2'
+source = '''
+impl Drop for OsIpcOneShotServer {
+    fn drop(&mut self) {
+        unsafe {
+            let result = libc::close(self.fd);
+            assert!(thread::panicking() || result == 0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/platform/unix/mod.rs:704:1: 711:2'
+source = '''
+impl Drop for BackingStore {
+    fn drop(&mut self) {
+        unsafe {
+            let result = libc::close(self.fd);
+            assert!(thread::panicking() || result == 0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/platform/unix/mod.rs:722:1: 731:2'
+source = '''
+impl Drop for OsIpcSharedMemory {
+    fn drop(&mut self) {
+        unsafe {
+            if !self.ptr.is_null() {
+                let result = libc::munmap(self.ptr as *mut c_void, self.length);
+                assert!(thread::panicking() || result == 0);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/platform/unix/mod.rs:1014:1: 1020:2'
+source = '''
+impl Drop for UnixCmsg {
+    fn drop(&mut self) {
+        unsafe {
+            libc::free(self.cmsg_buffer as *mut c_void);
+        }
+    }
+}'''

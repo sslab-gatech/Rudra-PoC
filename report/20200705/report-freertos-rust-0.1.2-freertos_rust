@@ -1,0 +1,114 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/timers.rs:182:1: 197:2'
+source = '''
+impl Drop for Timer {
+    #[allow(unused_must_use)]
+    fn drop(&mut self) {
+        if self.detached == true { return; }
+
+        unsafe {
+            if let Ok(callback_ptr) = self.get_id() {
+                // free the memory
+                Box::from_raw(callback_ptr as *mut Box<dyn Fn(Timer)>);
+            }
+            
+            // todo: configurable timeout?
+            freertos_rs_timer_delete(self.handle, Duration::ms(1000).to_ticks());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/queue.rs:80:1: 86:2'
+source = '''
+impl<T: Sized + Copy> Drop for Queue<T> {
+    fn drop(&mut self) {
+        unsafe {
+            freertos_rs_queue_delete(self.queue);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/semaphore.rs:50:1: 56:2'
+source = '''
+impl Drop for Semaphore {
+    fn drop(&mut self) {
+        unsafe {
+            freertos_rs_delete_semaphore(self.semaphore);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/semaphore.rs:63:1: 69:2'
+source = '''
+impl Drop for SemaphoreGuard {
+    fn drop(&mut self) {
+        unsafe {
+            freertos_rs_give_mutex(self.__semaphore);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/mutex.rs:134:1: 138:2'
+source = '''
+impl Drop for MutexNormal {
+    fn drop(&mut self) {
+        unsafe { freertos_rs_delete_semaphore(self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/mutex.rs:172:1: 176:2'
+source = '''
+impl Drop for MutexRecursive {
+    fn drop(&mut self) {
+        unsafe { freertos_rs_delete_semaphore(self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/isr.rs:23:1: 29:2'
+source = '''
+impl Drop for InterruptContext {
+    fn drop(&mut self) {
+        if self.x_higher_priority_task_woken == 1 {
+            unsafe { freertos_rs_isr_yield(); }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/critical.rs:14:1: 18:2'
+source = '''
+impl Drop for CriticalRegion {
+    fn drop(&mut self) {
+        unsafe { freertos_rs_exit_critical(); }
+    }
+}'''

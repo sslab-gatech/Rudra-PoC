@@ -1,0 +1,76 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/detection.rs:51:1: 57:2'
+source = '''
+impl Drop for Detection {
+    fn drop(&mut self) {
+        unsafe {
+            sys::apriltag_detection_destroy(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/detector.rs:89:1: 93:2'
+source = '''
+impl Drop for Detector {
+    fn drop(&mut self) {
+        unsafe { sys::apriltag_detector_destroy(self.ptr.as_ptr()) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/families.rs:92:1: 103:2'
+source = '''
+impl Drop for Family {
+    fn drop(&mut self) {
+        unsafe {
+            let ptr = self.ptr.as_ptr();
+            libc::free((*ptr).codes as *mut c_void);
+            libc::free((*ptr).bit_x as *mut c_void);
+            libc::free((*ptr).bit_y as *mut c_void);
+            libc::free((*ptr).name as *mut c_void);
+            libc::free(ptr as *mut c_void);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/image_buf.rs:122:1: 128:2'
+source = '''
+impl Drop for Image {
+    fn drop(&mut self) {
+        unsafe {
+            sys::image_u8_destroy(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/zarray.rs:116:1: 126:2'
+source = '''
+impl<T> Drop for Zarray<T> {
+    fn drop(&mut self) {
+        unsafe {
+            let data_ptr = self.ptr.as_mut().data;
+            if !data_ptr.is_null() {
+                libc::free(data_ptr as *mut c_void);
+            }
+            libc::free(self.ptr.as_ptr() as *mut c_void);
+        }
+    }
+}'''

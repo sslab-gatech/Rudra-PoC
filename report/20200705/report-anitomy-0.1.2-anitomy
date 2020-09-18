@@ -1,0 +1,11 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:290:1: 294:2'
+source = '''
+impl Drop for Anitomy {
+    fn drop(&mut self) {
+        unsafe { self.anitomy.destroy() }
+    }
+}'''

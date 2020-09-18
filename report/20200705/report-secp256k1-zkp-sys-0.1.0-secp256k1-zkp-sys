@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:75:1: 81:2'
+source = '''
+impl Drop for ScratchSpace {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::secp256k1_zkp_scratch_space_destroy(self.scratch_space);
+        }
+    }
+}'''

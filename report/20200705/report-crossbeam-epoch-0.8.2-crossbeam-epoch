@@ -1,0 +1,87 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/atomic.rs:756:1: 763:2'
+source = '''
+impl<T> Drop for Owned<T> {
+    fn drop(&mut self) {
+        let (raw, _) = decompose_data::<T>(self.data);
+        unsafe {
+            drop(Box::from_raw(raw));
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/collector.rs:91:1: 98:2'
+source = '''
+impl Drop for LocalHandle {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            Local::release_handle(&*self.local);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/guard.rs:419:1: 426:2'
+source = '''
+impl Drop for Guard {
+    #[inline]
+    fn drop(&mut self) {
+        if let Some(local) = unsafe { self.local.as_ref() } {
+            local.unpin();
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sync/list.rs:218:1: 233:2'
+source = '''
+impl<T, C: IsElement<T>> Drop for List<T, C> {
+    fn drop(&mut self) {
+        unsafe {
+            let guard = &unprotected();
+            let mut curr = self.head.load(Relaxed, guard);
+            while let Some(c) = curr.as_ref() {
+                let succ = c.next.load(Relaxed, guard);
+                // Verify that all elements have been removed from the list.
+                assert_eq!(succ.tag(), 1);
+
+                C::finalize(curr.deref(), guard);
+                curr = succ;
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sync/queue.rs:192:1: 204:2'
+source = '''
+impl<T> Drop for Queue<T> {
+    fn drop(&mut self) {
+        unsafe {
+            let guard = &unprotected();
+
+            while let Some(_) = self.try_pop(guard) {}
+
+            // Destroy the remaining sentinel node.
+            let sentinel = self.head.load(Relaxed, guard);
+            drop(sentinel.into_owned());
+        }
+    }
+}'''

@@ -1,0 +1,46 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/aref.rs:88:1: 95:2'
+source = '''
+impl<T> Drop for DescendContainer<T> {
+    fn drop(&mut self) {
+        unsafe {
+            mem::ManuallyDrop::drop(&mut self.inner);
+            (self.dropfn)(&mut self.owner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/aref.rs:222:1: 228:2'
+source = '''
+impl<'a, U: ?Sized> Drop for ARef<'a, U> {
+    fn drop(&mut self) {
+        unsafe {
+            (self.dropfn)(&mut self.owner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rmba.rs:190:1: 200:2'
+source = '''
+impl<'a, T: 'a + ?Sized> Drop for RMBA<'a, T> {
+    fn drop(&mut self) {
+        match self.unpack() {
+            (_, 0) => {},
+            (p, 1) => unsafe { let _ = Box::<T>::from_raw(p as *mut T); },
+            (p, 2) => unsafe { let _ = Self::arc(p); },
+            (_, 3) => {},
+            _ => unreachable!(),
+        }
+    }
+}'''

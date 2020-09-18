@@ -1,0 +1,14 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:97:1: 104:2'
+source = '''
+impl Drop for Atom {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            Gecko_ReleaseAtom(self.0);
+        }
+    }
+}'''

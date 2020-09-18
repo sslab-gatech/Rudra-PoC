@@ -1,0 +1,67 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/jni/mod.rs:583:1: 599:2'
+source = '''
+impl Drop for JavaVM {
+    fn drop(&mut self) {
+        if !self.owned {
+            return;
+        }
+
+        // Safe because the argument is ensured to be the correct by construction.
+        let status = unsafe {
+            let destroy_fn = (**self.java_vm).DestroyJavaVM.unwrap();
+            destroy_fn(self.java_vm)
+        };
+
+        if status != jni_sys::JNI_OK {
+            panic!("Failed destroying the JavaVm. Status: {}", status);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/jni/mod.rs:1284:1: 1305:2'
+source = '''
+impl<'vm> Drop for JniEnv<'vm> {
+    fn drop(&mut self) {
+        // In native calls `JniEnv` is build from a raw pointer, without attaching the current
+        // thread, and thus the thread doesn't need to be detached. A native method can return
+        // with a pending exception to propagate it to Java code, so no need to panic on pending
+        // exceptions either.
+        if self.native_method_call {
+            return;
+        }
+
+        if self.has_exception() {
+            // Safe because the argument is ensured to be the correct by construction.
+            unsafe { call_jni_method!(self, ExceptionDescribe) };
+            panic!(
+                "Dropping `JniEnv` with a pending exception is not allowed. Please clear the \
+                 exception by unwrapping the exception token before dropping it."
+            );
+        }
+        // Safe because the current thread is guaranteed to be attached and the argument is correct.
+        unsafe { JavaVM::detach(self.raw_jvm()) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/jni/mod.rs:1909:1: 1916:2'
+source = '''
+impl<'env> Drop for Object<'env> {
+    fn drop(&mut self) {
+        // Safe because the argument is ensured to be correct references by construction.
+        unsafe {
+            call_jni_method!(self.env, DeleteLocalRef, self.raw_object);
+        }
+    }
+}'''

@@ -1,0 +1,153 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sync.rs:758:1: 849:2'
+source = '''
+impl<T: ?Sized> Drop for Strong<T> {
+    /// Drops the `Strong`.
+    ///
+    /// This will decrement the strong reference count. If the strong reference
+    /// count reaches zero then the only other references (if any) are
+    /// [`Frail`], so we `drop` the inner value.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use arbalest::sync::Strong;
+    ///
+    /// struct Foo;
+    ///
+    /// impl Drop for Foo {
+    ///     fn drop(&mut self) {
+    ///         println!("dropped!");
+    ///     }
+    /// }
+    ///
+    /// let foo  = Strong::new(Foo);
+    /// let foo2 = Strong::clone(&foo);
+    ///
+    /// drop(foo);    // Doesn't print anything
+    /// drop(foo2);   // Prints "dropped!"
+    /// ```
+    ///
+    /// [`Frail`]: struct.Frail.html
+    #[inline]
+    fn drop(&mut self) {
+        // FIXME(nox): If a RefMut was forgotten, this is the only strong
+        // reference to the value but the strong reference counter is
+        // MUTABLE_REFCOUNT, so the heap allocation will be leaked, and
+        // the program may abort in Frail::upgrade.
+
+        // Because `fetch_sub` is already atomic, we do not need to synchronize
+        // with other threads unless we are going to delete the object. This
+        // same logic applies to the below `fetch_sub` to the `frail` count.
+        if self.inner().strong.fetch_sub(1, Release) != 1 {
+            return;
+        }
+
+        // This fence is needed to prevent reordering of use of the data and
+        // deletion of the data.  Because it is marked `Release`, the decreasing
+        // of the reference count synchronizes with this `Acquire` fence. This
+        // means that use of the data happens before decreasing the reference
+        // count, which happens before this fence, which happens before the
+        // deletion of the data.
+        //
+        // As explained in the [Boost documentation][1],
+        //
+        // > It is important to enforce any possible access to the object in one
+        // > thread (through an existing reference) to *happen before* deleting
+        // > the object in a different thread. This is achieved by a "release"
+        // > operation after dropping a reference (any access to the object
+        // > through this reference must obviously happened before), and an
+        // > "acquire" operation before deleting the object.
+        //
+        // In particular, while the contents of an Arc are usually immutable,
+        // it's possible to have interior writes to something like a Mutex<T>.
+        // Since a Mutex is not acquired when it is deleted, we can't rely on
+        // its synchronization logic to make writes in thread A visible to a
+        // destructor running in thread B.
+        //
+        // Also note that the Acquire fence here could probably be replaced with
+        // an Acquire load, which could improve performance in highly-contended
+        // situations. See [2].
+        //
+        // [1]: (www.boost.org/doc/libs/1_55_0/doc/html/atomic/usage_examples.html)
+        // [2]: (https://github.com/rust-lang/rust/pull/41714)
+        atomic::fence(Acquire);
+
+        #[inline(never)]
+        unsafe fn drop_slow<T: ?Sized>(this: &mut Strong<T>) {
+            // Destroy the data at this time, even though we may not free the box
+            // allocation itself (there may still be frail pointers lying around).
+            ptr::drop_in_place(&mut this.ptr.as_mut().data);
+
+            if this.inner().frail.fetch_sub(1, Release) == 1 {
+                atomic::fence(Acquire);
+                alloc::dealloc(
+                    this.ptr.cast().as_ptr(),
+                    Layout::for_value(this.ptr.as_ref()),
+                );
+            }
+        }
+
+        unsafe {
+            drop_slow(self);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sync.rs:1165:1: 1212:2'
+source = '''
+impl<T: ?Sized> Drop for Frail<T> {
+    /// Drops the `Frail` pointer.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use arbalest::sync::{Strong, Frail};
+    ///
+    /// struct Foo;
+    ///
+    /// impl Drop for Foo {
+    ///     fn drop(&mut self) {
+    ///         println!("dropped!");
+    ///     }
+    /// }
+    ///
+    /// let foo = Strong::new(Foo);
+    /// let frail_foo = Strong::downgrade(&foo);
+    /// let other_frail_foo = Frail::clone(&frail_foo);
+    ///
+    /// drop(frail_foo);   // Doesn't print anything
+    /// drop(foo);        // Prints "dropped!"
+    ///
+    /// assert!(other_frail_foo.upgrade().is_none());
+    /// ```
+    fn drop(&mut self) {
+        // If we find out that we were the last frail pointer, then its time
+        // to deallocate the data entirely. See the discussion in Strong::drop()
+        // about the memory orderings.
+        let inner = if let Some(inner) = self.inner() {
+            inner
+        } else {
+            return;
+        };
+
+        if inner.frail.fetch_sub(1, Release) != 1 {
+            return;
+        }
+
+        atomic::fence(Acquire);
+        unsafe {
+            alloc::dealloc(
+                self.ptr.cast().as_ptr(),
+                Layout::for_value(self.ptr.as_ref()),
+            );
+        }
+    }
+}'''

@@ -1,0 +1,62 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/async_client.rs:892:1: 902:2'
+source = '''
+impl Drop for InnerAsyncClient {
+    /// Drops the client by closing dpen all the underlying, dependent objects
+    fn drop(&mut self) {
+        // Destroy the underlying C client.
+        if !self.handle.is_null() {
+            unsafe {
+                ffi::MQTTAsync_destroy(&mut self.handle as *mut *mut c_void);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/properties.rs:338:1: 362:2'
+source = '''
+impl Drop for Property {
+    /// Drops the property.
+    /// For string any binary types, the heap memory will be freed.
+    fn drop(&mut self) {
+        unsafe {
+            match Property::get_type_from_code(self.cprop.identifier) {
+                PropertyType::BINARY_DATA => {
+                    debug!("Dropping binary property: {:?}", self.cprop.value.__bindgen_anon_1.data.data);
+                    let n = self.cprop.value.__bindgen_anon_1.data.len as usize;
+                    let _ = Vec::from_raw_parts(self.cprop.value.__bindgen_anon_1.data.data, n, n);
+                },
+                PropertyType::UTF_8_ENCODED_STRING => {
+                    debug!("Dropping string property: {:?}", self.cprop.value.__bindgen_anon_1.data.data);
+                    let _ = CString::from_raw(self.cprop.value.__bindgen_anon_1.data.data);
+                },
+                PropertyType::UTF_8_STRING_PAIR => {
+                    debug!("Dropping string pair property: {:?}, {:?}", self.cprop.value.__bindgen_anon_1.data.data, self.cprop.value.__bindgen_anon_1.value.data);
+                    let _ = CString::from_raw(self.cprop.value.__bindgen_anon_1.data.data);
+                    let _ = CString::from_raw(self.cprop.value.__bindgen_anon_1.value.data);
+                },
+                _ => (),
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/properties.rs:546:1: 551:2'
+source = '''
+impl Drop for Properties {
+    fn drop(&mut self) {
+        // This deletes the collection and all the elements in it.
+        unsafe { ffi::MQTTProperties_free(&mut self.cprops) };
+    }
+}'''

@@ -1,0 +1,54 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/util/locksteparray.rs:263:1: 272:2'
+source = '''
+impl<A1, A2> Drop for LockstepArray<A1, A2> where A1: Array, A2: Array {
+    fn drop(&mut self) {
+        for i in 0..self.len.as_usize() as isize {
+            unsafe {
+                ptr::drop_in_place(self.array1.as_mut_ptr().offset(i));
+                ptr::drop_in_place(self.array2.as_mut_ptr().offset(i));
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/util/locksteparray.rs:333:1: 343:2'
+source = '''
+impl<A1: Array, A2: Array> Drop for IntoIter<A1, A2> {
+    fn drop(&mut self) {
+        // drop any remaining items
+        for i in self.pos..self.len {
+            unsafe {
+                ptr::drop_in_place(self.array1.as_mut_ptr().offset(i as isize));
+                ptr::drop_in_place(self.array2.as_mut_ptr().offset(i as isize));
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rudymap/jpm/leaf_bitmap.rs:32:1: 44:2'
+source = '''
+impl<K: Key, V> Drop for LeafBitmap<K, V> {
+    fn drop(&mut self) {
+        for index in 0..256 {
+            let occupied = self.keys[index / 8] & (1 << (index % 8));
+            if occupied != 0 {
+                let mut value = &mut self.values[index];
+                unsafe {
+                    ptr::drop_in_place(value as *mut V);
+                }
+            }
+        }
+    }
+}'''

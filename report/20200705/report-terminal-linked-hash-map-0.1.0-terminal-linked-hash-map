@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:689:1: 698:2'
+source = '''
+impl<K, V> Drop for LinkedHashMap<K, V> {
+    fn drop(&mut self) {
+        unsafe {
+            if ! self.head.is_null() {
+                drop_empty_entry_box(self.head);
+            }
+            self.clear_free_list();
+        }
+    }
+}'''

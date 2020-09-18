@@ -1,0 +1,81 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core.rs:478:1: 496:2'
+source = '''
+impl<V> Drop for Value<V>
+where
+    V: Clone + Diff,
+{
+    fn drop(&mut self) {
+        // if is_reclaim is false, then it is a mvcc-clone. so don't touch
+        // the value.
+        match self {
+            Value::U {
+                value, is_reclaim, ..
+            } => {
+                if is_reclaim.load(SeqCst) {
+                    unsafe { ManuallyDrop::drop(value) };
+                }
+            }
+            _ => (),
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/mvcc.rs:79:1: 127:2'
+source = '''
+impl<K, V> Drop for Mvcc<K, V>
+where
+    K: Clone + Ord,
+    V: Clone + Diff,
+{
+    fn drop(&mut self) {
+        // validation check 1
+        let n = self.multi_rw();
+        if n > Self::CONCUR_REF_COUNT {
+            panic!("Mvcc dropped before read/write handles {}", n);
+        }
+
+        // NOTE: Means all references to mvcc are gone and ownership is
+        // going out of scope. This also implies that there are only
+        // TWO Arc<snapshots>. One is held by self.snapshot and another
+        // is held by its `next`.
+
+        // NOTE: self.snapshot's AtomicPtr will fence the drop chain, so
+        // we have to get past the atomic fence and drop it here.
+        // NOTE: Likewise Snapshot's drop will fence the drop on its
+        // `root` field, so we have to get past that and drop it here.
+        // TODO: move this logic to OuterSnapshot::Drop
+        {
+            let mut curr_s: Box<Arc<Snapshot<K,V>>> = // current snapshot
+                unsafe { Box::from_raw(self.snapshot.inner.load(SeqCst)) };
+            let snapshot = Arc::get_mut(&mut *curr_s).unwrap();
+            // println!("drop mvcc {:p} {:p}", self, snapshot);
+
+            let n = match snapshot.root.take() {
+                Some(root) => drop_tree(root),
+                None => 0,
+            };
+            self.snapshot
+                .n_nodes
+                .fetch_sub(n.try_into().unwrap(), SeqCst);
+        }
+
+        // validation check 2
+        let n = self.snapshot.n_active.load(SeqCst);
+        if n != 0 {
+            panic!("active snapshots: {}", n);
+        }
+        // validataion check 2
+        let n = self.snapshot.n_nodes.load(SeqCst);
+        if n != 0 {
+            panic!("leak or double free n_nodes:{}", n);
+        }
+    }
+}'''

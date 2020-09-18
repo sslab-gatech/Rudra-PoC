@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/hkdf.rs:45:1: 53:2'
+source = '''
+impl Drop for HKDFExpand {
+    fn drop(&mut self) {
+        atomic::compiler_fence(atomic::Ordering::SeqCst);
+        unsafe {
+            ptr::write_volatile(&mut self.prk, Default::default());
+        }
+        atomic::compiler_fence(atomic::Ordering::SeqCst);
+    }
+}'''

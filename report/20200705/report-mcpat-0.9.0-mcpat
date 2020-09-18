@@ -1,0 +1,25 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/processor.rs:54:1: 59:2'
+source = '''
+impl<'l> Drop for Processor<'l> {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe { raw::delete_Processor(debug_not_null!(self.raw.0)) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/system.rs:46:1: 51:2'
+source = '''
+impl Drop for System {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe { raw::delete_ParseXML(debug_not_null!(self.raw.0)) };
+    }
+}'''

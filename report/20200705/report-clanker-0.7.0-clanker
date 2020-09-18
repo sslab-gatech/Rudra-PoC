@@ -1,0 +1,48 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/git.rs:114:1: 119:2'
+source = '''
+impl Drop for Repository {
+    fn drop(&mut self) {
+        unsafe { libgit2_sys::git_repository_free(self.0) };
+        unsafe { libgit2_sys::git_libgit2_shutdown() };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/git.rs:155:1: 159:2'
+source = '''
+impl<'repo> Drop for Reference<'repo> {
+    fn drop(&mut self) {
+        unsafe { libgit2_sys::git_reference_free(self.0) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/git.rs:173:1: 177:2'
+source = '''
+impl<'repo> Drop for Commit<'repo> {
+    fn drop(&mut self) {
+        unsafe { libgit2_sys::git_commit_free(self.0) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/git.rs:223:1: 227:2'
+source = '''
+impl Drop for Buf {
+    fn drop(&mut self) {
+        unsafe { libgit2_sys::git_buf_dispose(&mut self.0) };
+    }
+}'''

@@ -1,0 +1,201 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bam/pileup.rs:177:1: 184:2'
+source = '''
+impl<'a, R: bam::Read> Drop for Pileups<'a, R> {
+    fn drop(&mut self) {
+        unsafe {
+            htslib::bam_plp_reset(self.itr);
+            htslib::bam_plp_destroy(self.itr);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bam/record.rs:703:1: 709:2'
+source = '''
+impl Drop for Record {
+    fn drop(&mut self) {
+        if self.own {
+            unsafe { ::libc::free(self.inner.data as *mut ::libc::c_void) }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bam/mod.rs:316:1: 322:2'
+source = '''
+impl Drop for Reader {
+    fn drop(&mut self) {
+        unsafe {
+            htslib::hts_close(self.htsfile);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bam/mod.rs:521:1: 531:2'
+source = '''
+impl Drop for IndexedReader {
+    fn drop(&mut self) {
+        unsafe {
+            if self.itr.is_some() {
+                htslib::hts_itr_destroy(self.itr.unwrap());
+            }
+            htslib::hts_idx_destroy(self.idx);
+            htslib::hts_close(self.htsfile);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bam/mod.rs:718:1: 724:2'
+source = '''
+impl Drop for Writer {
+    fn drop(&mut self) {
+        unsafe {
+            htslib::hts_close(self.f);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bam/mod.rs:930:1: 938:2'
+source = '''
+impl Drop for HeaderView {
+    fn drop(&mut self) {
+        if self.owned {
+            unsafe {
+                htslib::sam_hdr_destroy(self.inner);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bcf/header.rs:196:1: 200:2'
+source = '''
+impl Drop for Header {
+    fn drop(&mut self) {
+        unsafe { htslib::bcf_hdr_destroy(self.inner) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bcf/header.rs:470:1: 476:2'
+source = '''
+impl Drop for HeaderView {
+    fn drop(&mut self) {
+        unsafe {
+            htslib::bcf_hdr_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bcf/record.rs:722:1: 729:2'
+source = '''
+impl Drop for Record {
+    fn drop(&mut self) {
+        if !self.buffer.is_null() {
+            unsafe { ::libc::free(self.buffer as *mut ::libc::c_void) };
+        }
+        unsafe { htslib::bcf_destroy(self.inner) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bcf/mod.rs:152:1: 158:2'
+source = '''
+impl Drop for Reader {
+    fn drop(&mut self) {
+        unsafe {
+            htslib::hts_close(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bcf/mod.rs:309:1: 313:2'
+source = '''
+impl Drop for IndexedReader {
+    fn drop(&mut self) {
+        unsafe { htslib::bcf_sr_destroy(self.inner) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bcf/mod.rs:523:5: 527:6'
+source = '''
+impl Drop for SyncedReader {
+        fn drop(&mut self) {
+            unsafe { crate::htslib::bcf_sr_destroy(self.inner) };
+        }
+    }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bcf/mod.rs:681:1: 687:2'
+source = '''
+impl Drop for Writer {
+    fn drop(&mut self) {
+        unsafe {
+            htslib::hts_close(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/tbx/mod.rs:333:1: 343:2'
+source = '''
+impl Drop for Reader {
+    fn drop(&mut self) {
+        unsafe {
+            if self.itr.is_some() {
+                htslib::hts_itr_destroy(self.itr.unwrap());
+            }
+            htslib::tbx_destroy(self.tbx);
+            htslib::hts_close(self.hts_file);
+        }
+    }
+}'''

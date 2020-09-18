@@ -1,0 +1,24 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/object.rs:134:1: 151:2'
+source = '''
+impl Drop for Key {
+    fn drop(&mut self) {
+        unsafe {
+            if self.len > KEY_BUF_LEN {
+                // Construct a `Vec` out of the `key_ptr`. Since the key is
+                // always allocated from a slice, the capacity is equal to length.
+                let heap = Vec::from_raw_parts(
+                    self.ptr,
+                    self.len,
+                    self.len
+                );
+
+                // Now that we have an owned `Vec<u8>`, drop it.
+                drop(heap);
+            }
+        }
+    }
+}'''

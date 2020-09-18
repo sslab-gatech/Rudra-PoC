@@ -1,0 +1,11 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bitcode.rs:15:1: 19:2'
+source = '''
+impl Drop for MemoryBuffer {
+    fn drop(&mut self) {
+        unsafe { LLVMDisposeMemoryBuffer(self.0) }
+    }
+}'''

@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:73:1: 79:2'
+source = '''
+impl Drop for Encoder {
+	fn drop(&mut self) {
+		unsafe {
+			vorbis_encoder_helper_free(&mut self.e as *mut vorbis_encoder_helper);
+		}
+	}
+}'''

@@ -1,0 +1,14 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/circular_buffer.rs:70:1: 77:2'
+source = '''
+impl<T> Drop for CircularBuffer<T> {
+	fn drop(&mut self) {
+		while self.read_available() > 0 {
+			let _ = self.read();
+		}
+		unsafe { self.buf.set_len(0) };
+	}
+}'''

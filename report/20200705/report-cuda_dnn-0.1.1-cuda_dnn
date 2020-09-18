@@ -1,0 +1,59 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/v5/mod.rs:60:1: 67:2'
+source = '''
+impl Drop for CudnnHandle {
+  fn drop(&mut self) {
+    match unsafe { cudnnDestroy(self.ptr) } {
+      cudnnStatus_t::Success => {}
+      x => panic!("PANIC: failed to destroy cudnn handle: {:?}", x),
+    }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/v5/mod.rs:214:1: 221:2'
+source = '''
+impl<T> Drop for CudnnTensorDesc<T> where T: CudnnDataTypeExt {
+  fn drop(&mut self) {
+    match unsafe { cudnnDestroyTensorDescriptor(self.ptr) } {
+      cudnnStatus_t::Success => {}
+      x => panic!("PANIC: failed to destroy cudnn tensor desc: {:?}", x),
+    }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/v5/mod.rs:256:1: 263:2'
+source = '''
+impl<T> Drop for CudnnFilterDesc<T> where T: CudnnDataTypeExt {
+  fn drop(&mut self) {
+    match unsafe { cudnnDestroyFilterDescriptor(self.ptr) } {
+      cudnnStatus_t::Success => {}
+      x => panic!("PANIC: failed to destroy cudnn filter desc: {:?}", x),
+    }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/v5/mod.rs:303:1: 310:2'
+source = '''
+impl Drop for CudnnConvDesc {
+  fn drop(&mut self) {
+    match unsafe { cudnnDestroyConvolutionDescriptor(self.ptr) } {
+      cudnnStatus_t::Success => {}
+      x => panic!("PANIC: failed to destroy cudnn conv desc: {:?}", x),
+    }
+  }
+}'''

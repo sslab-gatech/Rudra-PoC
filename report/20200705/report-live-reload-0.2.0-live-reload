@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:387:1: 395:2'
+source = '''
+impl<Host> Drop for Reloadable<Host> {
+    fn drop(&mut self) {
+        if let Some(AppSym { ref mut api, .. }) = self.sym {
+            unsafe {
+                ((***api).deinit)(&mut self.host, Self::get_state_ptr(&mut self.state));
+            }
+        }
+    }
+}'''

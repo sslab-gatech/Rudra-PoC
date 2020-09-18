@@ -1,0 +1,63 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/shader_utils.rs:23:1: 29:2'
+source = '''
+impl Drop for DynamicAttribute {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteBuffers(1, &self.vbo);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/back_end.rs:39:1: 48:2'
+source = '''
+impl Drop for Colored {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteVertexArrays(1, &self.vao);
+            gl::DeleteProgram(self.program);
+            gl::DeleteShader(self.vertex_shader);
+            gl::DeleteShader(self.fragment_shader);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/back_end.rs:169:1: 178:2'
+source = '''
+impl Drop for Textured {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteVertexArrays(1, &self.vao);
+            gl::DeleteProgram(self.program);
+            gl::DeleteShader(self.vertex_shader);
+            gl::DeleteShader(self.fragment_shader);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/texture.rs:160:1: 168:2'
+source = '''
+impl Drop for Texture {
+    fn drop(&mut self) {
+        unsafe {
+            let ids = [self.id];
+            gl::DeleteTextures(1, ids.as_ptr());
+            drop(ids);
+        }
+    }
+}'''

@@ -1,0 +1,50 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/host.rs:206:1: 213:2'
+source = '''
+impl<T> Drop for Host<T> {
+    /// Call the corresponding ENet cleanup-function(s).
+    fn drop(&mut self) {
+        unsafe {
+            enet_host_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/packet.rs:86:1: 92:2'
+source = '''
+impl Drop for Packet {
+    fn drop(&mut self) {
+        unsafe {
+            enet_packet_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:173:1: 187:2'
+source = '''
+impl Drop for EnetKeepAlive {
+    fn drop(&mut self) {
+        match ENET_STATUS.compare_and_swap(ENET_INITIALIZED, ENET_DEINITIALIZED, Ordering::SeqCst) {
+            ENET_INITIALIZED => (),
+            other => panic!(
+                "enet-rs internal error; unexpected value in ENET_STATUS (drop): {}",
+                other
+            ),
+        };
+
+        unsafe {
+            enet_deinitialize();
+        }
+    }
+}'''

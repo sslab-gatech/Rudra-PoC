@@ -1,0 +1,21 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/data_sources/memmapf32/unix.rs:212:1: 226:2'
+source = '''
+impl Drop for MmapInner {
+    fn drop(&mut self) {
+        let alignment = self.ptr as usize % page_size();
+        unsafe {
+            assert!(
+                libc::munmap(
+                    self.ptr.offset(-(alignment as isize)),
+                    (self.len + alignment) as libc::size_t
+                ) == 0,
+                "unable to unmap mmap: {}",
+                io::Error::last_os_error()
+            );
+        }
+    }
+}'''

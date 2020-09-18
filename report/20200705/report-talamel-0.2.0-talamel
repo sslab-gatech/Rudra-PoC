@@ -1,0 +1,14 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:148:1: 155:2'
+source = '''
+impl Drop for TalamelFile {
+    fn drop(&mut self) {
+        // free the taglib file!
+        unsafe {
+            tml_free_file(self.file_handle);
+        }
+    }
+}'''

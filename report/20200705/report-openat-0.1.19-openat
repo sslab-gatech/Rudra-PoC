@@ -1,0 +1,30 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/dir.rs:595:1: 604:2'
+source = '''
+impl Drop for Dir {
+    fn drop(&mut self) {
+        let fd = self.0;
+        if fd != libc::AT_FDCWD {
+            unsafe {
+                libc::close(fd);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/list.rs:118:1: 124:2'
+source = '''
+impl Drop for DirIter {
+    fn drop(&mut self) {
+        unsafe {
+            libc::closedir(self.dir);
+        }
+    }
+}'''

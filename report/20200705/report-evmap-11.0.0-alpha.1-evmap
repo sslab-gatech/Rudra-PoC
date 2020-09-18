@@ -1,0 +1,56 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/write.rs:115:1: 164:2'
+source = '''
+impl<K, V, M, S> Drop for WriteHandle<K, V, M, S>
+where
+    K: Eq + Hash + Clone,
+    S: BuildHasher + Clone,
+    V: Eq + Hash + ShallowCopy,
+    M: 'static + Clone,
+{
+    fn drop(&mut self) {
+        use std::ptr;
+
+        // first, ensure both maps are up to date
+        // (otherwise safely dropping deduplicated rows is a pain)
+        if !self.oplog.is_empty() {
+            self.refresh();
+        }
+        if !self.oplog.is_empty() {
+            self.refresh();
+        }
+        assert!(self.oplog.is_empty());
+
+        // next, grab the read handle and set it to NULL
+        let r_handle = self
+            .r_handle
+            .inner
+            .swap(ptr::null_mut(), atomic::Ordering::Release);
+
+        // now, wait for all readers to depart
+        let epochs = Arc::clone(&self.epochs);
+        let mut epochs = epochs.lock().unwrap();
+        self.wait(&mut epochs);
+
+        // ensure that the subsequent epoch reads aren't re-ordered to before the swap
+        atomic::fence(atomic::Ordering::SeqCst);
+
+        let w_handle = &mut self.w_handle.as_mut().unwrap().data;
+
+        // all readers have now observed the NULL, so we own both handles.
+        // all records are duplicated between w_handle and r_handle.
+        // since the two maps are exactly equal, we need to make sure that we *don't* call the
+        // destructors of any of the values that are in our map, as they'll all be called when the
+        // last read handle goes out of scope. to do so, we first clear w_handle, which won't drop
+        // any elements since its values are kept as ManuallyDrop:
+        w_handle.clear();
+
+        // then we transmute r_handle to remove the ManuallyDrop, and then drop it, which will free
+        // all the records. this is safe, since we know that no readers are using this pointer
+        // anymore (due to the .wait() following swapping the pointer with NULL).
+        drop(unsafe { Box::from_raw(r_handle as *mut Inner<K, V, M, S>) });
+    }
+}'''

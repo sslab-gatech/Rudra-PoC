@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/body.rs:328:1: 334:2'
+source = '''
+impl Drop for StreamingBodyHandle {
+    fn drop(&mut self) {
+        unsafe { abi::xqd_body_close(self.as_body_handle().as_u32()) }
+            .result()
+            .expect("xqd_body_close failed");
+    }
+}'''

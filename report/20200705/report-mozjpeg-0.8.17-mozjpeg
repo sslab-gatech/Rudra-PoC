@@ -1,0 +1,28 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/compress.rs:361:1: 368:2'
+source = '''
+impl Drop for Compress {
+    fn drop(&mut self) {
+        self.free_mem_dest();
+        unsafe {
+            ffi::jpeg_destroy_compress(&mut self.cinfo);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/decompress.rs:491:1: 497:2'
+source = '''
+impl<'src> Drop for Decompress<'src> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::jpeg_destroy_decompress(&mut self.cinfo);
+        }
+    }
+}'''

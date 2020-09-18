@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:117:1: 125:2'
+source = '''
+impl Drop for FileDesc {
+	fn drop(&mut self) {
+		if self.fd >= 0 {
+			unsafe {
+				libc::close(self.fd);
+			}
+		}
+	}
+}'''

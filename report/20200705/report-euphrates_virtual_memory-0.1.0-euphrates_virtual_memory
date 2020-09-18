@@ -1,0 +1,34 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/posix.rs:57:1: 64:2'
+source = '''
+impl<T> Drop for PhysicalMemory<T> {
+    #[inline(always)]
+    fn drop(&mut self) {
+        unsafe {
+            check_error(libc::close(self.fd), -1, "drop physical memory\0");
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/posix.rs:121:1: 133:2'
+source = '''
+impl<T> Drop for LogicalMemory<T> {
+    #[inline]
+    fn drop(&mut self) {
+        use std::mem::transmute;
+        unsafe {
+            check_error(
+                libc::munmap(transmute(self.ptr), self.len * size_of::<T>()),
+                -1,
+                "drop logical memory\0",
+            );
+        }
+    }
+}'''

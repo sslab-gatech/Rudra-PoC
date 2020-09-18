@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:158:1: 167:2'
+source = '''
+impl<T> Drop for DynFuture<T> {
+    #[inline]
+    fn drop(&mut self) {
+        let ptr = self.deref_mut();
+        let (data, fdrop): (&mut u8, &fn(&mut u8)) = unsafe { mem::transmute(ptr) };
+        fdrop(data);
+
+        self.region.lock().deallocate();
+    }
+}'''

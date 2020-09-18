@@ -1,0 +1,23 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:484:1: 500:2'
+source = '''
+impl Drop for UnsafeSndFile {
+  fn drop(&mut self) {
+    let err_code = unsafe { sndfile_sys::sf_close(self.sndfile_ptr) };
+    unsafe {
+      Box::from_raw(self.vio_user_ptr);
+      Box::from_raw(self.vio_ptr);
+    }
+    if err_code != 0 {
+      let err_msg = unsafe {
+        std::ffi::CStr::from_ptr(sndfile_sys::sf_error_number(err_code))
+          .to_str()
+          .unwrap()
+      };
+      panic!(format!("Failed to call `sf_close`: {}", err_msg));
+    }
+  }
+}'''

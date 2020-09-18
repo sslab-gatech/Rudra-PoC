@@ -1,0 +1,69 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/database/mod.rs:106:1: 112:2'
+source = '''
+impl Drop for Database {
+    fn drop(&mut self) {
+        unsafe {
+            ejdb_sys::ejdbdel(self.0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/database/mod.rs:852:9: 858:10'
+source = '''
+impl Drop for QueryGuard {
+            fn drop(&mut self) {
+                unsafe {
+                    ejdb_sys::ejdbquerydel(self.0);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/database/mod.rs:922:1: 928:2'
+source = '''
+impl Drop for QueryResult {
+    fn drop(&mut self) {
+        unsafe {
+            ejdb_sys::ejdbqresultdispose(self.result);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/utils/tcxstr.rs:8:1: 14:2'
+source = '''
+impl Drop for TCXString {
+    fn drop(&mut self) {
+        unsafe {
+            ejdb_sys::tcxstrdel(self.0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ejdb_bson.rs:69:1: 75:2'
+source = '''
+impl Drop for EjdbBsonDocument {
+    fn drop(&mut self) {
+        unsafe {
+            ejdb_sys::bson_del(self.0);
+        }
+    }
+}'''

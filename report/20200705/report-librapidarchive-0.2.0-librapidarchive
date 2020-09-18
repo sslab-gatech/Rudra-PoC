@@ -1,0 +1,11 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/tape/unix.rs:117:1: 121:2'
+source = '''
+impl<P> Drop for UnixTapeDevice<P> {
+    fn drop(&mut self) {
+        unsafe { libc::close(self.tape_device) };
+    }
+}'''

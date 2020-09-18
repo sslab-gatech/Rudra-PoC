@@ -1,0 +1,63 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'source/builder.rs:107:1: 115:2'
+source = '''
+impl Drop for Builder {
+    fn drop(&mut self) {
+        if self.owned {
+            unsafe {
+                LLVMDisposeBuilder(self.builder);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'source/context.rs:59:1: 67:2'
+source = '''
+impl Drop for Context {
+    fn drop(&mut self) {
+        if self.owned {
+            unsafe {
+                LLVMContextDispose(self.context);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'source/engine.rs:170:1: 178:2'
+source = '''
+impl Drop for Engine {
+    fn drop(&mut self) {
+        if self.owned {
+            unsafe {
+                LLVMDisposeExecutionEngine(self.engine);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'source/module.rs:104:1: 112:2'
+source = '''
+impl Drop for Module {
+    fn drop(&mut self) {
+        if self.owned {
+            unsafe {
+                LLVMDisposeModule(self.module);
+            }
+        }
+    }
+}'''

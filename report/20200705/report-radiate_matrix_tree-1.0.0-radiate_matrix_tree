@@ -1,0 +1,24 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/matrix_tree/evtree.rs:372:1: 389:2'
+source = '''
+impl Drop for Evtree {
+    fn drop(&mut self) { 
+        unsafe {
+            let mut stack = Vec::with_capacity(*self.len() as usize);
+            stack.push(self.root);
+            while stack.len() > 0 {
+                let curr_node = stack.pop().unwrap();
+                if (&*curr_node).has_left_child() {
+                    stack.push((&*curr_node).left_child);
+                }
+                if (&*curr_node).has_right_child() {
+                    stack.push((&*curr_node).right_child);
+                }
+                drop(Box::from_raw(curr_node));
+            }
+        }
+    }
+}'''

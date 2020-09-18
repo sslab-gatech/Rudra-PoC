@@ -1,0 +1,29 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:186:1: 192:2'
+source = '''
+impl<'a> Drop for Handle<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            wren_sys::wrenReleaseHandle(self.wvm, self.handle);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:1137:1: 1145:2'
+source = '''
+impl Drop for VM {
+    fn drop(&mut self) {
+        unsafe {
+            let conf = wren_sys::wrenGetUserData(self.vm);
+            let _: Box<UserData> = Box::from_raw(conf as *mut _); // Drop the userdata
+            wren_sys::wrenFreeVM(self.vm);
+        }
+    }
+}'''

@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/compiler.rs:635:1: 641:2'
+source = '''
+impl<TTargetData> Drop for Compiler<TTargetData> {
+    fn drop(&mut self) {
+        unsafe {
+            br::sc_internal_compiler_delete(self.sc_compiler);
+        }
+    }
+}'''

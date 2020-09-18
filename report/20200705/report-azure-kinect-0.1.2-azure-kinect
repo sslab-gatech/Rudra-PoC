@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/factory.rs:324:1: 333:2'
+source = '''
+impl Drop for Factory {
+    fn drop(&mut self) {
+        if self.handle != ptr::null() {
+            unsafe {
+                FreeLibrary(self.handle);
+                self.handle = ptr::null();
+            }
+        }
+    }
+}'''

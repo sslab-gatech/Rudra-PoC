@@ -1,0 +1,18 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/loan.rs:48:1: 59:2'
+source = '''
+impl<K, V> Drop for Loan<K, V>
+where
+    K: Hash,
+{
+    fn drop(&mut self) {
+        if self.inner.is_some() && !thread::panicking() {
+            unsafe {
+                (*self.owner).checkin(self.key, self.inner.take().unwrap());
+            }
+        }
+    }
+}'''

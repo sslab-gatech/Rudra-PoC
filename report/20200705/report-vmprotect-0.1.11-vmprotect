@@ -1,0 +1,23 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/strings/encrypted_a.rs:7:1: 11:2'
+source = '''
+impl<'t> Drop for EncryptedStringA<'t> {
+    fn drop(&mut self) {
+        unsafe { internal::VMProtectFreeString(self.0 as *const c_void) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/strings/encrypted_w.rs:7:1: 11:2'
+source = '''
+impl<'t> Drop for EncryptedStringW<'t> {
+    fn drop(&mut self) {
+        unsafe { internal::VMProtectFreeString(self.0 as *const c_void) };
+    }
+}'''

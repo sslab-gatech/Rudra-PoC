@@ -1,0 +1,47 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:77:13: 85:14'
+source = '''
+impl Drop for $guard_name {
+                fn drop(&mut self) {
+                    // Ignoring syscalls errors seems to be the most sensible thing to do in a Drop impl
+                    // https://github.com/rust-lang/rust/blob/bd177f3e/src/libstd/sys/unix/fd.rs#L293-L302
+                    let _ = unsafe { dup2(self.original_fd, $fd) };
+                    let _ = unsafe { close(self.file_fd) };
+                    IS_REPLACED.store(false, ORDERING);
+                }
+            }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:77:13: 85:14'
+source = '''
+impl Drop for $guard_name {
+                fn drop(&mut self) {
+                    // Ignoring syscalls errors seems to be the most sensible thing to do in a Drop impl
+                    // https://github.com/rust-lang/rust/blob/bd177f3e/src/libstd/sys/unix/fd.rs#L293-L302
+                    let _ = unsafe { dup2(self.original_fd, $fd) };
+                    let _ = unsafe { close(self.file_fd) };
+                    IS_REPLACED.store(false, ORDERING);
+                }
+            }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:77:13: 85:14'
+source = '''
+impl Drop for $guard_name {
+                fn drop(&mut self) {
+                    // Ignoring syscalls errors seems to be the most sensible thing to do in a Drop impl
+                    // https://github.com/rust-lang/rust/blob/bd177f3e/src/libstd/sys/unix/fd.rs#L293-L302
+                    let _ = unsafe { dup2(self.original_fd, $fd) };
+                    let _ = unsafe { close(self.file_fd) };
+                    IS_REPLACED.store(false, ORDERING);
+                }
+            }'''

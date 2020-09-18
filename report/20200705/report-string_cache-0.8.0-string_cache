@@ -1,0 +1,25 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/atom.rs:218:1: 236:2'
+source = '''
+impl<Static> Drop for Atom<Static> {
+    #[inline]
+    fn drop(&mut self) {
+        if self.tag() == DYNAMIC_TAG {
+            let entry = self.unsafe_data.get() as *const Entry;
+            if unsafe { &*entry }.ref_count.fetch_sub(1, SeqCst) == 1 {
+                drop_slow(self)
+            }
+        }
+
+        // Out of line to guide inlining.
+        fn drop_slow<Static>(this: &mut Atom<Static>) {
+            DYNAMIC_SET
+                .lock()
+                .unwrap()
+                .remove(this.unsafe_data.get() as *mut Entry);
+        }
+    }
+}'''

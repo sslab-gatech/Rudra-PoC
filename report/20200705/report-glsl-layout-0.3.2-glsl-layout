@@ -1,0 +1,1517 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:77:17: 87:18'
+source = '''
+impl<T, U> Drop for ArrayProcess<T, U> {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+
+                        for i in self.counter + 1 .. $size {
+                            unsafe { std::ptr::drop_in_place(&mut self.input[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:122:17: 128:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.output[i]) }
+                        }
+                    }
+                }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:162:17: 168:18'
+source = '''
+impl<T: AsStd140> Drop for ArrayInit<T> where T::Std140: Sized {
+                    fn drop(&mut self) {
+                        for i in 0 .. self.counter {
+                            unsafe { std::ptr::drop_in_place(&mut self.array[i]) }
+                        }
+                    }
+                }'''

@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:176:1: 182:2'
+source = '''
+impl Drop for Closure {
+    fn drop(&mut self) {
+        unsafe {
+            closure_release(self);
+        }
+    }
+}'''

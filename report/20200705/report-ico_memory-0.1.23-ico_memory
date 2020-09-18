@@ -1,0 +1,21 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/mem/indexed_data_store.rs:274:1: 288:2'
+source = '''
+impl<'a, T> Drop for IndexedDataStore<'a, T> {
+    fn drop(&mut self) {
+        // let t : Nullable<IndexedRef<'a, T>> = Nullable::null();
+        //using CAPACITY here is a big, big error - freeing uninitialized memory
+        for i in 0..self.high_water_mark.get() {
+            unsafe {
+                // let data = self.buffer.offset(i as isize).as_mut().unwrap();
+                let data = self.get_data(i);
+                if data.is_initialized() {
+                    ptr::drop_in_place(data.data.as_mut_ptr());
+                }
+            }
+        }
+    }
+}'''

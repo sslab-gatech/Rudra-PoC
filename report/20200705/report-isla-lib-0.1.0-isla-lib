@@ -1,0 +1,114 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/smt.rs:548:1: 552:2'
+source = '''
+impl Drop for Config {
+    fn drop(&mut self) {
+        unsafe { Z3_del_config(self.z3_cfg) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/smt.rs:589:1: 593:2'
+source = '''
+impl Drop for Context {
+    fn drop(&mut self) {
+        unsafe { Z3_del_context(self.z3_ctx) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/smt.rs:646:1: 659:2'
+source = '''
+impl<'ctx> Drop for Enums<'ctx> {
+    fn drop(&mut self) {
+        unsafe {
+            let ctx = self.ctx.z3_ctx;
+            for e in self.enums.drain(..) {
+                for i in 0..e.size {
+                    Z3_dec_ref(ctx, Z3_func_decl_to_ast(ctx, e.consts[i]));
+                    Z3_dec_ref(ctx, Z3_func_decl_to_ast(ctx, e.testers[i]))
+                }
+                Z3_dec_ref(ctx, Z3_sort_to_ast(ctx, e.sort))
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/smt.rs:701:1: 708:2'
+source = '''
+impl<'ctx> Drop for Sort<'ctx> {
+    fn drop(&mut self) {
+        unsafe {
+            let ctx = self.ctx.z3_ctx;
+            Z3_dec_ref(ctx, Z3_sort_to_ast(ctx, self.z3_sort))
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/smt.rs:730:1: 737:2'
+source = '''
+impl<'ctx> Drop for FuncDecl<'ctx> {
+    fn drop(&mut self) {
+        unsafe {
+            let ctx = self.ctx.z3_ctx;
+            Z3_dec_ref(ctx, Z3_func_decl_to_ast(ctx, self.z3_func_decl))
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/smt.rs:1029:1: 1033:2'
+source = '''
+impl<'ctx> Drop for Ast<'ctx> {
+    fn drop(&mut self) {
+        unsafe { Z3_dec_ref(self.ctx.z3_ctx, self.z3_ast) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/smt.rs:1096:1: 1102:2'
+source = '''
+impl<'ctx, B> Drop for Solver<'ctx, B> {
+    fn drop(&mut self) {
+        unsafe {
+            Z3_solver_dec_ref(self.ctx.z3_ctx, self.z3_solver);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/smt.rs:1132:1: 1138:2'
+source = '''
+impl<'ctx, B> Drop for Model<'ctx, B> {
+    fn drop(&mut self) {
+        unsafe {
+            Z3_model_dec_ref(self.ctx.z3_ctx, self.z3_model);
+        }
+    }
+}'''

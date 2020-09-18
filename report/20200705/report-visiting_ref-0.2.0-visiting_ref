@@ -1,0 +1,20 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:712:1: 725:2'
+source = '''
+impl<T> Drop for VisitingInner<T> {
+    fn drop(&mut self) {
+        let (value, sender) = unsafe {
+            (
+                ManuallyDrop::into_inner(ptr::read(&self.value)),
+                ManuallyDrop::into_inner(ptr::read(&self.sender)),
+            )
+        };
+
+        // Sending the value back will fail if the receiver is dropped. Since we have no place to
+        // put the value in this situation, simply let the value drop as well.
+        sender.send(value).unwrap_or_else(|_| ());
+    }
+}'''

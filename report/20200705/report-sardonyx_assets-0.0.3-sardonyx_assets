@@ -1,0 +1,12 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/storage.rs:491:1: 496:2'
+source = '''
+impl<A: Asset> Drop for AssetStorage<A> {
+    fn drop(&mut self) {
+        let bitset = &self.bitset;
+        unsafe { self.assets.clean(bitset) }
+    }
+}'''

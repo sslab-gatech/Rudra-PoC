@@ -1,0 +1,125 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/client/session/mod.rs:88:1: 101:2'
+source = '''
+impl Drop for ClientSession {
+    fn drop(&mut self) {
+        let client = self.client.clone();
+        let server_session = ServerSession {
+            id: self.server_session.id.clone(),
+            last_use: self.server_session.last_use,
+            dirty: self.server_session.dirty,
+        };
+
+        RUNTIME.execute(async move {
+            client.check_in_server_session(server_session).await;
+        })
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/cmap/conn/mod.rs:254:1: 277:2'
+source = '''
+impl Drop for Connection {
+    fn drop(&mut self) {
+        // If the connection has a weak reference to a pool, that means that the connection is being
+        // dropped when it's checked out. If the pool is still alive, it should check itself back
+        // in. Otherwise, the connection should close itself and emit a ConnectionClosed event
+        // (because the `close_and_drop` helper was not called explicitly).
+        //
+        // If the connection does not have a weak reference to a pool, then the connection is being
+        // dropped while it's not checked out. This means that the pool called the `close_and_drop`
+        // helper explicitly, so we don't add it back to the pool or emit any events.
+        if let Some(ref weak_pool_ref) = self.pool {
+            if let Some(strong_pool_ref) = weak_pool_ref.upgrade() {
+                let dropped_connection_state = self.take();
+                RUNTIME.execute(async move {
+                    strong_pool_ref
+                        .check_in(dropped_connection_state.into())
+                        .await;
+                });
+            } else {
+                self.close(ConnectionClosedReason::PoolClosed);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/cmap/mod.rs:390:1: 412:2'
+source = '''
+impl Drop for ConnectionPoolInner {
+    /// Automatic cleanup for the connection pool. This is defined on `ConnectionPoolInner` rather
+    /// than `ConnectionPool` so that it only gets run once all (non-weak) references to the
+    /// `ConnectionPoolInner` are dropped.
+    fn drop(&mut self) {
+        let address = self.address.clone();
+        let connection_manager = self.connection_manager.clone();
+        let event_handler = self.event_handler.clone();
+
+        RUNTIME.execute(async move {
+            let mut connection_manager = connection_manager.lock().await;
+            while let Some(connection) = connection_manager.checked_in_connections.pop() {
+                connection_manager.close_connection(connection, ConnectionClosedReason::PoolClosed);
+            }
+
+            if let Some(ref handler) = event_handler {
+                handler.handle_pool_closed_event(PoolClosedEvent {
+                    address: address.clone(),
+                });
+            }
+        });
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/cursor/session.rs:61:1: 75:2'
+source = '''
+impl Drop for SessionCursor {
+    fn drop(&mut self) {
+        if self.exhausted {
+            return;
+        }
+
+        let ns = &self.info.ns;
+        let coll = self
+            .client
+            .database(ns.db.as_str())
+            .collection(ns.coll.as_str());
+        let cursor_id = self.info.id;
+        RUNTIME.execute(async move { coll.kill_cursor(cursor_id).await });
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/cursor/mod.rs:113:1: 127:2'
+source = '''
+impl Drop for Cursor {
+    fn drop(&mut self) {
+        if self.wrapped_cursor.is_exhausted() {
+            return;
+        }
+
+        let ns = self.wrapped_cursor.namespace();
+        let coll = self
+            .client
+            .database(ns.db.as_str())
+            .collection(ns.coll.as_str());
+        let cursor_id = self.wrapped_cursor.id();
+        RUNTIME.execute(async move { coll.kill_cursor(cursor_id).await });
+    }
+}'''

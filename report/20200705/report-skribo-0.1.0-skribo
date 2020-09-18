@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/hb_layout.rs:69:1: 75:2'
+source = '''
+impl Drop for HbFace {
+    fn drop(&mut self) {
+        unsafe {
+            hb_face_destroy(self.hb_face);
+        }
+    }
+}'''

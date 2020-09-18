@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/linux.rs:186:1: 195:2'
+source = '''
+impl Drop for Listener {
+    fn drop(&mut self) {
+        if let Err(err) = self.sender.send(HotkeyMessage::DropThread) {
+            eprintln!("cant send close thread message {}", err);
+        }
+        unsafe {
+            (self.xlib.XCloseDisplay)(self.display);
+        }
+    }
+}'''

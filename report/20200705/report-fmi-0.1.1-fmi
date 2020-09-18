@@ -1,0 +1,33 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/instance.rs:262:1: 272:2'
+source = '''
+impl<'a, A: fmi::FmiApi> Drop for FmuState<'a, A> {
+    fn drop(&mut self) {
+        trace!("Freeing FmuState");
+        unsafe {
+            self.container.common().free_fmu_state(
+                *self.component,
+                &mut self.state as *mut *mut core::ffi::c_void,
+            );
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/instance.rs:676:1: 684:2'
+source = '''
+impl<A> Drop for Instance<A>
+where
+    A: fmi::FmiApi,
+{
+    fn drop(&mut self) {
+        trace!("Freeing component {:?}", self.component);
+        unsafe { self.container.common().free_instance(self.component) };
+    }
+}'''

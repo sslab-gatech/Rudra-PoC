@@ -1,0 +1,91 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:456:1: 494:2'
+source = '''
+impl<T: Trace> Drop for Cc<T> {
+    /// Drops the `Cc<T>`.
+    ///
+    /// This will decrement the strong reference count. If the strong reference
+    /// count becomes zero and the only other references are `Weak<T>` ones,
+    /// `drop`s the inner value.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use bacon_rajan_cc::Cc;
+    ///
+    /// {
+    ///     let five = Cc::new(5);
+    ///
+    ///     // stuff
+    ///
+    ///     drop(five); // explicit drop
+    /// }
+    /// {
+    ///     let five = Cc::new(5);
+    ///
+    ///     // stuff
+    ///
+    /// } // implicit drop
+    /// ```
+    fn drop(&mut self) {
+        unsafe {
+            if self.strong() > 0 {
+                self.dec_strong();
+                if self.strong() == 0 {
+                    self.release();
+                } else {
+                    self.possible_root();
+                }
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:740:1: 778:2'
+source = '''
+impl<T: Trace> Drop for Weak<T> {
+    /// Drops the `Weak<T>`.
+    ///
+    /// This will decrement the weak reference count.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use bacon_rajan_cc::Cc;
+    ///
+    /// {
+    ///     let five = Cc::new(5);
+    ///     let weak_five = five.downgrade();
+    ///
+    ///     // stuff
+    ///
+    ///     drop(weak_five); // explicit drop
+    /// }
+    /// {
+    ///     let five = Cc::new(5);
+    ///     let weak_five = five.downgrade();
+    ///
+    ///     // stuff
+    ///
+    /// } // implicit drop
+    /// ```
+    fn drop(&mut self) {
+        unsafe {
+            if self.weak() > 0 {
+                self.dec_weak();
+                // The weak count starts at 1, and will only go to zero if all
+                // the strong pointers have disappeared.
+                if self.weak() == 0 {
+                    dealloc(self._ptr.cast().as_ptr(), Layout::new::<CcBox<T>>())
+                }
+            }
+        }
+    }
+}'''

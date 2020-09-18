@@ -1,0 +1,11 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/reader/in_libc.rs:135:1: 139:2'
+source = '''
+impl Drop for InterfaceAddressIterator {
+    fn drop(&mut self) {
+        unsafe { libc::freeifaddrs(self.base) };
+    }
+}'''

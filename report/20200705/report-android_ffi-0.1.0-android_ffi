@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:603:5: 609:6'
+source = '''
+impl Drop for AssetCloser {
+        fn drop(&mut self) {
+            unsafe {
+                ffi::AAsset_close(self.asset)
+            };
+        }
+    }'''

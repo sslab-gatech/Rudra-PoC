@@ -1,0 +1,12 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:171:1: 176:2'
+source = '''
+impl<T> Drop for AtomicImmut<T> {
+    fn drop(&mut self) {
+        let ptr = mem::replace(self.ptr.get_mut(), ptr::null_mut());
+        let _ = unsafe { Arc::from_raw(ptr) };
+    }
+}'''

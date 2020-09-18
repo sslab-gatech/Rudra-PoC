@@ -1,0 +1,79 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/database/iterator.rs:20:1: 24:2'
+source = '''
+impl Drop for RawIterator {
+    fn drop(&mut self) {
+        unsafe { leveldb_iter_destroy(self.ptr) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/database/snapshots.rs:21:1: 25:2'
+source = '''
+impl Drop for RawSnapshot {
+    fn drop(&mut self) {
+        unsafe { leveldb_release_snapshot(self.db_ptr, self.ptr) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/database/cache.rs:10:1: 16:2'
+source = '''
+impl Drop for RawCache {
+    fn drop(&mut self) {
+        unsafe {
+            leveldb_cache_destroy(self.ptr);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/database/batch.rs:16:1: 22:2'
+source = '''
+impl Drop for RawWritebatch {
+    fn drop(&mut self) {
+        unsafe {
+            leveldb_writebatch_destroy(self.ptr);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/database/mod.rs:33:1: 39:2'
+source = '''
+impl Drop for RawDB {
+    fn drop(&mut self) {
+        unsafe {
+            leveldb_close(self.ptr);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/database/mod.rs:46:1: 52:2'
+source = '''
+impl Drop for RawComparator {
+    fn drop(&mut self) {
+        unsafe {
+            leveldb_comparator_destroy(self.ptr);
+        }
+    }
+}'''

@@ -1,0 +1,28 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:161:1: 167:2'
+source = '''
+impl Drop for Player {
+    fn drop(&mut self) {
+        unsafe {
+            WildMidi_Shutdown();
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:254:1: 261:2'
+source = '''
+impl Drop for Midi {
+    fn drop(&mut self) {
+        unsafe {
+            // There isn't much of a point in handling errors here.
+            WildMidi_Close(self.ptr);
+        }
+    }
+}'''

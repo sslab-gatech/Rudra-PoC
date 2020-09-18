@@ -1,0 +1,24 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/scope.rs:26:1: 43:2'
+source = '''
+impl Drop for ScopeComplete {
+    /// When the Scope is dropped it records the
+    /// length of time it was alive for and records it
+    /// against the Profiler.
+    fn drop(&mut self) {
+        let end = precise_time_ns();
+        let start = self.start;
+        let name = self.name;
+        let args = unsafe {
+            replace(&mut self.args, zeroed())
+        };
+
+        LOCAL.with(|profiler| match *profiler.borrow() {
+            Some(ref profiler) => profiler.complete(start, end, name.into(), None, args),
+            None => println!("ERROR: ProfileScope {} on unregistered thread!", name),
+        });
+    }
+}'''

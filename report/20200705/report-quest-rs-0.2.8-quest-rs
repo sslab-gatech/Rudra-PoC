@@ -1,0 +1,39 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/environment.rs:36:1: 42:2'
+source = '''
+impl Drop for QuestEnv {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::destroyQuESTEnv(self.env);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/qubits.rs:979:1: 983:2'
+source = '''
+impl Drop for QuReg<'_> {
+    fn drop(&mut self) {
+        unsafe { ffi::destroyQureg(self.reg, self.env.into()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:577:1: 583:2'
+source = '''
+impl Drop for ComplexMatrixN {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::destroyComplexMatrixN(self.matrix);
+        }
+    }
+}'''

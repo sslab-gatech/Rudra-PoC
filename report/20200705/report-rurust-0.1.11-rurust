@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vm.rs:182:1: 190:2'
+source = '''
+impl std::ops::Drop for VM
+{
+    fn drop(&mut self) {
+        unsafe {
+            VM_EXISTS = false;
+            ffi::ruby_cleanup(0);
+        };
+    }
+}'''

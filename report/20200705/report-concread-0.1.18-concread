@@ -1,0 +1,90 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/cache/arc/ll.rs:186:1: 203:2'
+source = '''
+impl<K> Drop for LL<K>
+where
+    K: Clone + Debug,
+{
+    fn drop(&mut self) {
+        let head = self.head;
+        let tail = self.tail;
+        let mut n = unsafe { (*head).next };
+        while n != tail {
+            let next = unsafe { (*n).next };
+            unsafe { ptr::drop_in_place((*n).k.as_mut_ptr()) };
+            LLNode::free(n);
+            n = next;
+        }
+        LLNode::free(head);
+        LLNode::free(tail);
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/collections/bptree/leaf.rs:365:1: 375:2'
+source = '''
+impl<K: Ord + Clone, V: Clone> Drop for Leaf<K, V> {
+    fn drop(&mut self) {
+        // Due to the use of maybe uninit we have to drop any contained values.
+        for idx in 0..self.count {
+            unsafe {
+                ptr::drop_in_place(self.key[idx].as_mut_ptr());
+                ptr::drop_in_place(self.value[idx].as_mut_ptr());
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/collections/bptree/node.rs:1384:1: 1403:2'
+source = '''
+impl<K: Clone + Ord + Debug, V: Clone> Drop for Branch<K, V> {
+    fn drop(&mut self) {
+        // Due to the use of maybe uninit we have to drop any contained values.
+        if self.count > 0 {
+            for idx in 0..self.count {
+                unsafe {
+                    ptr::drop_in_place(self.key[idx].as_mut_ptr());
+                }
+            }
+            // Remember, a branch ALWAYS has two nodes per key, which means
+            // it's N+1,so we have to increase this to ensure we drop them
+            // all.
+            for idx in 0..(self.count + 1) {
+                unsafe {
+                    ptr::drop_in_place(self.node[idx].as_mut_ptr());
+                }
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ebrcell.rs:226:1: 239:2'
+source = '''
+impl<T> Drop for EbrCell<T>
+where
+    T: Clone + Send + 'static,
+{
+    fn drop(&mut self) {
+        // Right, we are dropping! Everything is okay here *except*
+        // that we need to tell our active data to be unlinked, else it may
+        // be dropped "unsafely".
+        let guard = epoch::pin();
+
+        let prev_data = self.active.load(Acquire, &guard);
+        unsafe { guard.defer_destroy(prev_data) };
+    }
+}'''

@@ -1,0 +1,112 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/services/fetch/std_web.rs:483:1: 503:2'
+source = '''
+impl Drop for FetchTask {
+    fn drop(&mut self) {
+        if self.is_active() {
+            // Fetch API doesn't support request cancelling in all browsers
+            // and we should use this workaround with a flag.
+            // In that case, request not canceled, but callback won't be called.
+            let handle = self
+                .0
+                .take()
+                .expect("tried to cancel request fetching twice");
+            js! {  @(no_return)
+                var handle = @{handle};
+                handle.active = false;
+                handle.callback.drop();
+                if (handle.abortController) {
+                    handle.abortController.abort();
+                }
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/services/interval.rs:70:1: 84:2'
+source = '''
+impl Drop for IntervalTask {
+    fn drop(&mut self) {
+        #[cfg(feature = "std_web")]
+        {
+            if self.is_active() {
+                let handle = &self.0;
+                js! { @(no_return)
+                    var handle = @{handle};
+                    clearInterval(handle.interval_id);
+                    handle.callback.drop();
+                }
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/services/render.rs:93:1: 109:2'
+source = '''
+impl Drop for RenderTask {
+    fn drop(&mut self) {
+        if self.is_active() {
+            cfg_match! {
+                feature = "std_web" => ({
+                    let handle = &self.0;
+                    js! { @(no_return)
+                        var handle = @{handle};
+                        cancelAnimationFrame(handle.render_id);
+                        handle.callback.drop();
+                    }
+                }),
+                feature = "web_sys" => utils::window().cancel_animation_frame(self.0.render_id).unwrap(),
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/services/resize.rs:90:1: 99:2'
+source = '''
+impl Drop for ResizeTask {
+    fn drop(&mut self) {
+        let handle = &self.0;
+        js! {
+            @(no_return)
+            var handle = @{handle};
+            window.removeEventListener("resize", handle);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/services/timeout.rs:69:1: 83:2'
+source = '''
+impl Drop for TimeoutTask {
+    fn drop(&mut self) {
+        #[cfg(feature = "std_web")]
+        {
+            if self.is_active() {
+                let handle = &self.0;
+                js! { @(no_return)
+                    var handle = @{handle};
+                    clearTimeout(handle.timeout_id);
+                    handle.callback.drop();
+                }
+            }
+        }
+    }
+}'''

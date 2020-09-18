@@ -1,0 +1,58 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/nestedmap/raw.rs:87:1: 98:2'
+source = '''
+impl<K: Hash + Eq, V> Drop for Table<K, V> {
+    fn drop(&mut self) {
+        self.buckets.iter().for_each(|ptr| {
+            let ptr = unsafe { ptr.load(Ordering::Acquire, epoch::unprotected()) };
+            if !ptr.is_null() {
+                unsafe {
+                    ptr.uniform_dealloc(&self.allocator, ptr.deref().tag() as usize);
+                }
+            }
+        });
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stack.rs:24:1: 36:2'
+source = '''
+impl<T> Drop for ConcurrentStack<T> {
+    #[inline]
+    fn drop(&mut self) {
+        let guard = &aquire_guard();
+        let head = self.head.load(Ordering::SeqCst, guard);
+
+        if !head.is_null() {
+            unsafe {
+                guard.defer_destroy(head);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stack.rs:43:1: 55:2'
+source = '''
+impl<T> Drop for Node<T> {
+    #[inline]
+    fn drop(&mut self) {
+        let guard = &aquire_guard();
+        let next = self.next.load(Ordering::SeqCst, guard);
+
+        if !next.is_null() {
+            unsafe {
+                guard.defer_destroy(next);
+            }
+        }
+    }
+}'''

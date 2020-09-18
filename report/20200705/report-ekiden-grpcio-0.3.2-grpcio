@@ -1,0 +1,167 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/async/executor.rs:54:1: 58:2'
+source = '''
+impl Drop for Alarm {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpc_alarm_destroy(self.alarm) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/call/server.rs:147:1: 151:2'
+source = '''
+impl Drop for AuthContext {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpc_auth_context_release(self.ctx) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/call/server.rs:281:1: 285:2'
+source = '''
+impl Drop for RequestContext {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpcwrap_request_call_context_destroy(self.ctx) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/call/mod.rs:151:1: 155:2'
+source = '''
+impl Drop for BatchContext {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpcwrap_batch_context_destroy(self.ctx) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/call/mod.rs:343:1: 347:2'
+source = '''
+impl Drop for Call {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpc_call_unref(self.call) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/channel.rs:490:1: 494:2'
+source = '''
+impl Drop for ChannelArgs {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpcwrap_channel_args_destroy(self.args) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/channel.rs:501:1: 507:2'
+source = '''
+impl Drop for ChannelInner {
+    fn drop(&mut self) {
+        unsafe {
+            grpc_sys::grpc_channel_destroy(self.channel);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/cq.rs:110:1: 114:2'
+source = '''
+impl Drop for CompletionQueueHandle {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpc_completion_queue_destroy(self.cq) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/credentials.rs:129:1: 141:2'
+source = '''
+impl Drop for ServerCredentialsBuilder {
+    fn drop(&mut self) {
+        for cert in self.cert_chains.drain(..) {
+            unsafe {
+                CString::from_raw(cert);
+            }
+        }
+        for key in self.private_keys.drain(..) {
+            let s = unsafe { CString::from_raw(key) };
+            clear_key_securely(&mut s.into_bytes_with_nul());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/credentials.rs:153:1: 157:2'
+source = '''
+impl Drop for ServerCredentials {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpc_server_credentials_release(self.creds) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/credentials.rs:253:1: 257:2'
+source = '''
+impl Drop for ChannelCredentials {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpc_channel_credentials_release(self.creds) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/metadata.rs:208:1: 214:2'
+source = '''
+impl Drop for Metadata {
+    fn drop(&mut self) {
+        unsafe {
+            grpc_sys::grpcwrap_metadata_array_cleanup(&mut self.0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/server.rs:356:1: 360:2'
+source = '''
+impl Drop for Inner {
+    fn drop(&mut self) {
+        unsafe { grpc_sys::grpc_server_destroy(self.server) }
+    }
+}'''

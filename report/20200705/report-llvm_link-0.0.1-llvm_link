@@ -1,0 +1,31 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/module.rs:75:1: 77:2'
+source = '''
+impl Drop for ObjFile {
+    fn drop(&mut self) { unsafe {lto_module_dispose(self.ptr)}; }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/module.rs:163:1: 165:2'
+source = '''
+impl Drop for Object {
+    fn drop(&mut self) { unsafe {lto_module_dispose(self.ptr)}; }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/merge.rs:104:1: 108:2'
+source = '''
+impl Drop for Linker {
+    fn drop(&mut self) {
+        unsafe {lto_codegen_dispose(self.ptr)};
+    }
+}'''

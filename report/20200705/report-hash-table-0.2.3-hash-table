@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:253:1: 261:2'
+source = '''
+impl<K: Eq + Hash, T,
+     Hs: IndexMut<usize, Output = usize> + Index<RangeFull, Output = [usize]>,
+     Es: IndexMut<usize, Output = Slot<(K, T)>>, H: Clone + Hasher> Drop for HashTable<K, T, Hs, Es, H> {
+    #[inline] fn drop(&mut self) { unsafe {
+        for i in 0..self.hashes[..].len() {
+            if self.hashes[i] != 0 && !is_dead(self.hashes[i]) { ptr::drop_in_place(self.elems[i].get_mut()); }
+        }
+    } }
+}'''

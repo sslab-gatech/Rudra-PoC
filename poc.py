@@ -135,6 +135,10 @@ def read_metadata(poc_id):
 
     with open(f"poc/{poc_name}.rs") as poc_file:
         lines = poc_file.readlines()
+        # /*!
+        # ```crux-test
+        # <parse this portion as toml>
+        # ````
         if lines[0] == "/*!\n" and lines[1] == "```crux-poc\n":
             idx = lines.index("```\n")
             toml_str = ''.join(lines[2:idx])

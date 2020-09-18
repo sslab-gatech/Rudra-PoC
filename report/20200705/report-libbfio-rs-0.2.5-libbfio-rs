@@ -1,0 +1,43 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/handle.rs:419:1: 441:2'
+source = '''
+impl Drop for Handle {
+    fn drop(&mut self) {
+        use libyal_rs_common::ffi::AsTypeRef;
+        use log::trace;
+
+        let mut error = ptr::null_mut();
+
+        trace!("Calling `libbfio_handle_free`");
+
+        unsafe {
+            libbfio_handle_free(&mut self.as_type_ref_mut() as *mut _, &mut error);
+        }
+
+        trace!("Called `libbfio_handle_free`");
+
+        if !(error.is_null()) {
+            let e = Error::try_from(error).expect("Failed to read error");
+            dbg!(e);
+        }
+
+        debug_assert!(error.is_null(), "`{}` failed!", module_path!());
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ffi_error.rs:60:1: 66:2'
+source = '''
+impl Drop for LibbfioError {
+    fn drop(&mut self) {
+        trace!("Calling `libbfio_error_free`");
+
+        unsafe { libbfio_error_free(self.as_raw()) };
+    }
+}'''

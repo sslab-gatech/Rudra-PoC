@@ -1,0 +1,19 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/append_only_vec.rs:53:1: 65:2'
+source = '''
+impl<T> Drop for Segment<T> {
+  fn drop(&mut self) {
+    unsafe {
+      if let Some(mut elements) = mem::replace(&mut self.elements, None) {
+        for i in 0..self.len {
+          ptr::drop_in_place(&mut elements[i]);
+        }
+
+        mem::forget(elements);
+      }
+    }
+  }
+}'''

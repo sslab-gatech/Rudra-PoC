@@ -1,0 +1,26 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/shm/writer.rs:217:1: 236:2'
+source = '''
+impl<D: DataFormat> Drop for ShmWriter<D> {
+    /// Marks this channel as `closed`, flushes the changes to the disk, and removes the memory mapping.
+    fn drop(&mut self) {
+        let write_index = self.write_offset;
+        info!("Closing message queue..");
+        unsafe {
+            #[allow(clippy::cast_ptr_alignment)]
+            //we should always have the 8 bytes required by CLOSE as they are acounted in the Footer
+            let write_ptr = self.data_ptr.offset(write_index as isize) as *mut u64;
+            store_atomic_u64(write_ptr, CLOSE, Ordering::Release);
+            info!("Closing message sent")
+        }
+        self.write_offset = self.mmap.len() as u32;
+        if self.mmap.flush().is_ok() {
+            info!("All changes flushed");
+        } else {
+            error!("Flush Failed");
+        }
+    }
+}'''

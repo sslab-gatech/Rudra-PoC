@@ -1,0 +1,50 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bitmap_glyph.rs:39:1: 44:2'
+source = '''
+impl Drop for BitmapGlyph {
+    fn drop(&mut self) { unsafe {
+        ffi::FT_Done_Glyph(self.raw as ffi::FT_Glyph);
+        ::error::from_ftret(ffi::FT_Done_Library(self.library_raw)).expect("Failed to drop bitmap glyph");
+    } }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/face.rs:264:1: 269:2'
+source = '''
+impl<'a> Drop for Face<'a> {
+    fn drop(&mut self) { unsafe {
+        ::error::from_ftret(ffi::FT_Done_Face(self.raw)).expect("Failed to drop face");
+        ::error::from_ftret(ffi::FT_Done_Library(self.library_raw)).expect("Failed to drop library");
+    } }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/glyph.rs:100:1: 105:2'
+source = '''
+impl Drop for Glyph {
+    fn drop(&mut self) { unsafe {
+        ffi::FT_Done_Glyph(self.raw);
+        ::error::from_ftret(ffi::FT_Done_Library(self.library_raw)).expect("Failed to drop library");
+    } }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/library.rs:78:1: 82:2'
+source = '''
+impl Drop for Library {
+    fn drop(&mut self) {
+        ::error::from_ftret(unsafe { ffi::FT_Done_Library(self.raw) }).expect("Failed to drop library");
+    }
+}'''

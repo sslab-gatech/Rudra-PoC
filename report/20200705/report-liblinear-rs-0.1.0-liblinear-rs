@@ -1,0 +1,14 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:931:1: 938:2'
+source = '''
+impl Drop for Model {
+    fn drop(&mut self) {
+        unsafe {
+            let mut temp = self.bound;
+            ffi::free_and_destroy_model(&mut temp);
+        }
+    }
+}'''

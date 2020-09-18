@@ -1,0 +1,80 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/multiqueue.rs:1020:1: 1024:2'
+source = '''
+impl<RW: QueueRW<T>, T> Drop for InnerRecv<RW, T> {
+    fn drop(&mut self) {
+        unsafe { self.do_unsubscribe_with(|| ()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/multiqueue.rs:1026:1: 1053:2'
+source = '''
+impl<RW: QueueRW<T>, T> Drop for MultiQueue<RW, T> {
+    fn drop(&mut self) {
+        if RW::do_drop() {
+            // everything that's tagged shouldn't be dropped
+            // otherwise, everything else is valid and waiting to be read
+            // or invalid and waiting to be overwritten/dropped
+            for i in 0..self.capacity {
+                unsafe {
+                    let cell = &mut *self.data.offset(i);
+                    if !is_tagged(cell.wraps.load(Relaxed)) {
+                        ptr::read(&cell.val);
+                    }
+                }
+            }
+        } else {
+            let last_read =
+                CountedIndex::from_usize(self.tail.last_pos.get(), self.capacity as Index);
+            while last_read.load_count(Relaxed) != self.head.load_count(Relaxed) {
+                unsafe {
+                    let cur_pos = last_read.load_transaction(Relaxed);
+                    let (cur_ind, _) = cur_pos.get();
+                    ptr::drop_in_place(&mut (*self.data.offset(cur_ind)).val);
+                    cur_pos.commit_direct(1, Relaxed);
+                }
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/multiqueue.rs:1055:1: 1064:2'
+source = '''
+impl<RW: QueueRW<T>, T> Drop for FutInnerRecv<RW, T> {
+    fn drop(&mut self) {
+        let prod_wait = self.prod_wait.clone();
+        unsafe {
+            self.reader.do_unsubscribe_with(|| {
+                prod_wait.notify();
+            })
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/multiqueue.rs:1066:1: 1075:2'
+source = '''
+impl<RW: QueueRW<T>, R, F: for<'r> FnMut(&T) -> R, T> Drop for FutInnerUniRecv<RW, R, F, T> {
+    fn drop(&mut self) {
+        let prod_wait = self.prod_wait.clone();
+        unsafe {
+            self.reader.do_unsubscribe_with(|| {
+                prod_wait.notify();
+            })
+        }
+    }
+}'''

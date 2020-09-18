@@ -1,0 +1,23 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vdom.rs:105:1: 121:2'
+source = '''
+impl Drop for VdomInnerExclusive {
+    fn drop(&mut self) {
+        debug!("Dropping VdomInnerExclusive");
+
+        // Make sure that we clean up our JS listeners and all that before we
+        // empty the container.
+        unsafe {
+            ManuallyDrop::drop(&mut self.change_list);
+        }
+
+        let registry = self.events_registry.take().unwrap_throw();
+        let mut registry = registry.borrow_mut();
+        registry.clear_active_listeners();
+
+        empty_container(&self.container);
+    }
+}'''

@@ -1,0 +1,217 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/screen/viewer.rs:156:1: 164:2'
+source = '''
+impl Drop for Viewer {
+    fn drop(&mut self) {
+        // Load function
+        let viewer_old = unsafe { (super::CONTEXT.viewer_old) };
+
+        // Run Function
+        viewer_old(self.0);
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/screen/ffi/render/vulkan/asi/buffer.rs:135:1: 145:2'
+source = '''
+impl Drop for BufferContext {
+    fn drop(&mut self) {
+        let vulkan = unsafe { VULKAN.clone().unwrap() };
+        let vulkan = vulkan.get();
+
+        unsafe {
+            (vulkan.drop_buffer)(vulkan.device, self.buffer, null());
+            (vulkan.drop_memory)(vulkan.device, self.memory, null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/screen/ffi/render/vulkan/asi/fence.rs:69:1: 73:2'
+source = '''
+impl Drop for FenceContext {
+    fn drop(&mut self) {
+        unsafe { drop(&self.vulkan, self.fence) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/screen/ffi/render/vulkan/asi/gpu/mod.rs:569:1: 613:2'
+source = '''
+impl Drop for GpuContext {
+    fn drop(&mut self) -> () {
+        // Load Function (Sampler)
+        type VkDestroySampler = unsafe extern "system" fn(VkDevice, VkSampler, *const c_void) -> ();
+        let destroy: VkDestroySampler = unsafe { sym(self, b"vkDestroySampler\0").unwrap() };
+
+        // Run Function (Sampler)
+        unsafe { destroy(self.device, self.sampler, null()) }
+
+        // Load Function (Command Buffer & Command Pool)
+        type VkDestroyCommandPool = unsafe extern "system" fn(VkDevice, u64, *const c_void) -> ();
+        let destroy: VkDestroyCommandPool =
+            unsafe { sym(self, b"vkDestroyCommandPool\0").unwrap() };
+
+        // Run Function (Command Buffer & Command Pool)
+        unsafe { destroy(self.device, self.command_pool, null()) }
+
+        // Load Function (Surface)
+        type VkDestroySurface = unsafe extern "system" fn(
+            instance: VkInstance,
+            surface: VkSurfaceKHR,
+            pAllocator: *mut c_void,
+        ) -> ();
+        let destroy: VkDestroySurface = unsafe { sym(self, b"vkDestroySurfaceKHR\0").unwrap() };
+
+        // Run Function (Surface)
+        unsafe { destroy(self.vk, self.surface, null_mut()) }
+
+        // Load Function
+        type VkDestroyDevice = unsafe extern "system" fn(VkDevice, *const c_void) -> ();
+        let destroy: VkDestroyDevice = unsafe { sym(self, b"vkDestroyDevice\0").unwrap() };
+
+        // Run Function
+        unsafe { destroy(self.device, null()) }
+
+        // Load Function
+        type VkDestroyInstance =
+            unsafe extern "system" fn(instance: VkInstance, pAllocator: *mut c_void) -> ();
+        let function_name = b"vkDestroyInstance\0";
+        let destroy: VkDestroyInstance = unsafe { sym(self, function_name).unwrap() };
+
+        // Run Function
+        unsafe { destroy(self.vk, null_mut()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/screen/ffi/render/vulkan/asi/image.rs:125:1: 135:2'
+source = '''
+impl Drop for ImageContext {
+    fn drop(&mut self) {
+        let vk = self.vulkan.get();
+
+        unsafe {
+            (vk.drop_image)(vk.device, self.image, null());
+            (vk.drop_memory)(vk.device, self.memory, null());
+            (vk.drop_imgview)(vk.device, self.view, null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/screen/ffi/render/vulkan/asi/sprite.rs:302:1: 310:2'
+source = '''
+impl Drop for SpriteContext {
+    fn drop(&mut self) {
+        let vk = self.vulkan.get();
+
+        unsafe {
+            (vk.drop_descpool)(vk.device, self.desc_pool, null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/screen/ffi/render/vulkan/asi/style.rs:355:1: 365:2'
+source = '''
+impl Drop for StyleContext {
+    fn drop(&mut self) {
+        let vk = self.vulkan.get();
+
+        unsafe {
+            (vk.drop_pipeline)(vk.device, self.pipeline, null());
+            (vk.drop_pipeline_layout)(vk.device, self.pipeline_layout, null());
+            (vk.drop_descset_layout)(vk.device, self.descsetlayout, null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/screen/ffi/render/vulkan/asi/mod.rs:978:1: 984:2'
+source = '''
+impl Drop for ShaderModule {
+    fn drop(&mut self) -> () {
+        unsafe {
+            (self.2)(self.1, self.0, null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/screen/ffi/render/opengl/asi/buffer.rs:63:1: 67:2'
+source = '''
+impl Drop for BufferContext {
+    fn drop(&mut self) {
+        gl!(self.1, (self.1.get().delete_buffer)(1, [self.0].as_ptr()));
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/screen/ffi/render/opengl/asi/program.rs:83:1: 87:2'
+source = '''
+impl Drop for ProgramContext {
+    fn drop(&mut self) {
+        gl!(self.1, (self.1.get().delete_program)(self.0));
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/screen/ffi/render/opengl/asi/texture.rs:102:1: 106:2'
+source = '''
+impl Drop for TextureContext {
+    fn drop(&mut self) {
+        gl!(self.1, (self.1.get().delete_texture)(1, [self.0].as_ptr()));
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/screen/ffi/linux.rs:68:1: 78:2'
+source = '''
+impl Drop for Window {
+    fn drop(&mut self) {
+        unsafe {
+            (self.xkb.xkb_state_unref)(self.state);
+            (self.xkb.xkb_keymap_unref)(self.keymap);
+            (self.xkb.xkb_context_unref)(self.context);
+            (self.xcb.xcb_destroy_window)(self.connection, self.window);
+            (self.xcb.xcb_disconnect)(self.connection);
+        }
+    }
+}'''

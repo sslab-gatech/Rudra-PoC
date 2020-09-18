@@ -1,0 +1,19 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:388:1: 400:2'
+source = '''
+impl Drop for Event {
+    #[inline]
+    fn drop(&mut self) {
+        let inner: *mut Inner = *self.inner.get_mut();
+
+        // If the state pointer has been initialized, deallocate it.
+        if !inner.is_null() {
+            unsafe {
+                drop(Arc::from_raw(inner));
+            }
+        }
+    }
+}'''

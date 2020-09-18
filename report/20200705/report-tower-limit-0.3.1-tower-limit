@@ -1,0 +1,6 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/concurrency/future.rs:14:15: 14:25'
+source = 'PinnedDrop'

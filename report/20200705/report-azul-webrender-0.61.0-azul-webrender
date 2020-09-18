@@ -1,0 +1,62 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/profiler.rs:160:1: 168:2'
+source = '''
+impl Drop for ProfileScope {
+    fn drop(&mut self) {
+        unsafe {
+            if let Some(ref hooks) = PROFILER_HOOKS {
+                hooks.end_marker(self.name);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/platform/unix/font.rs:166:1: 177:2'
+source = '''
+impl Drop for FontFace {
+    fn drop(&mut self) {
+        unsafe {
+            if !self.mm_var.is_null() &&
+               unimplemented(FT_Done_MM_Var((*(*self.face).glyph).library, self.mm_var)) {
+                free(self.mm_var as _);
+            }
+
+            FT_Done_Face(self.face);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/platform/unix/font.rs:181:1: 185:2'
+source = '''
+impl Drop for VariationFace {
+    fn drop(&mut self) {
+        unsafe { FT_Done_Face(self.0) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/platform/unix/font.rs:1014:1: 1022:2'
+source = '''
+impl Drop for FontContext {
+    fn drop(&mut self) {
+        self.variations.clear();
+        self.faces.clear();
+        unsafe {
+            FT_Done_FreeType(self.lib);
+        }
+    }
+}'''

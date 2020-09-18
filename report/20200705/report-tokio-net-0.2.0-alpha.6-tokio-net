@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/driver/sharded_rwlock.rs:126:1: 135:2'
+source = '''
+impl<'a, T> Drop for RwLockWriteGuard<'a, T> {
+    fn drop(&mut self) {
+        // Unlock the shards in reverse order of locking.
+        for shard in self.parent.shards.iter().rev() {
+            unsafe {
+                shard.force_unlock_write();
+            }
+        }
+    }
+}'''

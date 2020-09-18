@@ -1,0 +1,23 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:62:9: 66:10'
+source = '''
+impl<T: ?Sized> Drop for $RcBox<T> {
+            fn drop(&mut self) {
+                unsafe { drop($Rc::<T>::from(ptr::read(self))) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:62:9: 66:10'
+source = '''
+impl<T: ?Sized> Drop for $RcBox<T> {
+            fn drop(&mut self) {
+                unsafe { drop($Rc::<T>::from(ptr::read(self))) }
+            }
+        }'''

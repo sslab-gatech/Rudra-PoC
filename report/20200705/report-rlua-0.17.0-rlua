@@ -1,0 +1,40 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lua.rs:69:1: 83:2'
+source = '''
+impl Drop for Lua {
+    fn drop(&mut self) {
+        unsafe {
+            let extra = extra_data(self.main_state);
+            rlua_debug_assert!(
+                ffi::lua_gettop((*extra).ref_thread) == (*extra).ref_stack_max
+                    && (*extra).ref_stack_max as usize == (*extra).ref_free.len(),
+                "reference leak detected"
+            );
+            *rlua_expect!((*extra).registry_unref_list.lock(), "unref list poisoned") = None;
+            ffi::lua_close(self.main_state);
+            Box::from_raw(extra);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/util.rs:50:1: 61:2'
+source = '''
+impl Drop for StackGuard {
+    fn drop(&mut self) {
+        unsafe {
+            let top = ffi::lua_gettop(self.state);
+            if top > self.top {
+                ffi::lua_settop(self.state, self.top);
+            } else if top < self.top {
+                rlua_panic!("{} too many stack values popped", self.top - top);
+            }
+        }
+    }
+}'''

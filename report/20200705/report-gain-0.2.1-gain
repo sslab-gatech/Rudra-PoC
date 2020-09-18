@@ -1,0 +1,50 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core.rs:521:1: 532:2'
+source = '''
+impl<R, T> Drop for CallFuture<'_, R, T>
+where
+    R: FnOnce(&[u8]) -> T + Unpin,
+{
+    fn drop(&mut self) {
+        let this = unsafe { Pin::new_unchecked(self) }; // See pin module doc.
+
+        if this.polling {
+            die("call future dropped before completion");
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core.rs:690:1: 698:2'
+source = '''
+impl Drop for StreamWriteFuture<'_> {
+    fn drop(&mut self) {
+        let this = unsafe { Pin::new_unchecked(self) }; // See pin module doc.
+
+        if this.writing {
+            die("write future dropped before completion");
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core.rs:790:1: 798:2'
+source = '''
+impl Drop for StreamCloseFuture {
+    fn drop(&mut self) {
+        let this = unsafe { Pin::new_unchecked(self) }; // See pin module doc.
+
+        if !this.s.is_none() {
+            die("close future dropped before completion");
+        }
+    }
+}'''

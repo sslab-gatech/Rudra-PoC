@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/memory.rs:197:1: 203:2'
+source = '''
+impl Drop for Memory {
+    fn drop(&mut self) {
+        unsafe {
+            aligned_alloc::aligned_free(self.memory_ptr);
+        }
+    }
+}'''

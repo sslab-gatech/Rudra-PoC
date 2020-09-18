@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/owned.rs:313:1: 321:2'
+source = '''
+impl<T, R: Reclaim, N: Unsigned> Drop for Owned<T, R, N> {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let record = Record::<_, R>::from_raw(self.inner.decompose_ptr());
+            mem::drop(Box::from_raw(record.as_ptr()));
+        }
+    }
+}'''

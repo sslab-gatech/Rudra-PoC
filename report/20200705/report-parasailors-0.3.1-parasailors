@@ -1,0 +1,31 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/matrix.rs:158:1: 168:2'
+source = '''
+impl Drop for Matrix {
+    fn drop(&mut self) {
+        if let MatrixType::Identity = self.matrix_type {
+            unsafe { parasail_matrix_free(self.internal_rep as *mut ParasailMatrix) }
+        }
+
+        if let MatrixType::IdentityWithPenalty = self.matrix_type {
+            unsafe { parasail_matrix_free(self.internal_rep as *mut ParasailMatrix) }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/profile.rs:32:1: 38:2'
+source = '''
+impl<'a> Drop for Profile<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            parasail_profile_free(self.internal_rep);
+        }
+    }
+}'''

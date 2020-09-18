@@ -1,0 +1,80 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array_queue.rs:405:1: 434:2'
+source = '''
+impl<T> Drop for ArrayQueue<T> {
+    fn drop(&mut self) {
+        // Get the index of the head.
+        let hix = self.head.load(Ordering::Relaxed) & (self.one_lap - 1);
+
+        // Loop over all slots that hold a message and drop them.
+        for i in 0..self.len() {
+            // Compute the index of the next slot holding a message.
+            let index = if hix + i < self.cap {
+                hix + i
+            } else {
+                hix + i - self.cap
+            };
+
+            unsafe {
+                let p = {
+                    let slot = &mut *self.buffer.add(index);
+                    let value = &mut *slot.value.get();
+                    value.as_mut_ptr()
+                };
+                p.drop_in_place();
+            }
+        }
+
+        // Finally, deallocate the buffer, but don't run any destructors.
+        unsafe {
+            Vec::from_raw_parts(self.buffer, 0, self.cap);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/seg_queue.rs:442:1: 478:2'
+source = '''
+impl<T> Drop for SegQueue<T> {
+    fn drop(&mut self) {
+        let mut head = self.head.index.load(Ordering::Relaxed);
+        let mut tail = self.tail.index.load(Ordering::Relaxed);
+        let mut block = self.head.block.load(Ordering::Relaxed);
+
+        // Erase the lower bits.
+        head &= !((1 << SHIFT) - 1);
+        tail &= !((1 << SHIFT) - 1);
+
+        unsafe {
+            // Drop all values between `head` and `tail` and deallocate the heap-allocated blocks.
+            while head != tail {
+                let offset = (head >> SHIFT) % LAP;
+
+                if offset < BLOCK_CAP {
+                    // Drop the value in the slot.
+                    let slot = (*block).slots.get_unchecked(offset);
+                    let p = &mut *slot.value.get();
+                    p.as_mut_ptr().drop_in_place();
+                } else {
+                    // Deallocate the block and move to the next one.
+                    let next = (*block).next.load(Ordering::Relaxed);
+                    drop(Box::from_raw(block));
+                    block = next;
+                }
+
+                head = head.wrapping_add(1 << SHIFT);
+            }
+
+            // Deallocate the last remaining block.
+            if !block.is_null() {
+                drop(Box::from_raw(block));
+            }
+        }
+    }
+}'''

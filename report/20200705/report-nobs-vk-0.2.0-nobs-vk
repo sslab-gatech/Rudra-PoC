@@ -1,0 +1,39 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:11387:1: 11393:2'
+source = '''
+impl Drop for VkLib {
+  fn drop(&mut self) {
+    unsafe {
+      vklib = None;
+    }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/instance.rs:26:1: 44:2'
+source = '''
+impl Drop for Instance {
+  /// Cleans up the Instance
+  ///
+  /// If the instance was created with validation layers cleans up the debug callback.
+  /// Destroys the instance handle.
+  ///
+  /// After the instance is dropped, all vulkan commands will panic
+  fn drop(&mut self) {
+    if self.debug_callback != vk::NULL_HANDLE {
+      let name = std::ffi::CString::new("vkDestroyDebugReportCallbackEXT").unwrap();
+      let ptr = vk::GetInstanceProcAddr(self.handle, name.as_ptr());
+      if !(ptr as *const c_void).is_null() {
+        let destroy_callback: vk::PFN_vkDestroyDebugReportCallbackEXT = unsafe { std::mem::transmute(ptr) };
+        destroy_callback(self.handle, self.debug_callback, ptr::null());
+      };
+    }
+    vk::DestroyInstance(self.handle, ptr::null());
+  }
+}'''

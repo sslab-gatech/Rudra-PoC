@@ -1,0 +1,114 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/low/vkcmd/mod.rs:121:1: 130:2'
+source = '''
+impl<'a> Drop for VkCmdPool<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            self.state
+                .device
+                .free_command_buffers(self.cmd_pool, &self.cmd_buffers);
+            self.state.device.destroy_command_pool(self.cmd_pool, None);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/low/vkdescriptor/mod.rs:66:1: 74:2'
+source = '''
+impl<'a> Drop for VkDescriptor<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            if let Some(pool) = self.pool {
+                self.state.device.destroy_descriptor_pool(pool, None);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/low/vkmem/mod.rs:103:1: 109:2'
+source = '''
+impl<'a> Drop for VkBuffer<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            self.state.device.destroy_buffer(self.buffer, None);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/low/vkmem/mod.rs:254:1: 260:2'
+source = '''
+impl<'a> Drop for VkMem<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            self.state.device.free_memory(self.mem, None);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/low/vkpipeline/mod.rs:38:1: 44:2'
+source = '''
+impl<'a> Drop for VkComputePipeline<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            self.state.device.destroy_pipeline(self.pipeline, None);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/low/vkshader/mod.rs:86:1: 100:2'
+source = '''
+impl<'a> Drop for VkShader<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            if let Some(pipeline) = self.pipeline {
+                self.state.device.destroy_pipeline_layout(pipeline, None);
+            }
+            for descriptor in self.layout.iter() {
+                self.state
+                    .device
+                    .destroy_descriptor_set_layout(*descriptor, None);
+            }
+            self.state.device.destroy_shader_module(self.module, None);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/low/vkstate/mod.rs:25:1: 35:2'
+source = '''
+impl Drop for VulkanState {
+    fn drop(&mut self) {
+        unsafe {
+            self.device.device_wait_idle().unwrap();
+            self.device.destroy_device(None);
+            self.debug_report_loader
+                .destroy_debug_report_callback(self.debug_callback, None);
+            self.instance.destroy_instance(None);
+        }
+    }
+}'''

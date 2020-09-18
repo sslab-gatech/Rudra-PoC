@@ -1,0 +1,12 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:441:1: 446:2'
+source = '''
+impl Drop for Acl {
+    fn drop(&mut self) {
+        unsafe { acl_sys::acl_free(self.raw_ptr) };
+        self.raw_ptr = std::ptr::null_mut();
+    }
+}'''

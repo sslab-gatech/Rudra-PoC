@@ -1,0 +1,66 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/box_handle.rs:231:1: 236:2'
+source = '''
+impl<A> Drop for PoolBox<A> {
+    fn drop(&mut self) {
+        let handle = unsafe { Box::from_raw(self.handle.get_ptr()) };
+        handle.return_to_pool();
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pool.rs:180:1: 188:2'
+source = '''
+impl<A> Drop for Pool<A> {
+    fn drop(&mut self) {
+        if let Some(ptr) = self.inner.get_ptr_checked() {
+            if unsafe { (*ptr).dec() } == 1 {
+                std::mem::drop(unsafe { Box::from_raw(ptr) });
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pool.rs:274:1: 288:2'
+source = '''
+impl<A> Drop for PoolInner<A> {
+    fn drop(&mut self) {
+        while let Some(chunk) = self.stack.stack_pop() {
+            unsafe {
+                std::alloc::dealloc(
+                    chunk.as_ptr().cast(),
+                    std::alloc::Layout::from_size_align_unchecked(
+                        std::mem::size_of::<RefBox<A>>(),
+                        std::mem::align_of::<RefBox<A>>(),
+                    ),
+                );
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ref_handle.rs:392:1: 400:2'
+source = '''
+impl<A> Drop for PoolRef<A> {
+    fn drop(&mut self) {
+        if self.box_ref_mut().dec() != 1 {
+            return;
+        }
+        let handle = unsafe { Box::from_raw(self.handle.get_ptr()) };
+        handle.return_to_pool();
+    }
+}'''

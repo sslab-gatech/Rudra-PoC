@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/string_pool.rs:47:1: 56:2'
+source = '''
+impl Drop for Chunk {
+    fn drop(&mut self) {
+        // This is safe because we only ever store u8, which doesn't
+        // have a destructor. This means the len doesn't matter, only
+        // the capacity.
+        unsafe {
+            Vec::from_raw_parts(self.start, self.capacity, self.capacity);
+        }
+    }
+}'''

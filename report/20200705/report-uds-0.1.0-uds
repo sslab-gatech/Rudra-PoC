@@ -1,0 +1,99 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/helpers.rs:101:1: 106:2'
+source = '''
+impl Drop for Socket {
+    fn drop(&mut self) {
+        // ignore errors - unlikely and there is nowhere to return them
+        unsafe { close(self.0) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ancillary.rs:147:1: 159:2'
+source = '''
+impl Drop for AncillaryBuf {
+    fn drop(&mut self) {
+        unsafe {
+            if self.capacity as usize > Self::MAX_STACK_CAPACITY {
+                let layout = Layout::from_size_align(
+                    self.capacity as usize,
+                    mem::align_of::<cmsghdr>()
+                ).unwrap();
+                alloc::dealloc(self.ptr as *mut u8, layout);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ancillary.rs:343:1: 354:2'
+source = '''
+impl<'a> Drop for Ancillary<'a> {
+    fn drop(&mut self) {
+        // close all remaining file descriptors
+        for ancillary in self {
+            if let AncillaryItem::Fds(fds) = ancillary {
+                for &fd in fds {
+                    unsafe { close(fd) };
+                }
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/seqpacket.rs:35:5: 39:6'
+source = '''
+impl Drop for $type {
+        fn drop(&mut self) {
+            let _ = unsafe { close(self.fd) };
+        }
+    }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/seqpacket.rs:35:5: 39:6'
+source = '''
+impl Drop for $type {
+        fn drop(&mut self) {
+            let _ = unsafe { close(self.fd) };
+        }
+    }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/seqpacket.rs:35:5: 39:6'
+source = '''
+impl Drop for $type {
+        fn drop(&mut self) {
+            let _ = unsafe { close(self.fd) };
+        }
+    }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/seqpacket.rs:35:5: 39:6'
+source = '''
+impl Drop for $type {
+        fn drop(&mut self) {
+            let _ = unsafe { close(self.fd) };
+        }
+    }'''

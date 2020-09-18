@@ -1,0 +1,27 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core.rs:697:1: 705:2'
+source = '''
+impl Drop for EnvHandle {
+    fn drop(&mut self) {
+        unsafe {
+            if self.0 != ptr::null_mut() {
+                ffi::mdb_env_close(self.0);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core.rs:1559:1: 1563:2'
+source = '''
+impl<'txn> Drop for Cursor<'txn> {
+    fn drop(&mut self) {
+        unsafe { ffi::mdb_cursor_close(self.handle) };
+    }
+}'''

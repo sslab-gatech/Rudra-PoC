@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/chainbuf.rs:1176:1: 1182:2'
+source = '''
+impl Drop for MmappedFile {
+    fn drop(&mut self) {
+        let munmap_res = unsafe { mman::munmap(self.addr as *mut std::ffi::c_void, self.size) };
+        let close_res = close(self.fd);
+        assert!(munmap_res.is_ok() && close_res.is_ok());
+    }
+}'''

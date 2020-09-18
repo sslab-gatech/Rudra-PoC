@@ -1,0 +1,37 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buffer.rs:83:1: 87:2'
+source = '''
+impl<T> Drop for Buffer<T> {
+    fn drop(&mut self) {
+        unsafe { Vec::from_raw_parts(self.data, 0, self.size); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/unbounded/mpmc.rs:219:1: 224:2'
+source = '''
+impl<T> Drop for Queue<T> {
+    fn drop(&mut self) {
+        while self.consume(0).is_ok() { }
+        unsafe { BoxMemory.deallocate(self.write.load(Relaxed)); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/unbounded/spsc.rs:159:1: 164:2'
+source = '''
+impl<T> Drop for Queue<T> {
+    fn drop(&mut self) {
+        while self.consume().is_ok() { }
+        unsafe { BoxMemory.deallocate(self.write.get()); }
+    }
+}'''

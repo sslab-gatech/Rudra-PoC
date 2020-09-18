@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/fd_guard.rs:50:1: 56:2'
+source = '''
+impl Drop for FdGuard {
+    fn drop(&mut self) {
+        if self.close_on_drop.load(Ordering::Acquire) {
+            unsafe { ffi::close(self.fd); }
+        }
+    }
+}'''

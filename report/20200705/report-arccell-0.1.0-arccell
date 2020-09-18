@@ -1,0 +1,12 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:9:1: 14:2'
+source = '''
+impl<T> Drop for ArcCellInner<T> {
+    fn drop(&mut self) {
+        // by the time we get to this point, we *should* be the only ArcCellInner<T> remaining.
+        unsafe { Arc::from_raw(self.arc.load(Ordering::Relaxed)); }
+    }
+}'''

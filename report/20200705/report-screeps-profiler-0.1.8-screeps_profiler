@@ -1,0 +1,23 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:89:1: 105:2'
+source = '''
+impl<T> Drop for ProfileSentinel<T>
+where
+    T: FnMut() -> f64,
+{
+    fn drop(&mut self) {
+        let delta = (self.get_cpu)() - self.cpu_at_start;
+
+        let row = unsafe {
+            (*self.table).get_data_mut(self.id).expect(&format!(
+                "Expected a profile row to be available by id {:?}",
+                self.id
+            ))
+        };
+
+        row.cpu_per_call.push(delta);
+    }
+}'''

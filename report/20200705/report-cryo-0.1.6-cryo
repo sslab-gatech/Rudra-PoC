@@ -1,0 +1,29 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:379:1: 386:2'
+source = '''
+impl<T: ?Sized> Drop for CryoMutReadGuard<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.state().lock.raw_unlock_read();
+            // `self.state()` might be invalid beyond this point
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:418:1: 425:2'
+source = '''
+impl<T: ?Sized> Drop for CryoMutWriteGuard<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.state().lock.raw_unlock_write();
+            // `self.state()` might be invalid beyond this point
+        }
+    }
+}'''

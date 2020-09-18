@@ -1,0 +1,35 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/client.rs:209:1: 220:2'
+source = '''
+impl Drop for Client
+{
+	fn drop(&mut self)
+	{
+		unsafe
+		{
+			sys::curl_multi_remove_handle(self.multi, self.easy);
+			sys::curl_easy_cleanup(self.easy);
+			sys::curl_multi_cleanup(self.multi);
+		}
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/request.rs:24:1: 33:2'
+source = '''
+impl Drop for CurlList
+{
+	fn drop(&mut self)
+	{
+		unsafe
+		{
+			sys::curl_slist_free_all(self.headers);
+		}
+	}
+}'''

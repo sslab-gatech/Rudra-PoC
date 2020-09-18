@@ -1,0 +1,17 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/unix/terminal.rs:300:1: 310:2'
+source = '''
+impl Drop for Terminal {
+    fn drop(&mut self) {
+        if let Err(e) = self.set_cursor_mode(CursorMode::Normal) {
+            eprintln!("failed to restore terminal: {}", e);
+        }
+
+        if self.owned_fd {
+            unsafe { close_fd(self.out_fd); }
+        }
+    }
+}'''

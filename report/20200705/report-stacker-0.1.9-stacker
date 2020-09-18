@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:126:9: 135:10'
+source = '''
+impl Drop for StackRestoreGuard {
+            fn drop(&mut self) {
+                unsafe {
+                    // FIXME: check the error code and decide what to do with it.
+                    // Perhaps a debug_assertion?
+                    libc::munmap(self.new_stack, self.stack_bytes);
+                }
+                set_stack_limit(self.old_stack_limit);
+            }
+        }'''

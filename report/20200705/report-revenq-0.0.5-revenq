@@ -1,0 +1,41 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/utils.rs:23:1: 32:2'
+source = '''
+impl<T> Drop for AtomSetOnce<T> {
+    fn drop(&mut self) {
+        let ptr = *self.0.get_mut();
+        if !ptr.is_null() {
+            unsafe {
+                let _: Box<T> = Box::from_raw(ptr);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/woke_queue/mod.rs:38:1: 55:2'
+source = '''
+impl<T> Drop for WokeQueue<T> {
+    fn drop(&mut self) {
+        fn inner_drop<T>(this: Pin<&mut WokeQueue<T>>) {
+            let wakers = WokeQueue::pin_get_wakers(this.into_ref());
+            if Arc::strong_count(wakers) == 2 {
+                // there are no other senders out there...
+                if let Ok(mut wakers) = wakers.lock() {
+                    // notify all hanging queues
+                    notify_all(&mut wakers);
+                }
+            }
+        }
+
+        // `new_unchecked` is okay because we know this value is never used
+        // again after being dropped.
+        inner_drop(unsafe { Pin::new_unchecked(self) });
+    }
+}'''

@@ -1,0 +1,25 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/cqe.rs:112:1: 118:2'
+source = '''
+impl<'a> Drop for CompletionQueueEvent<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            uring_sys::io_uring_cqe_seen(self.ring.as_ptr(), self.cqe);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:281:1: 285:2'
+source = '''
+impl Drop for IoUring {
+    fn drop(&mut self) {
+        unsafe { uring_sys::io_uring_queue_exit(&mut self.ring) };
+    }
+}'''

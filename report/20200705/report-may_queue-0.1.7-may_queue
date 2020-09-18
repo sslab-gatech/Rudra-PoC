@@ -1,0 +1,68 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/mpsc_list.rs:110:1: 116:2'
+source = '''
+impl<T> Drop for Queue<T> {
+    fn drop(&mut self) {
+        while let Some(_) = self.pop() {}
+        // release the stub
+        let _: Box<Node<T>> = unsafe { Box::from_raw(*self.tail.get()) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/mpsc_list_v1.rs:122:1: 135:2'
+source = '''
+impl<T> Drop for Entry<T> {
+    // only call this drop in the same thread, or you must make sure it happens with no contension
+    // running in a coroutine is a kind of sequential operation, so it can safely drop there after
+    // returning from "kernel"
+    fn drop(&mut self) {
+        let node = unsafe { self.0.as_mut() };
+        // dec the ref count of node
+        node.refs -= 1;
+        if node.refs == 0 {
+            // release the node
+            let _: Box<Node<T>> = unsafe { Box::from_raw(node) };
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/mpsc_list_v1.rs:336:1: 342:2'
+source = '''
+impl<T> Drop for Queue<T> {
+    fn drop(&mut self) {
+        while let Some(_) = self.pop() {}
+        // release the stub
+        let _: Box<Node<T>> = unsafe { Box::from_raw(*self.tail.get()) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/spsc.rs:146:1: 158:2'
+source = '''
+impl<T> Drop for Queue<T> {
+    fn drop(&mut self) {
+        //  pop all the element to make sure the queue is empty
+        while self.pop().is_some() {}
+        let head = self.head.load(Ordering::Relaxed);
+        let tail = self.tail.load(Ordering::Relaxed);
+        assert_eq!(head, tail);
+
+        unsafe {
+            let _unused_block = Box::from_raw(head);
+        }
+    }
+}'''

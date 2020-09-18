@@ -1,0 +1,17 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:123:1: 133:2'
+source = '''
+impl Drop for InterfaceAddrs {
+    fn drop(&mut self) {
+        // UNSAFETY: Calling libc FFI function which frees previously allocated
+        // memory.
+        unsafe {
+            // Ask the libc to drop free the memory it allocated when the struct
+            // was created.
+            libc::freeifaddrs(self.inner as *mut libc::ifaddrs);
+        }
+    }
+}'''

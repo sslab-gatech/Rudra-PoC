@@ -1,0 +1,300 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros_jvm_wrappers.rs:53:9: 65:10'
+source = '''
+impl<'a> Drop for $rust_struct_name<'a> {
+
+            fn drop(&mut self) {
+
+                unsafe {
+                    // Delete the global JVM reference to the JVM object.
+                    (**self.jvm_attachment.jni_environment()).DeleteGlobalRef.unwrap()(
+                        self.jvm_attachment.jni_environment(),
+                        self.jvm_ptr
+                    );
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/jvm_attachment.rs:53:1: 66:2'
+source = '''
+impl Drop for JvmAttachment {
+
+    fn drop(&mut self) {
+
+        unsafe {
+            // Try to detach the current native thread from the embedded JVM.
+            let _ = (**self.jvm).DetachCurrentThread.unwrap()(
+                self.jvm,
+            );
+
+            // TODO: interpret the result
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros_jvm_wrappers.rs:53:9: 65:10'
+source = '''
+impl<'a> Drop for $rust_struct_name<'a> {
+
+            fn drop(&mut self) {
+
+                unsafe {
+                    // Delete the global JVM reference to the JVM object.
+                    (**self.jvm_attachment.jni_environment()).DeleteGlobalRef.unwrap()(
+                        self.jvm_attachment.jni_environment(),
+                        self.jvm_ptr
+                    );
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros_jvm_wrappers.rs:53:9: 65:10'
+source = '''
+impl<'a> Drop for $rust_struct_name<'a> {
+
+            fn drop(&mut self) {
+
+                unsafe {
+                    // Delete the global JVM reference to the JVM object.
+                    (**self.jvm_attachment.jni_environment()).DeleteGlobalRef.unwrap()(
+                        self.jvm_attachment.jni_environment(),
+                        self.jvm_ptr
+                    );
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros_jvm_wrappers.rs:53:9: 65:10'
+source = '''
+impl<'a> Drop for $rust_struct_name<'a> {
+
+            fn drop(&mut self) {
+
+                unsafe {
+                    // Delete the global JVM reference to the JVM object.
+                    (**self.jvm_attachment.jni_environment()).DeleteGlobalRef.unwrap()(
+                        self.jvm_attachment.jni_environment(),
+                        self.jvm_ptr
+                    );
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros_jvm_wrappers.rs:53:9: 65:10'
+source = '''
+impl<'a> Drop for $rust_struct_name<'a> {
+
+            fn drop(&mut self) {
+
+                unsafe {
+                    // Delete the global JVM reference to the JVM object.
+                    (**self.jvm_attachment.jni_environment()).DeleteGlobalRef.unwrap()(
+                        self.jvm_attachment.jni_environment(),
+                        self.jvm_ptr
+                    );
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros_jvm_wrappers.rs:53:9: 65:10'
+source = '''
+impl<'a> Drop for $rust_struct_name<'a> {
+
+            fn drop(&mut self) {
+
+                unsafe {
+                    // Delete the global JVM reference to the JVM object.
+                    (**self.jvm_attachment.jni_environment()).DeleteGlobalRef.unwrap()(
+                        self.jvm_attachment.jni_environment(),
+                        self.jvm_ptr
+                    );
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros_jvm_wrappers.rs:53:9: 65:10'
+source = '''
+impl<'a> Drop for $rust_struct_name<'a> {
+
+            fn drop(&mut self) {
+
+                unsafe {
+                    // Delete the global JVM reference to the JVM object.
+                    (**self.jvm_attachment.jni_environment()).DeleteGlobalRef.unwrap()(
+                        self.jvm_attachment.jni_environment(),
+                        self.jvm_ptr
+                    );
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros_jvm_wrappers.rs:53:9: 65:10'
+source = '''
+impl<'a> Drop for $rust_struct_name<'a> {
+
+            fn drop(&mut self) {
+
+                unsafe {
+                    // Delete the global JVM reference to the JVM object.
+                    (**self.jvm_attachment.jni_environment()).DeleteGlobalRef.unwrap()(
+                        self.jvm_attachment.jni_environment(),
+                        self.jvm_ptr
+                    );
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros_jvm_wrappers.rs:53:9: 65:10'
+source = '''
+impl<'a> Drop for $rust_struct_name<'a> {
+
+            fn drop(&mut self) {
+
+                unsafe {
+                    // Delete the global JVM reference to the JVM object.
+                    (**self.jvm_attachment.jni_environment()).DeleteGlobalRef.unwrap()(
+                        self.jvm_attachment.jni_environment(),
+                        self.jvm_ptr
+                    );
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros_jvm_wrappers.rs:53:9: 65:10'
+source = '''
+impl<'a> Drop for $rust_struct_name<'a> {
+
+            fn drop(&mut self) {
+
+                unsafe {
+                    // Delete the global JVM reference to the JVM object.
+                    (**self.jvm_attachment.jni_environment()).DeleteGlobalRef.unwrap()(
+                        self.jvm_attachment.jni_environment(),
+                        self.jvm_ptr
+                    );
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros_jvm_wrappers.rs:53:9: 65:10'
+source = '''
+impl<'a> Drop for $rust_struct_name<'a> {
+
+            fn drop(&mut self) {
+
+                unsafe {
+                    // Delete the global JVM reference to the JVM object.
+                    (**self.jvm_attachment.jni_environment()).DeleteGlobalRef.unwrap()(
+                        self.jvm_attachment.jni_environment(),
+                        self.jvm_ptr
+                    );
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros_jvm_wrappers.rs:53:9: 65:10'
+source = '''
+impl<'a> Drop for $rust_struct_name<'a> {
+
+            fn drop(&mut self) {
+
+                unsafe {
+                    // Delete the global JVM reference to the JVM object.
+                    (**self.jvm_attachment.jni_environment()).DeleteGlobalRef.unwrap()(
+                        self.jvm_attachment.jni_environment(),
+                        self.jvm_ptr
+                    );
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros_jvm_wrappers.rs:53:9: 65:10'
+source = '''
+impl<'a> Drop for $rust_struct_name<'a> {
+
+            fn drop(&mut self) {
+
+                unsafe {
+                    // Delete the global JVM reference to the JVM object.
+                    (**self.jvm_attachment.jni_environment()).DeleteGlobalRef.unwrap()(
+                        self.jvm_attachment.jni_environment(),
+                        self.jvm_ptr
+                    );
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros_jvm_wrappers.rs:53:9: 65:10'
+source = '''
+impl<'a> Drop for $rust_struct_name<'a> {
+
+            fn drop(&mut self) {
+
+                unsafe {
+                    // Delete the global JVM reference to the JVM object.
+                    (**self.jvm_attachment.jni_environment()).DeleteGlobalRef.unwrap()(
+                        self.jvm_attachment.jni_environment(),
+                        self.jvm_ptr
+                    );
+                }
+            }
+        }'''

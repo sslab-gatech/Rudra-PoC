@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/boxed.rs:100:1: 106:2'
+source = '''
+impl<T: ?Sized, A: LocalAlloc> Drop for LocalBox<T, A> {
+    fn drop(&mut self) {
+        unsafe {
+            A::dealloc(self.data.as_ptr() as *mut u8, Self::layout_of(self.data.as_ref()))
+        }
+    }
+}'''

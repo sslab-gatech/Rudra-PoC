@@ -1,0 +1,36 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/cqueue.rs:278:1: 307:2'
+source = '''
+impl Drop for Cqueue {
+    // this would cancel all unfinished select coroutines
+    // and wait until all of them return back
+    fn drop(&mut self) {
+        // first cancel all the select coroutines if they are running
+        self.selectors
+            .lock()
+            .unwrap()
+            .iter()
+            .map(|j| j.as_ref())
+            .fold((), |_, join| match join {
+                Some(j) if !j.is_done() => unsafe { j.coroutine().cancel() },
+                _ => {}
+            });
+
+        // if self.is_panicking {
+        //     return;
+        // }
+
+        // run the rest event
+        loop {
+            match self.poll(None) {
+                Ok(_) => {}
+                Err(_e @ PollError::Finished) => break,
+                _ => unreachable!("cqueue drop unreachable"),
+            }
+        }
+        // we are sure that all the coroutines are finished
+    }
+}'''

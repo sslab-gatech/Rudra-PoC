@@ -1,0 +1,30 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lock.rs:86:1: 91:2'
+source = '''
+impl Drop for LockGuard {
+  fn drop(&mut self) {
+    let result = unsafe { ::unlock(self.address, self.size) };
+    debug_assert!(result.is_ok(), "unlocking region");
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/protect.rs:125:1: 135:2'
+source = '''
+impl Drop for ProtectGuard {
+  fn drop(&mut self) {
+    let result = unsafe {
+      self
+        .regions
+        .iter()
+        .try_for_each(|region| protect(region.base, region.size, region.protection))
+    };
+    debug_assert!(result.is_ok(), "restoring region protection");
+  }
+}'''

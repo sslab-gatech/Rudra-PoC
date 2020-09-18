@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sys/unix/fd.rs:298:1: 307:2'
+source = '''
+impl Drop for FileDesc {
+    fn drop(&mut self) {
+        // Note that errors are ignored when closing a file descriptor. The
+        // reason for this is that if an error occurs we don't actually know if
+        // the file descriptor was closed or not, and if we retried (for
+        // something like EINTR), we might close another valid file descriptor
+        // opened after we closed ours.
+        let _ = unsafe { libc::close(self.fd) };
+    }
+}'''

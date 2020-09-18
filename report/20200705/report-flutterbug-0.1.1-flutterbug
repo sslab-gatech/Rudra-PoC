@@ -1,0 +1,139 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/color.rs:227:1: 235:2'
+source = '''
+impl Drop for ColorMap {
+    fn drop(&mut self) {
+        if let Ok(mut d) = self.dpy.raw() {
+            if !self.is_default {
+                unsafe { xlib::XFreeColormap(d.as_mut(), self.internal) };
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/context.rs:85:1: 103:2'
+source = '''
+impl Drop for Context {
+    fn drop(&mut self) {
+        if let Ok(d) = self.dpy.raw() {
+            self.current_types.iter().for_each(|(i, _)| {
+                let mut ptr: *mut dyn Any = ptr::null_mut::<i32>(); // need to coerce from a sized type
+                unsafe {
+                    xlib::XFindContext(
+                        d.as_ptr(),
+                        *i,
+                        self.inner,
+                        &mut ptr as *mut *mut dyn Any as *mut *mut c_char,
+                    )
+                };
+                let _b = unsafe { Box::<dyn Any>::from_raw(ptr) }; // let the Box destructor destroy the memory
+                unsafe { xlib::XDeleteContext(d.as_ptr(), *i, self.inner) };
+            });
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/drawable.rs:113:1: 122:2'
+source = '''
+impl Drop for GraphicsContext {
+    fn drop(&mut self) {
+        // we shouldn't call XFreeGC if we're using the default context
+        if !self.is_default {
+            if let Ok(mut d) = self.dpy.raw() {
+                unsafe { xlib::XFreeGC(d.as_mut(), self.raw.as_ptr()) };
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/image.rs:70:1: 75:2'
+source = '''
+impl Drop for Image {
+    fn drop(&mut self) {
+        unsafe { xlib::XDestroyImage(self.inner.as_ptr()) };
+        // note: XDestroyImage also destroys the inner data
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pixmap.rs:57:1: 63:2'
+source = '''
+impl Drop for Pixmap {
+    fn drop(&mut self) {
+        if let Ok(mut d) = self.dpy.raw() {
+            unsafe { xlib::XFreePixmap(d.as_mut(), self.inner) };
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/text.rs:78:1: 82:2'
+source = '''
+impl Drop for InputMethod {
+    fn drop(&mut self) {
+        unsafe { xlib::XCloseIM(self.inner.as_mut()) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/text.rs:98:1: 102:2'
+source = '''
+impl Drop for InputContext {
+    fn drop(&mut self) {
+        unsafe { xlib::XDestroyIC(self.inner.as_ptr()) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/window.rs:395:1: 405:2'
+source = '''
+impl Drop for Window {
+    fn drop(&mut self) {
+        // the gc should be dropped before the window is
+
+        if let Ok(mut d) = self.dpy.raw() {
+            unsafe {
+                xlib::XDestroyWindow(d.as_mut(), self.win);
+            };
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:138:1: 142:2'
+source = '''
+impl Drop for Display {
+    fn drop(&mut self) {
+        unsafe { xlib::XCloseDisplay(self.raw.as_ptr()) };
+    }
+}'''

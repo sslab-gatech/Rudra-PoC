@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/arena.rs:361:5: 369:6'
+source = '''
+impl<T, P> Drop for Entry<T, P> {
+        fn drop(&mut self) {
+            if self.occupied {
+                unsafe {
+                    ManuallyDrop::drop(&mut self.data);
+                }
+            }
+        }
+    }'''

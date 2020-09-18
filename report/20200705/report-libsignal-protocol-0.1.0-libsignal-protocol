@@ -1,0 +1,97 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buffer.rs:174:1: 180:2'
+source = '''
+impl Drop for Buffer {
+    fn drop(&mut self) {
+        unsafe {
+            sys::signal_buffer_free(self.raw);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/context.rs:372:1: 378:2'
+source = '''
+impl Drop for ContextInner {
+    fn drop(&mut self) {
+        unsafe {
+            sys::signal_context_destroy(self.raw());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/keys/pre_key_list.rs:21:1: 27:2'
+source = '''
+impl Drop for PreKeyList {
+    fn drop(&mut self) {
+        unsafe {
+            sys::signal_protocol_key_helper_key_list_free(self.head);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/raw_ptr.rs:61:1: 67:2'
+source = '''
+impl<T: IsA<sys::signal_type_base>> Drop for Raw<T> {
+    fn drop(&mut self) {
+        unsafe {
+            sys::signal_type_unref(T::upcast(self.0.as_ptr()));
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/session_builder.rs:64:1: 70:2'
+source = '''
+impl Drop for SessionBuilder {
+    fn drop(&mut self) {
+        unsafe {
+            sys::session_builder_free(self.raw);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/session_cipher.rs:71:1: 77:2'
+source = '''
+impl Drop for SessionCipher {
+    fn drop(&mut self) {
+        unsafe {
+            sys::session_cipher_free(self.raw);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/store_context.rs:93:1: 99:2'
+source = '''
+impl Drop for StoreContextInner {
+    fn drop(&mut self) {
+        unsafe {
+            sys::signal_protocol_store_context_destroy(self.raw);
+        }
+    }
+}'''

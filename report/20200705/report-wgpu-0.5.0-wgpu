@@ -1,0 +1,31 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:1538:1: 1546:2'
+source = '''
+impl<'a> Drop for RenderPass<'a> {
+    fn drop(&mut self) {
+        if !thread::panicking() {
+            unsafe {
+                wgn::wgpu_render_pass_end_pass(self.id);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:1601:1: 1609:2'
+source = '''
+impl<'a> Drop for ComputePass<'a> {
+    fn drop(&mut self) {
+        if !thread::panicking() {
+            unsafe {
+                wgn::wgpu_compute_pass_end_pass(self.id);
+            }
+        }
+    }
+}'''

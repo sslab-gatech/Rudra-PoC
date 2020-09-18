@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/test.rs:533:5: 539:6'
+source = '''
+impl Drop for FixedSliceSequenceRandom<'_> {
+        fn drop(&mut self) {
+            // Ensure that `fill()` was called exactly the right number of
+            // times.
+            assert_eq!(unsafe { *self.current.get() }, self.bytes.len());
+        }
+    }'''

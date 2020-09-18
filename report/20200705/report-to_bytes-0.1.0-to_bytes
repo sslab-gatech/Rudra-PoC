@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bytes.rs:41:1: 50:2'
+source = '''
+impl Drop for Bytes {
+    #[inline]
+    fn drop(&mut self) {
+        if let Some(d) = self.drops.take() {
+            for (o, f) in d {
+                unsafe { f(self, o) }
+            }
+        }
+    }
+}'''

@@ -1,0 +1,29 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:32:1: 38:2'
+source = '''
+impl Drop for StrcCtx{
+    fn drop(&mut self) {
+        unsafe{
+            let _ = str_fromraw!(self.ptr);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/list.rs:204:1: 212:2'
+source = '''
+impl Drop for StringList {
+    fn drop(&mut self) {
+        unsafe {
+            for s in self.alpm_list.iter() {
+                let _ = str_fromraw!(s.string_ptr);
+            }
+        }
+    }
+}'''

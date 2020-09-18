@@ -1,0 +1,18 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bindings/context.rs:139:1: 150:2'
+source = '''
+impl Drop for Context {
+    fn drop(&mut self) {
+        match *self {
+            Context::File(ref mut s) => unsafe {
+                sass_sys::sass_delete_file_context(s.context.get_mut())
+            },
+            Context::Data(ref mut s) => unsafe {
+                sass_sys::sass_delete_data_context(s.context.get_mut())
+            },
+        };
+    }
+}'''

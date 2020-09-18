@@ -1,0 +1,34 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/zd.rs:39:1: 47:2'
+source = '''
+impl<T> Drop for ZeroDrop<T> where T: Copy {
+    #[inline(never)]
+    fn drop(&mut self) {
+        let s: &mut T = self.0.deref_mut();
+        unsafe { ::std::intrinsics::volatile_set_memory::<T>(s,0,1) }
+        // We could do this if we had default
+        // *self.0 = Default::default();
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/cow.rs:26:1: 37:2'
+source = '''
+impl<'a, T> Drop for ZeroDropCow<'a, T> where T: 'a+Copy {
+    #[inline(never)]
+    fn drop(&mut self) {
+        match *self {
+            ZeroDropCow::Borrowed(_) => { },
+            ZeroDropCow::Boxed(ref mut b) => {
+                let s: &mut T = b.deref_mut();
+                unsafe { ::std::intrinsics::volatile_set_memory::<T>(s,0,1) }
+            }
+        }
+    }
+}'''

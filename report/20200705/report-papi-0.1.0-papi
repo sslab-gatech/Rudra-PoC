@@ -1,0 +1,57 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/event_set.rs:278:1: 287:2'
+source = '''
+impl Drop for ReadyEventSet {
+    fn drop(&mut self) {
+        if let Some(ref mut es) = self.event_set.take() {
+            unsafe {
+                check(ffi::PAPI_cleanup_eventset(*es)).expect("Failed to cleanup PAPI event set");
+                check(ffi::PAPI_destroy_eventset(es)).expect("Failed to destroy PAPI event set");
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/event_set.rs:421:1: 437:2'
+source = '''
+impl Drop for RunningEventSet {
+    fn drop(&mut self) {
+        if let Some(ref mut es) = self.event_set.take() {
+            unsafe {
+                let mut state = 0;
+                check(ffi::PAPI_state(*es, &mut state)).expect("Failed to get PAPI counter state");
+                if (state as u32 & ffi::PAPI_RUNNING) != 0 {
+                    check(ffi::PAPI_stop(*es, ptr::null_mut()))
+                        .expect("Failed to stop PAPI counters");
+                }
+
+                check(ffi::PAPI_cleanup_eventset(*es)).expect("Failed to cleanup PAPI event set");
+                check(ffi::PAPI_destroy_eventset(es)).expect("Failed to destroy PAPI event set");
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/event_set.rs:627:1: 636:2'
+source = '''
+impl Drop for EventSetBuilder<'_> {
+    fn drop(&mut self) {
+        if let Some(ref mut es) = self.event_set.take() {
+            unsafe {
+                check(ffi::PAPI_cleanup_eventset(*es)).expect("Failed to cleanup PAPI event set");
+                check(ffi::PAPI_destroy_eventset(es)).expect("Failed to destroy PAPI event set");
+            }
+        }
+    }
+}'''

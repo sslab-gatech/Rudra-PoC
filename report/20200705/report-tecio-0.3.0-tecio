@@ -1,0 +1,33 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/reader.rs:302:1: 311:2'
+source = '''
+impl Drop for TecReader{
+    fn drop(&mut self){
+        let er =  unsafe{
+            bindings::tecFileReaderClose(&mut self.file_handle)
+        };
+        if er != 0 {
+            panic!("Error closing tecplot File!");
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/writer.rs:161:1: 170:2'
+source = '''
+impl Drop for TecWriter{
+    fn drop(&mut self){
+        let er =  unsafe{
+            bindings::tecFileWriterClose(&mut self.file_handle)
+        };
+        if er != 0 {
+            panic!("Error closing tecplot File!");
+        }
+    }
+}'''

@@ -1,0 +1,37 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/common/channel.rs:328:1: 332:2'
+source = '''
+impl<T> Drop for Channel<T> {
+    fn drop(&mut self) {
+        let _ = unsafe { Box::from_raw(self.inner.0) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/common/condvar.rs:109:1: 113:2'
+source = '''
+impl Drop for Condvar {
+    fn drop(&mut self) {
+        unsafe { std::intrinsics::drop_in_place(self.wait_queue.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/common/mutex.rs:21:1: 27:2'
+source = '''
+impl Drop for Mutex {
+    fn drop(&mut self) {
+        unsafe {
+            std::intrinsics::drop_in_place(self.inner.0);
+        }
+    }
+}'''

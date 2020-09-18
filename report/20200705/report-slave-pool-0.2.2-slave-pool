@@ -1,0 +1,42 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/oneshot.rs:47:1: 57:2'
+source = '''
+impl<T> Drop for Payload<T> {
+    fn drop(&mut self) {
+        let state = self.state.load(Ordering::Acquire);
+        match state & READY == READY && !(state & CONSUMED == CONSUMED) {
+            true => unsafe {
+                ptr::drop_in_place(self.value().as_mut_ptr());
+            },
+            _ => (),
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/oneshot.rs:84:1: 101:2'
+source = '''
+impl<T> Drop for Sender<T> {
+    fn drop(&mut self) {
+        if !(self.payload.state.load(Ordering::Acquire) & READY == READY) {
+            //If we're already ready, closing here no longer matters
+            self.payload.state.fetch_or(SEND_CLOSED, Ordering::Release);
+        }
+
+        if self.payload.state.load(Ordering::Acquire) & WAKER_SET == WAKER_SET {
+            match unsafe { self.payload.notifier().take() } {
+                Some(Notifier::Thread(thread)) => thread.unpark(),
+                Some(Notifier::Waker(waker)) => waker.wake(),
+                _ => unreachable!(),
+            }
+
+            self.payload.state.fetch_and(!WAKER_SET, Ordering::Release);
+        }
+    }
+}'''

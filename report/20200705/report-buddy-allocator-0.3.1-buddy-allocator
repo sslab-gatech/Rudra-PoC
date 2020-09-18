@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/allocator.rs:256:1: 262:2'
+source = '''
+impl<AR: AllocRef> Drop for BuddyAllocator<AR> {
+    fn drop(&mut self) {
+        unsafe {
+            self.allocator.dealloc(self.memory.ptr, self.layout);
+        }
+    }
+}'''

@@ -1,0 +1,25 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bitmap.rs:371:1: 377:2'
+source = '''
+impl Drop for Bitmap {
+    fn drop(&mut self) {
+        if self.manage {
+            unsafe { ffi::hwloc_bitmap_free(self.bitmap) }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:551:1: 555:2'
+source = '''
+impl Drop for Topology {
+    fn drop(&mut self) {
+        unsafe { ffi::hwloc_topology_destroy(self.topo) }
+    }
+}'''

@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:708:1: 714:2'
+source = '''
+impl<P: Ord, V: Clone, C: Fn(P) -> V> Drop for LazyCache<P, V, C> {
+    fn drop(&mut self) {
+        if self.init { 
+            unsafe { self.cache.as_mut_ptr().drop_in_place() }
+        }
+    }   
+}'''

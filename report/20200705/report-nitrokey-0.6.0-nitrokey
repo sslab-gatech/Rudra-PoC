@@ -1,0 +1,27 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/device/pro.rs:63:1: 69:2'
+source = '''
+impl<'a> Drop for Pro<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            nitrokey_sys::NK_logout();
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/device/storage.rs:791:1: 797:2'
+source = '''
+impl<'a> Drop for Storage<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            nitrokey_sys::NK_logout();
+        }
+    }
+}'''

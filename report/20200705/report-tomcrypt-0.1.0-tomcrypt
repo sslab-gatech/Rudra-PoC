@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:175:1: 181:2'
+source = '''
+impl Drop for EccKey {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::ecc_free(&mut self.0);
+        }
+    }
+}'''

@@ -1,0 +1,35 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/dir.rs:86:1: 90:2'
+source = '''
+impl Drop for Dir {
+    fn drop(&mut self) {
+        unsafe { libc::closedir(self.0.as_ptr()) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/dir.rs:121:1: 125:2'
+source = '''
+impl<'d> Drop for Iter<'d> {
+    fn drop(&mut self) {
+        unsafe { libc::rewinddir((self.0).0.as_ptr()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ifaddrs.rs:83:1: 87:2'
+source = '''
+impl Drop for InterfaceAddressIterator {
+    fn drop(&mut self) {
+        unsafe { libc::freeifaddrs(self.base) };
+    }
+}'''

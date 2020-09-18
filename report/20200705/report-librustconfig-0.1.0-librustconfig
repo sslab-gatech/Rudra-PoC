@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/config.rs:273:1: 279:2'
+source = '''
+impl Drop for Config {
+    fn drop (&mut self) {
+        unsafe { 
+            raw::config_destroy(&mut self.config); 
+        }
+    }
+}'''

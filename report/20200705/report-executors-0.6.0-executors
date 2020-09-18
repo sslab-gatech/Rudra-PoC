@@ -1,0 +1,44 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/crossbeam_workstealing_pool.rs:849:1: 886:2'
+source = '''
+impl<P> Drop for Sentinel<P>
+where
+    P: Parker + Clone + 'static,
+{
+    fn drop(&mut self) {
+        if self.active {
+            warn!("Active worker {} died! Restarting...", self.id);
+            match self.core.upgrade() {
+                Some(core) => {
+                    let jobs = LOCAL_JOB_QUEUE.with(|q| unsafe {
+                        let mut jobs: Vec<Job> = Vec::new();
+                        if let Some(ref local_queue) = *q.get() {
+                            'drain: loop {
+                                match local_queue.pop() {
+                                    Some(d) => jobs.push(d),
+                                    None => break 'drain,
+                                }
+                            }
+                        }
+                        jobs
+                    });
+                    let mut guard = core.lock().unwrap();
+                    let gsend = guard.global_injector.clone();
+                    // cleanup
+                    guard.drop_worker(self.id);
+                    // restart
+                    // make sure the new thread starts with the same worker id, so the parker doesn't run out of slots
+                    guard.spawn_worker(core.clone(), Some(self.id));
+                    drop(guard);
+                    for job in jobs.into_iter() {
+                        gsend.push(job);
+                    }
+                }
+                None => warn!("Could not restart worker, as pool has been deallocated!"),
+            }
+        }
+    }
+}'''

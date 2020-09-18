@@ -1,0 +1,11 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/raw.rs:77:1: 81:2'
+source = '''
+impl<T: 'static + Sync> Drop for Server<T> {
+    fn drop(&mut self) {
+        unsafe { mg_stop(self.as_ptr()) }
+    }
+}'''

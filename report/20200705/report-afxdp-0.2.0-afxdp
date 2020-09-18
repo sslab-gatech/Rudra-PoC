@@ -1,0 +1,48 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/mmaparea.rs:85:1: 98:2'
+source = '''
+impl<'a, T: std::default::Default + std::marker::Copy> Drop for MmapArea<'a, T> {
+    fn drop(&mut self) {
+        let r: c_int;
+
+        unsafe {
+            r = munmap(self.ptr, self.buf_num * self.buf_len);
+        }
+
+        if r != 0 {
+            let errno = errno().0;
+            println!("munmap failed errno: {}", errno);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/socket.rs:264:1: 270:2'
+source = '''
+impl<'a, T: std::default::Default + std::marker::Copy> Drop for Socket<'a, T> {
+    fn drop(&mut self) {
+        unsafe {
+            xsk_socket__delete(self.socket.as_mut());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/umem.rs:108:1: 114:2'
+source = '''
+impl<'a, T: std::default::Default + std::marker::Copy> Drop for Umem<'a, T> {
+    fn drop(&mut self) {
+        unsafe {
+            xsk_umem__delete(self.umem.lock().unwrap().as_mut());
+        }
+    }
+}'''

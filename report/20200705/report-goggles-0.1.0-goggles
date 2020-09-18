@@ -1,0 +1,47 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/masked.rs:139:1: 161:2'
+source = '''
+impl<C: Component> Drop for MaskedStorage<C> {
+    fn drop(&mut self) {
+        struct DropGuard<'a, 'b, C: Component>(
+            Option<&'b mut BitIter<&'a BitSet>>,
+            &'b mut C::Storage,
+        );
+
+        impl<'a, 'b, C: Component> Drop for DropGuard<'a, 'b, C> {
+            fn drop(&mut self) {
+                if let Some(iter) = self.0.take() {
+                    let mut guard: DropGuard<C> = DropGuard(Some(&mut *iter), &mut *self.1);
+                    while let Some(index) = guard.0.as_mut().unwrap().next() {
+                        unsafe { C::Storage::remove(&mut guard.1, index) };
+                    }
+                    guard.0 = None;
+                }
+            }
+        }
+
+        let mut iter = (&self.mask).iter();
+        DropGuard::<C>(Some(&mut iter), &mut self.storage);
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/masked.rs:146:9: 156:10'
+source = '''
+impl<'a, 'b, C: Component> Drop for DropGuard<'a, 'b, C> {
+            fn drop(&mut self) {
+                if let Some(iter) = self.0.take() {
+                    let mut guard: DropGuard<C> = DropGuard(Some(&mut *iter), &mut *self.1);
+                    while let Some(index) = guard.0.as_mut().unwrap().next() {
+                        unsafe { C::Storage::remove(&mut guard.1, index) };
+                    }
+                    guard.0 = None;
+                }
+            }
+        }'''

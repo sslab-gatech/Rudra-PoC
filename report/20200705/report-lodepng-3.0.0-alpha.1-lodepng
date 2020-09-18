@@ -1,0 +1,17 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rustimpl.rs:2621:1: 2631:2'
+source = '''
+impl Drop for Info {
+    fn drop(&mut self) {
+        unsafe {
+            self.clear_text();
+            self.clear_itext();
+            for &i in &self.unknown_chunks_data {
+                lodepng_free(i as *mut _);
+            }
+        }
+    }
+}'''

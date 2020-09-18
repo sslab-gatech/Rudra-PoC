@@ -1,0 +1,75 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/raw/mod.rs:1205:1: 1219:2'
+source = '''
+impl<T> Drop for RawTable<T> {
+    #[cfg_attr(feature = "inline-more", inline)]
+    fn drop(&mut self) {
+        if !self.is_empty_singleton() {
+            unsafe {
+                if mem::needs_drop::<T>() {
+                    for item in self.iter() {
+                        item.drop();
+                    }
+                }
+                self.free_buckets();
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/raw/mod.rs:1460:1: 1477:2'
+source = '''
+impl<T> Drop for RawIntoIter<T> {
+    #[cfg_attr(feature = "inline-more", inline)]
+    fn drop(&mut self) {
+        unsafe {
+            // Drop all remaining elements
+            if mem::needs_drop::<T>() {
+                while let Some(item) = self.iter.next() {
+                    item.drop();
+                }
+            }
+
+            // Free the table
+            if let Some((ptr, layout)) = self.alloc {
+                dealloc(ptr.as_ptr(), layout);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/raw/mod.rs:1521:1: 1542:2'
+source = '''
+impl<T> Drop for RawDrain<'_, T> {
+    #[cfg_attr(feature = "inline-more", inline)]
+    fn drop(&mut self) {
+        unsafe {
+            // Drop all remaining elements. Note that this may panic.
+            if mem::needs_drop::<T>() {
+                while let Some(item) = self.iter.next() {
+                    item.drop();
+                }
+            }
+
+            // Reset the contents of the table now that all elements have been
+            // dropped.
+            self.table.clear_no_drop();
+
+            // Move the now empty table back to its original location.
+            self.orig_table
+                .as_ptr()
+                .copy_from_nonoverlapping(&*self.table, 1);
+        }
+    }
+}'''

@@ -1,0 +1,37 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/memory.rs:280:1: 310:2'
+source = '''
+impl<T: ?Sized> Drop for HeteroSizedVec<T> {
+    fn drop(&mut self) {
+        // drop elements
+        unsafe {
+            if pointer_is_fat::<T>() {
+                for (offset, (destructor, meta)) in Iterator::zip(
+                    self.mem_indices.iter().copied(),
+                    Iterator::zip(
+                        self.drop_handlers.iter().copied(),
+                        self.ptr_meta.iter().copied(),
+                    ),
+                ) {
+                    let ptr: *mut u8 = self.storage.as_mut_ptr()
+                        .offset(offset as isize);
+
+                    destructor(ptr, meta);
+                }
+            } else {
+                for (offset, destructor) in Iterator::zip(
+                    self.mem_indices.iter().copied(),
+                    self.drop_handlers.iter().copied(),
+                ) {
+                    let ptr: *mut u8 = self.storage.as_mut_ptr()
+                        .offset(offset as isize);
+
+                    destructor(ptr, 0);
+                }
+            }
+        }
+    }
+}'''

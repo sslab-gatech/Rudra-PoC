@@ -1,0 +1,29 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/impls/arrayvec.rs:40:1: 47:2'
+source = '''
+impl<'d, A: Array<Item=u8>> Drop for ArrayVecBuffer<'d, A> {
+    fn drop(&mut self) {
+        let len = self.vec.len();
+        unsafe {
+            self.vec.set_len(len + self.initialized);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/impls/vec.rs:35:1: 42:2'
+source = '''
+impl<'data> Drop for VecBuffer<'data> {
+    fn drop(&mut self) {
+        let len = self.vec.len();
+        unsafe {
+            self.vec.set_len(len + self.initialized);
+        }
+    }
+}'''

@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/shared.rs:18:1: 24:2'
+source = '''
+impl Drop for WebPMemory {
+    fn drop(&mut self) {
+        unsafe {
+            WebPFree(self.0 as _)
+        }
+    }
+}'''

@@ -1,0 +1,98 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buffer.rs:570:1: 575:2'
+source = '''
+impl<T> Drop for PyBuffer<T> {
+    fn drop(&mut self) {
+        let _gil_guard = Python::acquire_gil();
+        unsafe { ffi::PyBuffer_Release(&mut *self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/gil.rs:188:1: 196:2'
+source = '''
+impl Drop for GILGuard {
+    fn drop(&mut self) {
+        unsafe {
+            // Must drop the objects in the pool before releasing the GILGuard
+            ManuallyDrop::drop(&mut self.pool);
+            ffi::PyGILState_Release(self.gstate);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/gil.rs:284:1: 306:2'
+source = '''
+impl Drop for GILPool {
+    fn drop(&mut self) {
+        unsafe {
+            if let Some((obj_len_start, any_len_start)) = self.start {
+                let dropping_obj = OWNED_OBJECTS.with(|holder| {
+                    // `holder` must be dropped before calling Py_DECREF, or Py_DECREF may call
+                    // `GILPool::drop` recursively, resulting in invalid borrowing.
+                    let mut holder = holder.borrow_mut();
+                    holder.any.truncate(any_len_start);
+                    if obj_len_start < holder.obj.len() {
+                        holder.obj.split_off(obj_len_start)
+                    } else {
+                        Vec::new()
+                    }
+                });
+                for obj in dropping_obj {
+                    ffi::Py_DECREF(obj.as_ptr());
+                }
+            }
+        }
+        decrement_gil_count();
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/instance.rs:333:1: 339:2'
+source = '''
+impl<T> Drop for Py<T> {
+    fn drop(&mut self) {
+        unsafe {
+            gil::register_decref(self.0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/object.rs:321:1: 327:2'
+source = '''
+impl Drop for PyObject {
+    fn drop(&mut self) {
+        unsafe {
+            gil::register_decref(self.0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/types/iterator.rs:85:1: 89:2'
+source = '''
+impl<'p> Drop for PyIterator<'p> {
+    fn drop(&mut self) {
+        unsafe { ffi::Py_DECREF(self.0.as_ptr()) }
+    }
+}'''

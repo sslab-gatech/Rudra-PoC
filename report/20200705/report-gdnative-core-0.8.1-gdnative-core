@@ -1,0 +1,435 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/access.rs:177:1: 191:2'
+source = '''
+impl<G> Drop for Owned<G>
+where
+    G: Guard + WritePtr,
+    G::Target: Copy,
+{
+    fn drop(&mut self) {
+        unsafe {
+            let mut dst = self.guard.read_ptr() as *mut G::Target;
+            for o in self.owned.iter() {
+                ptr::write_unaligned(dst, *o);
+                dst = dst.add(1);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:250:9: 254:10'
+source = '''
+impl Drop for $Type {
+            fn drop(&mut self) {
+                unsafe { (get_api().$gd_method)(&mut self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:358:9: 364:10'
+source = '''
+impl<'a> Drop for $Type<'a> {
+            fn drop(&mut self) {
+                unsafe {
+                    ($crate::private::get_api().$gd_method)(self.$access);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:358:9: 364:10'
+source = '''
+impl<'a> Drop for $Type<'a> {
+            fn drop(&mut self) {
+                unsafe {
+                    ($crate::private::get_api().$gd_method)(self.$access);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:250:9: 254:10'
+source = '''
+impl Drop for $Type {
+            fn drop(&mut self) {
+                unsafe { (get_api().$gd_method)(&mut self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:358:9: 364:10'
+source = '''
+impl<'a> Drop for $Type<'a> {
+            fn drop(&mut self) {
+                unsafe {
+                    ($crate::private::get_api().$gd_method)(self.$access);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:358:9: 364:10'
+source = '''
+impl<'a> Drop for $Type<'a> {
+            fn drop(&mut self) {
+                unsafe {
+                    ($crate::private::get_api().$gd_method)(self.$access);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:250:9: 254:10'
+source = '''
+impl Drop for $Type {
+            fn drop(&mut self) {
+                unsafe { (get_api().$gd_method)(&mut self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:250:9: 254:10'
+source = '''
+impl Drop for $Type {
+            fn drop(&mut self) {
+                unsafe { (get_api().$gd_method)(&mut self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:358:9: 364:10'
+source = '''
+impl<'a> Drop for $Type<'a> {
+            fn drop(&mut self) {
+                unsafe {
+                    ($crate::private::get_api().$gd_method)(self.$access);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:358:9: 364:10'
+source = '''
+impl<'a> Drop for $Type<'a> {
+            fn drop(&mut self) {
+                unsafe {
+                    ($crate::private::get_api().$gd_method)(self.$access);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/free_on_drop.rs:34:1: 43:2'
+source = '''
+impl<T> Drop for FreeOnDrop<T>
+where
+    T: Free + Clone,
+{
+    fn drop(&mut self) {
+        unsafe {
+            self.ptr.clone().godot_free();
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/free_on_drop.rs:89:1: 98:2'
+source = '''
+impl<T> Drop for QueueFreeOnDrop<T>
+where
+    T: QueueFree + Clone,
+{
+    fn drop(&mut self) {
+        unsafe {
+            self.ptr.godot_queue_free();
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-core-0.8.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-core-1d7140af35604e11/out/core_traits.rs:54:1: 62:2'
+source = '''
+impl Drop for Reference {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:250:9: 254:10'
+source = '''
+impl Drop for $Type {
+            fn drop(&mut self) {
+                unsafe { (get_api().$gd_method)(&mut self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:358:9: 364:10'
+source = '''
+impl<'a> Drop for $Type<'a> {
+            fn drop(&mut self) {
+                unsafe {
+                    ($crate::private::get_api().$gd_method)(self.$access);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:358:9: 364:10'
+source = '''
+impl<'a> Drop for $Type<'a> {
+            fn drop(&mut self) {
+                unsafe {
+                    ($crate::private::get_api().$gd_method)(self.$access);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:250:9: 254:10'
+source = '''
+impl Drop for $Type {
+            fn drop(&mut self) {
+                unsafe { (get_api().$gd_method)(&mut self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:250:9: 254:10'
+source = '''
+impl Drop for $Type {
+            fn drop(&mut self) {
+                unsafe { (get_api().$gd_method)(&mut self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:250:9: 254:10'
+source = '''
+impl Drop for $Type {
+            fn drop(&mut self) {
+                unsafe { (get_api().$gd_method)(&mut self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:250:9: 254:10'
+source = '''
+impl Drop for $Type {
+            fn drop(&mut self) {
+                unsafe { (get_api().$gd_method)(&mut self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:250:9: 254:10'
+source = '''
+impl Drop for $Type {
+            fn drop(&mut self) {
+                unsafe { (get_api().$gd_method)(&mut self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:358:9: 364:10'
+source = '''
+impl<'a> Drop for $Type<'a> {
+            fn drop(&mut self) {
+                unsafe {
+                    ($crate::private::get_api().$gd_method)(self.$access);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:358:9: 364:10'
+source = '''
+impl<'a> Drop for $Type<'a> {
+            fn drop(&mut self) {
+                unsafe {
+                    ($crate::private::get_api().$gd_method)(self.$access);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:250:9: 254:10'
+source = '''
+impl Drop for $Type {
+            fn drop(&mut self) {
+                unsafe { (get_api().$gd_method)(&mut self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:250:9: 254:10'
+source = '''
+impl Drop for $Type {
+            fn drop(&mut self) {
+                unsafe { (get_api().$gd_method)(&mut self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:250:9: 254:10'
+source = '''
+impl Drop for $Type {
+            fn drop(&mut self) {
+                unsafe { (get_api().$gd_method)(&mut self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:358:9: 364:10'
+source = '''
+impl<'a> Drop for $Type<'a> {
+            fn drop(&mut self) {
+                unsafe {
+                    ($crate::private::get_api().$gd_method)(self.$access);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:358:9: 364:10'
+source = '''
+impl<'a> Drop for $Type<'a> {
+            fn drop(&mut self) {
+                unsafe {
+                    ($crate::private::get_api().$gd_method)(self.$access);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:250:9: 254:10'
+source = '''
+impl Drop for $Type {
+            fn drop(&mut self) {
+                unsafe { (get_api().$gd_method)(&mut self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:358:9: 364:10'
+source = '''
+impl<'a> Drop for $Type<'a> {
+            fn drop(&mut self) {
+                unsafe {
+                    ($crate::private::get_api().$gd_method)(self.$access);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:358:9: 364:10'
+source = '''
+impl<'a> Drop for $Type<'a> {
+            fn drop(&mut self) {
+                unsafe {
+                    ($crate::private::get_api().$gd_method)(self.$access);
+                }
+            }
+        }'''

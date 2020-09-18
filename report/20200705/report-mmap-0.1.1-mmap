@@ -1,0 +1,17 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:265:1: 275:2'
+source = '''
+impl Drop for MemoryMap {
+    /// Unmap the mapping. Panics the task if `munmap` panics.
+    fn drop(&mut self) {
+        if self.len == 0 { /* workaround for dummy_stack */ return; }
+
+        unsafe {
+            // `munmap` only panics due to logic errors
+            libc::munmap(self.data as *mut c_void, self.len as libc::size_t);
+        }
+    }
+}'''

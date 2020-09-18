@@ -1,0 +1,12 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ctokenize.rs:60:1: 65:2'
+source = '''
+impl<T> Drop for PtrBox<T> {
+    fn drop(&mut self) {
+        unsafe { libc::free(self.inner as *mut c_void) };
+        self.inner = ptr::null_mut();
+    }
+}'''

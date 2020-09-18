@@ -1,0 +1,11 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/x64/fixed_memory_unix.rs:19:1: 23:2'
+source = '''
+impl Drop for FixedMemory {
+    fn drop(&mut self) {
+        unsafe { munmap(self.addr as *mut c_void, self.len as usize) };
+    }
+}'''

@@ -1,0 +1,20 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:1174:1: 1187:2'
+source = '''
+impl<T> Drop for Ref<T> {
+  fn drop(&mut self) {
+    unsafe {
+      let mut ref_count = 0;
+      let status = sys::napi_reference_unref(self.raw_env, self.raw_ref, &mut ref_count);
+      debug_assert!(Status::from(status) == Status::Ok);
+
+      if ref_count == 0 {
+        let status = sys::napi_delete_reference(self.raw_env, self.raw_ref);
+        debug_assert!(Status::from(status) == Status::Ok);
+      }
+    }
+  }
+}'''

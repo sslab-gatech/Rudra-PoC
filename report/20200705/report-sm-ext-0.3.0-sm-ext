@@ -1,0 +1,43 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:233:1: 239:2'
+source = '''
+impl<T: IExtensionInterface + ExtensionMetadata> Drop for IExtensionInterfaceAdapter<T> {
+    fn drop(&mut self) {
+        unsafe {
+            drop(Box::from_raw(self.vtable));
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:1328:1: 1334:2'
+source = '''
+impl<T> Drop for IHandleTypeDispatchAdapter<T> {
+    fn drop(&mut self) {
+        unsafe {
+            drop(Box::from_raw(self.vtable));
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:1421:1: 1429:2'
+source = '''
+impl<T> Drop for HandleType<T> {
+    fn drop(&mut self) {
+        IHandleSys(self.iface).remove_type(self).unwrap();
+
+        unsafe {
+            drop(Box::from_raw(self.dispatch));
+        }
+    }
+}'''

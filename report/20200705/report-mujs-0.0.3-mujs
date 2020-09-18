@@ -1,0 +1,11 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:990:1: 994:2'
+source = '''
+impl Drop for State {
+    fn drop(self: &mut State) {
+        unsafe { js_freestate((*self.ptr).state) };
+    }
+}'''

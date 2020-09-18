@@ -1,0 +1,83 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/gluster.rs:176:1: 189:2'
+source = '''
+impl Drop for GlusterFile {
+    fn drop(&mut self) {
+        if self.file_handle.is_null() {
+            // No cleanup needed
+            return;
+        }
+        unsafe {
+            let retcode = glfs_close(self.file_handle);
+            if retcode < 0 {
+                error!("{:?}", GlusterError::new(get_error()));
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/gluster.rs:195:1: 208:2'
+source = '''
+impl Drop for Gluster {
+    fn drop(&mut self) {
+        if self.cluster_handle.is_null() {
+            // No cleanup needed
+            return;
+        }
+        unsafe {
+            let retcode = glfs_fini(self.cluster_handle);
+            if retcode < 0 {
+                error!("{:?}", GlusterError::new(get_error()));
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/gluster.rs:217:1: 230:2'
+source = '''
+impl Drop for GlusterDirectoryPlus {
+    fn drop(&mut self) {
+        if self.dir_handle.is_null() {
+            // No cleanup needed
+            return;
+        }
+        unsafe {
+            let retcode = glfs_closedir(self.dir_handle);
+            if retcode < 0 {
+                error!("{:?}", GlusterError::new(get_error()));
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/gluster.rs:271:1: 284:2'
+source = '''
+impl Drop for GlusterDirectory {
+    fn drop(&mut self) {
+        if self.dir_handle.is_null() {
+            // No cleanup needed
+            return;
+        }
+        unsafe {
+            let retcode = glfs_closedir(self.dir_handle);
+            if retcode < 0 {
+                error!("{:?}", GlusterError::new(get_error()));
+            }
+        }
+    }
+}'''

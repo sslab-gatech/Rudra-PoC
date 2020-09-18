@@ -1,0 +1,12 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/crypto/key.rs:35:1: 40:2'
+source = '''
+impl Drop for PrivateWif {
+    fn drop(&mut self) {
+        let bytes = unsafe { self.0.as_bytes_mut() };
+        sodiumoxide::utils::memzero(bytes);
+    }
+}'''

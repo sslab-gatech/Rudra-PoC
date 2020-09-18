@@ -1,0 +1,25 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/scheduler.rs:966:1: 984:2'
+source = '''
+impl Drop for ThreadPool {
+    fn drop(&mut self) {
+        if is_debug_mode() {
+            println!(
+                "Shutting down this individual pool, sending terminate message to all workers."
+            );
+        }
+
+        // close the pool in sync mode, that's to wait all workers to quit before unblocking
+        if !self.status.closing() {
+            self.close();
+        }
+
+        // now drop the manually allocated stuff
+        unsafe {
+            ptr::drop_in_place(self.status.0.as_ptr());
+        }
+    }
+}'''

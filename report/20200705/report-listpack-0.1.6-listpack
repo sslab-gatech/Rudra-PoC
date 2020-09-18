@@ -1,0 +1,11 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:1814:1: 1818:2'
+source = '''
+impl Drop for Listpack {
+    fn drop(&mut self) {
+        unsafe { lpFree(self.lp) }
+    }
+}'''

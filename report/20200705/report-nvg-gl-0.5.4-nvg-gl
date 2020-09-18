@@ -1,0 +1,43 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:17:1: 25:2'
+source = '''
+impl Drop for Shader {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteProgram(self.prog);
+            gl::DeleteShader(self.vert);
+            gl::DeleteShader(self.frag);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:144:1: 148:2'
+source = '''
+impl Drop for Texture {
+    fn drop(&mut self) {
+        unsafe { gl::DeleteTextures(1, &self.tex) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:189:1: 197:2'
+source = '''
+impl Drop for Renderer {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteBuffers(1, &self.frag_buf);
+            gl::DeleteBuffers(1, &self.vert_buf);
+            gl::DeleteVertexArrays(1, &self.vert_arr);
+        }
+    }
+}'''

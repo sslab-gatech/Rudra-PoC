@@ -1,0 +1,35 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/connection.rs:49:1: 53:2'
+source = '''
+impl Drop for Environment {
+    fn drop(&mut self) {
+        let _ = unsafe { SQLFreeHandle(SQL_HANDLE_ENV, self.handle()) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/connection.rs:93:1: 97:2'
+source = '''
+impl Drop for Connection {
+    fn drop(&mut self) {
+        let _ = unsafe { SQLFreeHandle(SQL_HANDLE_DBC, self.handle()) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/statement.rs:111:1: 115:2'
+source = '''
+impl<P: ParamBinding, C: ColBinding> Drop for Statement<P, C> {
+    fn drop(&mut self) {
+        let _ = unsafe { SQLFreeHandle(SQL_HANDLE_STMT, self.handle()) };
+    }
+}'''

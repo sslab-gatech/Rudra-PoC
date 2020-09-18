@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/runtime/buffer.rs:198:1: 207:2'
+source = '''
+impl Drop for Buffer {
+    fn drop(&mut self) {
+        if self.capacity != 0 {
+            unsafe {
+                let layout = Layout::from_size_align_unchecked(self.capacity, 1);
+                dealloc(self.data, layout);
+            }
+        }
+    }
+}'''

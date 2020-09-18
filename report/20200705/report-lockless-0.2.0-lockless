@@ -1,0 +1,82 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/primitives/atomic_cell.rs:49:1: 57:2'
+source = '''
+impl<T> Drop for Inner<T> {
+    fn drop(&mut self) {
+        let p = self.value.load(Ordering::Relaxed);
+        unsafe {
+            ptr::read(p);
+            free(p);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/primitives/atomic_cell.rs:83:1: 89:2'
+source = '''
+impl<T> Drop for StorageCell<T> {
+    fn drop(&mut self) {
+        unsafe {
+            free(self.get())
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/primitives/prepend_list.rs:60:1: 64:2'
+source = '''
+impl<T> Drop for PrependList<T> {
+    fn drop(&mut self) {
+        unsafe { Self::from_raw(self.0.swap(ptr::null_mut(), Ordering::Relaxed)) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/primitives/append_list.rs:80:1: 84:2'
+source = '''
+impl<T> Drop for AppendList<T> {
+    fn drop(&mut self) {
+        unsafe { Self::from_raw(self.0.swap(ptr::null_mut(), Ordering::Relaxed)) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sync/mpsc_queue.rs:260:1: 268:2'
+source = '''
+impl<T, H: Handle, SenderTag> Drop for MpscQueueReceiver<T, H, SenderTag> where H::HandleInner: HandleInnerBase<ContainerInner=MpscQueueInner<T, SenderTag>> {
+    fn drop(&mut self) {
+        // Drain the channel of all pending messages
+        self.0.with(|inner| unsafe {
+            inner.close();
+            inner.drain();
+        })
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sync/mpsc_queue.rs:313:1: 318:2'
+source = '''
+impl<T, H: Handle, SenderTag> Drop for MpscQueueSender<T, H, SenderTag> where H::HandleInner: HandleInnerBase<ContainerInner=MpscQueueInner<T, SenderTag>> + HandleInner<SenderTag> {
+    fn drop(&mut self) {
+        // Wake up the receiver
+        self.0.with_mut(|inner, id| unsafe { inner.dec_sender_count(id) })
+    }
+}'''

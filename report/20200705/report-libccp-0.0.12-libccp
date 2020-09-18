@@ -1,0 +1,29 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:104:1: 109:2'
+source = '''
+impl Drop for Datapath {
+    fn drop(&mut self) {
+        let dp = &mut self.0;
+        unsafe { ccp::ccp_free(dp as *mut ccp::ccp_datapath) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:257:1: 266:2'
+source = '''
+impl<'dp, T: CongestionOps> Drop for Connection<'dp, T> {
+    fn drop(&mut self) {
+        let ptr = self.0.lock().expect("Lock ccp_connection");
+        unsafe {
+            let index = (**ptr).index;
+            let dp = (**ptr).datapath;
+            ccp::ccp_connection_free(dp, index);
+        }
+    }
+}'''

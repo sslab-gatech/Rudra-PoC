@@ -1,0 +1,14 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/backend/gles.rs:123:1: 130:2'
+source = '''
+impl Drop for BackendGL {
+    fn drop(&mut self) {
+        if self.vert_buf != 0 {
+            unsafe { gles::DeleteBuffers(1, &self.vert_buf) }
+            self.vert_buf = 0;
+        }
+    }
+}'''

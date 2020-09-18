@@ -1,0 +1,52 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/iter.rs:75:1: 88:2'
+source = '''
+impl<T, N> Drop for GenericArrayIter<T, N>
+where
+    N: ArrayLength<T>,
+{
+    #[inline]
+    fn drop(&mut self) {
+        // Drop values that are still alive.
+        for p in self.as_mut_slice() {
+            unsafe {
+                ptr::drop_in_place(p);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:245:1: 253:2'
+source = '''
+impl<T, N: ArrayLength<T>> Drop for ArrayBuilder<T, N> {
+    fn drop(&mut self) {
+        unsafe {
+            for value in &mut (&mut *self.array.as_mut_ptr())[..self.position] {
+                ptr::drop_in_place(value);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:286:1: 294:2'
+source = '''
+impl<T, N: ArrayLength<T>> Drop for ArrayConsumer<T, N> {
+    fn drop(&mut self) {
+        for value in &mut self.array[self.position..N::USIZE] {
+            unsafe {
+                ptr::drop_in_place(value);
+            }
+        }
+    }
+}'''

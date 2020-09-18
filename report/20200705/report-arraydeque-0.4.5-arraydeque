@@ -1,0 +1,52 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:2277:1: 2322:2'
+source = '''
+impl<'a, A, B> Drop for Drain<'a, A, B>
+where
+    A: Array,
+    A::Item: 'a,
+    B: Behavior,
+{
+    fn drop(&mut self) {
+        for _ in self.by_ref() {}
+
+        let source_deque = unsafe { &mut *self.deque };
+
+        let tail_len = source_deque.len();
+        let head_len = self.after_len;
+
+        let orig_tail = source_deque.tail();
+        let drain_tail = wrap_add(orig_tail, tail_len, A::capacity());
+        let drain_head = self.after_tail;
+        let orig_head = wrap_add(drain_head, head_len, A::capacity());
+        let orig_len = wrap_sub(orig_head, orig_tail, A::capacity());
+
+        // Restore the original len value
+        unsafe { source_deque.set_len(orig_len) }
+        match (tail_len, head_len) {
+            (0, 0) => unsafe {
+                source_deque.set_tail(0);
+                source_deque.set_len(0);
+            },
+            (0, _) => unsafe {
+                source_deque.set_tail(drain_head);
+                source_deque.set_len(head_len);
+            },
+            (_, 0) => unsafe { source_deque.set_len(tail_len) },
+            _ => unsafe {
+                if tail_len <= head_len {
+                    let new_tail = wrap_sub(drain_head, tail_len, A::capacity());
+                    source_deque.set_tail(new_tail);
+                    source_deque.set_len(tail_len + head_len);
+                    source_deque.wrap_copy(new_tail, orig_tail, tail_len);
+                } else {
+                    source_deque.set_len(tail_len + head_len);
+                    source_deque.wrap_copy(drain_tail, drain_head, head_len);
+                }
+            },
+        }
+    }
+}'''

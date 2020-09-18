@@ -1,0 +1,49 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:106:1: 118:2'
+source = '''
+impl<T: Copy> Drop for VarLenArray<T> {
+    fn drop(&mut self) {
+        if !self.ptr.is_null() {
+            unsafe {
+                libc::free(self.ptr as *mut _);
+            }
+            self.ptr = ptr::null();
+            if self.len != 0 {
+                self.len = 0;
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/string.rs:192:1: 199:2'
+source = '''
+impl Drop for VarLenAscii {
+    #[inline]
+    fn drop(&mut self) {
+        if !self.ptr.is_null() {
+            unsafe { libc::free(self.ptr as *mut _) };
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/string.rs:295:1: 302:2'
+source = '''
+impl Drop for VarLenUnicode {
+    #[inline]
+    fn drop(&mut self) {
+        if !self.ptr.is_null() {
+            unsafe { libc::free(self.ptr as *mut _) };
+        }
+    }
+}'''

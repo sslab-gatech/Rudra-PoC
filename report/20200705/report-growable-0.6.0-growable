@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:373:1: 381:2'
+source = '''
+impl Drop for Growable {
+    fn drop(&mut self) {
+        if self.len != 0 {
+            unsafe {
+                Global.dealloc(self.ptr, Layout::from_size_align_unchecked(self.len, self.ptr_alignment));
+            }
+        }
+    }
+}'''

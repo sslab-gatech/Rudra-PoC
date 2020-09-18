@@ -1,0 +1,95 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-physics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-physics-99312b551b29e86e/out/physics_types.rs:2293:1: 2301:2'
+source = '''
+impl Drop for Physics2DTestMotionResult {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-physics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-physics-99312b551b29e86e/out/physics_types.rs:2718:1: 2726:2'
+source = '''
+impl Drop for Physics2DShapeQueryParameters {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-physics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-physics-99312b551b29e86e/out/physics_types.rs:4636:1: 4644:2'
+source = '''
+impl Drop for PhysicsShapeQueryParameters {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-physics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-physics-99312b551b29e86e/out/physics_types.rs:16112:1: 16120:2'
+source = '''
+impl Drop for KinematicCollision2D {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-physics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-physics-99312b551b29e86e/out/physics_types.rs:20100:1: 20108:2'
+source = '''
+impl Drop for KinematicCollision {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-physics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-physics-99312b551b29e86e/out/physics_types.rs:35283:1: 35291:2'
+source = '''
+impl Drop for PhysicsMaterial {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''

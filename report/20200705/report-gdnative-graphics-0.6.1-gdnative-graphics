@@ -1,0 +1,639 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:3164:1: 3172:2'
+source = '''
+impl Drop for TileSet {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:8935:1: 8943:2'
+source = '''
+impl Drop for SpatialMaterial {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:12501:1: 12509:2'
+source = '''
+impl Drop for BakedLightmapData {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:13041:1: 13049:2'
+source = '''
+impl Drop for SpriteFrames {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:24891:1: 24899:2'
+source = '''
+impl Drop for GIProbeData {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:25369:1: 25377:2'
+source = '''
+impl Drop for OccluderPolygon2D {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:32584:1: 32592:2'
+source = '''
+impl Drop for CurveTexture {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:33282:1: 33290:2'
+source = '''
+impl Drop for ParticlesMaterial {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:35575:1: 35583:2'
+source = '''
+impl Drop for VisualShaderNodeColorUniform {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:36059:1: 36067:2'
+source = '''
+impl Drop for VisualShaderNodeCubeMapUniform {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:36556:1: 36564:2'
+source = '''
+impl Drop for ShaderMaterial {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:37060:1: 37068:2'
+source = '''
+impl Drop for VisualShaderNodeTransformUniform {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:37564:1: 37572:2'
+source = '''
+impl Drop for VisualShaderNodeVec3Uniform {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:38104:1: 38112:2'
+source = '''
+impl Drop for VisualShaderNodeTextureUniform {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:38614:1: 38622:2'
+source = '''
+impl Drop for CanvasItemMaterial {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:42616:1: 42624:2'
+source = '''
+impl Drop for VisualShader {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:43110:1: 43118:2'
+source = '''
+impl Drop for VisualShaderNodeInput {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:44051:1: 44059:2'
+source = '''
+impl Drop for VisualShaderNodeColorConstant {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:44545:1: 44553:2'
+source = '''
+impl Drop for VisualShaderNodeVec3Constant {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:45039:1: 45047:2'
+source = '''
+impl Drop for VisualShaderNodeTransformConstant {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:45533:1: 45541:2'
+source = '''
+impl Drop for VisualShaderNodeScalarConstant {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:46041:1: 46049:2'
+source = '''
+impl Drop for VisualShaderNodeScalarOp {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:46982:1: 46990:2'
+source = '''
+impl Drop for VisualShaderNodeVectorOp {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:47490:1: 47498:2'
+source = '''
+impl Drop for VisualShaderNodeColorOp {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:47991:1: 47999:2'
+source = '''
+impl Drop for VisualShaderNodeTransformMult {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:48510:1: 48518:2'
+source = '''
+impl Drop for VisualShaderNodeScalarFunc {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:49015:1: 49023:2'
+source = '''
+impl Drop for VisualShaderNodeVectorFunc {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:49518:1: 49526:2'
+source = '''
+impl Drop for VisualShaderNodeTransformVecMult {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:50002:1: 50010:2'
+source = '''
+impl Drop for VisualShaderNodeScalarInterp {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:50533:1: 50541:2'
+source = '''
+impl Drop for VisualShaderNodeTexture {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:51017:1: 51025:2'
+source = '''
+impl Drop for VisualShaderNodeVectorInterp {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:51501:1: 51509:2'
+source = '''
+impl Drop for VisualShaderNodeTransformDecompose {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:52442:1: 52450:2'
+source = '''
+impl Drop for VisualShaderNodeVectorDecompose {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:52946:1: 52954:2'
+source = '''
+impl Drop for VisualShaderNodeScalarUniform {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:53430:1: 53438:2'
+source = '''
+impl Drop for VisualShaderNodeDotProduct {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:53914:1: 53922:2'
+source = '''
+impl Drop for VisualShaderNodeVectorCompose {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:54426:1: 54434:2'
+source = '''
+impl Drop for VisualShaderNodeCubeMap {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:54944:1: 54952:2'
+source = '''
+impl Drop for CubeMap {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:55428:1: 55436:2'
+source = '''
+impl Drop for VisualShaderNodeVectorLen {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-graphics-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-graphics-8bd868dd8f1c829b/out/graphics_types.rs:55912:1: 55920:2'
+source = '''
+impl Drop for VisualShaderNodeTransformCompose {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''

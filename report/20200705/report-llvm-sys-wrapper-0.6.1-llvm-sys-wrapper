@@ -1,0 +1,45 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/builder.rs:790:1: 795:2'
+source = '''
+impl Drop for Builder {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe { LLVMDisposeBuilder(self.llvm_builder) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/module.rs:114:1: 119:2'
+source = '''
+impl Drop for Module {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe { LLVMDisposeModule(self.llvm_module) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/cstring_manager.rs:75:1: 87:2'
+source = '''
+impl Drop for CStringManager {
+    fn drop(&mut self){
+        let mut list: *mut List = unsafe { &mut *self.cstrings };
+        unsafe {
+            while !list.is_null() {
+                libc::free((*list).value_ptr);
+                let ptr = list;
+                list = (*list).next;
+                libc::free(ptr as *mut c_void);
+            }
+        }
+    }
+}'''

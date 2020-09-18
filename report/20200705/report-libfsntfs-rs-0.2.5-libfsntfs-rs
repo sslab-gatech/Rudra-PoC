@@ -1,0 +1,80 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/attribute.rs:50:1: 65:2'
+source = '''
+impl<'a> Drop for Attribute<'a> {
+    fn drop(&mut self) {
+        use libyal_rs_common::ffi::AsTypeRef;
+        use log::trace;
+
+        let mut error = ptr::null_mut();
+
+        trace!("Calling `libfsntfs_attribute_free`");
+
+        unsafe {
+            libfsntfs_attribute_free(self.as_raw(), &mut error);
+        }
+
+        debug_assert!(error.is_null(), "`libfsntfs_attribute_free` failed!");
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ffi_error.rs:61:1: 67:2'
+source = '''
+impl Drop for LibfsntfsError {
+    fn drop(&mut self) {
+        trace!("Calling `libfsntfs_error_free`");
+
+        unsafe { libfsntfs_error_free(self.as_raw()) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/file_entry.rs:57:1: 72:2'
+source = '''
+impl<'a> Drop for FileEntry<'a> {
+    fn drop(&mut self) {
+        use libyal_rs_common::ffi::AsTypeRef;
+        use log::trace;
+
+        let mut error = ptr::null_mut();
+
+        trace!("Calling `libfsntfs_file_entry_free`");
+
+        unsafe {
+            libfsntfs_file_entry_free(&mut self.as_type_ref_mut() as *mut _, &mut error);
+        }
+
+        debug_assert!(error.is_null(), "`libfsntfs_file_entry_free` failed!");
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/volume.rs:55:1: 68:2'
+source = '''
+impl Drop for Volume {
+    fn drop(&mut self) {
+        let mut error = ptr::null_mut();
+
+        if unsafe { libfsntfs_volume_close(self.as_type_ref(), &mut error) } != 1 {
+            error!("`libfsntfs_volume_close` failed!");
+        }
+
+        let mut error = ptr::null_mut();
+        if unsafe { libfsntfs_volume_free(self.as_raw(), &mut error) } != 1 {
+            panic!("`libfsntfs_volume_free` failed!");
+        }
+    }
+}'''

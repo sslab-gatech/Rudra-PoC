@@ -1,0 +1,46 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:693:1: 732:2'
+source = '''
+impl<K, V> Drop for ZipTree<K, V> {
+    fn drop(&mut self) {
+        let mut path = LinkedList::new();
+        path.push_back((self.root, DfsAction::Enter));
+
+        loop {
+            let (node, action) = match path.pop_back() {
+                None => break,
+                Some(item) => item,
+            };
+
+            if node.is_null() {
+                continue;
+            }
+
+            let (left, right) = unsafe {
+                let left = (*node).left;
+                let right = (*node).right;
+                (left, right)
+            };
+
+            match action {
+                DfsAction::Enter => {
+                    path.push_back((right, DfsAction::Enter));
+                    path.push_back((node, DfsAction::Leave));
+                    path.push_back((left, DfsAction::Enter));
+                }
+                DfsAction::Leave => {
+                    let node_boxed = unsafe {
+                        Box::from_raw(node)
+                    };
+                    drop(node_boxed);
+                }
+            }
+        }
+
+        self.root = null_mut();
+        self.n_nodes = 0;
+    }
+}'''

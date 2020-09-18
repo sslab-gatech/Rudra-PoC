@@ -1,0 +1,29 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:219:1: 228:2'
+source = '''
+impl Drop for IfAddrIterator {
+    fn drop(&mut self) {
+        // Zero the iterator pointer.
+        self.ifap = ptr::null_mut();
+
+        // Zero the original pointer in the structure and then free it.
+        let ptr = mem::replace(&mut self.orig, ptr::null_mut());
+        unsafe { ffi::freeifaddrs(ptr) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:607:1: 612:2'
+source = '''
+impl Drop for Interface {
+    fn drop(&mut self) {
+        let sock = mem::replace(&mut self.sock, 0);
+        unsafe { close(sock) };
+    }
+}'''

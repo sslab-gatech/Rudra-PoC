@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:84:5: 93:6'
+source = '''
+impl<T> Drop for NoDrop<T> {
+        fn drop(&mut self) {
+            if needs_drop::<T>() {
+                // inhibit drop
+                unsafe {
+                    ptr::write(&mut self.0, Flag::Dropped(0));
+                }
+            }
+        }
+    }'''

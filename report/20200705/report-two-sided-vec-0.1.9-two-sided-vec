@@ -1,0 +1,60 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/raw.rs:112:1: 126:2'
+source = '''
+unsafe impl<#[may_dangle] T> Drop for RawTwoSidedVec<T> {
+    #[inline]
+    fn drop(&mut self) {
+        if !self.capacity.is_empty() {
+            let mut heap = Global::default();
+            unsafe {
+                let layout = self.capacity.layout::<T>();
+                heap.dealloc(
+                    NonNull::new_unchecked(self.alloc_start() as *mut u8),
+                    layout
+                );
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:487:1: 494:2'
+source = '''
+unsafe impl<#[may_dangle] T> Drop for TwoSidedVec<T> {
+    fn drop(&mut self) {
+        unsafe {
+            // use drop for owned slice `[T]` just like vec
+            ptr::drop_in_place(&mut self[..])
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:817:1: 833:2'
+source = '''
+impl<'a, T, F: FnMut(isize, &mut T) -> bool> Drop for DrainFilterBack<'a, T, F> {
+    fn drop(&mut self) {
+        for _ in self.by_ref() {}
+        let target_len = self.old_len - self.del;
+        unsafe {
+            ptr::copy_nonoverlapping(
+                self.vec.middle_ptr().sub(self.old_len),
+                self.vec.middle_ptr().sub(target_len),
+                target_len
+            );
+        }
+        debug_assert!(target_len <= isize::max_value() as usize);
+        self.vec.start_index = -(target_len as isize);
+        // Reverse the order so we're back to where we started
+        self.vec.back_mut().reverse();
+    }
+}'''

@@ -1,0 +1,91 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/integer/traits.rs:56:1: 63:2'
+source = '''
+impl Drop for Integer {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            xmpz::clear(self);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rational/traits.rs:60:1: 67:2'
+source = '''
+impl Drop for Rational {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            xmpq::clear(self);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/float/traits.rs:63:1: 71:2'
+source = '''
+impl Drop for Float {
+    #[inline]
+    fn drop(&mut self) {
+        // Safety: we are freeing memory. This is sound as self must be initialized.
+        unsafe {
+            mpfr::clear(self.as_raw_mut());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/complex/traits.rs:58:1: 66:2'
+source = '''
+impl Drop for Complex {
+    #[inline]
+    fn drop(&mut self) {
+        // Safety: we are freeing memory. This is sound as self must be initialized.
+        unsafe {
+            mpc::clear(self.as_raw_mut());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rand.rs:110:1: 117:2'
+source = '''
+impl Drop for RandState<'_> {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            gmp::randclear(self.as_raw_mut());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rand.rs:643:1: 650:2'
+source = '''
+impl Drop for ThreadRandState<'_> {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            gmp::randclear(self.as_raw_mut());
+        }
+    }
+}'''

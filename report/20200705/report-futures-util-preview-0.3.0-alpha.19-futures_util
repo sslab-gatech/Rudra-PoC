@@ -1,0 +1,85 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stream/futures_unordered/task.rs:72:1: 88:2'
+source = '''
+impl<Fut> Drop for Task<Fut> {
+    fn drop(&mut self) {
+        // Since `Task<Fut>` is sent across all threads for any lifetime,
+        // regardless of `Fut`, we, to guarantee memory safety, can't actually
+        // touch `Fut` at any time except when we have a reference to the
+        // `FuturesUnordered` itself .
+        //
+        // Consequently it *should* be the case that we always drop futures from
+        // the `FuturesUnordered` instance. This is a bomb, just in case there's
+        // a bug in that logic.
+        unsafe {
+            if (*self.future.get()).is_some() {
+                abort("future still here when dropping");
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stream/futures_unordered/ready_to_run_queue.rs:90:1: 109:2'
+source = '''
+impl<Fut> Drop for ReadyToRunQueue<Fut> {
+    fn drop(&mut self) {
+        // Once we're in the destructor for `Inner<Fut>` we need to clear out
+        // the ready to run queue of tasks if there's anything left in there.
+        //
+        // Note that each task has a strong reference count associated with it
+        // which is owned by the ready to run queue. All tasks should have had
+        // their futures dropped already by the `FuturesUnordered` destructor
+        // above, so we're just pulling out tasks and dropping their refcounts.
+        unsafe {
+            loop {
+                match self.dequeue() {
+                    Dequeue::Empty => break,
+                    Dequeue::Inconsistent => abort("inconsistent in drop"),
+                    Dequeue::Data(ptr) => drop(Arc::from_raw(ptr)),
+                }
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stream/futures_unordered/mod.rs:443:1: 470:2'
+source = '''
+impl<Fut> Drop for FuturesUnordered<Fut> {
+    fn drop(&mut self) {
+        // When a `FuturesUnordered` is dropped we want to drop all futures
+        // associated with it. At the same time though there may be tons of
+        // wakers flying around which contain `Task<Fut>` references
+        // inside them. We'll let those naturally get deallocated.
+        unsafe {
+            while !self.head_all.is_null() {
+                let head = self.head_all;
+                let task = self.unlink(head);
+                self.release_task(task);
+            }
+        }
+
+        // Note that at this point we could still have a bunch of tasks in the
+        // ready to run queue. None of those tasks, however, have futures
+        // associated with them so they're safe to destroy on any thread. At
+        // this point the `FuturesUnordered` struct, the owner of the one strong
+        // reference to the ready to run queue will drop the strong reference.
+        // At that point whichever thread releases the strong refcount last (be
+        // it this thread or some other thread as part of an `upgrade`) will
+        // clear out the ready to run queue and free all remaining tasks.
+        //
+        // While that freeing operation isn't guaranteed to happen here, it's
+        // guaranteed to happen "promptly" as no more "blocking work" will
+        // happen while there's a strong refcount held.
+    }
+}'''

@@ -1,0 +1,22 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/archetype.rs:302:1: 317:2'
+source = '''
+impl Drop for Archetype {
+    fn drop(&mut self) {
+        self.clear();
+        if self.data_size != 0 {
+            unsafe {
+                dealloc(
+                    (*self.data.get()).as_ptr().cast(),
+                    Layout::from_size_align_unchecked(
+                        self.data_size,
+                        self.types.first().map_or(1, |x| x.layout.align()),
+                    ),
+                );
+            }
+        }
+    }
+}'''

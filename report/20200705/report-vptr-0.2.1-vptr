@@ -1,0 +1,12 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:485:1: 490:2'
+source = '''
+impl<Trait: ?Sized + 'static> Drop for ThinBox<Trait> {
+    fn drop(&mut self) {
+        let ptr = &mut *ThinBox::as_thin_ref_mut(self) as *mut Trait;
+        unsafe { Box::from_raw(ptr) };
+    }
+}'''

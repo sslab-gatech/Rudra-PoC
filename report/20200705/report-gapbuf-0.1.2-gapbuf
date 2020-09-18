@@ -1,0 +1,14 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/gap_buffer.rs:652:1: 659:2'
+source = '''
+impl<T> Drop for GapBuffer<T> {
+    fn drop(&mut self) {
+        unsafe {
+            let (s0, s1) = self.as_mut_slices();
+            try_finally!(drop_in_place(s0), drop_in_place(s1));
+        }
+    }
+}'''

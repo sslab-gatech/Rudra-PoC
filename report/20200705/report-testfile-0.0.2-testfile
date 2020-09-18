@@ -1,0 +1,12 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:30:1: 35:2'
+source = '''
+impl Drop for TestFile {
+    fn drop(&mut self) {
+        unsafe { ManuallyDrop::drop(&mut self.file) };
+        let _ = std::fs::remove_file(&self.path);
+    }
+}'''

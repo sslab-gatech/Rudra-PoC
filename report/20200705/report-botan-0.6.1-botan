@@ -1,0 +1,203 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/block.rs:17:1: 21:2'
+source = '''
+impl Drop for BlockCipher {
+    fn drop(&mut self) {
+        unsafe { botan_block_cipher_destroy(self.obj); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/cipher.rs:27:1: 31:2'
+source = '''
+impl Drop for Cipher {
+    fn drop(&mut self) {
+        unsafe { botan_cipher_destroy(self.obj); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/fpe.rs:29:1: 33:2'
+source = '''
+impl Drop for FPE {
+    fn drop(&mut self) {
+        unsafe { botan_fpe_destroy(self.obj); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/hash.rs:17:1: 21:2'
+source = '''
+impl Drop for HashFunction {
+    fn drop(&mut self) {
+        unsafe { botan_hash_destroy(self.obj); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/mac.rs:15:1: 19:2'
+source = '''
+impl Drop for MsgAuthCode {
+    fn drop(&mut self) {
+        unsafe { botan_mac_destroy(self.obj); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/mp.rs:24:1: 28:2'
+source = '''
+impl Drop for MPI {
+    fn drop(&mut self) {
+        unsafe { botan_mp_destroy(self.obj); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/otp.rs:17:1: 21:2'
+source = '''
+impl Drop for HOTP {
+    fn drop(&mut self) {
+        unsafe { botan_hotp_destroy(self.obj); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/otp.rs:23:1: 27:2'
+source = '''
+impl Drop for TOTP {
+    fn drop(&mut self) {
+        unsafe { botan_totp_destroy(self.obj); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pk_ops.rs:25:1: 29:2'
+source = '''
+impl Drop for Signer {
+    fn drop(&mut self) {
+        unsafe { botan_pk_op_sign_destroy(self.obj) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pk_ops.rs:63:1: 67:2'
+source = '''
+impl Drop for Decryptor {
+    fn drop(&mut self) {
+        unsafe { botan_pk_op_decrypt_destroy(self.obj) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pk_ops.rs:97:1: 101:2'
+source = '''
+impl Drop for Verifier {
+    fn drop(&mut self) {
+        unsafe { botan_pk_op_verify_destroy(self.obj) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pk_ops.rs:153:1: 157:2'
+source = '''
+impl Drop for Encryptor {
+    fn drop(&mut self) {
+        unsafe { botan_pk_op_encrypt_destroy(self.obj) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pk_ops.rs:187:1: 191:2'
+source = '''
+impl Drop for KeyAgreement {
+    fn drop(&mut self) {
+        unsafe { botan_pk_op_key_agreement_destroy(self.obj) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pubkey.rs:20:1: 24:2'
+source = '''
+impl Drop for Privkey {
+    fn drop(&mut self) {
+        unsafe { botan_privkey_destroy(self.obj) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pubkey.rs:26:1: 30:2'
+source = '''
+impl Drop for Pubkey {
+    fn drop(&mut self) {
+        unsafe { botan_pubkey_destroy(self.obj) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rng.rs:10:1: 14:2'
+source = '''
+impl Drop for RandomNumberGenerator {
+    fn drop(&mut self) {
+        unsafe { botan_rng_destroy(self.obj); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/x509.rs:13:1: 17:2'
+source = '''
+impl Drop for Certificate {
+    fn drop(&mut self) {
+        unsafe { botan_x509_cert_destroy(self.obj) };
+    }
+}'''

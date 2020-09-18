@@ -1,0 +1,46 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/gl_context.rs:46:1: 55:2'
+source = '''
+impl Drop for GLContext {
+    fn drop(&mut self) {
+        self.platform_context.make_current();
+
+        unsafe {
+            skia::SkiaGrContextRelease(self.gr_context);
+            skia::SkiaGrGLInterfaceRelease(self.gl_interface);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/gl_context_glx.rs:36:1: 58:2'
+source = '''
+impl Drop for GLPlatformContext {
+    fn drop(&mut self) {
+        // We need this thread to grab the GLX context before we can make
+        // OpenGL calls. But glXMakeCurrent() will flush the old context,
+        // which might have been uninitialized. Dropping the current context
+        // first solves this problem somehow.
+        self.drop_current_context();
+        self.make_current();
+
+        gl_rasterization_context::destroy_framebuffer(self.gl(),
+                                                      self.framebuffer_id,
+                                                      self.texture_id,
+                                                      self.depth_stencil_renderbuffer_id);
+
+        unsafe {
+            let glx_display = self.display as *mut glx::types::Display;
+            glx::MakeCurrent(glx_display, 0 /* None */, ptr::null_mut());
+            glx::DestroyContext(glx_display, self.glx_context as glx::types::GLXContext);
+            glx::DestroyGLXPixmap(glx_display, self.glx_pixmap);
+            xlib::XFreePixmap(self.display, self.pixmap);
+        }
+    }
+}'''

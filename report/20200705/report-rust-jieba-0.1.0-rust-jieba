@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:358:1: 364:2'
+source = '''
+impl Drop for Jieba {
+    fn drop(&mut self) {
+        if !self.inner.is_null() {
+            unsafe { jieba_free(self.inner) };
+        }
+    }
+}'''

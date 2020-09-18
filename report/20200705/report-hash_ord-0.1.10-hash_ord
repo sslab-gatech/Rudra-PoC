@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/hash_table.rs:548:1: 556:2'
+source = '''
+impl<K, V> Drop for HashTable<K, V> {
+    fn drop(&mut self) {
+        if self.index != self.init.as_mut_ptr() {
+            unsafe {
+                free(self.index as *mut c_void);
+            }
+        }
+    }
+}'''

@@ -1,0 +1,14 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/unique_ptr.rs:90:1: 97:2'
+source = '''
+impl<T> Drop for UniquePtr<T>
+where
+    T: UniquePtrTarget,
+{
+    fn drop(&mut self) {
+        unsafe { T::__drop(self.repr) }
+    }
+}'''

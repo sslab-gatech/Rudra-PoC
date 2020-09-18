@@ -1,0 +1,86 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/fileset.rs:127:1: 133:2'
+source = '''
+impl Drop for Fileset {
+    fn drop(&mut self) {
+        unsafe {
+            mtbl_sys::mtbl_fileset_destroy(&mut self.mtbl_fileset);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/merger.rs:124:1: 130:2'
+source = '''
+impl Drop for Merger {
+    fn drop(&mut self) {
+        unsafe {
+            mtbl_sys::mtbl_merger_destroy(&mut self.mtbl_merger);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/reader.rs:149:1: 155:2'
+source = '''
+impl<'a> Drop for Iter<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            mtbl_sys::mtbl_iter_destroy(&mut self.mtbl_iter);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/reader.rs:336:1: 342:2'
+source = '''
+impl Drop for Reader {
+    fn drop(&mut self) {
+        unsafe {
+            mtbl_sys::mtbl_reader_destroy(&mut self.mtbl_reader);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sorter.rs:199:1: 208:2'
+source = '''
+impl Drop for Sorter {
+    fn drop(&mut self) {
+        unsafe {
+            // TODO check retval? I'm not sure how to handle errors in
+            // destructors.
+            mtbl_sys::mtbl_sorter_write(self.mtbl_sorter, self.writer.as_raw_ptr());
+            mtbl_sys::mtbl_sorter_destroy(&mut self.mtbl_sorter);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/writer.rs:181:1: 187:2'
+source = '''
+impl Drop for Writer {
+    fn drop(&mut self) {
+        unsafe {
+            mtbl_sys::mtbl_writer_destroy(&mut self.mtbl_writer);
+        }
+    }
+}'''

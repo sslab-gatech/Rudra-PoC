@@ -1,0 +1,19 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:307:1: 319:2'
+source = '''
+impl<T> Drop for IntoElements<T> where T: TupleElements {
+    #[inline(always)]
+    fn drop(&mut self) {
+        let mut tuple = self.tuple.take().unwrap();
+        // only drop remaining elements
+        for i in self.index .. T::N {
+            unsafe {
+                ptr::drop_in_place(tuple.get_mut(i).unwrap());
+            }
+        }
+        mem::forget(tuple);
+    }
+}'''

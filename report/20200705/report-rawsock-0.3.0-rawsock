@@ -1,0 +1,38 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pcap/interface.rs:57:1: 61:2'
+source = '''
+impl<'a> Drop for Interface<'a> {
+    fn drop(&mut self) {
+        unsafe { self.dll.pcap_close(self.handle) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/wpcap/interface.rs:62:1: 69:2'
+source = '''
+impl<'a> Drop for Interface<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            self.dll.pcap_sendqueue_destroy(self.queue);
+            self.dll.pcap_close(self.handle)
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pfring/interface.rs:46:1: 50:2'
+source = '''
+impl<'a> Drop for Interface<'a> {
+    fn drop(&mut self) {
+        unsafe {self.dll.pfring_close(self.handle)};
+    }
+}'''

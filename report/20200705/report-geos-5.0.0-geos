@@ -1,0 +1,82 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/context_handle.rs:285:1: 295:2'
+source = '''
+impl<'a> Drop for ContextHandle<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            if !self.ptr.is_null() {
+                GEOS_finish_r(self.as_raw());
+            }
+            // Now we just have to clear stuff!
+            let _inner: Box<InnerContext<'a>> = Box::from_raw(self.inner.0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/coord_seq.rs:526:1: 533:2'
+source = '''
+impl<'a> Drop for CoordSeq<'a> {
+    fn drop(&mut self) {
+        if self.ptr.is_null() {
+            return;
+        }
+        unsafe { GEOSCoordSeq_destroy_r(self.get_raw_context(), self.as_raw()) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/geometry.rs:2702:1: 2708:2'
+source = '''
+impl<'a> Drop for Geometry<'a> {
+    fn drop(&mut self) {
+        if !self.ptr.is_null() && self.owned {
+            unsafe { GEOSGeom_destroy_r(self.get_raw_context(), self.as_raw()) }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/prepared_geometry.rs:311:1: 315:2'
+source = '''
+impl<'a> Drop for PreparedGeometry<'a> {
+    fn drop(&mut self) {
+        unsafe { GEOSPreparedGeom_destroy_r(self.get_raw_context(), self.as_raw()) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/wkb_writer.rs:291:1: 295:2'
+source = '''
+impl<'a> Drop for WKBWriter<'a> {
+    fn drop(&mut self) {
+        unsafe { GEOSWKBWriter_destroy_r(self.get_raw_context(), self.as_raw()) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/wkt_writer.rs:221:1: 225:2'
+source = '''
+impl<'a> Drop for WKTWriter<'a> {
+    fn drop(&mut self) {
+        unsafe { GEOSWKTWriter_destroy_r(self.get_raw_context(), self.as_raw()) };
+    }
+}'''

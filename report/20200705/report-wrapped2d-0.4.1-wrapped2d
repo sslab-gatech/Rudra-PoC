@@ -1,0 +1,119 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/common/mod.rs:136:1: 140:2'
+source = '''
+impl Drop for DrawLink {
+    fn drop(&mut self) {
+        unsafe { ffi::DrawLink_drop(self.ptr) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/collision/shapes/chain.rs:97:1: 101:2'
+source = '''
+impl Drop for ChainShape {
+    fn drop(&mut self) {
+        unsafe { ffi::ChainShape_drop(self.mut_ptr()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/collision/shapes/edge.rs:78:1: 82:2'
+source = '''
+impl Drop for EdgeShape {
+    fn drop(&mut self) {
+        unsafe { ffi::EdgeShape_drop(self.mut_ptr()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/collision/shapes/circle.rs:60:1: 64:2'
+source = '''
+impl Drop for CircleShape {
+    fn drop(&mut self) {
+        unsafe { ffi::CircleShape_drop(self.mut_ptr()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/collision/shapes/polygon.rs:61:1: 65:2'
+source = '''
+impl Drop for PolygonShape {
+    fn drop(&mut self) {
+        unsafe { ffi::PolygonShape_drop(self.mut_ptr()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/dynamics/world_callbacks.rs:61:1: 65:2'
+source = '''
+impl Drop for ContactFilterLink {
+    fn drop(&mut self) {
+        unsafe { ffi::ContactFilterLink_drop(self.mut_ptr()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/dynamics/world_callbacks.rs:146:1: 150:2'
+source = '''
+impl Drop for ContactListenerLink {
+    fn drop(&mut self) {
+        unsafe { ffi::ContactListenerLink_drop(self.mut_ptr()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/dynamics/world_callbacks.rs:303:1: 307:2'
+source = '''
+impl Drop for QueryCallbackLink {
+    fn drop(&mut self) {
+        unsafe { ffi::QueryCallbackLink_drop(self.ptr) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/dynamics/world_callbacks.rs:360:1: 364:2'
+source = '''
+impl Drop for RayCastCallbackLink {
+    fn drop(&mut self) {
+        unsafe { ffi::RayCastCallbackLink_drop(self.mut_ptr()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/dynamics/world.rs:295:1: 299:2'
+source = '''
+impl<U: UserDataTypes> Drop for World<U> {
+    fn drop(&mut self) {
+        unsafe { ffi::World_drop(self.mut_ptr()) }
+    }
+}'''

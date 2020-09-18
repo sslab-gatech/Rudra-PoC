@@ -1,0 +1,53 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/event.rs:114:1: 133:2'
+source = '''
+impl<'nvml> Drop for EventSet<'nvml> {
+    fn drop(&mut self) {
+        #[allow(unused_must_use)]
+        unsafe {
+            match nvml_try(nvmlEventSetFree(self.set)) {
+                Ok(()) => (),
+                Err(e) => {
+                    io::stderr().write(
+                        format!(
+                            "WARNING: Error returned by `nvmlEventSetFree()` in Drop \
+                             implementation: {:?}",
+                            e
+                        )
+                        .as_bytes(),
+                    );
+                }
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:910:1: 929:2'
+source = '''
+impl Drop for NVML {
+    fn drop(&mut self) {
+        #[allow(unused_must_use)]
+        unsafe {
+            match nvml_try(nvmlShutdown()) {
+                Ok(()) => (),
+                Err(e) => {
+                    io::stderr().write(
+                        format!(
+                            "WARNING: Error returned by `nmvlShutdown()` in Drop implementation: \
+                             {:?}",
+                            e
+                        )
+                        .as_bytes(),
+                    );
+                }
+            }
+        }
+    }
+}'''

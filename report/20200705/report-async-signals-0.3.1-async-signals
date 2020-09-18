@@ -1,0 +1,41 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:76:1: 110:2'
+source = '''
+impl Drop for Signals {
+    fn drop(&mut self) {
+        let mut signal_set = SIGNAL_SET.write().unwrap();
+
+        let mut signal_record = SIGNAL_RECORD.lock().unwrap();
+
+        signal_set.remove(&self.id);
+
+        let inner = self.inner.lock().unwrap();
+
+        for drop_signal in inner.wants.iter() {
+            let count = signal_record.get_mut(drop_signal).expect("must exist");
+
+            if *count > 1 {
+                *count -= 1;
+                continue;
+            }
+
+            signal_record.remove(drop_signal);
+
+            // no one wants to handle this signal, let default handler handle it.
+            let default_handler = SigHandler::SigDfl;
+            let default_action =
+                SigAction::new(default_handler, SaFlags::SA_RESTART, SigSet::empty());
+
+            unsafe {
+                // TODO should I ignore error?
+                let _ = sigaction(
+                    Signal::try_from(*drop_signal).expect("checked"),
+                    &default_action,
+                );
+            }
+        }
+    }
+}'''

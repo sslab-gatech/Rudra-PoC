@@ -1,0 +1,62 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/handles/henv.rs:20:1: 33:2'
+source = '''
+impl Drop for HEnv {
+    fn drop(&mut self) {
+        unsafe {
+            match SQLFreeHandle(SQL_HANDLE_ENV, self.handle as SQLHANDLE) {
+                SQL_SUCCESS => (),
+                other => {
+                    if !panicking() {
+                        panic!("Unexepected return value of SQLFreeHandle: {:?}", other)
+                    }
+                }
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/handles/hdbc.rs:16:1: 29:2'
+source = '''
+impl<'env> Drop for HDbc<'env> {
+    fn drop(&mut self) {
+        unsafe {
+            match SQLFreeHandle(SQL_HANDLE_DBC, self.handle as SQLHANDLE) {
+                SQL_SUCCESS => (),
+                other => {
+                    if !panicking() {
+                        panic!("Unexepected return value of SQLFreeHandle: {:?}.", other)
+                    }
+                }
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/handles/hstmt.rs:15:1: 28:2'
+source = '''
+impl<'con, 'param> Drop for HStmt<'con> {
+    fn drop(&mut self) {
+        unsafe {
+            match SQLFreeHandle(SQL_HANDLE_STMT, self.handle as SQLHANDLE) {
+                SQL_SUCCESS => (),
+                other => {
+                    if !panicking() {
+                        panic!("Unexepected return value of SQLFreeHandle: {:?}.", other)
+                    }
+                }
+            }
+        }
+    }
+}'''

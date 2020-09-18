@@ -1,0 +1,89 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/wrapper/objects/global_ref.rs:83:1: 106:2'
+source = '''
+impl Drop for GlobalRefGuard {
+    fn drop(&mut self) {
+        fn drop_impl(env: &JNIEnv, global_ref: JObject) -> Result<()> {
+            let internal = env.get_native_interface();
+            // This method is safe to call in case of pending exceptions (see chapter 2 of the spec)
+            jni_unchecked!(internal, DeleteGlobalRef, global_ref.into_inner());
+            Ok(())
+        }
+
+        let res = match self.vm.get_env() {
+            Ok(env) => drop_impl(&env, self.as_obj()),
+            Err(_) => {
+                warn!("Dropping a GlobalRef in a detached thread. Fix your code if this message appears frequently (see the GlobalRef docs).");
+                self.vm
+                    .attach_current_thread()
+                    .and_then(|env| drop_impl(&env, self.as_obj()))
+            }
+        };
+
+        if let Err(err) = res {
+            debug!("error dropping global ref: {:#?}", err);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/wrapper/objects/auto_byte_array.rs:78:1: 90:2'
+source = '''
+impl<'a, 'b> Drop for AutoByteArray<'a, 'b> {
+    fn drop(&mut self) {
+        let res = self.env.release_byte_array_elements(
+            *self.obj,
+            unsafe { self.ptr.as_mut() },
+            self.mode,
+        );
+        match res {
+            Ok(()) => {}
+            Err(e) => debug!("error releasing byte array: {:#?}", e),
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/wrapper/objects/auto_primitive_array.rs:66:1: 78:2'
+source = '''
+impl<'a, 'b> Drop for AutoPrimitiveArray<'a, 'b> {
+    fn drop(&mut self) {
+        let res = self.env.release_primitive_array_critical(
+            *self.obj,
+            unsafe { self.ptr.as_mut() },
+            self.mode,
+        );
+        match res {
+            Ok(()) => {}
+            Err(e) => debug!("error releasing primitive array: {:#?}", e),
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/wrapper/jnienv.rs:2161:1: 2172:2'
+source = '''
+impl<'a> Drop for MonitorGuard<'a> {
+    fn drop(&mut self) {
+        let res: Result<()> = catch!({
+            jni_unchecked!(self.env, MonitorExit, self.obj);
+            Ok(())
+        });
+
+        if let Err(e) = res {
+            warn!("error releasing java monitor: {}", e)
+        }
+    }
+}'''

@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/server/ping_timer.rs:68:1: 77:2'
+source = '''
+impl Drop for PingTimer {
+  fn drop(&mut self) {
+    let ping_msg_sender = self.ping_msg_sender.clone();
+    async_manager::spawn(async move {
+      if ping_msg_sender.send(PingMessage::End).await.is_err() {
+        debug!("Receiver does not exist, assuming ping timer event loop already dead.");
+      }
+    }).unwrap();
+  }
+}'''

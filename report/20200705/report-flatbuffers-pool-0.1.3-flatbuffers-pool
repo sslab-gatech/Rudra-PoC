@@ -1,0 +1,20 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pool.rs:172:1: 185:2'
+source = '''
+impl Drop for GlobalBuilder {
+    fn drop(&mut self) {
+        if let Some(mut builder) = self.0.take() {
+            // resetting the builder outside of the lock
+            // to reduce the pool manipulation contention.
+            builder.reset();
+            let max = unsafe { MAX_POOL_SIZE };
+            let mut pool = POOL.lock();
+            if pool.len() < max {
+                pool.push(GlobalBuilder(Some(builder)))
+            }
+        }
+    }
+}'''

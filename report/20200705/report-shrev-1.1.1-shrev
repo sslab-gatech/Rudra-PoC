@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/storage.rs:521:1: 527:2'
+source = '''
+impl<T> Drop for RingBuffer<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.data.clean(self.last_index + 1);
+        }
+    }
+}'''

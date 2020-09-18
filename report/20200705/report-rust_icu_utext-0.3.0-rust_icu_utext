@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:104:1: 112:2'
+source = '''
+impl Drop for Text {
+    /// Implements `utext_close` from ICU4C.
+    fn drop(&mut self) {
+        // Requires that self.rep is a valid pointer.
+        unsafe {
+            versioned_function!(utext_close)(self.rep);
+        }
+    }
+}'''

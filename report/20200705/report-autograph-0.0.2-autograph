@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/cpp-0.5.4/src/lib.rs:357:22: 357:42'
+source = '__cpp_internal_class'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/cpp-0.5.4/src/lib.rs:357:22: 357:42'
+source = '__cpp_internal_class'

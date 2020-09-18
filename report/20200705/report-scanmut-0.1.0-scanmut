@@ -1,0 +1,41 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:195:1: 208:2'
+source = '''
+impl<'a, T> Drop for Inserter<'a, T> {
+    #[inline]
+    fn drop(&mut self) {
+        let ptr = self.vec.as_mut_ptr();
+        let merged_len = self.merged_end - self.merged_start;
+
+        unsafe {
+            ptr.add(self.merged_start)
+                .copy_to(ptr.add(self.vec.len()), merged_len);
+
+            self.vec.set_len(self.vec.len() + merged_len);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:361:1: 374:2'
+source = '''
+impl<'a, T> Drop for Remover<'a, T> {
+    #[inline]
+    fn drop(&mut self) {
+        let ptr = self.vec.as_mut_ptr();
+        let unfiltered_len = self.unfiltered_end - self.unfiltered_start;
+
+        unsafe {
+            ptr.add(self.unfiltered_start)
+                .copy_to(ptr.add(self.vec.len()), unfiltered_len);
+
+            self.vec.set_len(self.vec.len() + unfiltered_len)
+        }
+    }
+}'''

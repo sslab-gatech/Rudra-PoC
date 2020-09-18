@@ -1,0 +1,24 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:58:1: 63:2'
+source = '''
+impl Drop for Link {
+    fn drop(&mut self) {
+        unsafe { Link_destroy(self.wlink) }
+        // println!("Link destroyed!")
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:440:1: 444:2'
+source = '''
+impl Drop for Clock{
+    fn drop(&mut self) {
+        unsafe { Clock_destroy(self.wc) }
+    }
+}'''

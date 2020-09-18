@@ -1,0 +1,35 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/allocator.rs:101:1: 112:2'
+source = '''
+impl Drop for Allocator {
+	fn drop(&mut self) {
+		for pool in &self.pools {
+			unsafe {
+				System.dealloc(
+					*pool,
+					Layout::from_size_align_unchecked(PAGE_SIZE, mem::align_of::<Entry>()),
+				);
+			}
+		}
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/static_ref_vector.rs:160:1: 169:2'
+source = '''
+impl<T> Drop for StaticRefVector<T> {
+	fn drop(&mut self) {
+		let pages = self.num_pages();
+		unsafe {
+			for page in self.pages.iter_mut().take(pages) {
+				let _ = (*page.get()).take();
+			}
+		}
+	}
+}'''

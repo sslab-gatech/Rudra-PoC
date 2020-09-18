@@ -1,0 +1,11 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/dmgr.rs:53:1: 57:2'
+source = '''
+impl Drop for DeviceHandle {
+    fn drop(&mut self) {
+        let _ = unsafe { ffi::DmgrClose(self.hif) };
+    }
+}'''

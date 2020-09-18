@@ -1,0 +1,88 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/profile.rs:525:1: 531:2'
+source = '''
+impl<Context> Drop for Profile<Context> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::cmsCloseProfile(self.handle);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ciecam.rs:47:1: 53:2'
+source = '''
+impl Drop for CIECAM02 {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::cmsCIECAM02Done(self.handle);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/context.rs:206:1: 210:2'
+source = '''
+impl Drop for ThreadContext {
+    fn drop(&mut self) {
+        unsafe { ffi::cmsDeleteContext(self.handle) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.5.0/src/lib.rs:248:9: 248:51'
+source = '$crate::foreign_type_impl!($crate $($t)*);'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.5.0/src/lib.rs:248:9: 248:51'
+source = '$crate::foreign_type_impl!($crate $($t)*);'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.5.0/src/lib.rs:248:9: 248:51'
+source = '$crate::foreign_type_impl!($crate $($t)*);'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.5.0/src/lib.rs:248:9: 248:51'
+source = '$crate::foreign_type_impl!($crate $($t)*);'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/transform.rs:271:1: 277:2'
+source = '''
+impl<F, T, C, L> Drop for Transform<F, T, C, L> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::cmsDeleteTransform(self.handle);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.5.0/src/lib.rs:248:9: 248:51'
+source = '$crate::foreign_type_impl!($crate $($t)*);'

@@ -1,0 +1,58 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/freenect.rs:186:1: 193:2'
+source = '''
+impl Drop for FreenectContext {
+    fn drop(&mut self) {
+        self.stop_process_thread().unwrap();
+        unsafe {
+            ffi::freenect_shutdown(self.ctx);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/freenect.rs:384:1: 390:2'
+source = '''
+impl<'a, 'b> Drop for FreenectDevice<'a, 'b> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::freenect_close_device(self.device);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/freenect.rs:461:1: 468:2'
+source = '''
+impl<'a, 'b> Drop for FreenectDepthStream<'a, 'b> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::freenect_stop_depth(self.parent.device);
+        }
+        *self.parent.depth_sender.lock().unwrap() = None;
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/freenect.rs:503:1: 510:2'
+source = '''
+impl<'a, 'b> Drop for FreenectVideoStream<'a, 'b> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::freenect_stop_video(self.parent.device);
+        }
+        *self.parent.video_sender.lock().unwrap() = None;
+    }
+}'''

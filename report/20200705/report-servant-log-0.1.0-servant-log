@@ -1,0 +1,19 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ring_logger/logger.rs:48:1: 60:2'
+source = '''
+impl Drop for RingLogger {
+    fn drop(&mut self) {
+        log::info!("end of ring-logger");
+
+        unsafe {
+            // 关闭sender，sink_spawn线程也就自动退出了。
+            SENDER = None;
+        }
+
+        // 等待sink_spawn线程退出
+        self.sink_handle.take().map(JoinHandle::join);
+    }
+}'''

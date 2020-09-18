@@ -1,0 +1,633 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buffer/sys.rs:371:1: 379:2'
+source = '''
+impl Drop for UnsafeBuffer {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.device.pointers();
+            vk.DestroyBuffer(self.device.internal_object(), self.buffer, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buffer/view.rs:245:1: 260:2'
+source = '''
+impl<F, B> Drop for BufferView<F, B>
+where
+    B: BufferAccess,
+{
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.buffer.inner().buffer.device().pointers();
+            vk.DestroyBufferView(
+                self.buffer.inner().buffer.device().internal_object(),
+                self.view,
+                ptr::null(),
+            );
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/command_buffer/pool/standard.rs:263:1: 274:2'
+source = '''
+impl Drop for StandardCommandPoolAlloc {
+    fn drop(&mut self) {
+        // Safe because `self.cmd` is wrapped in a `ManuallyDrop`.
+        let cmd: UnsafeCommandPoolAlloc = unsafe { ptr::read(&*self.cmd) };
+
+        if self.secondary {
+            self.pool.available_secondary_command_buffers.push(cmd);
+        } else {
+            self.pool.available_primary_command_buffers.push(cmd);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/command_buffer/pool/sys.rs:257:1: 265:2'
+source = '''
+impl Drop for UnsafeCommandPool {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.device.pointers();
+            vk.DestroyCommandPool(self.device.internal_object(), self.pool, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/command_buffer/traits.rs:367:1: 384:2'
+source = '''
+impl<F, Cb> Drop for CommandBufferExecFuture<F, Cb>
+where
+    F: GpuFuture,
+    Cb: CommandBuffer,
+{
+    fn drop(&mut self) {
+        unsafe {
+            if !*self.finished.get_mut() {
+                // TODO: handle errors?
+                self.flush().unwrap();
+                // Block until the queue finished.
+                self.queue.wait().unwrap();
+                self.command_buffer.unlock();
+                self.previous.signal_finished();
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/descriptor/descriptor_set/std_pool.rs:169:1: 180:2'
+source = '''
+impl Drop for StdDescriptorPoolAlloc {
+    // This is the destructor of a single allocation (not of the whole pool).
+    fn drop(&mut self) {
+        unsafe {
+            let mut pool = self.pool.lock().unwrap();
+            pool.pool.free(self.set.take()).unwrap();
+            // Add back the capacity only after freeing, in case of a panic during the free.
+            pool.remaining_sets_count += 1;
+            pool.remaining_capacity += self.descriptors;
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/descriptor/descriptor_set/sys.rs:499:1: 507:2'
+source = '''
+impl Drop for UnsafeDescriptorPool {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.device.pointers();
+            vk.DestroyDescriptorPool(self.device.internal_object(), self.pool, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/descriptor/descriptor_set/unsafe_layout.rs:159:1: 167:2'
+source = '''
+impl Drop for UnsafeDescriptorSetLayout {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.device.pointers();
+            vk.DestroyDescriptorSetLayout(self.device.internal_object(), self.layout, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/descriptor/pipeline_layout/sys.rs:242:1: 250:2'
+source = '''
+impl<L> Drop for PipelineLayout<L> {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.device.pointers();
+            vk.DestroyPipelineLayout(self.device.internal_object(), self.layout, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/device/mod.rs:592:1: 608:2'
+source = '''
+impl Drop for Device {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            for &raw_fence in self.fence_pool.lock().unwrap().iter() {
+                self.vk.DestroyFence(self.device, raw_fence, ptr::null());
+            }
+            for &raw_sem in self.semaphore_pool.lock().unwrap().iter() {
+                self.vk.DestroySemaphore(self.device, raw_sem, ptr::null());
+            }
+            for &raw_event in self.event_pool.lock().unwrap().iter() {
+                self.vk.DestroyEvent(self.device, raw_event, ptr::null());
+            }
+            self.vk.DestroyDevice(self.device, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/framebuffer/framebuffer.rs:457:1: 465:2'
+source = '''
+impl<Rp, A> Drop for Framebuffer<Rp, A> {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.device.pointers();
+            vk.DestroyFramebuffer(self.device.internal_object(), self.framebuffer, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/framebuffer/sys.rs:513:1: 521:2'
+source = '''
+impl<D> Drop for RenderPass<D> {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.device.pointers();
+            vk.DestroyRenderPass(self.device.internal_object(), self.render_pass, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/image/sys.rs:870:1: 882:2'
+source = '''
+impl Drop for UnsafeImage {
+    #[inline]
+    fn drop(&mut self) {
+        if !self.needs_destruction {
+            return;
+        }
+
+        unsafe {
+            let vk = self.device.pointers();
+            vk.DestroyImage(self.device.internal_object(), self.image, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/image/sys.rs:1211:1: 1219:2'
+source = '''
+impl Drop for UnsafeImageView {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.device.pointers();
+            vk.DestroyImageView(self.device.internal_object(), self.view, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/instance/debug.rs:214:1: 226:2'
+source = '''
+impl Drop for DebugCallback {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.instance.pointers();
+            vk.DestroyDebugUtilsMessengerEXT(
+                self.instance.internal_object(),
+                self.debug_report_callback,
+                ptr::null(),
+            );
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/instance/instance.rs:530:1: 537:2'
+source = '''
+impl Drop for Instance {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            self.vk.DestroyInstance(self.instance, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/memory/device_memory.rs:252:1: 266:2'
+source = '''
+impl Drop for DeviceMemory {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.device.pointers();
+            vk.FreeMemory(self.device.internal_object(), self.memory, ptr::null());
+            let mut allocation_count = self
+                .device
+                .allocation_count()
+                .lock()
+                .expect("Poisoned mutex");
+            *allocation_count -= 1;
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/memory/device_memory.rs:452:1: 473:2'
+source = '''
+impl<'a, T: ?Sized + 'a> Drop for CpuAccess<'a, T> {
+    #[inline]
+    fn drop(&mut self) {
+        // If the memory doesn't have the `coherent` flag, we need to flush the data.
+        if !self.coherent {
+            let vk = self.mem.as_ref().device().pointers();
+
+            let range = vk::MappedMemoryRange {
+                sType: vk::STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
+                pNext: ptr::null(),
+                memory: self.mem.as_ref().internal_object(),
+                offset: self.range.start as u64,
+                size: (self.range.end - self.range.start) as u64,
+            };
+
+            // TODO: check result?
+            unsafe {
+                vk.FlushMappedMemoryRanges(self.mem.as_ref().device().internal_object(), 1, &range);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pipeline/compute_pipeline.rs:305:1: 313:2'
+source = '''
+impl Drop for Inner {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.device.pointers();
+            vk.DestroyPipeline(self.device.internal_object(), self.pipeline, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pipeline/graphics_pipeline/mod.rs:323:1: 331:2'
+source = '''
+impl Drop for Inner {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.device.pointers();
+            vk.DestroyPipeline(self.device.internal_object(), self.pipeline, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pipeline/cache.rs:243:1: 251:2'
+source = '''
+impl Drop for PipelineCache {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.device.pointers();
+            vk.DestroyPipelineCache(self.device.internal_object(), self.cache, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pipeline/shader.rs:192:1: 200:2'
+source = '''
+impl Drop for ShaderModule {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.device.pointers();
+            vk.DestroyShaderModule(self.device.internal_object(), self.module, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/query/mod.rs:258:1: 266:2'
+source = '''
+impl Drop for UnsafeQueryPool {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.device.pointers();
+            vk.DestroyQueryPool(self.device.internal_object(), self.pool, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sampler.rs:539:1: 547:2'
+source = '''
+impl Drop for Sampler {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.device.pointers();
+            vk.DestroySampler(self.device.internal_object(), self.sampler, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/swapchain/surface.rs:686:1: 694:2'
+source = '''
+impl<W> Drop for Surface<W> {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.instance.pointers();
+            vk.DestroySurfaceKHR(self.instance.internal_object(), self.surface, ptr::null());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/swapchain/swapchain.rs:902:1: 911:2'
+source = '''
+impl<W> Drop for Swapchain<W> {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let vk = self.device.pointers();
+            vk.DestroySwapchainKHR(self.device.internal_object(), self.swapchain, ptr::null());
+            self.surface.flag().store(false, Ordering::Release);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/swapchain/swapchain.rs:1542:1: 1563:2'
+source = '''
+impl<P, W> Drop for PresentFuture<P, W>
+where
+    P: GpuFuture,
+{
+    fn drop(&mut self) {
+        unsafe {
+            if !*self.finished.get_mut() {
+                match self.flush() {
+                    Ok(()) => {
+                        // Block until the queue finished.
+                        self.queue().unwrap().wait().unwrap();
+                        self.previous.signal_finished();
+                    }
+                    Err(_) => {
+                        // In case of error we simply do nothing, as there's nothing to do
+                        // anyway.
+                    }
+                }
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sync/event.rs:177:1: 190:2'
+source = '''
+impl Drop for Event {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            if self.must_put_in_pool {
+                let raw_event = self.event;
+                self.device.event_pool().lock().unwrap().push(raw_event);
+            } else {
+                let vk = self.device.pointers();
+                vk.DestroyEvent(self.device.internal_object(), self.event, ptr::null());
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sync/fence.rs:335:1: 351:2'
+source = '''
+impl<D> Drop for Fence<D>
+where
+    D: SafeDeref<Target = Device>,
+{
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            if self.must_put_in_pool {
+                let raw_fence = self.fence;
+                self.device.fence_pool().lock().unwrap().push(raw_fence);
+            } else {
+                let vk = self.device.pointers();
+                vk.DestroyFence(self.device.internal_object(), self.fence, ptr::null());
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sync/future/fence_signal.rs:426:1: 458:2'
+source = '''
+impl<F> Drop for FenceSignalFuture<F>
+where
+    F: GpuFuture,
+{
+    fn drop(&mut self) {
+        let mut state = self.state.lock().unwrap();
+
+        // We ignore any possible error while submitting for now. Problems are handled below.
+        let _ = self.flush_impl(&mut state);
+
+        match mem::replace(&mut *state, FenceSignalFutureState::Cleaned) {
+            FenceSignalFutureState::Flushed(previous, fence) => {
+                // This is a normal situation. Submitting worked.
+                // TODO: handle errors?
+                fence.wait(None).unwrap();
+                unsafe {
+                    previous.signal_finished();
+                }
+            }
+            FenceSignalFutureState::Cleaned => {
+                // Also a normal situation. The user called `cleanup_finished()` before dropping.
+            }
+            FenceSignalFutureState::Poisoned => {
+                // The previous future was already dropped and blocked the current queue.
+            }
+            FenceSignalFutureState::Pending(_, _)
+            | FenceSignalFutureState::PartiallyFlushed(_, _) => {
+                // Flushing produced an error. There's nothing more we can do except drop the
+                // previous future and let it block the current queue.
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sync/future/semaphore_signal.rs:183:1: 198:2'
+source = '''
+impl<F> Drop for SemaphoreSignalFuture<F>
+where
+    F: GpuFuture,
+{
+    fn drop(&mut self) {
+        unsafe {
+            if !*self.finished.get_mut() {
+                // TODO: handle errors?
+                self.flush().unwrap();
+                // Block until the queue finished.
+                self.queue().unwrap().wait().unwrap();
+                self.previous.signal_finished();
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sync/semaphore.rs:116:1: 132:2'
+source = '''
+impl<D> Drop for Semaphore<D>
+where
+    D: SafeDeref<Target = Device>,
+{
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            if self.must_put_in_pool {
+                let raw_sem = self.semaphore;
+                self.device.semaphore_pool().lock().unwrap().push(raw_sem);
+            } else {
+                let vk = self.device.pointers();
+                vk.DestroySemaphore(self.device.internal_object(), self.semaphore, ptr::null());
+            }
+        }
+    }
+}'''

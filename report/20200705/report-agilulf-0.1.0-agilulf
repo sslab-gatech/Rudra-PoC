@@ -1,0 +1,12 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/storage/mem_database.rs:65:1: 70:2'
+source = '''
+impl Drop for MemDatabase {
+    fn drop(&mut self) {
+        let skip_map = self.inner.load(Ordering::SeqCst);
+        unsafe { drop(Box::from_raw(skip_map)) }
+    }
+}'''

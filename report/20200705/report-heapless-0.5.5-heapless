@@ -1,0 +1,129 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/linear_map.rs:525:1: 533:2'
+source = '''
+impl<K, V, N> Drop for LinearMap<K, V, N>
+where
+    N: ArrayLength<(K, V)>,
+    K: Eq,
+{
+    fn drop(&mut self) {
+        unsafe { ptr::drop_in_place(self.0.buffer.as_mut_slice()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vec.rs:450:1: 457:2'
+source = '''
+impl<T, N> Drop for Vec<T, N>
+where
+    N: ArrayLength<T>,
+{
+    fn drop(&mut self) {
+        unsafe { ptr::drop_in_place(&mut self[..]) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vec.rs:591:1: 603:2'
+source = '''
+impl<T, N> Drop for IntoIter<T, N>
+where
+    N: ArrayLength<T>,
+{
+    fn drop(&mut self) {
+        unsafe {
+            // Drop all the elements that have not been moved out of vec
+            ptr::drop_in_place(&mut self.vec[self.next..]);
+            // Prevent dropping of other elements
+            self.vec.0.len = 0;
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/binary_heap.rs:504:1: 513:2'
+source = '''
+impl<'a, T> Drop for Hole<'a, T> {
+    #[inline]
+    fn drop(&mut self) {
+        // fill the hole again
+        unsafe {
+            let pos = self.pos;
+            ptr::write(self.data.get_unchecked_mut(pos), ptr::read(&*self.elt));
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/binary_heap.rs:540:1: 549:2'
+source = '''
+impl<T, N, K> Drop for BinaryHeap<T, N, K>
+where
+    N: ArrayLength<T>,
+    K: Kind,
+    T: Ord,
+{
+    fn drop(&mut self) {
+        unsafe { ptr::drop_in_place(self.0.data.as_mut_slice()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pool/singleton.rs:191:1: 207:2'
+source = '''
+impl<P, S> Drop for Box<P, S>
+where
+    P: Pool,
+    S: 'static,
+{
+    fn drop(&mut self) {
+        if TypeId::of::<S>() == TypeId::of::<Init>() {
+            unsafe {
+                ptr::drop_in_place(self.inner.node.as_ref().data.get());
+            }
+        }
+
+        if mem::size_of::<P::Data>() != 0 {
+            P::ptr().stack.push(self.inner.node)
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/spsc/mod.rs:215:1: 228:2'
+source = '''
+impl<T, N, U, C> Drop for Queue<T, N, U, C>
+where
+    N: ArrayLength<T>,
+    U: sealed::Uxx,
+    C: sealed::XCore,
+{
+    fn drop(&mut self) {
+        for item in self {
+            unsafe {
+                ptr::drop_in_place(item);
+            }
+        }
+    }
+}'''

@@ -1,0 +1,299 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:27:1: 31:2'
+source = '''
+impl<T> Drop for CFArray<T> {
+    fn drop(&mut self) {
+        unsafe { CFRelease(self.as_CFTypeRef()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/dictionary.rs:27:1: 31:2'
+source = '''
+impl<K, V> Drop for CFDictionary<K, V> {
+    fn drop(&mut self) {
+        unsafe { CFRelease(self.as_CFTypeRef()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/dictionary.rs:134:1: 138:2'
+source = '''
+impl<K, V> Drop for CFMutableDictionary<K, V> {
+    fn drop(&mut self) {
+        unsafe { CFRelease(self.as_CFTypeRef()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/set.rs:23:1: 27:2'
+source = '''
+impl<T> Drop for CFSet<T> {
+    fn drop(&mut self) {
+        unsafe { CFRelease(self.as_CFTypeRef()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:65:9: 69:10'
+source = '''
+impl Drop for $ty {
+            fn drop(&mut self) {
+                unsafe { $crate::base::CFRelease(self.as_CFTypeRef()) }
+            }
+        }'''

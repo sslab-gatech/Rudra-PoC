@@ -1,0 +1,17 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/journal_reader.rs:192:1: 202:2'
+source = '''
+impl Drop for JournalReader {
+
+	fn drop(&mut self) {
+		if !self.j.is_null() {
+			unsafe {
+				ffi::sd_journal_close(self.j);
+			}
+		}
+	}
+
+}'''

@@ -1,0 +1,66 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/loaders/freetype.rs:970:1: 978:2'
+source = '''
+impl Drop for Font {
+    fn drop(&mut self) {
+        unsafe {
+            if !self.freetype_face.is_null() {
+                assert_eq!(FT_Done_Face(self.freetype_face), 0);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sources/fontconfig.rs:306:5: 312:6'
+source = '''
+impl Drop for Config {
+        fn drop(&mut self) {
+            unsafe {
+                ffi::FcConfigDestroy(self.d);
+            }
+        }
+    }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sources/fontconfig.rs:392:5: 397:6'
+source = '''
+impl Drop for Pattern {
+        #[inline]
+        fn drop(&mut self) {
+            unsafe { ffi::FcPatternDestroy(self.d) }
+        }
+    }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sources/fontconfig.rs:474:5: 478:6'
+source = '''
+impl Drop for FontSet {
+        fn drop(&mut self) {
+            unsafe { ffi::FcFontSetDestroy(self.d) }
+        }
+    }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sources/fontconfig.rs:504:5: 508:6'
+source = '''
+impl Drop for ObjectSet {
+        fn drop(&mut self) {
+            unsafe { ffi::FcObjectSetDestroy(self.d) }
+        }
+    }'''

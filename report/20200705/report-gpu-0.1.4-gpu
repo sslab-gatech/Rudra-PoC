@@ -1,0 +1,151 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/data/buffer.rs:73:1: 79:2'
+source = '''
+impl Drop for Buffer {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteBuffers(1, &mut self.id);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/data/textures/texture2d.rs:100:1: 106:2'
+source = '''
+impl Drop for Texture2D {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteTextures(1, &mut self.id);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/data/textures/texture3d.rs:99:1: 105:2'
+source = '''
+impl Drop for Texture3D {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteTextures(1, &mut self.id);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/data/textures/sampler.rs:23:1: 29:2'
+source = '''
+impl Drop for Sampler {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteSamplers(1, &mut self.id);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/data/vao.rs:50:1: 56:2'
+source = '''
+impl Drop for VertexArrayObject {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteVertexArrays(1, &mut self.id);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/data/renderbuffer.rs:28:1: 34:2'
+source = '''
+impl Drop for Renderbuffer {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteRenderbuffers(1, &mut self.id);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/data/framebuffer.rs:91:1: 97:2'
+source = '''
+impl Drop for Framebuffer {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteFramebuffers(1, &mut self.id);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/code/shaders/vertexshader.rs:18:1: 24:2'
+source = '''
+impl Drop for VertexShader {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteShader(self.get_id());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/code/shaders/fragmentshader.rs:18:1: 24:2'
+source = '''
+impl Drop for FragmentShader {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteShader(self.get_id());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/code/shaders/computeshader.rs:18:1: 24:2'
+source = '''
+impl Drop for ComputeShader {
+    fn drop(&mut self) {
+        unsafe {
+            gl::DeleteShader(self.get_id());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/code/programs/rasterprogram.rs:67:1: 71:2'
+source = '''
+impl Drop for RasterProgram {
+    fn drop(&mut self) {
+        unsafe { gl::DeleteProgram(self.id); }
+    }
+}'''

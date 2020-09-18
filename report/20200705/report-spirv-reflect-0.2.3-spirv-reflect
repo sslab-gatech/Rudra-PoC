@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:561:1: 569:2'
+source = '''
+impl Drop for ShaderModule {
+    fn drop(&mut self) {
+        if let Some(ref mut module) = self.module {
+            unsafe {
+                ffi::spvReflectDestroyShaderModule(module);
+            }
+        }
+    }
+}'''

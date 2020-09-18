@@ -1,0 +1,86 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/clang.rs:782:1: 794:2'
+source = '''
+impl<'a> Drop for RawTokens<'a> {
+    fn drop(&mut self) {
+        if !self.tokens.is_null() {
+            unsafe {
+                clang_disposeTokens(
+                    self.tu,
+                    self.tokens,
+                    self.token_count as c_uint,
+                );
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/clang.rs:817:1: 821:2'
+source = '''
+impl Drop for ClangToken {
+    fn drop(&mut self) {
+        unsafe { clang_disposeString(self.spelling) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/clang.rs:1535:1: 1541:2'
+source = '''
+impl Drop for Index {
+    fn drop(&mut self) {
+        unsafe {
+            clang_disposeIndex(self.x);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/clang.rs:1629:1: 1635:2'
+source = '''
+impl Drop for TranslationUnit {
+    fn drop(&mut self) {
+        unsafe {
+            clang_disposeTranslationUnit(self.x);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/clang.rs:1658:1: 1665:2'
+source = '''
+impl Drop for Diagnostic {
+    /// Destroy this diagnostic message.
+    fn drop(&mut self) {
+        unsafe {
+            clang_disposeDiagnostic(self.x);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/clang.rs:2047:1: 2051:2'
+source = '''
+impl Drop for EvalResult {
+    fn drop(&mut self) {
+        unsafe { clang_EvalResult_dispose(self.x) };
+    }
+}'''

@@ -1,0 +1,27 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:56:1: 62:2'
+source = '''
+impl Drop for Context {
+    fn drop(&mut self) {
+        unsafe {
+            bindings::glslopt_cleanup(self.ctx);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:96:1: 102:2'
+source = '''
+impl Drop for Shader {
+    fn drop(&mut self) {
+        unsafe {
+            bindings::glslopt_shader_delete(self.shader);
+        }
+    }
+}'''

@@ -1,0 +1,28 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:1773:1: 1778:2'
+source = '''
+impl Drop for Control {
+    fn drop(&mut self) {
+        // println!("drop Control");
+        unsafe { clingo_control_free(self.ctl.as_ptr()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:2882:1: 2890:2'
+source = '''
+impl<'a> Drop for Backend<'a> {
+    /// Finalize the backend after using it.
+    fn drop(&mut self) {
+        // println!("drop Backend");
+        if !unsafe { clingo_backend_end(self.theref) } {
+            panic!("Call to clingo_backend_end() failed");
+        }
+    }
+}'''

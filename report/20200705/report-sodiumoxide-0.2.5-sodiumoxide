@@ -1,0 +1,41 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/crypto/auth/auth_state_macros.rs:39:1: 45:2'
+source = '''
+impl Drop for State {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::sodium_memzero(&mut self.0 as *mut $state_name as *mut _, mem::size_of_val(&self.0));
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/crypto/auth/auth_state_macros.rs:39:1: 45:2'
+source = '''
+impl Drop for State {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::sodium_memzero(&mut self.0 as *mut $state_name as *mut _, mem::size_of_val(&self.0));
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/crypto/auth/auth_state_macros.rs:39:1: 45:2'
+source = '''
+impl Drop for State {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::sodium_memzero(&mut self.0 as *mut $state_name as *mut _, mem::size_of_val(&self.0));
+        }
+    }
+}'''

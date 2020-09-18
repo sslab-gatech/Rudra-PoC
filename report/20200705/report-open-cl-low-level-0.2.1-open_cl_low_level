@@ -1,0 +1,44 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/object_wrapper.rs:46:1: 50:2'
+source = '''
+impl<T: RetainRelease> Drop for ObjectWrapper<T> {
+    fn drop(&mut self) {
+        unsafe { self.cl_object().release(); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/event.rs:202:1: 210:2'
+source = '''
+impl<T: ClNumber> Drop for BufferReadEvent<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.event.wait().unwrap();
+            ManuallyDrop::drop(&mut self.event);
+            ManuallyDrop::drop(&mut self.host_buffer);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/session.rs:268:1: 277:2'
+source = '''
+impl Drop for Session {
+    fn drop(&mut self) {
+        unsafe {
+            ManuallyDrop::drop(&mut self.queues);
+            ManuallyDrop::drop(&mut self.program);
+            ManuallyDrop::drop(&mut self.context);
+            ManuallyDrop::drop(&mut self.devices);
+        }
+    }
+}'''

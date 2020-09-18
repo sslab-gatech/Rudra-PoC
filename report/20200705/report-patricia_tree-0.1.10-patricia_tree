@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/node.rs:693:1: 702:2'
+source = '''
+impl<V> Drop for Node<V> {
+    fn drop(&mut self) {
+        unsafe {
+            let _ = self.take_value();
+            let _ = self.take_child();
+            let _ = self.take_sibling();
+            libc::free(self.ptr as *mut libc::c_void)
+        }
+    }
+}'''

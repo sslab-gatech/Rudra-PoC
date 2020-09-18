@@ -1,0 +1,19 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/util/init.rs:97:9: 109:10'
+source = '''
+impl<Item> Drop for DropGuard<'_, Item> {
+            fn drop(&mut self) {
+                // ## Safety
+                //
+                // The contract of the struct guarantees that this is sound
+                unsafe {
+                    let inited: &mut [Item] = self.arr[..self.initialized].assume_init_mut();
+
+                    // drop initialized elements
+                    ptr::drop_in_place(inited);
+                }
+            }
+        }'''

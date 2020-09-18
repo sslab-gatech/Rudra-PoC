@@ -1,0 +1,91 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/config.rs:56:1: 64:2'
+source = '''
+impl Drop for Config {
+    fn drop(&mut self) {
+        unsafe {
+            debug!("drop config {:p}", self.z3_cfg);
+            let guard = Z3_MUTEX.lock().unwrap();
+            Z3_del_config(self.z3_cfg);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/context.rs:134:1: 141:2'
+source = '''
+impl Drop for Context {
+    fn drop(&mut self) {
+        unsafe {
+            debug!("drop context {:p}", self.z3_ctx);
+            Z3_del_context(self.z3_ctx);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ast.rs:272:1: 280:2'
+source = '''
+impl<'ctx> Drop for Ast<'ctx> {
+    fn drop(&mut self) {
+        unsafe {
+            debug!("drop ast {:p}", self.z3_ast);
+            let guard = Z3_MUTEX.lock().unwrap();
+            Z3_dec_ref(self.ctx.z3_ctx, self.z3_ast);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/solver.rs:44:1: 51:2'
+source = '''
+impl<'ctx> Drop for Solver<'ctx> {
+    fn drop(&mut self) {
+        unsafe {
+            let guard = Z3_MUTEX.lock().unwrap();
+            Z3_solver_dec_ref(self.ctx.z3_ctx, self.z3_slv);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/optimize.rs:61:1: 68:2'
+source = '''
+impl<'ctx> Drop for Optimize<'ctx> {
+    fn drop(&mut self) {
+        unsafe {
+            let guard = Z3_MUTEX.lock().unwrap();
+            Z3_optimize_dec_ref(self.ctx.z3_ctx, self.z3_opt);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/model.rs:54:1: 61:2'
+source = '''
+impl<'ctx> Drop for Model<'ctx> {
+    fn drop(&mut self) {
+        unsafe {
+            let guard = Z3_MUTEX.lock().unwrap();
+            Z3_model_dec_ref(self.ctx.z3_ctx, self.z3_mdl);
+        }
+    }
+}'''

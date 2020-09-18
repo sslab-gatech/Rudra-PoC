@@ -1,0 +1,12 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:589:1: 594:2'
+source = '''
+impl Drop for Device {
+    fn drop(&mut self) {
+        // Linux close(2) can fail, but there is nothing to do if it does.
+        unsafe { libc::close(self.fd); }
+    }
+}'''

@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/image.rs:117:1: 126:2'
+source = '''
+impl<P: Pixel> Drop for Image<P> {
+    /// Deallocate constituent rows on drop
+    fn drop(&mut self) {
+        unsafe {
+            for r in self.rows.iter() {
+                dealloc(r.0 as *mut u8, self.row_layout);
+            }
+        }
+    }
+}'''

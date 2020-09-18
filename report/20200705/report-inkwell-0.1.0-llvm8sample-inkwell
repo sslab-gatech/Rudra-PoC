@@ -1,0 +1,211 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/support/mod.rs:94:1: 100:2'
+source = '''
+impl Drop for LLVMString {
+    fn drop(&mut self) {
+        unsafe {
+            LLVMDisposeMessage(self.ptr as *mut _);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/builder.rs:1647:1: 1653:2'
+source = '''
+impl Drop for Builder<'_> {
+    fn drop(&mut self) {
+        unsafe {
+            LLVMDisposeBuilder(self.builder);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/context.rs:857:1: 863:2'
+source = '''
+impl Drop for Context {
+    fn drop(&mut self) {
+        unsafe {
+            LLVMContextDispose(self.context);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/execution_engine.rs:446:1: 454:2'
+source = '''
+impl Drop for ExecEngineInner {
+    fn drop(&mut self) {
+        if Rc::strong_count(&self.0) == 1 {
+            unsafe {
+                LLVMDisposeExecutionEngine(*self.0);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/memory_buffer.rs:124:1: 130:2'
+source = '''
+impl Drop for MemoryBuffer {
+    fn drop(&mut self) {
+        unsafe {
+            LLVMDisposeMemoryBuffer(self.memory_buffer);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/module.rs:1360:1: 1370:2'
+source = '''
+impl Drop for Module<'_> {
+    fn drop(&mut self) {
+        if self.owned_by_ee.borrow_mut().take().is_none() {
+            unsafe {
+                LLVMDisposeModule(self.module.get());
+            }
+        }
+
+        // Context & EE will drop naturally if they are unique references at this point
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/object_file.rs:39:1: 45:2'
+source = '''
+impl Drop for ObjectFile {
+    fn drop(&mut self) {
+        unsafe {
+            LLVMDisposeObjectFile(self.object_file)
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/object_file.rs:87:1: 93:2'
+source = '''
+impl Drop for SectionIterator {
+    fn drop(&mut self) {
+        unsafe {
+            LLVMDisposeSectionIterator(self.section_iterator)
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/object_file.rs:186:1: 192:2'
+source = '''
+impl Drop for RelocationIterator {
+    fn drop(&mut self) {
+        unsafe {
+            LLVMDisposeRelocationIterator(self.relocation_iterator)
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/object_file.rs:283:1: 289:2'
+source = '''
+impl Drop for SymbolIterator {
+    fn drop(&mut self) {
+        unsafe {
+            LLVMDisposeSymbolIterator(self.symbol_iterator)
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/passes.rs:159:1: 165:2'
+source = '''
+impl Drop for PassManagerBuilder {
+    fn drop(&mut self) {
+        unsafe {
+            LLVMPassManagerBuilderDispose(self.pass_manager_builder)
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/passes.rs:1110:1: 1116:2'
+source = '''
+impl<T> Drop for PassManager<T> {
+    fn drop(&mut self) {
+        unsafe {
+            LLVMDisposePassManager(self.pass_manager)
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/targets.rs:1276:1: 1280:2'
+source = '''
+impl Drop for TargetMachine {
+    fn drop(&mut self) {
+        unsafe { LLVMDisposeTargetMachine(self.target_machine) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/targets.rs:1419:1: 1423:2'
+source = '''
+impl Drop for TargetData {
+    fn drop(&mut self) {
+        unsafe { LLVMDisposeTargetData(self.target_data) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/values/generic_value.rs:57:1: 63:2'
+source = '''
+impl Drop for GenericValue {
+    fn drop(&mut self) {
+        unsafe {
+            LLVMDisposeGenericValue(self.generic_value)
+        }
+    }
+}'''

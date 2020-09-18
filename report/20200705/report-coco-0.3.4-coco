@@ -1,0 +1,153 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/deque.rs:124:1: 130:2'
+source = '''
+impl<T> Drop for Buffer<T> {
+    fn drop(&mut self) {
+        unsafe {
+            drop(Vec::from_raw_parts(self.ptr, 0, self.cap));
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/deque.rs:371:1: 391:2'
+source = '''
+impl<T> Drop for Deque<T> {
+    fn drop(&mut self) {
+        // Load the bottom, top, and buffer.
+        let b = self.bottom.load(Relaxed);
+        let t = self.top.load(Relaxed);
+
+        unsafe {
+            let buffer = epoch::unprotected(|scope| self.buffer.load(Relaxed, scope).as_raw());
+
+            // Go through the buffer from top to bottom and drop all elements in the deque.
+            let mut i = t;
+            while i != b {
+                ptr::drop_in_place((*buffer).at(i));
+                i = i.wrapping_add(1);
+            }
+
+            // Free the memory allocated by the buffer.
+            drop(Box::from_raw(buffer as *mut Buffer<T>));
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/epoch/atomic.rs:612:1: 619:2'
+source = '''
+impl<T> Drop for Owned<T> {
+    fn drop(&mut self) {
+        let raw = (self.data & !low_bits::<T>()) as *mut T;
+        unsafe {
+            drop(Box::from_raw(raw));
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/epoch/garbage.rs:368:1: 401:2'
+source = '''
+impl Drop for Garbage {
+    fn drop(&mut self) {
+        unsafe {
+            epoch::unprotected(|scope| {
+                // Load the pending bag, then destroy it and all it's objects.
+                let pending = self.pending.load(Relaxed, scope).as_raw();
+                if !pending.is_null() {
+                    (*pending).destroy_all_objects();
+                    drop(Vec::from_raw_parts(pending as *mut Bag, 0, 1));
+                }
+
+                // Destroy all bags and objects in the queue.
+                let mut head = self.head.load(Relaxed, scope).as_raw();
+                loop {
+                    // Load the next bag and destroy the current head.
+                    let next = (*head).next.load(Relaxed, scope).as_raw();
+                    drop(Vec::from_raw_parts(head as *mut Bag, 0, 1));
+
+                    // If the next node is null, we've reached the end of the queue.
+                    if next.is_null() {
+                        break;
+                    }
+
+                    // Move one step forward.
+                    head = next;
+
+                    // Destroy all objects in this bag.
+                    // The bag itself will be destroyed in the next iteration of the loop.
+                    (*head).destroy_all_objects();
+                }
+            })
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/epoch/thread.rs:52:1: 78:2'
+source = '''
+impl Drop for Harness {
+    fn drop(&mut self) {
+        // Now that the thread is exiting, we must move the local bag into the global garbage
+        // queue. Also, let's try advancing the epoch and help free some garbage.
+        let thread = unsafe { &*self.thread };
+
+        // If we called `pin()` here, it would try to access `HARNESS` and then panic.
+        // To work around the problem, we manually pin the thread.
+        let pin = &Scope { bag: &self.bag };
+        thread.set_pinned(pin);
+
+        // Spare some cycles on garbage collection.
+        // Note: This may itself produce garbage and in turn allocate new bags.
+        try_advance(pin);
+        garbage::collect(pin);
+
+        // Push the local bag into the global garbage queue.
+        let bag = unsafe { Box::from_raw(self.bag.get()) };
+        garbage::push(bag, pin);
+
+        // Manually unpin the thread.
+        thread.set_unpinned();
+
+        // Mark the thread entry as deleted.
+        thread.unregister();
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stack.rs:128:1: 142:2'
+source = '''
+impl<T> Drop for Stack<T> {
+    fn drop(&mut self) {
+        // Destruct all nodes in the stack.
+        unsafe {
+            epoch::unprotected(|scope| {
+                let mut curr = self.head.load(Relaxed, scope).as_raw();
+                while !curr.is_null() {
+                    let next = (*curr).next.load(Relaxed, scope).as_raw();
+                    drop(Box::from_raw(curr as *mut Node<T>));
+                    curr = next;
+                }
+            })
+        }
+    }
+}'''

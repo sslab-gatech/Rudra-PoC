@@ -1,0 +1,431 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:973:1: 981:2'
+source = '''
+impl Drop for AudioStreamRandomPitch {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:1436:1: 1444:2'
+source = '''
+impl Drop for AudioEffectEQ {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:2256:1: 2264:2'
+source = '''
+impl Drop for AudioEffectFilter {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:2696:1: 2704:2'
+source = '''
+impl Drop for AudioBusLayout {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:3154:1: 3162:2'
+source = '''
+impl Drop for AudioEffectAmplify {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:4469:1: 4477:2'
+source = '''
+impl Drop for AudioEffectHighPassFilter {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:4973:1: 4981:2'
+source = '''
+impl Drop for AudioEffectNotchFilter {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:5477:1: 5485:2'
+source = '''
+impl Drop for AudioEffectBandLimitFilter {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:5981:1: 5989:2'
+source = '''
+impl Drop for AudioEffectLowShelfFilter {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:6455:1: 6463:2'
+source = '''
+impl Drop for AudioEffectEQ21 {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:6963:1: 6971:2'
+source = '''
+impl Drop for AudioEffectDistortion {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:7467:1: 7475:2'
+source = '''
+impl Drop for AudioEffectHighShelfFilter {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:7941:1: 7949:2'
+source = '''
+impl Drop for AudioEffectEQ6 {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:8415:1: 8423:2'
+source = '''
+impl Drop for AudioEffectEQ10 {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:8943:1: 8951:2'
+source = '''
+impl Drop for AudioEffectReverb {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:9447:1: 9455:2'
+source = '''
+impl Drop for AudioEffectLowPassFilter {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:9951:1: 9959:2'
+source = '''
+impl Drop for AudioEffectBandPassFilter {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:10489:1: 10497:2'
+source = '''
+impl Drop for AudioEffectChorus {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:10947:1: 10955:2'
+source = '''
+impl Drop for AudioEffectPanner {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:11425:1: 11433:2'
+source = '''
+impl Drop for AudioEffectStereoEnhance {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:12003:1: 12011:2'
+source = '''
+impl Drop for AudioEffectDelay {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:12521:1: 12529:2'
+source = '''
+impl Drop for AudioEffectCompressor {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:12979:1: 12987:2'
+source = '''
+impl Drop for AudioEffectPitchShift {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:13467:1: 13475:2'
+source = '''
+impl Drop for AudioEffectLimiter {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:13965:1: 13973:2'
+source = '''
+impl Drop for AudioEffectPhaser {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:18722:1: 18730:2'
+source = '''
+impl Drop for AudioStreamSample {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/rust/crux_scratch/gdnative-audio-0.6.1/target/x86_64-unknown-linux-gnu/debug/build/gdnative-audio-e27bbedcbc3f31c7/out/audio_types.rs:19537:1: 19545:2'
+source = '''
+impl Drop for AudioStreamOGGVorbis {
+    fn drop(&mut self) {
+        unsafe {
+            if object::unref(self.this) {
+                (get_api().godot_object_destroy)(self.this);
+            }
+        }
+    }
+}'''

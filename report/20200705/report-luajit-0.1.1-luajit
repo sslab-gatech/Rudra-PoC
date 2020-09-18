@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/state.rs:700:1: 708:2'
+source = '''
+impl Drop for State {
+    fn drop(&mut self) {
+        if self.owned {
+            unsafe {
+                lua_close(self.state);
+            }
+        }
+    }
+}'''

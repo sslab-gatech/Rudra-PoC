@@ -1,0 +1,14 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/guards/slice_memory_guard.rs:71:1: 78:2'
+source = '''
+impl<'a, T> Drop for SliceMemoryGuard<'a, T> {
+    #[inline]
+    fn drop(&mut self) {
+        for item in self.memory.into_iter() {
+            unsafe { drop_in_place(item.as_mut_ptr()); }
+        }
+    }
+}'''

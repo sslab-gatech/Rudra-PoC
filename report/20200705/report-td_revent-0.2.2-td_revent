@@ -1,0 +1,19 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sys/from_raw_arc.rs:101:1: 113:2'
+source = '''
+impl<T> Drop for FromRawArc<T> {
+    fn drop(&mut self) {
+        unsafe {
+            // Atomic orderings lifted from the standard library
+            if (*self._inner).cnt.fetch_sub(1, Ordering::Release) != 1 {
+                return;
+            }
+
+            atomic::fence(Ordering::Acquire);
+            drop(mem::transmute::<_, Box<T>>(self._inner));
+        }
+    }
+}'''

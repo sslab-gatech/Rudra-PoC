@@ -1,0 +1,103 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/elements.rs:48:1: 60:2'
+source = '''
+impl<T: Type> Drop for WriteElements<'_, '_, T> {
+    fn drop(&mut self) {
+        unsafe {
+            nifpga_sys::release_fifo_elements(
+                self.fifo.session.handle,
+                self.fifo.handle,
+                self.slice.len(),
+            )
+            .to_result()
+            .unwrap()
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/elements.rs:99:1: 111:2'
+source = '''
+impl<T: Type> Drop for ReadElements<'_, '_, T> {
+    fn drop(&mut self) {
+        unsafe {
+            nifpga_sys::release_fifo_elements(
+                self.fifo.session.handle,
+                self.fifo.handle,
+                self.slice.len(),
+            )
+            .to_result()
+            .unwrap()
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/fifo.rs:60:1: 68:2'
+source = '''
+impl<T: Type> Drop for ReadFifo<'_, T> {
+    fn drop(&mut self) {
+        unsafe {
+            nifpga_sys::stop_fifo(self.session.handle, self.handle)
+                .to_result()
+                .unwrap();
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/fifo.rs:110:1: 118:2'
+source = '''
+impl<T: Type> Drop for WriteFifo<'_, T> {
+    fn drop(&mut self) {
+        unsafe {
+            nifpga_sys::stop_fifo(self.session.handle, self.handle)
+                .to_result()
+                .unwrap();
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/irq.rs:41:1: 49:2'
+source = '''
+impl Drop for Context<'_> {
+    fn drop(&mut self) {
+        unsafe {
+            nifpga_sys::reserve_irq_context(self.session.handle, &mut self.context)
+                .to_result()
+                .unwrap()
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/session.rs:134:1: 142:2'
+source = '''
+impl Drop for Session {
+    fn drop(&mut self) {
+        unsafe {
+            nifpga_sys::close(self.handle, if self.reset_on_close { 0 } else { 1 })
+                .to_result()
+                .unwrap()
+        };
+    }
+}'''

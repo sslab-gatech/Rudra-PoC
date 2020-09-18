@@ -1,0 +1,736 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bio.rs:12:1: 18:2'
+source = '''
+impl<'a> Drop for MemBioSlice<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::BIO_free_all(self.0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bio.rs:42:1: 48:2'
+source = '''
+impl Drop for MemBio {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::BIO_free_all(self.0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:195:9: 200:10'
+source = '''
+impl<T> Drop for $owned<T> {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:195:9: 200:10'
+source = '''
+impl<T> Drop for $owned<T> {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:195:9: 200:10'
+source = '''
+impl<T> Drop for $owned<T> {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/envelope.rs:153:1: 159:2'
+source = '''
+impl Drop for Seal {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::EVP_CIPHER_CTX_free(self.ctx);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/envelope.rs:251:1: 257:2'
+source = '''
+impl Drop for Open {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::EVP_CIPHER_CTX_free(self.ctx);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/hash.rs:321:1: 330:2'
+source = '''
+impl Drop for Hasher {
+    fn drop(&mut self) {
+        unsafe {
+            if self.state != Finalized {
+                drop(self.finish());
+            }
+            EVP_MD_CTX_free(self.ctx);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:195:9: 200:10'
+source = '''
+impl<T> Drop for $owned<T> {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/macros.rs:195:9: 200:10'
+source = '''
+impl<T> Drop for $owned<T> {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sign.rs:117:1: 124:2'
+source = '''
+impl<'a> Drop for Signer<'a> {
+    fn drop(&mut self) {
+        // pkey_ctx is owned by the md_ctx, so no need to explicitly free it.
+        unsafe {
+            EVP_MD_CTX_free(self.md_ctx);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sign.rs:409:1: 416:2'
+source = '''
+impl<'a> Drop for Verifier<'a> {
+    fn drop(&mut self) {
+        // pkey_ctx is owned by the md_ctx, so no need to explicitly free it.
+        unsafe {
+            EVP_MD_CTX_free(self.md_ctx);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ssl/bio.rs:221:9: 227:10'
+source = '''
+impl Drop for BIO_METHOD {
+            fn drop(&mut self) {
+                unsafe {
+                    ffi::BIO_meth_free(self.0);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ssl/mod.rs:3441:1: 3449:2'
+source = '''
+impl<S> Drop for SslStream<S> {
+    fn drop(&mut self) {
+        // ssl holds a reference to method internally so it has to drop first
+        unsafe {
+            ManuallyDrop::drop(&mut self.ssl);
+            ManuallyDrop::drop(&mut self.method);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stack.rs:56:1: 63:2'
+source = '''
+impl<T: Stackable> Drop for Stack<T> {
+    fn drop(&mut self) {
+        unsafe {
+            while self.pop().is_some() {}
+            OPENSSL_sk_free(self.0 as *mut _);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stack.rs:140:1: 147:2'
+source = '''
+impl<T: Stackable> Drop for IntoIter<T> {
+    fn drop(&mut self) {
+        unsafe {
+            while let Some(_) = self.next() {}
+            OPENSSL_sk_free(self.stack as *mut _);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/symm.rs:659:1: 665:2'
+source = '''
+impl Drop for Crypter {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::EVP_CIPHER_CTX_free(self.ctx);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/x509/mod.rs:129:9: 135:10'
+source = '''
+impl<'a> Drop for Cleanup<'a> {
+            fn drop(&mut self) {
+                unsafe {
+                    ffi::X509_STORE_CTX_cleanup(self.0.as_ptr());
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.3.2/src/lib.rs:238:9: 243:10'
+source = '''
+impl Drop for $owned {
+            #[inline]
+            fn drop(&mut self) {
+                unsafe { $drop(self.0) }
+            }
+        }'''

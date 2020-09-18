@@ -1,0 +1,119 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/channel.rs:560:1: 570:2'
+source = '''
+impl<T> Drop for Sender<T> {
+    fn drop(&mut self) {
+        unsafe {
+            match &self.flavor {
+                SenderFlavor::Array(chan) => chan.release(|c| c.disconnect()),
+                SenderFlavor::List(chan) => chan.release(|c| c.disconnect()),
+                SenderFlavor::Zero(chan) => chan.release(|c| c.disconnect()),
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/channel.rs:1012:1: 1025:2'
+source = '''
+impl<T> Drop for Receiver<T> {
+    fn drop(&mut self) {
+        unsafe {
+            match &self.flavor {
+                ReceiverFlavor::Array(chan) => chan.release(|c| c.disconnect()),
+                ReceiverFlavor::List(chan) => chan.release(|c| c.disconnect()),
+                ReceiverFlavor::Zero(chan) => chan.release(|c| c.disconnect()),
+                ReceiverFlavor::After(_) => {}
+                ReceiverFlavor::Tick(_) => {}
+                ReceiverFlavor::Never(_) => {}
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/flavors/array.rs:532:1: 561:2'
+source = '''
+impl<T> Drop for Channel<T> {
+    fn drop(&mut self) {
+        // Get the index of the head.
+        let hix = self.head.load(Ordering::Relaxed) & (self.mark_bit - 1);
+
+        // Loop over all slots that hold a message and drop them.
+        for i in 0..self.len() {
+            // Compute the index of the next slot holding a message.
+            let index = if hix + i < self.cap {
+                hix + i
+            } else {
+                hix + i - self.cap
+            };
+
+            unsafe {
+                let p = {
+                    let slot = &mut *self.buffer.add(index);
+                    let msg = &mut *slot.msg.get();
+                    msg.as_mut_ptr()
+                };
+                p.drop_in_place();
+            }
+        }
+
+        // Finally, deallocate the buffer, but don't run any destructors.
+        unsafe {
+            Vec::from_raw_parts(self.buffer, 0, self.cap);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/flavors/list.rs:563:1: 599:2'
+source = '''
+impl<T> Drop for Channel<T> {
+    fn drop(&mut self) {
+        let mut head = self.head.index.load(Ordering::Relaxed);
+        let mut tail = self.tail.index.load(Ordering::Relaxed);
+        let mut block = self.head.block.load(Ordering::Relaxed);
+
+        // Erase the lower bits.
+        head &= !((1 << SHIFT) - 1);
+        tail &= !((1 << SHIFT) - 1);
+
+        unsafe {
+            // Drop all messages between head and tail and deallocate the heap-allocated blocks.
+            while head != tail {
+                let offset = (head >> SHIFT) % LAP;
+
+                if offset < BLOCK_CAP {
+                    // Drop the message in the slot.
+                    let slot = (*block).slots.get_unchecked(offset);
+                    let p = &mut *slot.msg.get();
+                    p.as_mut_ptr().drop_in_place();
+                } else {
+                    // Deallocate the block and move to the next one.
+                    let next = (*block).next.load(Ordering::Relaxed);
+                    drop(Box::from_raw(block));
+                    block = next;
+                }
+
+                head = head.wrapping_add(1 << SHIFT);
+            }
+
+            // Deallocate the last remaining block.
+            if !block.is_null() {
+                drop(Box::from_raw(block));
+            }
+        }
+    }
+}'''

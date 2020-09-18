@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:296:1: 305:2'
+source = '''
+impl<'a, T> Drop for DynamicCellGuard<'a, T> {
+    fn drop(&mut self) {
+        // We can safely drop the new value of a cell and restore the old one provided that get()
+        // set() methods of DynamicCell are used correctly. That is, there are no users of the
+        // new value (which is about to be destroyed).
+        unsafe {
+            std::mem::replace(&mut *self.cell.cell.get(), self.old_value.take());
+        }
+    }
+}'''

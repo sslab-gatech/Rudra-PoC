@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/archive.rs:319:1: 325:2'
+source = '''
+impl Drop for OpenArchive {
+    fn drop(&mut self) {
+        unsafe {
+            native::RARCloseArchive(self.handle.as_ptr());
+        }
+    }
+}'''

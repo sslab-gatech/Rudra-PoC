@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:1153:1: 1159:2'
+source = '''
+impl Drop for Ftdi {
+    fn drop(&mut self) {
+        // TODO: This can return an error, but all the sample code in the
+        // programmers guide ignores it.
+        unsafe { FT_Close(self.handle) };
+    }
+}'''

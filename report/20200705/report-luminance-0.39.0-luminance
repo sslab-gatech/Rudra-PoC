@@ -1,0 +1,113 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buffer.rs:504:1: 511:2'
+source = '''
+impl Drop for RawBuffer {
+  fn drop(&mut self) {
+    unsafe {
+      self.state.borrow_mut().unbind_buffer(self.handle);
+      gl::DeleteBuffers(1, &self.handle);
+    }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buffer.rs:534:1: 548:2'
+source = '''
+impl<'a, T> Drop for BufferSlice<'a, T>
+where
+  T: 'a,
+{
+  fn drop(&mut self) {
+    unsafe {
+      self
+        .raw
+        .state
+        .borrow_mut()
+        .bind_array_buffer(self.raw.handle, Bind::Cached);
+      gl::UnmapBuffer(gl::ARRAY_BUFFER);
+    }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buffer.rs:588:1: 602:2'
+source = '''
+impl<'a, T> Drop for BufferSliceMut<'a, T>
+where
+  T: 'a,
+{
+  fn drop(&mut self) {
+    unsafe {
+      self
+        .raw
+        .state
+        .borrow_mut()
+        .bind_array_buffer(self.raw.handle, Bind::Cached);
+      gl::UnmapBuffer(gl::ARRAY_BUFFER);
+    }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/shader/program.rs:137:1: 141:2'
+source = '''
+impl Drop for RawProgram {
+  fn drop(&mut self) {
+    unsafe { gl::DeleteProgram(self.handle) }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/shader/stage.rs:126:1: 130:2'
+source = '''
+impl Drop for Stage {
+  fn drop(&mut self) {
+    unsafe { gl::DeleteShader(self.handle) }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/tess.rs:902:1: 909:2'
+source = '''
+impl Drop for Tess {
+  fn drop(&mut self) {
+    unsafe {
+      self.state.borrow_mut().unbind_vertex_array();
+      gl::DeleteVertexArrays(1, &self.vao);
+    }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/texture.rs:555:1: 563:2'
+source = '''
+impl<D, P> Drop for Texture<D, P>
+where
+  D: Dimensionable,
+  P: Pixel,
+{
+  fn drop(&mut self) {
+    unsafe { gl::DeleteTextures(1, &self.handle) }
+  }
+}'''

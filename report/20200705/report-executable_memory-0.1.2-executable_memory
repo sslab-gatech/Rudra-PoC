@@ -1,0 +1,14 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/executable_memory.rs:83:1: 90:2'
+source = '''
+impl Drop for ExecutableMemory {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            dealloc_executable_memory(self.ptr, PAGE_SIZE);
+        }
+    }
+}'''

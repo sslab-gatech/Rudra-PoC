@@ -1,0 +1,23 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:425:1: 441:2'
+source = '''
+impl Drop for CryptoVec {
+    fn drop(&mut self) {
+        if self.capacity > 0 {
+            unsafe {
+                for i in 0..self.size {
+                    std::ptr::write_volatile(self.p.offset(i as isize), 0)
+                }
+                munlock(self.p, self.capacity);
+                let layout = std::alloc::Layout::from_size_align_unchecked(self.capacity, 1);
+                std::alloc::dealloc(
+                    self.p,
+                    layout,
+                );
+            }
+        }
+    }
+}'''

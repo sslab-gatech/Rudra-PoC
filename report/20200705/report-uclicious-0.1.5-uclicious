@@ -1,0 +1,55 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/raw/iterator.rs:65:1: 71:2'
+source = '''
+impl<'data> Drop for Iter<'data> {
+    fn drop(&mut self) {
+        unsafe {
+            ucl_object_iterate_free(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/raw/iterator.rs:73:1: 79:2'
+source = '''
+impl Drop for IntoIter {
+    fn drop(&mut self) {
+        unsafe {
+            ucl_object_iterate_free(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/raw/object.rs:176:1: 184:2'
+source = '''
+impl Drop for Object {
+    fn drop(&mut self) {
+        unsafe {
+            if !self.object.is_null() {
+                ucl_object_unref(self.object as *mut ucl_object_t);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/raw/parser.rs:232:1: 236:2'
+source = '''
+impl Drop for Parser {
+    fn drop(&mut self) {
+        unsafe { ucl_parser_free(self.parser) }
+    }
+}'''

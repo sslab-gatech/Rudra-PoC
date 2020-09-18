@@ -1,0 +1,22 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:82:1: 97:2'
+source = '''
+impl Drop for Linker {
+    #[cfg(target_os = "windows")]
+    fn drop(&mut self) {
+        if winapi::shared::minwindef::FALSE
+            == unsafe { winapi::um::libloaderapi::FreeLibrary(self.link) }
+        {
+            log_f!("Can not free library '{}'.", self.name);
+        }
+    }
+    #[cfg(not(target_os = "windows"))]
+    fn drop(&mut self) {
+        if 0 != unsafe { libc::dlclose(self.link) } {
+            log_f!("Can not free library '{}'.", self.name);
+        }
+    }
+}'''

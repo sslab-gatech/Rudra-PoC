@@ -1,0 +1,149 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/global.rs:270:1: 298:2'
+source = '''
+impl<T> Drop for Global<T> {
+  fn drop(&mut self) {
+    match &mut self.value {
+      None => {
+        // This global handle is empty.
+        assert!(self.isolate_handle.is_none())
+      }
+      Some(_)
+        if unsafe {
+          self
+            .isolate_handle
+            .as_ref()
+            .unwrap()
+            .get_isolate_ptr()
+            .is_null()
+        } =>
+      {
+        // This global handle is associated with an Isolate that has already
+        // been disposed.
+      }
+      addr @ Some(_) => unsafe {
+        // Destroy the storage cell that contains the contents of this Global.
+        v8__Global__Reset__0(
+          &mut *(addr as *mut Option<NonNull<T>> as *mut *mut Value),
+        )
+      },
+    }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/handle_scope.rs:57:1: 61:2'
+source = '''
+impl Drop for HandleScope {
+  fn drop(&mut self) {
+    unsafe { v8__HandleScope__DESTRUCT(self) }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/handle_scope.rs:98:1: 102:2'
+source = '''
+impl Drop for EscapableHandleScope {
+  fn drop(&mut self) {
+    unsafe { v8__EscapableHandleScope__DESTRUCT(self) }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/isolate.rs:524:1: 528:2'
+source = '''
+impl Drop for OwnedIsolate {
+  fn drop(&mut self) {
+    unsafe { self.0.as_mut().dispose() }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/snapshot.rs:76:1: 80:2'
+source = '''
+impl Drop for OwnedStartupData {
+  fn drop(&mut self) {
+    unsafe { v8__StartupData__DESTRUCT(&mut self.0) }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/snapshot.rs:112:1: 116:2'
+source = '''
+impl Drop for SnapshotCreator {
+  fn drop(&mut self) {
+    unsafe { v8__SnapshotCreator__DESTRUCT(self) };
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/support.rs:149:1: 159:2'
+source = '''
+impl<T> Drop for UniqueRef<T>
+where
+  T: Delete,
+{
+  fn drop(&mut self) {
+    let inner = replace(&mut self.0, unsafe {
+      transmute(NonNull::<&'static mut T>::dangling())
+    });
+    Delete::delete(inner)
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/try_catch.rs:189:1: 193:2'
+source = '''
+impl Drop for CxxTryCatch {
+  fn drop(&mut self) {
+    unsafe { v8__TryCatch__DESTRUCT(self) }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/scope.rs:285:1: 289:2'
+source = '''
+impl Drop for ContextScope {
+  fn drop(&mut self) {
+    unsafe { self.get_captured_context() }.exit()
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/script_compiler.rs:42:1: 46:2'
+source = '''
+impl Drop for Source {
+  fn drop(&mut self) {
+    unsafe { v8__ScriptCompiler__Source__DESTRUCT(self) }
+  }
+}'''

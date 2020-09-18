@@ -1,0 +1,141 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/canvas.rs:169:1: 173:2'
+source = '''
+impl<'lt> Drop for OwnedCanvas<'lt> {
+    fn drop(&mut self) {
+        unsafe { sb::C_SkCanvas_delete(self.native()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/canvas.rs:1147:1: 1151:2'
+source = '''
+impl<'a> Drop for AutoRestoredCanvas<'a> {
+    fn drop(&mut self) {
+        unsafe { sb::C_SkAutoCanvasRestore_destruct(self.native_mut()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/font_arguments.rs:43:1: 47:2'
+source = '''
+impl<'a> Drop for FontArguments<'a> {
+    fn drop(&mut self) {
+        unsafe { sb::C_SkFontArguments_destruct(self.native_mut()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/path.rs:50:1: 54:2'
+source = '''
+impl<'a> Drop for Iter<'a> {
+    fn drop(&mut self) {
+        unsafe { sb::C_SkPath_Iter_destruct(&mut self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/path.rs:124:1: 128:2'
+source = '''
+impl<'a> Drop for RawIter<'a> {
+    fn drop(&mut self) {
+        unsafe { sb::C_SkPath_RawIter_destruct(&mut self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/path_effect.rs:32:1: 41:2'
+source = '''
+impl Drop for PointData {
+    fn drop(&mut self) {
+        unsafe {
+            // we can't call destruct, because it would destruct
+            // other fields like Path, which would also be dropped individually,
+            // so we just delete the points array here.
+            sb::C_SkPathEffect_PointData_deletePoints(self.native_mut())
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/region.rs:422:1: 426:2'
+source = '''
+impl<'a> Drop for Cliperator<'a> {
+    fn drop(&mut self) {
+        unsafe { sb::C_SkRegion_Cliperator_destruct(self.native_mut()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/region.rs:470:1: 474:2'
+source = '''
+impl<'a> Drop for Spanerator<'a> {
+    fn drop(&mut self) {
+        unsafe { sb::C_SkRegion_Spanerator_destruct(self.native_mut()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/interop/stream.rs:22:1: 28:2'
+source = '''
+impl<T: NativeStreamBase> Drop for Stream<T> {
+    fn drop(&mut self) {
+        unsafe {
+            sb::C_SkStream_delete(self.0 as _);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/prelude.rs:562:1: 567:2'
+source = '''
+impl<N: NativeRefCounted> Drop for RCHandle<N> {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe { &*self.0 }._unref();
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/svg/canvas.rs:15:1: 21:2'
+source = '''
+impl Drop for Canvas {
+    fn drop(&mut self) {
+        unsafe {
+            sb::C_SkCanvas_delete(self.canvas);
+        }
+    }
+}'''

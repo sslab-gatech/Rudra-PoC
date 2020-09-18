@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/dynlib.rs:101:1: 110:2'
+source = '''
+impl ::std::ops::Drop for Library {
+    /// Closes the handle then drops the entire library.
+    fn drop(&mut self) {
+        if !self.handle.is_null() {
+            unsafe {
+                ::libc::dlclose(self.handle);
+            }
+        }
+    }
+}'''

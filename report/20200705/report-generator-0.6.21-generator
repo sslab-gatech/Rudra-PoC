@@ -1,0 +1,70 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/gen_impl.rs:476:1: 505:2'
+source = '''
+impl<'a, A, T> Drop for GeneratorImpl<'a, A, T> {
+    fn drop(&mut self) {
+        // when the thread is already panic, do nothing
+        if thread::panicking() {
+            return;
+        }
+
+        if !self.is_started() {
+            // not started yet, just drop the gen
+            return;
+        }
+
+        if !self.is_done() {
+            warn!("generator is not done while drop");
+            unsafe { self.raw_cancel() }
+        }
+
+        assert!(self.is_done());
+
+        let (total_stack, used_stack) = self.stack_usage();
+        if used_stack < total_stack {
+            // here we should record the stack in the class
+            // next time will just use
+            // set_stack_size::<F>(used_stack);
+        } else {
+            error!("stack overflow detected!");
+            panic!(Error::StackErr);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stack/mod.rs:121:1: 128:2'
+source = '''
+impl Drop for Func {
+    fn drop(&mut self) {
+        if !self.data.is_null() {
+            (self.drop)(self.data);
+        }
+        unsafe { *self.offset -= self.size };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stack/mod.rs:179:1: 190:2'
+source = '''
+impl<T> Drop for StackBox<T> {
+    fn drop(&mut self) {
+        let header = self.get_header();
+        unsafe {
+            *header.stack.get_offset() -= header.data_size + HEADER_SIZE;
+            ptr::drop_in_place(self.ptr.as_ptr());
+            if header.need_drop != 0 {
+                header.stack.drop_stack();
+            }
+        }
+    }
+}'''

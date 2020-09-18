@@ -1,0 +1,67 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/kprobe/v0_9_0.rs:141:1: 147:2'
+source = '''
+impl Drop for Kprobe {
+    fn drop(&mut self) {
+        unsafe {
+            bpf_detach_kprobe(self.name.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/tracepoint/v0_6_0.rs:55:1: 61:2'
+source = '''
+impl Drop for Tracepoint {
+    fn drop(&mut self) {
+        unsafe {
+            bpf_detach_tracepoint(self.subsys.as_ptr(), self.name.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/uprobe/v0_6_0.rs:86:1: 92:2'
+source = '''
+impl Drop for Uprobe {
+    fn drop(&mut self) {
+        unsafe {
+            bpf_detach_uprobe(self.name.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/mod.rs:441:1: 447:2'
+source = '''
+impl Drop for BPF {
+    fn drop(&mut self) {
+        unsafe {
+            bpf_module_destroy(self.ptr());
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/perf.rs:44:1: 48:2'
+source = '''
+impl Drop for PerfReader {
+    fn drop(&mut self) {
+        unsafe { perf_reader_free(self.ptr() as *mut c_void) }
+    }
+}'''

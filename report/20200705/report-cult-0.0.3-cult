@@ -1,0 +1,29 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:179:1: 186:2'
+source = '''
+impl Drop for AudioStream {
+  fn drop(&mut self) {
+    unsafe {
+      println!("stream destroy.");
+      cubeb_stream_destroy(self.stream);
+    }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:273:1: 280:2'
+source = '''
+impl Drop for CubebContext {
+  fn drop(&mut self) {
+    unsafe {
+      println!("Cubeb_destroy.");
+      cubeb_destroy(self.ctx);
+    }
+  }
+}'''

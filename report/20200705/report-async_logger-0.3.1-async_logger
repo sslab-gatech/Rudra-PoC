@@ -1,0 +1,18 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buf.rs:289:1: 300:2'
+source = '''
+impl<T> Drop for Buf<T> {
+
+    fn drop(&mut self) {
+
+        let align = std::mem::align_of::<T>();
+
+        unsafe {
+
+            std::alloc::dealloc(self.ptr as *mut u8, std::alloc::Layout::from_size_align(self.size, align).unwrap());
+        }
+    }
+}'''

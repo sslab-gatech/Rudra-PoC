@@ -1,0 +1,22 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:118:1: 133:2'
+source = '''
+impl Drop for HalComponent {
+    /// Clean up resources
+    ///
+    /// Cleans up HAL resources by calling [`hal_exit`] as required by the docs.
+    ///
+    /// Also deregisters signal handlers
+    fn drop(&mut self) {
+        debug!("Closing component ID {}, name {}", self.id, self.name);
+
+        self.signals.close();
+
+        unsafe {
+            hal_exit(self.id);
+        }
+    }
+}'''

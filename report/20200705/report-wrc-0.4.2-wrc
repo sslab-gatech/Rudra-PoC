@@ -1,0 +1,45 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/wrc.rs:227:1: 265:2'
+source = '''
+impl<T: ?Sized> Drop for WRC<T> {
+    /// Drops the `WRC`.
+    ///
+    /// This will decrement the total weight of the referenced object by the
+    /// weight of this reference.
+    ///
+    /// ## Examples
+    /// ```
+    /// use wrc::WRC;
+    ///
+    /// struct Foo;
+    ///
+    /// impl Drop for Foo {
+    ///     fn drop(&mut self) {
+    ///         println!("dropped!");
+    ///     }
+    /// }
+    ///
+    /// let foo = WRC::new(Foo);
+    /// let foo2 = foo.clone();
+    ///
+    /// drop(foo);  // Doesn't print anything
+    /// drop(foo2); // Prints "dropped!"
+    /// ```
+    fn drop(&mut self) {
+        let ptr = unsafe { self.ptr.as_ref() };
+        let existing_weight = self.get_weight();
+        let new_weight = ptr
+            .drop_weight(existing_weight)
+            .unwrap_or_else(|| panic!("Unable to drop {:?} from to WRC", existing_weight));
+        if new_weight > 0 {
+            return;
+        }
+
+        let ptr = self.ptr.as_ptr();
+        let data = unsafe { Box::from_raw(ptr) };
+        drop(data);
+    }
+}'''

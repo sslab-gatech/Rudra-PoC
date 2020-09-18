@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/result.rs:79:1: 87:2'
+source = '''
+impl Drop for FfiResult {
+    fn drop(&mut self) {
+        unsafe {
+            if !self.description.is_null() {
+                let _ = CString::from_raw(self.description as *mut _);
+            }
+        }
+    }
+}'''

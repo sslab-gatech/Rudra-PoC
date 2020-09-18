@@ -1,0 +1,48 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:267:1: 274:2'
+source = '''
+impl Drop for MosqMessage {
+    fn drop(&mut self) {
+        // eprintln!("dropping {}",self.owned);
+        if self.owned {
+            unsafe { mosquitto_message_free(&self.msg) };
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:642:1: 654:2'
+source = '''
+impl Drop for Mosquitto {
+    fn drop(&mut self) {
+        // eprintln!("Mosquitto drop {}",self.owned);
+        if self.owned {
+            unsafe { mosquitto_destroy(self.mosq); }
+            // the last person to leave the building must turn off the lights
+            if INSTANCES.fetch_sub(1, Ordering::SeqCst) == 1 {
+                // eprintln!("clean up mosq");
+                unsafe {mosquitto_lib_init();}
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:765:1: 771:2'
+source = '''
+impl <'a,T>Drop for Callbacks<'a,T> {
+    fn drop(&mut self) {
+        unsafe {
+            mosquitto_user_data_set(self.mosq.mosq, null() as *const Data);
+        }
+    }
+}'''

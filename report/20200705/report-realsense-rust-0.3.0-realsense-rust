@@ -1,0 +1,292 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/config.rs:59:1: 65:2'
+source = '''
+impl Drop for Config {
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_delete_config(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/context.rs:109:1: 113:2'
+source = '''
+impl Drop for Context {
+    fn drop(&mut self) {
+        unsafe { realsense_sys::rs2_delete_context(self.ptr.as_ptr()) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/device.rs:120:1: 126:2'
+source = '''
+impl Drop for Device {
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_delete_device(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/device_hub.rs:48:1: 54:2'
+source = '''
+impl Drop for DeviceHub {
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_delete_device_hub(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/device_list.rs:78:1: 84:2'
+source = '''
+impl Drop for DeviceList {
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_delete_device_list(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/device_list.rs:134:1: 140:2'
+source = '''
+impl Drop for DeviceListIntoIter {
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_delete_device_list(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/error.rs:96:1: 103:2'
+source = '''
+impl Drop for Error {
+    fn drop(&mut self) {
+        let ptr = self.get_ptr();
+        unsafe {
+            realsense_sys::rs2_free_error(ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/frame.rs:765:1: 774:2'
+source = '''
+impl<Kind> Drop for Frame<Kind>
+where
+    Kind: marker::FrameKind,
+{
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_release_frame(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/frame.rs:824:1: 830:2'
+source = '''
+impl Drop for CompositeFrameIntoIter {
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_release_frame(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/frame_queue.rs:91:1: 97:2'
+source = '''
+impl Drop for FrameQueue {
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_delete_frame_queue(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pipeline.rs:300:1: 309:2'
+source = '''
+impl<State> Drop for Pipeline<State>
+where
+    State: marker::PipelineState,
+{
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_delete_pipeline(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pipeline_profile.rs:53:1: 59:2'
+source = '''
+impl Drop for PipelineProfile {
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_delete_pipeline_profile(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/processing_block.rs:145:1: 154:2'
+source = '''
+impl<Kind> Drop for ProcessingBlock<Kind>
+where
+    Kind: marker::ProcessingBlockKind,
+{
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_delete_processing_block(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/processing_block_list.rs:76:1: 82:2'
+source = '''
+impl Drop for ProcessingBlockList {
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_delete_recommended_processing_blocks(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/processing_block_list.rs:118:1: 124:2'
+source = '''
+impl Drop for ProcessingBlockListIntoIter {
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_delete_recommended_processing_blocks(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sensor.rs:381:1: 390:2'
+source = '''
+impl<Kind> Drop for Sensor<Kind>
+where
+    Kind: marker::SensorKind,
+{
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_delete_sensor(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sensor_list.rs:129:1: 135:2'
+source = '''
+impl Drop for SensorList {
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_delete_sensor_list(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stream_profile.rs:151:1: 159:2'
+source = '''
+impl Drop for StreamProfile {
+    fn drop(&mut self) {
+        unsafe {
+            if self.from_clone {
+                realsense_sys::rs2_delete_stream_profile(self.ptr.as_ptr());
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stream_profile_list.rs:79:1: 85:2'
+source = '''
+impl Drop for StreamProfileList {
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_delete_stream_profiles_list(self.ptr.as_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stream_profile_list.rs:135:1: 141:2'
+source = '''
+impl Drop for StreamProfileListIntoIter {
+    fn drop(&mut self) {
+        unsafe {
+            realsense_sys::rs2_delete_stream_profiles_list(self.ptr.as_ptr());
+        }
+    }
+}'''

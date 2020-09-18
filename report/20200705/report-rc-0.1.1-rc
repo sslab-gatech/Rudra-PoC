@@ -1,0 +1,100 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stable_rc.rs:271:1: 317:2'
+source = '''
+impl<T> Drop for Rc<T> {
+    /// Drops the `Rc<T>`.
+    ///
+    /// This will decrement the strong reference count. If the strong reference
+    /// count becomes zero and the only other references are `Weak<T>` ones,
+    /// `drop`s the inner value.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use rc::Rc;
+    ///
+    /// {
+    ///     let five = Rc::new(5);
+    ///
+    ///     // stuff
+    ///
+    ///     drop(five); // explicit drop
+    /// }
+    /// {
+    ///     let five = Rc::new(5);
+    ///
+    ///     // stuff
+    ///
+    /// } // implicit drop
+    /// ```
+    fn drop(&mut self) {
+        unsafe {
+            let ptr = self._ptr;
+            if !(*(&ptr as *const _ as *const *const ())).is_null() {
+                self.dec_strong();
+                if self.strong() == 0 {
+                    // destroy the contained object
+                    mem::drop(ptr::read(&(*ptr).value));
+
+                    // remove the implicit "strong weak" pointer now that we've
+                    // destroyed the contents.
+                    self.dec_weak();
+
+                    if self.weak() == 0 {
+                        deallocate(ptr, 1)
+                    }
+                }
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stable_rc.rs:562:1: 601:2'
+source = '''
+impl<T> Drop for Weak<T> {
+    /// Drops the `Weak<T>`.
+    ///
+    /// This will decrement the weak reference count.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use rc::Rc;
+    ///
+    /// {
+    ///     let five = Rc::new(5);
+    ///     let weak_five = five.downgrade();
+    ///
+    ///     // stuff
+    ///
+    ///     drop(weak_five); // explicit drop
+    /// }
+    /// {
+    ///     let five = Rc::new(5);
+    ///     let weak_five = five.downgrade();
+    ///
+    ///     // stuff
+    ///
+    /// } // implicit drop
+    /// ```
+    fn drop(&mut self) {
+        unsafe {
+            let ptr = self._ptr;
+            if !(*(&ptr as *const _ as *const *const ())).is_null() {
+                self.dec_weak();
+                // the weak count starts at 1, and will only go to zero if all
+                // the strong pointers have disappeared.
+                if self.weak() == 0 {
+                    deallocate(ptr, 1)
+                }
+            }
+        }
+    }
+}'''

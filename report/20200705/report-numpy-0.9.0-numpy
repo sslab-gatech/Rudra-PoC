@@ -1,0 +1,11 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/slice_box.rs:18:1: 22:2'
+source = '''
+impl<T> Drop for SliceBox<T> {
+    fn drop(&mut self) {
+        let _boxed_slice = unsafe { Box::from_raw(self.data) };
+    }
+}'''

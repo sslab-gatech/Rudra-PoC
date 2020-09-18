@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stream.rs:90:1: 96:2'
+source = '''
+impl<F> Drop for Stream<F> {
+    fn drop(&mut self) {
+        let user_ptr = self.user_ptr();
+        unsafe { ManuallyDrop::drop(&mut self.0) };
+        let _ = unsafe { Box::from_raw(user_ptr as *mut StreamCallbacks<F>) };
+    }
+}'''

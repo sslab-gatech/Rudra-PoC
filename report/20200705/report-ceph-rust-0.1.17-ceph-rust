@@ -1,0 +1,27 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ceph.rs:245:1: 251:2'
+source = '''
+impl Drop for ReadOperation {
+    fn drop(&mut self) {
+        unsafe {
+            rados_release_read_op(self.read_op_handle);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ceph.rs:265:1: 271:2'
+source = '''
+impl Drop for WriteOperation {
+    fn drop(&mut self) {
+        unsafe {
+            rados_release_write_op(self.write_op_handle);
+        }
+    }
+}'''

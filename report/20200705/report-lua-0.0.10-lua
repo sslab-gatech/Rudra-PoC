@@ -1,0 +1,17 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/wrapper/state.rs:1627:1: 1637:2'
+source = '''
+impl Drop for State {
+  fn drop(&mut self) {
+    if self.owned {
+      unsafe {
+        let extra_ptr = ffi::lua_getextraspace(self.L) as ExtraHolder;
+        ptr::drop_in_place(*extra_ptr);
+        ffi::lua_close(self.L);
+      }
+    }
+  }
+}'''

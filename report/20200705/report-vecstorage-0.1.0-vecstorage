@@ -1,0 +1,28 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:206:1: 227:2'
+source = '''
+impl<T> Drop for VecStorage<T>
+{
+    fn drop(&mut self) {
+        if !self.is_locked {
+            unsafe {
+                mem::drop(Vec::from_raw_parts(
+                    self.ptr as *mut T,
+                    0,
+                    self.capacity,
+                ));
+            }
+        } else {
+            // If `mem::forget()` was called on a guard, then
+            // the `drop()` on the guard did not run and
+            // the ptr and the capacity of the underlying vector may not be
+            // correct anymore.
+            // It is probably not a good idea to panic inside the `drop()` function,
+            // so let's just leak some memory (`mem::forget()` was called after all.)
+            // We do nothing in this `else` branch.
+        }
+    }
+}'''

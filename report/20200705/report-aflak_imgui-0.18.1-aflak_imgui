@@ -1,0 +1,26 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/window_draw_list.rs:60:1: 64:2'
+source = '''
+impl<'ui> Drop for WindowDrawList<'ui> {
+    fn drop(&mut self) {
+        unsafe { WINDOW_DRAW_LIST_LOADED = false; }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:423:1: 430:2'
+source = '''
+impl Drop for ImGui {
+    fn drop(&mut self) {
+        unsafe {
+            CURRENT_UI = None;
+            sys::igShutdown();
+        }
+    }
+}'''

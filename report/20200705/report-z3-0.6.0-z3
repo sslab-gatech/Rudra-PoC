@@ -1,0 +1,295 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ast.rs:299:9: 310:10'
+source = '''
+impl<'ctx> Drop for $ast<'ctx> {
+            fn drop(&mut self) {
+                debug!(
+                    "drop ast: id = {}, pointer = {:p}",
+                    unsafe { Z3_get_ast_id(self.ctx.z3_ctx, self.z3_ast) },
+                    self.z3_ast
+                );
+                unsafe {
+                    Z3_dec_ref(self.ctx.z3_ctx, self.z3_ast);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ast.rs:299:9: 310:10'
+source = '''
+impl<'ctx> Drop for $ast<'ctx> {
+            fn drop(&mut self) {
+                debug!(
+                    "drop ast: id = {}, pointer = {:p}",
+                    unsafe { Z3_get_ast_id(self.ctx.z3_ctx, self.z3_ast) },
+                    self.z3_ast
+                );
+                unsafe {
+                    Z3_dec_ref(self.ctx.z3_ctx, self.z3_ast);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ast.rs:299:9: 310:10'
+source = '''
+impl<'ctx> Drop for $ast<'ctx> {
+            fn drop(&mut self) {
+                debug!(
+                    "drop ast: id = {}, pointer = {:p}",
+                    unsafe { Z3_get_ast_id(self.ctx.z3_ctx, self.z3_ast) },
+                    self.z3_ast
+                );
+                unsafe {
+                    Z3_dec_ref(self.ctx.z3_ctx, self.z3_ast);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ast.rs:299:9: 310:10'
+source = '''
+impl<'ctx> Drop for $ast<'ctx> {
+            fn drop(&mut self) {
+                debug!(
+                    "drop ast: id = {}, pointer = {:p}",
+                    unsafe { Z3_get_ast_id(self.ctx.z3_ctx, self.z3_ast) },
+                    self.z3_ast
+                );
+                unsafe {
+                    Z3_dec_ref(self.ctx.z3_ctx, self.z3_ast);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ast.rs:299:9: 310:10'
+source = '''
+impl<'ctx> Drop for $ast<'ctx> {
+            fn drop(&mut self) {
+                debug!(
+                    "drop ast: id = {}, pointer = {:p}",
+                    unsafe { Z3_get_ast_id(self.ctx.z3_ctx, self.z3_ast) },
+                    self.z3_ast
+                );
+                unsafe {
+                    Z3_dec_ref(self.ctx.z3_ctx, self.z3_ast);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ast.rs:299:9: 310:10'
+source = '''
+impl<'ctx> Drop for $ast<'ctx> {
+            fn drop(&mut self) {
+                debug!(
+                    "drop ast: id = {}, pointer = {:p}",
+                    unsafe { Z3_get_ast_id(self.ctx.z3_ctx, self.z3_ast) },
+                    self.z3_ast
+                );
+                unsafe {
+                    Z3_dec_ref(self.ctx.z3_ctx, self.z3_ast);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ast.rs:299:9: 310:10'
+source = '''
+impl<'ctx> Drop for $ast<'ctx> {
+            fn drop(&mut self) {
+                debug!(
+                    "drop ast: id = {}, pointer = {:p}",
+                    unsafe { Z3_get_ast_id(self.ctx.z3_ctx, self.z3_ast) },
+                    self.z3_ast
+                );
+                unsafe {
+                    Z3_dec_ref(self.ctx.z3_ctx, self.z3_ast);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ast.rs:299:9: 310:10'
+source = '''
+impl<'ctx> Drop for $ast<'ctx> {
+            fn drop(&mut self) {
+                debug!(
+                    "drop ast: id = {}, pointer = {:p}",
+                    unsafe { Z3_get_ast_id(self.ctx.z3_ctx, self.z3_ast) },
+                    self.z3_ast
+                );
+                unsafe {
+                    Z3_dec_ref(self.ctx.z3_ctx, self.z3_ast);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ast.rs:299:9: 310:10'
+source = '''
+impl<'ctx> Drop for $ast<'ctx> {
+            fn drop(&mut self) {
+                debug!(
+                    "drop ast: id = {}, pointer = {:p}",
+                    unsafe { Z3_get_ast_id(self.ctx.z3_ctx, self.z3_ast) },
+                    self.z3_ast
+                );
+                unsafe {
+                    Z3_dec_ref(self.ctx.z3_ctx, self.z3_ast);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/config.rs:60:1: 65:2'
+source = '''
+impl Drop for Config {
+    fn drop(&mut self) {
+        let guard = Z3_MUTEX.lock().unwrap();
+        unsafe { Z3_del_config(self.z3_cfg) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/context.rs:29:1: 33:2'
+source = '''
+impl Drop for Context {
+    fn drop(&mut self) {
+        unsafe { Z3_del_context(self.z3_ctx) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/func_decl.rs:101:1: 110:2'
+source = '''
+impl<'ctx> Drop for FuncDecl<'ctx> {
+    fn drop(&mut self) {
+        unsafe {
+            Z3_dec_ref(
+                self.ctx.z3_ctx,
+                Z3_func_decl_to_ast(self.ctx.z3_ctx, self.z3_func_decl),
+            );
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/model.rs:79:1: 84:2'
+source = '''
+impl<'ctx> Drop for Model<'ctx> {
+    fn drop(&mut self) {
+        let guard = Z3_MUTEX.lock().unwrap();
+        unsafe { Z3_model_dec_ref(self.ctx.z3_ctx, self.z3_mdl) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/optimize.rs:154:1: 159:2'
+source = '''
+impl<'ctx> Drop for Optimize<'ctx> {
+    fn drop(&mut self) {
+        let guard = Z3_MUTEX.lock().unwrap();
+        unsafe { Z3_optimize_dec_ref(self.ctx.z3_ctx, self.z3_opt) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/params.rs:90:1: 95:2'
+source = '''
+impl<'ctx> Drop for Params<'ctx> {
+    fn drop(&mut self) {
+        let guard = Z3_MUTEX.lock().unwrap();
+        unsafe { Z3_params_dec_ref(self.ctx.z3_ctx, self.z3_params) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pattern.rs:71:1: 77:2'
+source = '''
+impl<'ctx> Drop for Pattern<'ctx> {
+    fn drop(&mut self) {
+        unsafe {
+            Z3_dec_ref(self.ctx.z3_ctx, self.z3_pattern as Z3_ast);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/solver.rs:316:1: 321:2'
+source = '''
+impl<'ctx> Drop for Solver<'ctx> {
+    fn drop(&mut self) {
+        let guard = Z3_MUTEX.lock().unwrap();
+        unsafe { Z3_solver_dec_ref(self.ctx.z3_ctx, self.z3_slv) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sort.rs:173:1: 182:2'
+source = '''
+impl<'ctx> Drop for Sort<'ctx> {
+    fn drop(&mut self) {
+        unsafe {
+            Z3_dec_ref(
+                self.ctx.z3_ctx,
+                Z3_sort_to_ast(self.ctx.z3_ctx, self.z3_sort),
+            );
+        }
+    }
+}'''

@@ -1,0 +1,55 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sdl/cd.rs:150:1: 154:2'
+source = '''
+impl Drop for CD {
+    fn drop(&mut self) {
+        unsafe { ll::SDL_CDClose(self.raw); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sdl/joy.rs:123:1: 127:2'
+source = '''
+impl Drop for Joystick {
+    fn drop(&mut self) {
+        unsafe { ll::SDL_JoystickClose(self.raw); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sdl/mouse.rs:79:1: 87:2'
+source = '''
+impl Drop for Cursor {
+    fn drop(&mut self) {
+        unsafe {
+            if self.owned {
+                ll::SDL_FreeCursor(self.raw);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sdl/video.rs:198:1: 206:2'
+source = '''
+impl Drop for Surface {
+    fn drop(&mut self) {
+        unsafe {
+            if self.owned {
+                ll::SDL_FreeSurface(self.raw);
+            }
+        }
+    }
+}'''

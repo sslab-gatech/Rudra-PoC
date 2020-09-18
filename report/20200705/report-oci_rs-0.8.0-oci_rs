@@ -1,0 +1,77 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/connection.rs:121:1: 167:2'
+source = '''
+impl Drop for Connection {
+    /// Ends the current user session, disconnects from the database and frees the handles
+    /// allocated by the OCI library.
+    ///
+    /// This should ensure there are no remaining processes or memory allocated.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the resources can't be freed. This would be
+    /// a failure of the underlying OCI resource freeing function.
+    ///
+    fn drop(&mut self) {
+        let session_end_result = unsafe {
+            OCISessionEnd(
+                self.service,
+                self.error,
+                self.session,
+                EnvironmentMode::Default.into(),
+            )
+        };
+
+        match session_end_result.into() {
+            ReturnCode::Success => (),
+            _ => println!("Could not end user session"), //log instead in future
+        }
+
+        let disconnect_result =
+            unsafe { OCIServerDetach(self.server, self.error, EnvironmentMode::Default.into()) };
+
+        match disconnect_result.into() {
+            ReturnCode::Success => (),
+            _ => println!("Could not disconnect"), //log instead in future
+        }
+
+        let free_result = unsafe {
+            OCIHandleFree(
+                self.environment as *mut c_void,
+                HandleType::Environment.into(),
+            )
+        };
+
+        match free_result.into() {
+            ReturnCode::Success => (),
+            _ => panic!("Could not free the handles in Connection"),
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/statement.rs:774:1: 790:2'
+source = '''
+impl Drop for Column {
+    fn drop(&mut self) {
+        // let define_free_result =
+        //    unsafe { OCIHandleFree(self.define as *mut c_void, HandleType::Define.into()) };
+        // match define_free_result.into() {
+        //    ReturnCode::Success => (),
+        //    _ => panic!("Could not free the define handle in Column"),
+        // }
+        let descriptor_free_result = unsafe {
+            OCIDescriptorFree(self.handle as *mut c_void, DescriptorType::Parameter.into())
+        };
+        match descriptor_free_result.into() {
+            ReturnCode::Success => (),
+            _ => panic!("Could not free the parameter descriptor in Column"),
+        }
+    }
+}'''

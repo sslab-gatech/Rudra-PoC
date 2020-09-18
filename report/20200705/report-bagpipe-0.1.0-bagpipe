@@ -1,0 +1,48 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/queue.rs:214:1: 236:2'
+source = '''
+impl<T: Node> Drop for YangCrummeyQueue<T> {
+    fn drop(&mut self) {
+        // This method will do very bad things if it ever gets called
+        // with parts of the queue still reachable.
+        let guard = epoch::pin();
+        let head = self.head_data.load(Ordering::Relaxed, &guard).unwrap();
+        let tail = self.tail_data.load(Ordering::Relaxed, &guard).unwrap();
+        let mut cur_node = if head.id.load(Ordering::Relaxed) < tail.id.load(Ordering::Relaxed) {
+            head
+        } else {
+            tail
+        };
+        loop {
+            unsafe {
+                guard.unlinked(cur_node);
+            }
+            match cur_node.next.load(Ordering::Relaxed, &guard) {
+                Some(shared) => cur_node = shared,
+                None => break,
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/queue.rs:499:1: 510:2'
+source = '''
+impl<T: Node, F: RevokeFunc<T> + 'static> Drop for FAAQueueLowLevel<T, F> {
+    fn drop(&mut self) {
+        let guard = epoch::pin();
+        let mut cur_node = &self.head;
+        while let Some(n) = cur_node.load(Ordering::Relaxed, &guard) {
+            unsafe {
+                guard.unlinked(n);
+            }
+            cur_node = &n.next;
+        }
+    }
+}'''

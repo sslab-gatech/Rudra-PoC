@@ -1,0 +1,41 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sort.rs:300:1: 306:2'
+source = '''
+impl<'a, T: 'a> Drop for DualPivotSort<'a, T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.write_pivots();
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sort.rs:420:1: 426:2'
+source = '''
+impl<'a, T: 'a> Drop for Siftup<'a, T> {
+    fn drop(&mut self) {
+        unsafe {
+            ptr::copy(&*self.new, self.v.get_unchecked_mut(self.pos), 1);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sort.rs:487:1: 493:2'
+source = '''
+impl<'a, T: 'a> Drop for Siftdown<'a, T> {
+    fn drop(&mut self) {
+        unsafe {
+            ptr::copy(&*self.new, self.v.get_unchecked_mut(self.pos), 1);
+        }
+    }
+}'''

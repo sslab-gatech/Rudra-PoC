@@ -1,0 +1,123 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/interval.rs:31:1: 35:2'
+source = '''
+impl Drop for Interval {
+    fn drop(&mut self) {
+        unsafe { glib_sys::g_source_remove(self.id) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/timeout.rs:35:1: 41:2'
+source = '''
+impl Drop for Timeout {
+    fn drop(&mut self) {
+        if !self.triggered.get() {
+            unsafe { glib_sys::g_source_remove(self.id) };
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/io/mod.rs:300:1: 306:2'
+source = '''
+impl Drop for IoChannel {
+    fn drop(&mut self) {
+        unsafe {
+            glib_sys::g_io_channel_unref(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/error.rs:70:1: 76:2'
+source = '''
+impl Drop for Error {
+    fn drop(&mut self) {
+        unsafe {
+            glib_sys::g_error_free(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:209:1: 215:2'
+source = '''
+impl Drop for MainContext {
+    fn drop(&mut self) {
+        unsafe {
+            glib_sys::g_main_context_unref(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:253:1: 259:2'
+source = '''
+impl<'a> Drop for LockedMainContext<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            glib_sys::g_main_context_release(self.inner.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:267:1: 273:2'
+source = '''
+impl<'a> Drop for PushThreadDefault<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            glib_sys::g_main_context_pop_thread_default(self.inner.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:341:1: 347:2'
+source = '''
+impl Drop for MainLoop {
+    fn drop(&mut self) {
+        unsafe {
+            glib_sys::g_main_loop_unref(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:636:1: 642:2'
+source = '''
+impl<T> Drop for Source<T> {
+    fn drop(&mut self) {
+        unsafe {
+            glib_sys::g_source_unref(self.inner);
+        }
+    }
+}'''

@@ -1,0 +1,48 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/value.rs:434:1: 446:2'
+source = '''
+impl<B: GetBytesMut, V: ?Sized + HasDrop> Drop for Value<B, V> {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            // This is safe since self will never be used after this call.
+            self.vtable.drop_fn()(self.bytes.get_bytes_mut());
+
+            // Manually drop what we promised.
+            ManuallyDrop::drop(&mut self.bytes);
+            ManuallyDrop::drop(&mut self.vtable);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vec_drop.rs:32:1: 53:2'
+source = '''
+impl<V: ?Sized + HasDrop> Drop for VecDrop<V> {
+    fn drop(&mut self) {
+        unsafe {
+            {
+                // Drop the contents using the associated drop function
+                let VecCopy {
+                    data,
+                    vtable,
+                    element_size,
+                    ..
+                } = &mut *self.data;
+                let chunks_iter = data.chunks_exact_mut(*element_size);
+                for elem_bytes in chunks_iter {
+                    vtable.drop_fn()(elem_bytes);
+                }
+            }
+
+            // Drop the vec itself
+            ManuallyDrop::drop(&mut self.data);
+        }
+    }
+}'''

@@ -1,0 +1,140 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/qrw_lock.rs:121:1: 125:2'
+source = '''
+impl<T> Drop for ReadGuard<T> {
+    fn drop(&mut self) {
+        unsafe { self.lock.release_read_lock() }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/qrw_lock.rs:179:1: 183:2'
+source = '''
+impl<T> Drop for WriteGuard<T> {
+    fn drop(&mut self) {
+        unsafe { self.lock.release_write_lock() }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/qrw_lock.rs:247:1: 268:2'
+source = '''
+impl<T> Drop for FutureUpgrade<T> {
+    /// Gracefully unlock if this guard has a lock acquired but has not yet
+    /// been polled to completion.
+    fn drop(&mut self) {
+        if let Some(lock) = self.lock.take() {
+            match self.rx.take() {
+                Some(mut rx) => {
+                    rx.close();
+                    match rx.try_recv() {
+                        Ok(status) => {
+                            if status.is_some() {
+                                unsafe { lock.release_write_lock() }
+                            }
+                        }
+                        Err(_) => (),
+                    }
+                }
+                None => unsafe { lock.release_write_lock() },
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/qrw_lock.rs:316:1: 332:2'
+source = '''
+impl<T> Drop for FutureReadGuard<T> {
+    /// Gracefully unlock if this guard has a lock acquired but has not yet
+    /// been polled to completion.
+    fn drop(&mut self) {
+        if let Some(lock) = self.lock.take() {
+            self.rx.close();
+            match self.rx.try_recv() {
+                Ok(status) => {
+                    if status.is_some() {
+                        unsafe { lock.release_read_lock() }
+                    }
+                }
+                Err(_) => (),
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/qrw_lock.rs:380:1: 396:2'
+source = '''
+impl<T> Drop for FutureWriteGuard<T> {
+    /// Gracefully unlock if this guard has a lock acquired but has not yet
+    /// been polled to completion.
+    fn drop(&mut self) {
+        if let Some(lock) = self.lock.take() {
+            self.rx.close();
+            match self.rx.try_recv() {
+                Ok(status) => {
+                    if status.is_some() {
+                        unsafe { lock.release_write_lock() }
+                    }
+                }
+                Err(_) => (),
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/qutex.rs:46:1: 51:2'
+source = '''
+impl<T> Drop for Guard<T> {
+    fn drop(&mut self) {
+        // unsafe { self.qutex.direct_unlock().expect("Error dropping Guard") };
+        unsafe { self.qutex.direct_unlock() }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/qutex.rs:98:1: 117:2'
+source = '''
+impl<T> Drop for FutureGuard<T> {
+    /// Gracefully unlock if this guard has a lock acquired but has not yet
+    /// been polled to completion.
+    fn drop(&mut self) {
+        if let Some(qutex) = self.qutex.take() {
+            self.rx.close();
+
+            match self.rx.try_recv() {
+                Ok(status) => {
+                    if status.is_some() {
+                        unsafe {
+                            qutex.direct_unlock();
+                        }
+                    }
+                }
+                Err(_) => (),
+            }
+        }
+    }
+}'''

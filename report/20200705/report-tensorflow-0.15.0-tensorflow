@@ -1,0 +1,172 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buffer.rs:138:1: 146:2'
+source = '''
+impl<T: TensorType> Drop for Buffer<T> {
+    fn drop(&mut self) {
+        if self.owned {
+            unsafe {
+                tf::TF_DeleteBuffer(self.inner);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/graph.rs:44:1: 53:2'
+source = '''
+impl Drop for GraphImpl {
+    /// Graph will be deleted once no more Sessions are referencing it.
+    fn drop(&mut self) {
+        if self.owned {
+            unsafe {
+                tf::TF_DeleteGraph(self.inner);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:83:9: 89:10'
+source = '''
+impl Drop for $name {
+            fn drop(&mut self) {
+                unsafe {
+                    tf::$call(self.inner);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:83:9: 89:10'
+source = '''
+impl Drop for $name {
+            fn drop(&mut self) {
+                unsafe {
+                    tf::$call(self.inner);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/graph.rs:1794:1: 1807:2'
+source = '''
+impl<'a> Drop for OperationDescription<'a> {
+    fn drop(&mut self) {
+        if !self.finished {
+            unsafe {
+                // TF_NewOperation requires us to make sure TF_FinishOperation is called before the
+                // graph is deleted.  Combined with guaranteeing that OperationDescription does
+                // not outlive Graph, this ensures that the contract is held.
+                let status = tf::TF_NewStatus();
+                tf::TF_FinishOperation(self.inner, status);
+                tf::TF_DeleteStatus(status);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:83:9: 89:10'
+source = '''
+impl Drop for $name {
+            fn drop(&mut self) {
+                unsafe {
+                    tf::$call(self.inner);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/session.rs:252:1: 260:2'
+source = '''
+impl Drop for Session {
+    fn drop(&mut self) {
+        let mut status = Status::new();
+        unsafe {
+            tf::TF_DeleteSession(self.inner, status.inner());
+        }
+        // TODO: What do we do with the status?
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:83:9: 89:10'
+source = '''
+impl Drop for $name {
+            fn drop(&mut self) {
+                unsafe {
+                    tf::$call(self.inner);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:83:9: 89:10'
+source = '''
+impl Drop for $name {
+            fn drop(&mut self) {
+                unsafe {
+                    tf::$call(self.inner);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:997:1: 1006:2'
+source = '''
+impl<T: TensorType> Drop for TensorDataCRepr<T> {
+    fn drop(&mut self) {
+        if !self.inner.is_null() {
+            unsafe {
+                tf::TF_DeleteTensor(self.inner);
+            }
+        }
+        self.inner = ptr::null_mut();
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/while_loop.rs:21:1: 29:2'
+source = '''
+impl Drop for CWhileParams {
+    fn drop(&mut self) {
+        if !self.finished {
+            unsafe {
+                tf::TF_AbortWhile(&self.inner);
+            }
+        }
+    }
+}'''

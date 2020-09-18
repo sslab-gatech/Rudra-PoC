@@ -1,0 +1,48 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/index.rs:284:1: 295:2'
+source = '''
+impl Drop for Index {
+    fn drop(&mut self) {
+        if !self.index.is_null() {
+            unsafe { sys::ngt_close_index(self.index) };
+            self.index = ptr::null_mut();
+        }
+        if !self.ebuf.is_null() {
+            unsafe { sys::ngt_destroy_error_object(self.ebuf) };
+            self.ebuf = ptr::null_mut();
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/optim.rs:222:1: 229:2'
+source = '''
+impl Drop for GraphOptimizer {
+    fn drop(&mut self) {
+        if !self.0.is_null() {
+            unsafe { sys::ngt_destroy_optimizer(self.0) };
+            self.0 = ptr::null_mut();
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/properties.rs:283:1: 290:2'
+source = '''
+impl Drop for Properties {
+    fn drop(&mut self) {
+        if !self.raw_prop.is_null() {
+            unsafe { sys::ngt_destroy_property(self.raw_prop) };
+            self.raw_prop = ptr::null_mut();
+        }
+    }
+}'''

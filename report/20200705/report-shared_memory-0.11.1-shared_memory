@@ -1,0 +1,47 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/unix.rs:28:1: 68:2'
+source = '''
+impl Drop for MapData {
+    ///Takes care of properly closing the SharedMem (munmap(), shmem_unlink(), close())
+    fn drop(&mut self) {
+        //Unmap memory
+        if !self.map_ptr.is_null() {
+            match unsafe { munmap(self.map_ptr as *mut _, self.map_size) } {
+                Ok(_) => {}
+                Err(_e) => {
+                    //debug!("os_impl::Linux : Failed to munmap() shared memory mapping...");
+                    //debug!("{}", e);
+                }
+            };
+        }
+
+        //Unlink shmem
+        if self.map_fd != 0 {
+            //unlink shmem if we created it
+            if self.owner {
+                match shm_unlink(self.unique_id.as_str()) {
+                    Ok(_) => {
+                        //debug!("shm_unlink()");
+                    }
+                    Err(_e) => {
+                        //debug!("os_impl::Linux : Failed to shm_unlink() shared memory name...");
+                        //debug!("{}", e);
+                    }
+                };
+            }
+
+            match close(self.map_fd) {
+                Ok(_) => {
+                    //debug!("close()");
+                }
+                Err(_e) => {
+                    //debug!("os_impl::Linux : Failed to close() shared memory file descriptor...");
+                    //debug!("{}", e);
+                }
+            };
+        }
+    }
+}'''

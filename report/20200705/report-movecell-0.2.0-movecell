@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'lib.rs:121:1: 127:2'
+source = '''
+impl<'a, T> Drop for Borrow<'a, T> {
+    fn drop(&mut self) {
+        // FIXME: make self._value a `ManuallyDrop` when that exists.
+        // https://github.com/rust-lang/rfcs/pull/197
+        mem::swap(&mut self._value, unsafe { &mut *self._cell.as_unsafe_cell().get() })
+    }
+}'''

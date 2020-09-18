@@ -1,0 +1,26 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/text_shaping.rs:102:1: 109:2'
+source = '''
+impl<'a> Drop for HbFont<'a> {
+    fn drop(&mut self) {
+        unsafe { hb_font_destroy(self.hb_font) };
+        unsafe { hb_face_destroy(self.hb_face) };
+        // TODO: Is this safe - memory may be deleted twice?
+        unsafe { hb_blob_destroy(self.hb_face_bytes) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/text_shaping.rs:159:1: 163:2'
+source = '''
+impl<'a> Drop for HbBuffer<'a> {
+    fn drop(&mut self) {
+        unsafe { hb_buffer_destroy(self.hb_buffer) };
+    }
+}'''

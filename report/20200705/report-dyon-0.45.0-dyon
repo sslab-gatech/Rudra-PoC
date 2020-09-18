@@ -1,0 +1,26 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/link.rs:111:1: 130:2'
+source = '''
+impl Drop for Block {
+    fn drop(&mut self) {
+        use std::mem::transmute;
+
+        for k in 0..BLOCK_SIZE {
+            let i = k / 32;
+            let j = k - i * 32;
+            match self.tys[i] >> (j * 2) & 0x3 {
+                EMPTY => break,
+                STR => {
+                    // Arc<String>
+                    unsafe {
+                        drop(transmute::<usize, Arc<String>>(self.data[k] as usize))
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
+}'''

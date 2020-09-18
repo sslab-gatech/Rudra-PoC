@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:448:1: 456:2'
+source = '''
+impl Drop for ZBarImageScanner {
+    fn drop(&mut self) {
+        if !self.scanner.is_null() {
+            unsafe {
+                zbar_image_scanner_destroy(self.scanner);
+            }
+        }
+    }
+}'''

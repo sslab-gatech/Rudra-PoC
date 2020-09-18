@@ -1,0 +1,43 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/closure.rs:502:1: 515:2'
+source = '''
+impl<T> Drop for Closure<T>
+where
+    T: ?Sized,
+{
+    fn drop(&mut self) {
+        unsafe {
+            // this will implicitly drop our strong reference in addition to
+            // invalidating all future invocations of the closure
+            if super::__wbindgen_cb_drop(self.js.idx) != 0 {
+                ManuallyDrop::drop(&mut self.data);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:557:1: 572:2'
+source = '''
+impl Drop for JsValue {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            // We definitely should never drop anything in the stack area
+            debug_assert!(self.idx >= JSIDX_OFFSET, "free of stack slot {}", self.idx);
+
+            // Otherwise if we're not dropping one of our reserved values,
+            // actually call the intrinsic. See #1054 for eventually removing
+            // this branch.
+            if self.idx >= JSIDX_RESERVED {
+                __wbindgen_object_drop_ref(self.idx);
+            }
+        }
+    }
+}'''

@@ -1,0 +1,14 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/cow_rc_str.rs:116:1: 123:2'
+source = '''
+impl<'a> Drop for CowRcStr<'a> {
+    #[inline]
+    fn drop(&mut self) {
+        if let Err(ptr) = self.unpack() {
+            mem::drop(unsafe { Rc::from_raw(ptr) })
+        }
+    }
+}'''

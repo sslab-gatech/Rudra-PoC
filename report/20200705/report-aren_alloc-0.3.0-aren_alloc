@@ -1,0 +1,14 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:194:1: 201:2'
+source = '''
+impl<'a, T:?Sized> Drop for Pointer<'a, T> {
+    fn drop(&mut self) {
+        unsafe {
+            let node: *mut Node = std::mem::transmute_copy(&self.node);
+            self.pool.recycle(node);
+        }
+    }
+}'''

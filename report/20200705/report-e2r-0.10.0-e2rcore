@@ -1,0 +1,21 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'core/implement/render/renderer_gl.rs:46:1: 60:2'
+source = '''
+impl Drop for Renderer {
+    fn drop( & mut self ) {
+        unsafe {
+            gl::DeleteBuffers( self._vaos.len() as _, self._vaos.as_ptr(), );
+
+            gl::DeleteBuffers( self._vbos.len() as _, self._vbos.as_ptr(), );
+        }
+        self._shader_collection.borrow_mut().clear().is_ok(); //does DeleteProgram
+        unsafe {
+            for i in self._shaders_compiled.iter() {
+                gl::DeleteShader( *i );
+            }
+        }
+    }
+}'''

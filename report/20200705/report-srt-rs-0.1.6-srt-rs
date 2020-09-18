@@ -1,0 +1,18 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/socket.rs:315:1: 326:2'
+source = '''
+impl Drop for SrtSocket {
+    fn drop(&mut self) {
+        let mut counter = match SOCK_COUNTER.lock() {
+            Ok(c) => c,
+            Err(_) => panic!("SOCK_COUNTER Mutex fail"),
+        };
+        *counter -= 1;
+        if *counter == 0 {
+            unsafe { srt::srt_cleanup() };
+        }
+    }
+}'''

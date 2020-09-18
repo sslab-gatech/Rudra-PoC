@@ -1,0 +1,34 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:166:1: 193:2'
+source = '''
+impl<T> Drop for SkipList<T> {
+    fn drop(&mut self) {
+        // Main idea: Start in top left and iterate row by row.
+        let mut curr_left_node = self.top_left.as_ptr();
+        let mut next_down;
+        let mut curr_node = self.top_left.as_ptr();
+        unsafe {
+            loop {
+                if let Some(down) = (*curr_left_node).down {
+                    next_down = Some(down.as_ptr());
+                } else {
+                    next_down = None;
+                }
+                while let Some(right) = (*curr_node).right {
+                    let garbage = std::mem::replace(&mut curr_node, right.as_ptr());
+                    drop(Box::from_raw(garbage));
+                }
+                drop(Box::from_raw(curr_node));
+                if let Some(next_down) = next_down {
+                    curr_left_node = next_down;
+                    curr_node = curr_left_node;
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+}'''

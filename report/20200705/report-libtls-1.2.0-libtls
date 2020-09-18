@@ -1,0 +1,59 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/config.rs:1028:1: 1040:2'
+source = '''
+impl Drop for Config {
+    /// Free the configuration object.  This should only happen when no
+    /// more [`Tls`] contexts are to be configured.
+    ///
+    /// # See also
+    ///
+    /// [`tls_config_free(3)`](https://man.openbsd.org/tls_config_free.3)
+    ///
+    /// [`Tls`]: ../tls/struct.Tls.html
+    fn drop(&mut self) {
+        unsafe { libtls_sys::tls_config_free(self.0) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/tls.rs:957:1: 989:2'
+source = '''
+impl Drop for Tls {
+    /// The `drop` method frees the [`Tls`] context and forcibly closes
+    /// the connection.
+    ///
+    /// Please note that it calls both [`tls_close(3)`] and [`tls_free(3)`]
+    /// internally to avoid leaking the internal socket file descriptor.
+    /// `libtls` itself does not close the socket when calling [`tls_free(3)`]
+    /// and requires the program to call [`tls_close(3)`] itself but
+    /// this would be unsafe in Rust when applied to the [`Drop`] trait.
+    ///
+    /// # See also
+    ///
+    /// [`tls_close(3)`],
+    /// [`tls_free(3)`]
+    ///
+    /// [`Drop`]: https://doc.rust-lang.org/std/ops/trait.Drop.html
+    /// [`Tls`]: ../tls/struct.Tls.html
+    /// [`tls_free(3)`]: https://man.openbsd.org/tls_free.3
+    /// [`tls_close(3)`]: https://man.openbsd.org/tls_close.3
+    fn drop(&mut self) {
+        unsafe {
+            // XXX libtls doesn't close the connection in tls_free(3), but
+            // XXX this wouldn't satisfy the safety rules of Rust.
+            loop {
+                let ret = libtls_sys::tls_close(self.0);
+                if !(ret == TLS_WANT_POLLIN || ret == TLS_WANT_POLLOUT) {
+                    break;
+                }
+            }
+            libtls_sys::tls_free(self.0);
+        };
+    }
+}'''

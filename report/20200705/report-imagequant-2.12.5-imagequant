@@ -1,0 +1,57 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:52:1: 60:2'
+source = '''
+impl Drop for Attributes {
+    fn drop(&mut self) {
+        unsafe {
+            if !self.handle.is_null() {
+                ffi::liq_attr_destroy(&mut *self.handle);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:62:1: 68:2'
+source = '''
+impl<'a> Drop for Image<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::liq_image_destroy(&mut *self.handle);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:70:1: 76:2'
+source = '''
+impl Drop for QuantizationResult {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::liq_result_destroy(&mut *self.handle);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:78:1: 84:2'
+source = '''
+impl<'a> Drop for Histogram<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::liq_histogram_destroy(&mut *self.handle);
+        }
+    }
+}'''

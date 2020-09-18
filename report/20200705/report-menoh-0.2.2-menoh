@@ -1,0 +1,59 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/model.rs:139:1: 143:2'
+source = '''
+impl Drop for Model {
+    fn drop(&mut self) {
+        unsafe { menoh_sys::menoh_delete_model(self.handle) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/model_builder.rs:78:1: 82:2'
+source = '''
+impl Drop for ModelBuilder {
+    fn drop(&mut self) {
+        unsafe { menoh_sys::menoh_delete_model_builder(self.handle) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/model_data.rs:84:1: 88:2'
+source = '''
+impl Drop for ModelData {
+    fn drop(&mut self) {
+        unsafe { menoh_sys::menoh_delete_model_data(self.handle) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/variable_profile_table.rs:51:1: 55:2'
+source = '''
+impl Drop for VariableProfileTable {
+    fn drop(&mut self) {
+        unsafe { menoh_sys::menoh_delete_variable_profile_table(self.handle) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/variable_profile_table_builder.rs:112:1: 116:2'
+source = '''
+impl Drop for VariableProfileTableBuilder {
+    fn drop(&mut self) {
+        unsafe { menoh_sys::menoh_delete_variable_profile_table_builder(self.handle) }
+    }
+}'''

@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pugl.rs:975:1: 984:2'
+source = '''
+impl<T: PuglViewTrait> Drop for PuglView<T> {
+    fn drop(&mut self) {
+        unsafe {
+            let instance = self.instance as *mut p::PuglView;
+            let world = p::puglGetWorld(instance);
+            p::puglFreeView(instance);
+            p::puglFreeWorld(world);
+        };
+    }
+}'''

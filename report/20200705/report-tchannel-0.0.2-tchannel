@@ -1,0 +1,43 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/atomic_arc.rs:54:1: 61:2'
+source = '''
+impl<T> Drop for AtomicArc<T> {
+    fn drop(&mut self) {
+        let ptr = self.ptr.load(Ordering::Relaxed);
+        if !ptr.is_null() {
+            mem::drop(unsafe { Arc::from_raw(ptr) });
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/atomic_cell.rs:81:1: 87:2'
+source = '''
+impl<T> Drop for AtomicCell<T> {
+    fn drop(&mut self) {
+        if self.state.load(Ordering::Relaxed) == STATE_FULL {
+            unsafe { ManuallyDrop::drop(&mut self.data); }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/oneshot.rs:203:1: 210:2'
+source = '''
+impl<T> Drop for Inner<T> {
+    fn drop(&mut self) {
+        let value_ptr = self.value.load(Ordering::Relaxed);
+        if !value_ptr.is_null() {
+            mem::drop(unsafe { Box::from_raw(value_ptr) })
+        }
+    }
+}'''

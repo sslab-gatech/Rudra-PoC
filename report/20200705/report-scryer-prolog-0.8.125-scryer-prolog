@@ -1,0 +1,17 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/prolog/machine/partial_string.rs:17:1: 27:2'
+source = '''
+impl Drop for PartialString {
+    fn drop(&mut self) {
+        unsafe {
+            let layout = alloc::Layout::from_size_align_unchecked(self.len, mem::align_of::<u8>());
+            alloc::dealloc(self.buf as *mut u8, layout);
+
+            self.buf = ptr::null();
+            self.len = 0;
+        }
+    }
+}'''

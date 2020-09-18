@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/guard.rs:35:1: 41:2'
+source = '''
+impl Drop for FloatingReferenceGuard {
+    fn drop(&mut self) {
+        unsafe {
+            gobject_ffi::g_object_force_floating(self.0.as_ptr());
+        }
+    }
+}'''

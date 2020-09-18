@@ -1,0 +1,20 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/weak_list.rs:106:1: 119:2'
+source = '''
+impl<T> Drop for Handle<T> {
+    fn drop(&mut self) {
+        unsafe {
+            let count = &self.cur.as_ref().strong_count;
+            match count.get() {
+                1 => {
+                    Handle::detach(&self);
+                    drop(Box::from_raw(self.cur.as_ptr()));
+                },
+                x => count.set(x - 1),
+            }
+        }
+    }
+}'''

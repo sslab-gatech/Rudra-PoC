@@ -1,0 +1,34 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pyinterp.rs:863:1: 878:2'
+source = '''
+impl<'a> Drop for MainPythonInterpreter<'a> {
+    fn drop(&mut self) {
+        if let Some(key) = &self.config.write_modules_directory_env {
+            if let Ok(path) = env::var(key) {
+                let path = PathBuf::from(path);
+                let py = self.acquire_gil();
+
+                if let Err(msg) = write_modules_to_directory(py, &path) {
+                    eprintln!("error writing modules file: {}", msg);
+                }
+            }
+        }
+
+        let _ = unsafe { pyffi::Py_FinalizeEx() };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pystr.rs:49:1: 53:2'
+source = '''
+impl Drop for OwnedPyStr {
+    fn drop(&mut self) {
+        unsafe { pyffi::PyMem_RawFree(self.data as *mut c_void) }
+    }
+}'''

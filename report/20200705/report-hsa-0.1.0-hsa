@@ -1,0 +1,133 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/signal.rs:356:1: 365:2'
+source = '''
+impl Drop for Signal {
+    fn drop(&mut self) {
+        if self.handle.handle != 0 {
+            unsafe {
+                hsa_signal_destroy(self.handle);
+            }
+            self.handle.handle = 0;
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/signal.rs:466:1: 475:2'
+source = '''
+impl<T> Drop for SignalGroup<T> {
+    fn drop(&mut self) {
+        if self.handle.handle != 0 {
+            unsafe {
+                hsa_signal_group_destroy(self.handle);
+            }
+            self.handle.handle = 0;
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/queue.rs:180:1: 186:2'
+source = '''
+impl Drop for Queue {
+    fn drop(&mut self) {
+        unsafe {
+            hsa_queue_destroy(self.handle);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/region.rs:124:1: 136:2'
+source = '''
+impl<T> Drop for Memory<T> {
+    fn drop(&mut self) {
+        match *self {
+            Memory::RegionMemory(x) => unsafe {
+                hsa_memory_free(x as *mut c_void);
+            },
+            Memory::Registered(x, sz) => unsafe {
+                hsa_memory_deregister(x as *mut c_void, sz);
+            },
+            _ => (),
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/executable.rs:130:1: 139:2'
+source = '''
+impl Drop for Executable {
+    fn drop(&mut self) {
+        if self.handle.handle != 0 {
+            unsafe {
+                hsa_executable_destroy(self.handle);
+            }
+        }
+        self.handle.handle = 0;
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/code_object.rs:46:1: 52:2'
+source = '''
+impl Drop for CodeObject {
+    fn drop(&mut self) {
+        unsafe {
+            hsa_code_object_destroy(self.handle);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ext_finalize.rs:107:1: 116:2'
+source = '''
+impl Drop for ExtProgram {
+    fn drop(&mut self) {
+        if self.handle.handle != 0 {
+            unsafe {
+                hsa_ext_program_destroy(self.handle);
+            }
+        }
+        self.handle.handle = 0;
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ext_finalize.rs:146:1: 156:2'
+source = '''
+impl Drop for ExtCodeObjectWriter {
+    fn drop(&mut self) {
+        if self.handle.handle != 0 {
+            unsafe {
+                hsa_ext_code_object_writer_destroy(self.handle);
+            }
+        }
+        self.handle.handle = 0;
+        self.buffer.clear();
+    }
+}'''

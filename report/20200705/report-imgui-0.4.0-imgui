@@ -1,0 +1,44 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/context.rs:231:1: 240:2'
+source = '''
+impl Drop for Context {
+    fn drop(&mut self) {
+        let _guard = CTX_MUTEX.lock();
+        // If this context is the active context, Dear ImGui automatically deactivates it during
+        // destruction
+        unsafe {
+            sys::igDestroyContext(self.raw);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/fonts/atlas.rs:420:1: 424:2'
+source = '''
+impl Drop for SharedFontAtlas {
+    fn drop(&mut self) {
+        unsafe { sys::ImFontAtlas_destroy(self.0) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:139:1: 147:2'
+source = '''
+impl<'a> Drop for Ui<'a> {
+    fn drop(&mut self) {
+        if !thread::panicking() {
+            unsafe {
+                sys::igEndFrame();
+            }
+        }
+    }
+}'''

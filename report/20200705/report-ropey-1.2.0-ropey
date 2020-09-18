@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/tree/node_children.rs:688:5: 697:6'
+source = '''
+impl Drop for NodeChildrenInternal {
+        fn drop(&mut self) {
+            // The `.nodes` array contains `MaybeUninit` wrappers, which need
+            // to be manually dropped if valid.  We drop only the valid ones
+            // here.
+            for node in &mut self.nodes[..self.len as usize] {
+                unsafe { ptr::drop_in_place(node.as_mut_ptr()) };
+            }
+        }
+    }'''

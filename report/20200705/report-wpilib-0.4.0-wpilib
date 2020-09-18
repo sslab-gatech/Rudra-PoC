@@ -1,0 +1,121 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/analog_input.rs:200:1: 206:2'
+source = '''
+impl Drop for AnalogInput {
+    fn drop(&mut self) {
+        unsafe {
+            HAL_FreeAnalogInputPort(self.port);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/dio.rs:137:1: 144:2'
+source = '''
+impl Drop for DigitalOutput {
+    fn drop(&mut self) {
+        let _ = self.disable_pwm();
+        unsafe {
+            HAL_FreeDIOPort(self.handle);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/dio.rs:194:1: 200:2'
+source = '''
+impl Drop for DigitalInput {
+    fn drop(&mut self) {
+        unsafe {
+            HAL_FreeDIOPort(self.handle);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/encoder.rs:137:1: 142:2'
+source = '''
+impl Drop for Encoder {
+    fn drop(&mut self) {
+        hal_call!(HAL_FreeEncoder(self.encoder)).ok();
+        // .ok() because the status variable is unused in HAL_FreeEncoder
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pneumatics.rs:142:1: 146:2'
+source = '''
+impl Drop for Solenoid {
+    fn drop(&mut self) {
+        unsafe { HAL_FreeSolenoidPort(self.solenoid_handle) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pwm.rs:168:1: 173:2'
+source = '''
+impl Drop for PWM {
+    fn drop(&mut self) {
+        hal_call!(HAL_SetPWMDisabled(self.handle)).ok();
+        hal_call!(HAL_FreePWMPort(self.handle)).ok();
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/robot_base.rs:146:1: 155:2'
+source = '''
+impl Drop for RobotBase {
+    fn drop(&mut self) {
+        // In WPILibc, this is handled by the destructor of a static variable,
+        // the one ds instance, which runs after main() finishes. Rust does not
+        // execute anything after main, so this is the closest approximation.
+        unsafe {
+            HAL_ReleaseDSMutex();
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/serial.rs:225:1: 229:2'
+source = '''
+impl Drop for SerialPort {
+    fn drop(&mut self) {
+        hal_call!(HAL_CloseSerial(self.port as HAL_SerialPort::Type)).ok();
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/spi.rs:165:1: 169:2'
+source = '''
+impl Drop for Spi {
+    fn drop(&mut self) {
+        unsafe { HAL_CloseSPI(self.port) }
+    }
+}'''

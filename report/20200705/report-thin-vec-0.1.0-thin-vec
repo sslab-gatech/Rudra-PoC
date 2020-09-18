@@ -1,0 +1,62 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:775:1: 782:2'
+source = '''
+impl<T> Drop for ThinVec<T> {
+    fn drop(&mut self) {
+        unsafe {
+            ptr::drop_in_place(&mut self [..]);
+            self.deallocate();
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:1000:1: 1013:2'
+source = '''
+impl<T> Drop for IntoIter<T> {
+    fn drop(&mut self) {
+        unsafe {
+            let old_len = self.vec.len();
+            let mut vec = mem::replace(&mut self.vec, ThinVec::new());
+            ptr::drop_in_place(&mut vec[self.start..]);
+
+            // Don't mutate the empty singleton!
+            if old_len != 0 {
+                vec.set_len(0)
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:1038:1: 1057:2'
+source = '''
+impl<'a, T> Drop for Drain<'a, T> {
+    fn drop(&mut self) {
+        // Consume the rest of the iterator.
+        while let Some(_) = self.next() {}
+
+        // Move the tail over the drained items, and update the length.
+        unsafe {
+            let vec = &mut *self.vec;
+
+            // Don't mutate the empty singleton!
+            if vec.has_allocation() {
+                let old_len = vec.len();
+                let start = vec.data_raw().offset(old_len as isize);
+                let end = vec.data_raw().offset(self.end as isize);
+                ptr::copy(end, start, self.tail);
+                vec.set_len(old_len + self.tail);
+            }
+        }
+    }
+}'''

@@ -1,0 +1,67 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/hashstore.rs:239:1: 265:2'
+source = '''
+impl<K: Key, D: From<K>> Drop for HashStore<K, D> {
+    fn drop(&mut self) {
+        let shared = &mut *(self.shared.try_write().unwrap());
+        let exclusive = &mut *(self.exclusive.lock().unwrap());
+        let arena = &mut exclusive.arena;
+        let requests = &mut exclusive.requests;
+        let resources = &mut shared.resources;
+
+        resources.retain(|_, &mut v| {
+            let v = unsafe { &mut *v };
+            assert!(v.ref_count.load(Ordering::Relaxed) == 0, "resource leak");
+            arena.deallocate(v);
+            false
+        });
+
+        requests.retain(|_, &mut v| {
+            let v = unsafe { &mut *v };
+            assert!(v.ref_count.load(Ordering::Relaxed) == 0, "resource leak");
+            arena.deallocate(v);
+            false
+        });
+
+        assert!(resources.is_empty(), "Leaking resource");
+        assert!(requests.is_empty(), "Leaking requests");
+        assert!(arena.is_empty(), "Leaking arena, internal store error");
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/store.rs:215:1: 241:2'
+source = '''
+impl<D> Drop for Store<D> {
+    fn drop(&mut self) {
+        let shared = &mut *(self.shared.write().unwrap());
+        let exclusive = &mut *(self.exclusive.lock().unwrap());
+        let arena = &mut exclusive.arena;
+        let requests = &mut exclusive.requests;
+        let resources = &mut shared.resources;
+
+        resources.drain_filter(|&mut v| {
+            let v = unsafe { &mut *v };
+            assert!(v.ref_count.load(Ordering::Relaxed) == 0, "resource leak");
+            arena.deallocate(v);
+            true
+        });
+
+        requests.drain_filter(|&mut v| {
+            let v = unsafe { &mut *v };
+            assert!(v.ref_count.load(Ordering::Relaxed) == 0, "resource leak");
+            arena.deallocate(v);
+            true
+        });
+
+        assert!(resources.is_empty(), "Leaking resource");
+        assert!(requests.is_empty(), "Leaking requests");
+        assert!(arena.is_empty(), "Leaking arena, internal store error");
+    }
+}'''

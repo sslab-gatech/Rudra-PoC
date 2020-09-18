@@ -1,0 +1,37 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:298:1: 304:2'
+source = '''
+impl<'fc> Drop for Pattern<'fc> {
+    fn drop(&mut self) {
+        unsafe {
+            sys::FcPatternDestroy(self.pat);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:351:1: 355:2'
+source = '''
+impl<'fc> Drop for FontSet<'fc> {
+    fn drop(&mut self) {
+        unsafe { sys::FcFontSetDestroy(self.fcset) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:393:1: 397:2'
+source = '''
+impl Drop for ObjectSet {
+    fn drop(&mut self) {
+        unsafe { sys::FcObjectSetDestroy(self.fcset) }
+    }
+}'''

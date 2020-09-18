@@ -1,0 +1,408 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/audio.rs:237:1: 241:2'
+source = '''
+impl Drop for RaylibAudio {
+    fn drop(&mut self) {
+        unsafe { ffi::CloseAudioDevice() }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/drawing.rs:27:1: 33:2'
+source = '''
+impl<'a> Drop for RaylibDrawHandle<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::EndDrawing();
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/drawing.rs:48:1: 52:2'
+source = '''
+impl<'a, T> Drop for RaylibTextureMode<'a, T> {
+    fn drop(&mut self) {
+        unsafe { ffi::EndTextureMode() }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/drawing.rs:82:1: 86:2'
+source = '''
+impl<'a, T> Drop for RaylibVRMode<'a, T> {
+    fn drop(&mut self) {
+        unsafe { ffi::EndVrDrawing() }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/drawing.rs:113:1: 117:2'
+source = '''
+impl<'a, T> Drop for RaylibMode2D<'a, T> {
+    fn drop(&mut self) {
+        unsafe { ffi::EndMode2D() }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/drawing.rs:146:1: 150:2'
+source = '''
+impl<'a, T> Drop for RaylibMode3D<'a, T> {
+    fn drop(&mut self) {
+        unsafe { ffi::EndMode3D() }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/drawing.rs:180:1: 184:2'
+source = '''
+impl<'a, T> Drop for RaylibShaderMode<'a, T> {
+    fn drop(&mut self) {
+        unsafe { ffi::EndShaderMode() }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/drawing.rs:211:1: 215:2'
+source = '''
+impl<'a, T> Drop for RaylibBlendMode<'a, T> {
+    fn drop(&mut self) {
+        unsafe { ffi::EndBlendMode() }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/drawing.rs:242:1: 246:2'
+source = '''
+impl<'a, T> Drop for RaylibScissorMode<'a, T> {
+    fn drop(&mut self) {
+        unsafe { ffi::EndScissorMode() }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/macros.rs:22:9: 29:10'
+source = '''
+impl Drop for $name {
+            #[allow(unused_unsafe)]
+            fn drop(&mut self) {
+                unsafe {
+                    ($dropfunc)(self.$rawfield);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/vr.rs:53:1: 57:2'
+source = '''
+impl Drop for RaylibVR {
+    fn drop(&mut self) {
+        unsafe { ffi::CloseVrSimulator() }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/mod.rs:45:1: 54:2'
+source = '''
+impl Drop for RaylibHandle {
+    fn drop(&mut self) {
+        if IS_INITIALIZED.load(Ordering::Relaxed) {
+            unsafe {
+                ffi::CloseWindow();
+            }
+            IS_INITIALIZED.store(false, Ordering::Relaxed);
+        }
+    }
+}'''

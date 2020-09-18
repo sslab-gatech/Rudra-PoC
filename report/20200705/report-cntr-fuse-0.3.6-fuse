@@ -1,0 +1,21 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/channel.rs:115:1: 129:2'
+source = '''
+impl Drop for Channel {
+    fn drop(&mut self) {
+        // TODO: send ioctl FUSEDEVIOCSETDAEMONDEAD on macOS before closing the fd
+        // Close the communication channel to the kernel driver
+        // (closing it before unmount prevents sync unmount deadlock)
+        unsafe {
+            libc::close(self.fd);
+            libc::close(self.read_pipe_fd);
+            libc::close(self.write_pipe_fd);
+        }
+        // Unmount this channel's mount point
+        #[cfg(feature = "libfuse")]
+        let _ = unmount(&self.mountpoint);
+    }
+}'''

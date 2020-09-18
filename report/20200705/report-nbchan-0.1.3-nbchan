@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/queue.rs:97:1: 105:2'
+source = '''
+impl<T> Drop for QueueHead<T> {
+    fn drop(&mut self) {
+        let tail = self.tail.swap(ptr::null_mut(), Ordering::SeqCst);
+        while self.head != tail {
+            let _ = self.dequeue();
+        }
+        mem::drop(unsafe { Box::from_raw(self.head) });
+    }
+}'''

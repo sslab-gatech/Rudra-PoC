@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:93:1: 101:2'
+source = '''
+impl Drop for Archive {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe {
+            let _guard = MUTEX.lock().unwrap();
+            raw::tar_close(self.raw);
+        }
+    }
+}'''

@@ -1,0 +1,21 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:232:1: 246:2'
+source = '''
+impl<T> Drop for HeapVec<T> {
+    fn drop(&mut self) {
+        if !self.ptr.is_null() {
+            while let Some(_) = self.pop() { }
+
+            let align = std::cmp::max(mem::align_of::<T>(), mem::align_of::<usize>());
+            let elem_size = mem::size_of::<T>();
+            let cap_size = Self::get_offset();
+            let num_bytes = cap_size + elem_size * self.capacity();
+            unsafe {
+                alloc::dealloc(self.ptr.as_ptr() as *mut _, alloc::Layout::from_size_align(num_bytes, align).expect("Couldn't create layout!"));
+            }
+        }
+    }
+}'''

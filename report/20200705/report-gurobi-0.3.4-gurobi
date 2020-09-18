@@ -1,0 +1,27 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/env.rs:119:1: 126:2'
+source = '''
+impl Drop for Env {
+  fn drop(&mut self) {
+    if self.require_drop {
+      unsafe { ffi::GRBfreeenv(self.env) };
+      self.env = null_mut();
+    }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/model.rs:1305:1: 1310:2'
+source = '''
+impl Drop for Model {
+  fn drop(&mut self) {
+    unsafe { ffi::GRBfreemodel(self.model) };
+    self.model = null_mut();
+  }
+}'''

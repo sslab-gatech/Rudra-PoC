@@ -1,0 +1,53 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pipe.rs:45:1: 53:2'
+source = '''
+impl Drop for Pipe {
+    fn drop(&mut self) {
+        let Pipe(x, y) = *self;
+        unsafe {
+            libc::close(x);
+            libc::close(y);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pipe.rs:75:1: 79:2'
+source = '''
+impl Drop for PipeReader {
+    fn drop(&mut self) {
+        unsafe { libc::close(self.0) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pipe.rs:81:1: 85:2'
+source = '''
+impl Drop for PipeWriter {
+    fn drop(&mut self) {
+        unsafe { libc::close(self.0) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stdio.rs:132:1: 138:2'
+source = '''
+impl Drop for Closing {
+    fn drop(&mut self) {
+        unsafe {
+            libc::close(self.0);
+        }
+    }
+}'''

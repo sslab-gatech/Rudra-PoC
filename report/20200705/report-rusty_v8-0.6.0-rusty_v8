@@ -1,0 +1,216 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array_buffer.rs:139:1: 143:2'
+source = '''
+impl Drop for Allocator {
+  fn drop(&mut self) {
+    unsafe { v8__ArrayBuffer__Allocator__DELETE(self) };
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array_buffer.rs:207:1: 211:2'
+source = '''
+impl Drop for BackingStore {
+  fn drop(&mut self) {
+    unsafe { v8__BackingStore__DELETE(self) };
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/global.rs:128:1: 156:2'
+source = '''
+impl<T> Drop for Global<T> {
+  fn drop(&mut self) {
+    match &mut self.value {
+      None => {
+        // This global handle is empty.
+        assert!(self.isolate_handle.is_none())
+      }
+      Some(_)
+        if unsafe {
+          self
+            .isolate_handle
+            .as_ref()
+            .unwrap()
+            .get_isolate_ptr()
+            .is_null()
+        } =>
+      {
+        // This global handle is associated with an Isolate that has already
+        // been disposed.
+      }
+      addr @ Some(_) => unsafe {
+        // Destroy the storage cell that contains the contents of this Global.
+        v8__Global__Reset__0(
+          &mut *(addr as *mut Option<NonNull<T>> as *mut *const Data),
+        )
+      },
+    }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/isolate.rs:564:1: 568:2'
+source = '''
+impl Drop for OwnedIsolate {
+  fn drop(&mut self) {
+    unsafe { self.cxx_isolate.as_mut().dispose() }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/platform/task.rs:44:1: 48:2'
+source = '''
+impl Drop for Task {
+  fn drop(&mut self) {
+    unsafe { v8__Task__DELETE(self) }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/platform/mod.rs:24:1: 28:2'
+source = '''
+impl Drop for Platform {
+  fn drop(&mut self) {
+    unsafe { v8__Platform__DELETE(self) }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/scope.rs:1287:3: 1292:4'
+source = '''
+impl Drop for ContextScope {
+    fn drop(&mut self) {
+      debug_assert!(!self.entered_context.is_null());
+      unsafe { v8__Context__Exit(self.entered_context) };
+    }
+  }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/scope.rs:1316:3: 1320:4'
+source = '''
+impl Drop for HandleScope {
+    fn drop(&mut self) {
+      unsafe { v8__HandleScope__DESTRUCT(self) };
+    }
+  }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/scope.rs:1373:3: 1377:4'
+source = '''
+impl Drop for TryCatch {
+    fn drop(&mut self) {
+      unsafe { v8__TryCatch__DESTRUCT(self) };
+    }
+  }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/snapshot.rs:63:1: 67:2'
+source = '''
+impl Drop for StartupData {
+  fn drop(&mut self) {
+    unsafe { v8__StartupData__DESTRUCT(self) }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/snapshot.rs:99:1: 103:2'
+source = '''
+impl Drop for SnapshotCreator {
+  fn drop(&mut self) {
+    unsafe { v8__SnapshotCreator__DESTRUCT(self) };
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/support.rs:121:1: 125:2'
+source = '''
+impl<T: ?Sized> Drop for UniqueRef<T> {
+  fn drop(&mut self) {
+    unsafe { drop_in_place(self.0.as_ptr()) }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/inspector.rs:579:1: 583:2'
+source = '''
+impl Drop for V8InspectorSession {
+  fn drop(&mut self) {
+    unsafe { v8_inspector__V8InspectorSession__DELETE(self) };
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/inspector.rs:611:1: 615:2'
+source = '''
+impl Drop for StringBuffer {
+  fn drop(&mut self) {
+    unsafe { v8_inspector__StringBuffer__DELETE(self) }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/inspector.rs:888:1: 892:2'
+source = '''
+impl Drop for V8Inspector {
+  fn drop(&mut self) {
+    unsafe { v8_inspector__V8Inspector__DELETE(self) };
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/script_compiler.rs:42:1: 46:2'
+source = '''
+impl Drop for Source {
+  fn drop(&mut self) {
+    unsafe { v8__ScriptCompiler__Source__DESTRUCT(self) }
+  }
+}'''

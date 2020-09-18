@@ -1,0 +1,31 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:140:1: 148:2'
+source = '''
+impl<T> Drop for VecDropper<T> {
+    fn drop(&mut self) {
+        unsafe {
+            // Set len to 0 because we only want to free the memory.
+            // Dropping the elements themselves is taken care of by the shards.
+            mem::drop(Vec::from_raw_parts(self.ptr, 0, self.capacity));
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:350:1: 358:2'
+source = '''
+impl<T> Drop for VecShard<T> {
+    fn drop(&mut self) {
+        // Drop all the elements
+        // The VecDropper will take care of freeing the Vec itself, if needed
+        for o in 0..self.len {
+            unsafe { ptr::drop_in_place(self.data.add(o)) };
+        }
+    }
+}'''

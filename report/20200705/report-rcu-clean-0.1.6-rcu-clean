@@ -1,0 +1,43 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/boxrcu.rs:42:1: 49:2'
+source = '''
+impl<T> Drop for List<T> {
+    fn drop(&mut self) {
+        let next = self.next.load(Ordering::Acquire);
+        if next != null_mut() {
+            unsafe { Box::from_raw(next); }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rcrcu.rs:64:1: 70:2'
+source = '''
+impl<T> Drop for List<T> {
+    fn drop(&mut self) {
+        if self.next.get() != null_mut() {
+            unsafe { Box::from_raw(self.next.get()); }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/arcrcu.rs:70:1: 77:2'
+source = '''
+impl<T> Drop for List<T> {
+    fn drop(&mut self) {
+        let next = self.next.load(Ordering::Acquire);
+        if next != null_mut() {
+            unsafe { Box::from_raw(next); }
+        }
+    }
+}'''

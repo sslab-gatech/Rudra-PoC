@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/raw.rs:74:1: 82:2'
+source = '''
+impl<R> Drop for RawContext<R> {
+    fn drop(&mut self) {
+        if !self.raw.is_null() {
+            unsafe {
+                sys::spng_ctx_free(self.raw);
+            }
+        }
+    }
+}'''

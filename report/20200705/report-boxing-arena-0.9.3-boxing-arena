@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:134:1: 143:2'
+source = '''
+impl<T> Drop for BoxingArena<T> {
+    fn drop(&mut self) {
+        // Deallocate all the free boxes that we kept.
+        unsafe {
+            for p in &self.items {
+                std::alloc::dealloc(*p as *mut u8, std::alloc::Layout::new::<T>());
+            }
+        }
+    }
+}'''

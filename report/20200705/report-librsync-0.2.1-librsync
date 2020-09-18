@@ -1,0 +1,31 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/job.rs:130:1: 138:2'
+source = '''
+impl Drop for Job {
+    fn drop(&mut self) {
+        unsafe {
+            if !self.0.is_null() {
+                raw::rs_job_free(self.0);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:425:1: 433:2'
+source = '''
+impl Drop for Sumset {
+    fn drop(&mut self) {
+        unsafe {
+            if !self.0.is_null() {
+                raw::rs_free_sumset(self.0);
+            }
+        }
+    }
+}'''

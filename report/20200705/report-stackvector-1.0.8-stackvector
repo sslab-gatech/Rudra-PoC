@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:936:1: 942:2'
+source = '''
+impl<A: Array> Drop for StackVec<A> {
+    fn drop(&mut self) {
+        unsafe {
+            ptr::drop_in_place(&mut self[..]);
+        }
+    }
+}'''

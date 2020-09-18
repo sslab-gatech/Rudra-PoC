@@ -1,0 +1,17 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/num.rs:202:1: 212:2'
+source = '''
+impl Drop for NumericBuf {
+    #[inline]
+    fn drop(&mut self) {
+        if !self.buf.is_null() {
+            unsafe {
+                let _vec = Vec::<u8>::from_raw_parts(self.buf as *mut u8, 0, self.len as usize);
+            }
+            self.buf = std::ptr::null();
+        }
+    }
+}'''

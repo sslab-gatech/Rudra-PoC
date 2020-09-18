@@ -1,0 +1,39 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:144:1: 176:2'
+source = '''
+impl<'a, I: 'a, P> Drop for VecDrainWhere<'a, I, P> {
+    /// If the iterator was run to completion this will
+    /// set the len to the new len after drop. I.e. it
+    /// will undo the leak amplification.
+    ///
+    /// If the iterator is dropped before completion this
+    /// will move the remaining elements to the (single)
+    /// gap (still) left from draining elements and then
+    /// sets the new length.
+    ///
+    /// If the iterator is dropped because the called
+    /// predicate panicked the element it panicked on
+    /// is _leaked_. This is because its simply to easy
+    /// to leaf the `&mut T` value in a illegal state
+    /// likely to panic drop or even behave unsafely
+    /// (through it surly shouldn't behave this way).
+    fn drop(&mut self) {
+        let pos = self.pos as usize;
+        if self.pos.is_null() {
+            return
+        }
+        let start  = self.self_ref.as_mut_ptr() as usize;
+        let end = self.end as usize;
+        let gap = self.gap_pos as usize;
+        let item_size: usize = mem::size_of::<I>();
+        unsafe {
+            let cur_len = (gap - start)/item_size;
+            let rem_len = (end - pos)/item_size;
+            ptr::copy(self.pos, self.gap_pos, rem_len);
+            self.self_ref.set_len(cur_len + rem_len);
+        }
+    }
+}'''

@@ -1,0 +1,60 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/loader.rs:85:1: 91:2'
+source = '''
+impl Drop for Loader {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::delete_fluid_defsfloader(self.handle);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/log.rs:167:1: 179:2'
+source = '''
+impl Drop for Log {
+    fn drop(&mut self) {
+        for level in &self.levels {
+            unsafe {
+                ffi::fluid_set_log_function(
+                    *level as i32,
+                    Some(ffi::fluid_default_log_function),
+                    null_mut(),
+                );
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/settings.rs:30:1: 34:2'
+source = '''
+impl Drop for Settings {
+    fn drop(&mut self) {
+        unsafe { ffi::delete_fluid_settings(self.handle) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/synth.rs:68:1: 75:2'
+source = '''
+impl Drop for Synth {
+    fn drop(&mut self) {
+        let _settings = Settings::from_ptr(unsafe { ffi::fluid_synth_get_settings(self.handle) });
+        unsafe {
+            ffi::delete_fluid_synth(self.handle);
+        }
+    }
+}'''

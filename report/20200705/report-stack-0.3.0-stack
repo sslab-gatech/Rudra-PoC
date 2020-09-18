@@ -1,0 +1,41 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array_vec.rs:81:1: 95:2'
+source = '''
+impl<T: Array> Drop for ArrayVec<T> {
+    fn drop(&mut self) {
+        let len = ArrayIndex::to_usize(self.len);
+        if len > 0 {
+            let ptr = self.array.as_mut_ptr();
+
+            unsafe {
+                self.set_len(0);
+                for i in 0..len {
+                    drop_in_place(ptr.uoffset(i));
+                }
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/small_dst.rs:95:1: 107:2'
+source = '''
+impl<T: ?Sized, A: Vector<Item=usize>> Drop for SmallDST<T, A> {
+    #[inline]
+    fn drop(&mut self) {
+        use std::ptr;
+
+        unsafe {
+            if self.data.len() > 0 {
+                self.data.set_len(0);
+                ptr::drop_in_place(&mut **self);
+            }
+        }
+    }
+}'''

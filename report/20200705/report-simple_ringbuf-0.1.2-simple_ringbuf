@@ -1,0 +1,19 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/raw.rs:87:1: 99:2'
+source = '''
+impl<T> Drop for RawRingBuffer<T> {
+    fn drop(&mut self) {
+        let elem_size = mem::size_of::<T>();
+        if self.cap != 0 && elem_size != 0 {
+            unsafe {
+                dealloc(
+                    self.ptr.as_ptr() as *mut _,
+                    array_layout::<T>(self.cap).unwrap(),
+                )
+            }
+        }
+    }
+}'''

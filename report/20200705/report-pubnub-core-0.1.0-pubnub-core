@@ -1,0 +1,23 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/subscription/subscription.rs:47:1: 63:2'
+source = '''
+impl<TRuntime: Runtime> Drop for Subscription<TRuntime> {
+    fn drop(&mut self) {
+        debug!("Dropping Subscription: {:?}", self.name);
+
+        let command = self.drop_command();
+        let mut control_tx = self.control_tx.clone();
+
+        // Spawn a future that will send the drop message for us.
+        // See: https://boats.gitlab.io/blog/post/poll-drop/
+        self.runtime.spawn(async move {
+            let drop_send_result = control_tx.send(command).await;
+            if is_drop_send_result_error(drop_send_result) {
+                panic!("Unable to unsubscribe");
+            }
+        });
+    }
+}'''

@@ -1,0 +1,28 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:72:1: 79:2'
+source = '''
+impl Drop for Span {
+    fn drop(&mut self) {
+        // SAFE: the only way to construct `Span` is by creating a valid tracy zone context.
+        unsafe {
+            sys::___tracy_emit_zone_end(self.0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:203:1: 209:2'
+source = '''
+impl Drop for Frame {
+    fn drop(&mut self) {
+        unsafe {
+            sys::___tracy_emit_frame_mark_end(self.0.as_ptr() as _);
+        }
+    }
+}'''

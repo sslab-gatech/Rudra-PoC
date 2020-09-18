@@ -1,0 +1,22 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stack/generator.rs:136:1: 151:2'
+source = '''
+impl<'s, Y, R, F: Future> Drop for Gen<'s, Y, R, F> {
+    fn drop(&mut self) {
+        // Safety: `state` is a `MaybeUninit` which is guaranteed to be initialized,
+        // because the only way to construct a `Gen` is with `Gen::new`, which
+        // initializes it.
+        //
+        // Drop `state` in place, by dropping each field in place. Drop `future` first,
+        // since it likely contains a reference to `airlock` (through the `co` object).
+        // Since we drop everything in place, the `Pin` invariants are not violated.
+        unsafe {
+            let state = self.state.as_mut().get_unchecked_mut();
+            ptr::drop_in_place(&mut state.future);
+            ptr::drop_in_place(&mut state.airlock);
+        }
+    }
+}'''

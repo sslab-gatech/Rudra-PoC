@@ -1,0 +1,23 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/decoder.rs:111:1: 115:2'
+source = '''
+impl Drop for DecoderContext {
+    fn drop(&mut self) {
+        unsafe { LZ4F_freeDecompressionContext(self.c) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/encoder.rs:183:1: 187:2'
+source = '''
+impl Drop for EncoderContext {
+    fn drop(&mut self) {
+        unsafe { LZ4F_freeCompressionContext(self.c) };
+    }
+}'''

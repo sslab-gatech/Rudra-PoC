@@ -1,0 +1,196 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/bsonc.rs:68:1: 73:2'
+source = '''
+impl Drop for Bsonc {
+    fn drop(&mut self) {
+        assert!(!self.0.is_null());
+        unsafe { bson_destroy(self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/uri.rs:435:1: 440:2'
+source = '''
+impl Drop for Uri {
+    fn drop(&mut self) {
+        assert!(!self.0.is_null());
+        unsafe { mongoc_uri_destroy(self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/database.rs:338:1: 343:2'
+source = '''
+impl Drop for Database {
+    fn drop(&mut self) {
+        assert!(!self.0.is_null());
+        unsafe { mongoc_database_destroy(self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/collection.rs:583:1: 588:2'
+source = '''
+impl Drop for Collection {
+    fn drop(&mut self) {
+        assert!(!self.0.is_null());
+        unsafe { mongoc_collection_destroy(self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/cursor.rs:136:1: 140:2'
+source = '''
+impl Drop for Cursor {
+    fn drop(&mut self) {
+        unsafe { mongoc_cursor_destroy(self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/change_stream.rs:76:1: 81:2'
+source = '''
+impl Drop for ChangeStream {
+    fn drop(&mut self) {
+        assert!(!self.0.is_null());
+        unsafe { mongoc_change_stream_destroy(self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/session.rs:175:1: 180:2'
+source = '''
+impl Drop for ClientSession {
+    fn drop(&mut self) {
+        assert!(!self.0.is_null());
+        unsafe { mongoc_client_session_destroy(self.0); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/session.rs:240:1: 245:2'
+source = '''
+impl Drop for SessionOpt {
+    fn drop(&mut self) {
+        assert!(!self.0.is_null());
+        unsafe { mongoc_session_opts_destroy(self.0); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/transaction.rs:87:1: 92:2'
+source = '''
+impl Drop for TransactionOpt {
+    fn drop(&mut self) {
+        assert!(!self.0.is_null());
+        unsafe { mongoc_transaction_opts_destroy(self.0); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/read_preference.rs:102:1: 107:2'
+source = '''
+impl Drop for ReadPreference {
+    fn drop(&mut self) {
+        assert!(!self.0.is_null());
+        unsafe { mongoc_read_prefs_destroy(self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/read_concern.rs:72:1: 77:2'
+source = '''
+impl Drop for ReadConcern {
+    fn drop(&mut self) {
+        assert!(!self.0.is_null());
+        unsafe { mongoc_read_concern_destroy(self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/write_concern.rs:123:1: 128:2'
+source = '''
+impl Drop for WriteConcern {
+    fn drop(&mut self) {
+        assert!(!self.0.is_null());
+        unsafe { mongoc_write_concern_destroy(self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/find_and_modify.rs:128:1: 133:2'
+source = '''
+impl Drop for FindAndModifyOpts {
+    fn drop(&mut self) {
+        assert!(!self.0.is_null());
+        unsafe { mongoc_find_and_modify_opts_destroy(self.0) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/apm_callbacks.rs:59:1: 64:2'
+source = '''
+impl Drop for ApmCallbacks {
+    fn drop(&mut self) {
+        assert!(!self.0.is_null());
+        unsafe { mongoc_apm_callbacks_destroy(self.0); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/client.rs:302:1: 310:2'
+source = '''
+impl Drop for MongoInner {
+    fn drop(&mut self) {
+        self.pool.destroy();
+
+        if let Some(apm_ptr) = self.apm_ptr {
+            unsafe { Box::from_raw(apm_ptr); }
+        }
+    }
+}'''

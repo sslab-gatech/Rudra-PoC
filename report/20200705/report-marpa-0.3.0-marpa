@@ -1,0 +1,79 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/thin/bocage.rs:35:1: 41:2'
+source = '''
+impl Drop for Bocage {
+    fn drop(&mut self) {
+        unsafe {
+            marpa_b_unref(self.internal);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/thin/grammar.rs:24:1: 30:2'
+source = '''
+impl Drop for Grammar {
+    fn drop(&mut self) {
+        unsafe {
+            marpa_g_unref(self.internal);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/thin/order.rs:35:1: 41:2'
+source = '''
+impl Drop for Order {
+    fn drop(&mut self) {
+        unsafe {
+            marpa_o_unref(self.internal);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/thin/recognizer.rs:41:1: 47:2'
+source = '''
+impl Drop for Recognizer {
+    fn drop(&mut self) {
+        unsafe {
+            marpa_r_unref(self.internal);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/thin/tree.rs:32:1: 36:2'
+source = '''
+impl Drop for Tree {
+    fn drop(&mut self) {
+        unsafe { marpa_t_unref(self.internal) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/thin/value.rs:43:1: 47:2'
+source = '''
+impl Drop for Value {
+    fn drop(&mut self) {
+        unsafe { marpa_v_unref(self.internal) };
+    }
+}'''

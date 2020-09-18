@@ -1,0 +1,100 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/app.rs:196:1: 202:2'
+source = '''
+impl Drop for AppConfig {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::newrelic_destroy_app_config(&mut self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/app.rs:259:1: 266:2'
+source = '''
+impl Drop for App {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::newrelic_destroy_app(&mut self.inner);
+        }
+        debug!("Destroyed app");
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/event.rs:85:1: 94:2'
+source = '''
+impl<'a> Drop for CustomEvent<'a> {
+    /// If the custom event wasn't ever recorded, we should discard it
+    /// to free the memory.
+    fn drop(&mut self) {
+        if !self.recorded {
+            warn!("Dropping unrecorded custom event");
+            unsafe { ffi::newrelic_discard_custom_event(&mut self.inner) };
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/segment.rs:323:1: 333:2'
+source = '''
+impl<'a> Drop for Segment<'a> {
+    fn drop(&mut self) {
+        if let Some(ref mut inner) = self.inner {
+            unsafe {
+                ffi::newrelic_end_segment(inner.transaction.inner, &mut inner.inner);
+            }
+            debug!("Ended segment");
+        }
+        self.inner = None;
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/segment.rs:448:1: 457:2'
+source = '''
+impl Drop for ExternalParams {
+    fn drop(&mut self) {
+        debug!("Reclaiming ExternalParams");
+        unsafe {
+            let _ = CString::from_raw(self.uri);
+            drop_if_non_null!(self.procedure);
+            drop_if_non_null!(self.library);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/segment.rs:633:1: 645:2'
+source = '''
+impl Drop for DatastoreParams {
+    fn drop(&mut self) {
+        debug!("Reclaiming DatastoreParams");
+        unsafe {
+            drop_if_non_null!(self.collection);
+            drop_if_non_null!(self.operation);
+            drop_if_non_null!(self.host);
+            drop_if_non_null!(self.port_path_or_id);
+            drop_if_non_null!(self.database_name);
+            drop_if_non_null!(self.query);
+        }
+    }
+}'''

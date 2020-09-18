@@ -1,0 +1,45 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/server.rs:301:1: 339:2'
+source = '''
+impl Drop for Listener {
+    fn drop(&mut self) {
+        match *self {
+            Listener::UNIX(Some(ref listener), false) => {
+                if let Ok(local_addr) = listener.local_addr() {
+                    if let Some(path) = local_addr.as_pathname() {
+                        let _ = fs::remove_file(path);
+                    }
+                }
+            }
+            Listener::UNIX(ref mut listener, true) => {
+                if let Some(l) = listener.take() {
+                    #[cfg(unix)]
+                    unsafe {
+                        let s = UnixStream::from_raw_fd(l.into_raw_fd());
+                        let _ = s.set_read_timeout(None);
+                    }
+                    #[cfg(windows)]
+                    let _ = l;
+                }
+            }
+            Listener::TCP(ref mut listener, true) => {
+                if let Some(l) = listener.take() {
+                    #[cfg(unix)]
+                    unsafe {
+                        let s = TcpStream::from_raw_fd(l.into_raw_fd());
+                        let _ = s.set_read_timeout(None);
+                    }
+                    #[cfg(windows)]
+                    unsafe {
+                        let s = TcpStream::from_raw_socket(l.into_raw_socket());
+                        let _ = s.set_read_timeout(None);
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+}'''

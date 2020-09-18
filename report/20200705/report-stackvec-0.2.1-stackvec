@@ -1,0 +1,24 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stackvec/traits/into_iter.rs:12:1: 29:2'
+source = '''
+impl<A: Array> Drop for Iter<A> {
+    fn drop (
+        self: &mut Self,
+    )
+    {
+        let len = self.stackvec.len;
+        self.stackvec.len = 0;
+        for i in self.start .. len {
+            unsafe {
+                ptr::drop_in_place(
+                    self.stackvec
+                        .array.as_mut_ptr()
+                        .offset(i as isize)
+                );
+            };
+        };
+    }
+}'''

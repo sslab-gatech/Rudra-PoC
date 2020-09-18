@@ -1,0 +1,338 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buffer/alloc.rs:860:1: 870:2'
+source = '''
+impl Drop for Alloc {
+    fn drop(&mut self) {
+        unsafe {
+            let mut ctxt = self.context.make_current();
+            self.assert_unmapped(&mut ctxt);
+            self.assert_not_transform_feedback(&mut ctxt);
+            VertexAttributesSystem::purge_buffer(&mut ctxt, self.id);
+            destroy_buffer(&mut ctxt, self.id);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buffer/alloc.rs:907:1: 957:2'
+source = '''
+impl<'a, D: ?Sized> Drop for MappingImpl<'a, D> {
+    fn drop(&mut self) {
+        match self {
+            &mut MappingImpl::PersistentMapping { buffer, offset_bytes, data, needs_flushing } => {
+                let mut ctxt = buffer.context.make_current();
+                unsafe {
+                    if needs_flushing {
+                        flush_range(&mut ctxt, buffer.id, buffer.ty,
+                                    offset_bytes .. offset_bytes + mem::size_of_val(&*data));
+                    }
+                }
+            },
+
+            &mut MappingImpl::TemporaryBuffer { original_buffer, original_buffer_offset,
+                                                temporary_buffer, temporary_buffer_data,
+                                                needs_flushing } =>
+            {
+                let mut ctxt = original_buffer.context.make_current();
+                original_buffer.barrier_for_buffer_update(&mut ctxt);
+
+                unsafe {
+                    if needs_flushing {
+                        flush_range(&mut ctxt, temporary_buffer, original_buffer.ty,
+                                    0 .. mem::size_of_val(&*temporary_buffer_data));
+                    }
+                    unmap_buffer(&mut ctxt, temporary_buffer, original_buffer.ty);
+                    if needs_flushing {
+                        copy_buffer(&mut ctxt, temporary_buffer, 0, original_buffer.id,
+                                    original_buffer_offset, mem::size_of_val(&*temporary_buffer_data)).unwrap();
+                    }
+
+                    destroy_buffer(&mut ctxt, temporary_buffer);
+                }
+            },
+
+            &mut MappingImpl::RegularMapping { ref mut buffer, data, needs_flushing } => {
+                let mut ctxt = buffer.context.make_current();
+
+                unsafe {
+                    if needs_flushing {
+                        flush_range(&mut ctxt, buffer.id, buffer.ty,
+                                    0 .. mem::size_of_val(&*data));
+                    }
+                    unmap_buffer(&mut ctxt, buffer.id, buffer.ty);
+                }
+
+                buffer.mapped.set(false);
+            },
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/draw_parameters/query.rs:381:1: 409:2'
+source = '''
+impl Drop for RawQuery {
+    fn drop(&mut self) {
+        let mut ctxt = self.context.make_current();
+        self.deactivate(&mut ctxt);
+
+        if let Some((id, _)) = ctxt.state.conditional_render {
+            if id == self.id {
+                RawQuery::end_conditional_render(&mut ctxt);
+            }
+        }
+
+        unsafe {
+            if ctxt.version >= &Version(Api::Gl, 1, 5) ||
+               ctxt.version >= &Version(Api::GlEs, 3, 0)
+            {
+                ctxt.gl.DeleteQueries(1, [self.id].as_ptr());
+
+            } else if ctxt.extensions.gl_arb_occlusion_query {
+                ctxt.gl.DeleteQueriesARB(1, [self.id].as_ptr());
+
+            } else if ctxt.extensions.gl_ext_occlusion_query_boolean {
+                ctxt.gl.DeleteQueriesEXT(1, [self.id].as_ptr());
+
+            } else {
+                unreachable!();
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/framebuffer/render_buffer.rs:448:1: 477:2'
+source = '''
+impl Drop for RenderBufferAny {
+    fn drop(&mut self) {
+        unsafe {
+            let mut ctxt = self.context.make_current();
+
+            // removing FBOs which contain this buffer
+            FramebuffersContainer::purge_renderbuffer(&mut ctxt, self.id);
+
+            if ctxt.version >= &Version(Api::Gl, 3, 0) ||
+               ctxt.version >= &Version(Api::GlEs, 2, 0)
+            {
+                if ctxt.state.renderbuffer == self.id {
+                    ctxt.state.renderbuffer = 0;
+                }
+
+                ctxt.gl.DeleteRenderbuffers(1, [ self.id ].as_ptr());
+
+            } else if ctxt.extensions.gl_ext_framebuffer_object {
+                if ctxt.state.renderbuffer == self.id {
+                    ctxt.state.renderbuffer = 0;
+                }
+
+                ctxt.gl.DeleteRenderbuffersEXT(1, [ self.id ].as_ptr());
+
+            } else {
+                unreachable!();
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/program/raw.rs:672:1: 706:2'
+source = '''
+impl Drop for RawProgram {
+    fn drop(&mut self) {
+        let mut ctxt = self.context.make_current();
+
+        // removing VAOs which contain this program
+        VertexAttributesSystem::purge_program(&mut ctxt, self.id);
+
+        // sending the destroy command
+        unsafe {
+            match self.id {
+                Handle::Id(id) => {
+                    assert!(ctxt.version >= &Version(Api::Gl, 2, 0) ||
+                            ctxt.version >= &Version(Api::GlEs, 2, 0));
+
+                    if ctxt.state.program == Handle::Id(id) {
+                        ctxt.gl.UseProgram(0);
+                        ctxt.state.program = Handle::Id(0);
+                    }
+
+                    ctxt.gl.DeleteProgram(id);
+                },
+                Handle::Handle(id) => {
+                    assert!(ctxt.extensions.gl_arb_shader_objects);
+
+                    if ctxt.state.program == Handle::Handle(id) {
+                        ctxt.gl.UseProgramObjectARB(0 as gl::types::GLhandleARB);
+                        ctxt.state.program = Handle::Handle(0 as gl::types::GLhandleARB);
+                    }
+
+                    ctxt.gl.DeleteObjectARB(id);
+                }
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/program/shader.rs:33:1: 51:2'
+source = '''
+impl Drop for Shader {
+    fn drop(&mut self) {
+        let ctxt = self.context.make_current();
+
+        unsafe {
+            match self.id {
+                Handle::Id(id) => {
+                    assert!(ctxt.version >= &Version(Api::Gl, 2, 0) ||
+                            ctxt.version >= &Version(Api::GlEs, 2, 0));
+                    ctxt.gl.DeleteShader(id);
+                },
+                Handle::Handle(id) => {
+                    assert!(ctxt.extensions.gl_arb_shader_objects);
+                    ctxt.gl.DeleteObjectARB(id);
+                }
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/texture/buffer_texture.rs:479:1: 492:2'
+source = '''
+impl<T> Drop for BufferTexture<T> where [T]: BufferContent {
+    fn drop(&mut self) {
+        let mut ctxt = self.buffer.get_context().make_current();
+
+        // resetting the bindings
+        for tex_unit in ctxt.state.texture_units.iter_mut() {
+            if tex_unit.texture == self.texture {
+                tex_unit.texture = 0;
+            }
+        }
+
+        unsafe { ctxt.gl.DeleteTextures(1, [ self.texture ].as_ptr()); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/texture/any.rs:751:1: 769:2'
+source = '''
+impl Drop for TextureAny {
+    fn drop(&mut self) {
+        let mut ctxt = self.context.make_current();
+
+        // removing FBOs which contain this texture
+        fbo::FramebuffersContainer::purge_texture(&mut ctxt, self.id);
+
+        // resetting the bindings
+        for tex_unit in ctxt.state.texture_units.iter_mut() {
+            if tex_unit.texture == self.id {
+                tex_unit.texture = 0;
+            }
+        }
+
+        if self.owned {
+            unsafe { ctxt.gl.DeleteTextures(1, [ self.id ].as_ptr()); }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/context/mod.rs:687:1: 735:2'
+source = '''
+impl Drop for Context {
+    fn drop(&mut self) {
+        unsafe {
+            // this is the code of make_current duplicated here because we can't borrow
+            // `self` twice
+            if self.check_current_context {
+                let backend = self.backend.borrow();
+                if !backend.is_current() {
+                    backend.make_current();
+                }
+            }
+
+            let mut ctxt = CommandContext {
+                gl: &self.gl,
+                state: self.state.borrow_mut(),
+                version: &self.version,
+                extensions: &self.extensions,
+                capabilities: &self.capabilities,
+                report_debug_output_errors: &self.report_debug_output_errors,
+                vertex_array_objects: &self.vertex_array_objects,
+                framebuffer_objects: self.framebuffer_objects.as_ref().unwrap(),
+                samplers: self.samplers.borrow_mut(),
+                resident_texture_handles: self.resident_texture_handles.borrow_mut(),
+                resident_image_handles: self.resident_image_handles.borrow_mut(),
+                marker: PhantomData,
+            };
+
+            fbo::FramebuffersContainer::cleanup(&mut ctxt);
+            vertex_array_object::VertexAttributesSystem::cleanup(&mut ctxt);
+
+            for (_, s) in mem::replace(&mut *ctxt.samplers, HashMap::with_hasher(Default::default())) {
+                s.destroy(&mut ctxt);
+            }
+
+            // disabling callback
+            if ctxt.state.enabled_debug_output != Some(false) {
+                if ctxt.version >= &Version(Api::Gl, 4,5) || ctxt.extensions.gl_khr_debug {
+                    ctxt.gl.Disable(gl::DEBUG_OUTPUT);
+                } else if ctxt.extensions.gl_arb_debug_output {
+                    ctxt.gl.DebugMessageCallbackARB(mem::transmute(0usize),
+                                                    ptr::null());
+                }
+
+                ctxt.state.enabled_debug_output = Some(false);
+                ctxt.gl.Finish();
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sync.rs:59:1: 70:2'
+source = '''
+impl Drop for SyncFence {
+    #[inline]
+    fn drop(&mut self) {
+        let sync = match self.id {
+            None => return,     // fence has already been deleted
+            Some(s) => s
+        };
+
+        let mut ctxt = self.context.make_current();
+        unsafe { delete_fence(&mut ctxt, sync) };
+    }
+}'''

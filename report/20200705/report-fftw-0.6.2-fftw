@@ -1,0 +1,11 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:88:1: 92:2'
+source = '''
+impl<T> Drop for AlignedVec<T> {
+    fn drop(&mut self) {
+        excall! { ffi::fftw_free(self.data as *mut c_void) };
+    }
+}'''

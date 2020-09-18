@@ -1,0 +1,20 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.5.0/src/lib.rs:248:9: 248:51'
+source = '$crate::foreign_type_impl!($crate $($t)*);'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/dwfl/dwfl.rs:158:1: 164:2'
+source = '''
+impl<'a, 'b> Drop for Report<'a, 'b> {
+    fn drop(&mut self) {
+        unsafe {
+            dw_sys::dwfl_report_end(self.0.as_ptr(), None, ptr::null_mut());
+        }
+    }
+}'''

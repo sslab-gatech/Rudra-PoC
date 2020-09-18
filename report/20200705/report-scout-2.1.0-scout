@@ -1,0 +1,17 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ui.rs:148:1: 158:2'
+source = '''
+impl<W: io::Write + Send + Unpin + 'static> Drop for Canvas<W> {
+    fn drop(&mut self) {
+        smol::block_on(async {
+            if let Some(teardown) = self.mode.teardown() {
+                self.write(&teardown)
+                    .await
+                    .expect("Error writing to output");
+            }
+        });
+    }
+}'''

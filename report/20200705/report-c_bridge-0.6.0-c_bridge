@@ -1,0 +1,35 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/array.rs:86:1: 90:2'
+source = '''
+impl<T> Drop for Array<T> {
+	fn drop(&mut self) {
+		unsafe{ (self.dealloc)(self) }
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/opaque.rs:71:1: 75:2'
+source = '''
+impl Drop for Opaque {
+	fn drop(&mut self) {
+		unsafe{ (self.dealloc)(self) }
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/result.rs:108:1: 112:2'
+source = '''
+impl<T, E> Drop for FfiResult<T, E> {
+	fn drop(&mut self) {
+		unsafe{ (self.dealloc)(self) }
+	}
+}'''

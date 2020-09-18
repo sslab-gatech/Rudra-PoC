@@ -1,0 +1,64 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/gc.rs:20:1: 38:2'
+source = '''
+impl Drop for GcState {
+    fn drop(&mut self) {
+        unsafe {
+            {
+                let mut p = &self.boxes_start;
+                while let Some(node) = *p {
+                    Finalize::finalize(&(*node.as_ptr()).data);
+                    p = &(*node.as_ptr()).header.next;
+                }
+            }
+
+            let _guard = DropGuard::new();
+            while let Some(node) = self.boxes_start {
+                let node = Box::from_raw(node.as_ptr());
+                self.boxes_start = node.header.next;
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:265:1: 275:2'
+source = '''
+impl<T: Trace + ?Sized> Drop for Gc<T> {
+    #[inline]
+    fn drop(&mut self) {
+        // If this pointer was a root, we should unroot it.
+        if self.rooted() {
+            unsafe {
+                self.inner().unroot_inner();
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:843:1: 856:2'
+source = '''
+impl<'a, T: Trace + ?Sized> Drop for GcCellRefMut<'a, T> {
+    #[inline]
+    fn drop(&mut self) {
+        debug_assert!(self.flags.get().borrowed() == BorrowState::Writing);
+        // Restore the rooted state of the GcCell's contents to the state of the GcCell.
+        // During the lifetime of the GcCellRefMut, the GcCell's contents are rooted.
+        if !self.flags.get().rooted() {
+            unsafe {
+                self.value.unroot();
+            }
+        }
+        self.flags.set(self.flags.get().set_unused());
+    }
+}'''

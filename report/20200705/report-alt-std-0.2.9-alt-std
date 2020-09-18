@@ -1,0 +1,73 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/mem.rs:89:1: 97:2'
+source = '''
+impl<T> Drop for Box<T> {
+    fn drop(&mut self) {
+        unsafe {
+            let addr = self.uptr.getMutPtr();
+            ::core::ptr::drop_in_place(addr);
+            free(addr);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/io.rs:116:1: 120:2'
+source = '''
+impl Drop for FileWriter {
+    fn drop(&mut self) {
+        unsafe { ::libc::fclose(self.file) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/io.rs:188:1: 192:2'
+source = '''
+impl Drop for FileReader {
+    fn drop(&mut self) {
+        unsafe { ::libc::fclose(self.file) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vec.rs:122:1: 127:2'
+source = '''
+impl<T> Drop for Vec<T> {
+    fn drop(&mut self) {
+        self.dropElements();
+        unsafe { free(self.elements) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/hashmap.rs:222:1: 235:2'
+source = '''
+impl<K : Hash + PartialEq, V> Drop for HashMap<K, V> {
+    fn drop(&mut self) {
+            if self.capacity > 0 {
+            let arr      = unsafe { core::slice::from_raw_parts_mut(self.table.getMutPtr(), self.capacity) };
+            for kv in arr {
+                if !kv.isEmpty() {
+                    unsafe { ptr::drop_in_place(&kv.key as *const K as *mut K) };
+                    unsafe { ptr::drop_in_place(&kv.value as *const V as *mut V) };
+                }
+            }
+            unsafe { free(self.table.getMutPtr()) }
+        }
+    }
+}'''

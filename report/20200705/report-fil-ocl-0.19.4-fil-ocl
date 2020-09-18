@@ -1,0 +1,25 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/async/order_lock.rs:144:1: 149:2'
+source = '''
+impl<V> Drop for ReadGuard<V> {
+    fn drop(&mut self) {
+        print_debug(self.order_lock.id(), "dropping and releasing ReadGuard");
+        unsafe { Self::release_components(self) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/async/order_lock.rs:231:1: 236:2'
+source = '''
+impl<V> Drop for WriteGuard<V> {
+    fn drop(&mut self) {
+        print_debug(self.order_lock.id(), "WriteGuard::drop: Dropping and releasing WriteGuard");
+        unsafe { Self::release_components(self) }
+    }
+}'''

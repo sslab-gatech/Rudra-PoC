@@ -1,0 +1,18 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/bitvec.rs:345:1: 356:2'
+source = '''
+impl<T> Drop for BitVecCore<T> {
+    fn drop(&mut self) {
+        // Drop all elements
+        self.clear();
+
+        unsafe {
+            // Deallocate the memory. `clear()` sets the length to 0 and drops
+            // all existing elements, so it's fine to call `dealloc`.
+            self.dealloc();
+        }
+    }
+}'''

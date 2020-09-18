@@ -1,0 +1,118 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/slice/proxy.rs:76:1: 81:2'
+source = '''
+impl<O, T> Drop for BitMut<'_, O, T>
+where O: BitOrder, T: BitStore {
+	fn drop(&mut self) {
+		unsafe { (*self.data.as_ptr()).set::<O>(self.head, self.bit) }
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/boxed/ops.rs:126:1: 135:2'
+source = '''
+impl<O, T> Drop for BitBox<O, T>
+where O: BitOrder, T: BitStore {
+	fn drop(&mut self) {
+		let bp = self.bitptr();
+		let ptr = bp.pointer().w();
+		let len = bp.elements();
+		let slice = unsafe { slice::from_raw_parts_mut(ptr, len) };
+		drop(unsafe { Box::from_raw(slice as *mut [_]) })
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vec/iter.rs:259:1: 281:2'
+source = '''
+impl<'a, O, T> Drop for Drain<'a, O, T>
+where O: BitOrder, T: 'a + BitStore {
+	fn drop(&mut self) { unsafe {
+		let bv: &mut BitVec<O, T> = self.bitvec.as_mut();
+		//  Get the start of the drained span.
+		let start = bv.len();
+		//  Get the start of the remnant span.
+		let tail = self.tail_start;
+		let tail_len = self.tail_len;
+		//  Get the full length of the vector,
+		let full_len = tail + tail_len;
+		//  And the length of the vector after the drain.
+		let end_len = start + tail_len;
+		//  Inflate the vector to include the remnant span,
+		bv.set_len(full_len);
+		//  Swap the remnant span down into the drained span,
+		for (from, to) in (tail .. full_len).zip(start .. end_len) {
+			bv.swap(from, to);
+		}
+		//  And deflate the vector to fit.
+		bv.set_len(end_len);
+	} }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vec/iter.rs:529:1: 563:2'
+source = '''
+impl<'a, O, T, I> Drop for Splice<'a, O, T, I>
+where O: BitOrder, T: 'a + BitStore, I: Iterator<Item=bool> {
+	fn drop(&mut self) { unsafe {
+		if self.drain.tail_len == 0 {
+			self.drain.bitvec.as_mut().extend(self.splice.by_ref());
+			return;
+		}
+
+		//  Fill the drained span from the splice. If this exhausts the splice,
+		//  exit. Note that `Drain::fill` runs from the current `BitVec.len`
+		//  value, so the fact that `Splice::next` attempts to push onto the
+		//  vector is not a problem here.
+		if !self.drain.fill(&mut self.splice) {
+			return;
+		}
+
+		let (lower, _) = self.splice.size_hint();
+
+		//  If the splice still has data, move the tail to make room for it and
+		//  fill.
+		if lower > 0 {
+			self.drain.move_tail(lower);
+			if !self.drain.fill(&mut self.splice) {
+				return;
+			}
+		}
+
+		let mut remnant = self.splice.by_ref().collect::<Vec<_>>().into_iter();
+		if remnant.len() > 0 {
+			self.drain.move_tail(remnant.len());
+			self.drain.fill(&mut remnant);
+		}
+		//  Drain::drop does the rest
+	} }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vec/ops.rs:361:1: 370:2'
+source = '''
+impl<O, T> Drop for BitVec<O, T>
+where O: BitOrder, T: BitStore {
+	/// Rebuild the interior `Vec` and let it run the deallocator.
+	fn drop(&mut self) {
+		let bp = mem::replace(&mut self.pointer, BitPtr::empty());
+		//  Build a Vec<T> out of the elements, and run its destructor.
+		let (ptr, cap) = (bp.pointer(), self.capacity);
+		drop(unsafe { Vec::from_raw_parts(ptr.w(), 0, cap) });
+	}
+}'''

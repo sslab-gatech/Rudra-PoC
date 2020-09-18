@@ -1,0 +1,15 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ioctls/mod.rs:88:1: 96:2'
+source = '''
+impl Drop for KvmRunWrapper {
+    fn drop(&mut self) {
+        // This is safe because we mmap the area at kvm_run_ptr ourselves,
+        // and nobody else is holding a reference to it.
+        unsafe {
+            libc::munmap(self.kvm_run_ptr as *mut libc::c_void, self.mmap_size);
+        }
+    }
+}'''

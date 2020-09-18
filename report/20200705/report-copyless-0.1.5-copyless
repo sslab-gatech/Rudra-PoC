@@ -1,0 +1,18 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/boxed.rs:31:1: 42:2'
+source = '''
+impl<T> Drop for BoxAllocation<T> {
+    fn drop(&mut self) {
+        if mem::size_of::<T>() == 0 {
+            return;
+        }
+
+        let layout = alloc::Layout::new::<T>();
+        unsafe {
+            alloc::dealloc(self.0.as_ptr() as *mut u8, layout);
+        }
+    }
+}'''

@@ -1,0 +1,14 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'lib.rs:380:9: 387:10'
+source = '''
+impl <'a> Drop for Registration<'a> {
+            fn drop(&mut self) {
+                let _mutex_guard = self.cancellation_token.registrations.as_ref().unwrap().lock().unwrap();
+                if !self.link_to_this.is_null() {
+                    unsafe { unlink(self); }
+                }
+            }
+        }'''

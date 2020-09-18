@@ -1,0 +1,17 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:75:1: 85:2'
+source = '''
+impl<'a, T:'a> Drop for CallocBackingStore<'a, T> {
+  fn drop(self :&mut Self) {
+//      core::mem::forget(core::mem::replace(self.data, &mut[]));
+    core::mem::forget(core::mem::replace(&mut self.data, &mut[]));
+    if !self.raw_data.is_null() {
+      let local_free = self.free;
+      unsafe {(local_free)(self.raw_data)};
+
+    }
+  }
+}'''

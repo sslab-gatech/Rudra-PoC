@@ -1,0 +1,44 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/alloc.rs:80:1: 90:2'
+source = '''
+impl Drop for CacheAlignedAllocator {
+    /// Deallocates all allocated message segments.
+    fn drop(&mut self) {
+        for (buf, sz) in self.segments.iter() {
+            let num_bytes = sz * mem::size_of::<capnp::Word>();
+            let layout = unsafe { Layout::from_size_align_unchecked(num_bytes, CACHE_SIZE) };
+
+            unsafe { alloc::dealloc(*buf as *mut u8, layout) };
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/node.rs:145:1: 164:2'
+source = '''
+impl Drop for Node {
+    /// Calls vptr->destroy.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the call to vptr.destroy returns nonzero.
+    fn drop(&mut self) {
+        assert!(self.core.upgrade().is_some());
+
+        match unsafe { (self.plugin.vptr().destroy)(self.impl_ptr) } {
+            0 => return,
+            x => panic!(
+                "couldn't drop node {:p}: {} ({})",
+                self.impl_ptr,
+                self.get_err_msg(x).unwrap(),
+                x
+            ),
+        }
+    }
+}'''

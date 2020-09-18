@@ -1,0 +1,21 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:77:1: 91:2'
+source = '''
+impl<S: Stream + Unpin, B: Push<S::Item>> Drop for StreamBuffer<B, S> {
+    fn drop(&mut self) {
+        let tx = self.tx.take().expect("Sender is gone");
+        // SAFETY: we don't use inner nor buffer after this line, it is not touched by Drop too
+        // ignore error as we don't care if receiver no more interested in stream and buffer
+        let _ = tx.send((
+            // SAFETY: We required S to be Unpin, so here we can move it out of ManuallyDrop
+            unsafe { ManuallyDrop::take(&mut self.inner) },
+            // SAFETY: We don't need S::Item to be Unpin because we never pin them,
+            // and buffer can be moved out of ManuallyDrop because we never pin it
+            unsafe { ManuallyDrop::take(&mut self.buffer) },
+        ));
+        // we don't call ManuallyDrop on fields as they are moved to channel
+    }
+}'''

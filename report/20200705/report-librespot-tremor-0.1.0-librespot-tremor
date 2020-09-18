@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:252:1: 258:2'
+source = '''
+impl<R> Drop for Decoder<R> where R: Read + Seek {
+    fn drop(&mut self) {
+        unsafe {
+            tremor_sys::ov_clear(&mut self.data.vorbis);
+        }
+    }
+}'''

@@ -1,0 +1,79 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/bytes.rs:105:1: 137:2'
+source = '''
+impl Drop for Slice {
+    fn drop(&mut self) {
+        // If the slice was created via `Box::leak`, turn it back into a boxed
+        // slice and drop it to free the underlying bytes.
+        //
+        // Safety:
+        //
+        // Do not `mem::take(self)` to move out the leaked slice. This causes a
+        // double free reported by miri.
+        //
+        // Instead, replace the contents of the `Leaked` variant with a truly
+        // &'static [u8] that can be safely dropped when it goes out of scope.
+        if let Slice::Leaked(mut slice) = self {
+            // Move the leaked &'static mut [u8] out of the leaked variant and
+            // replace with a truly static empty "".
+            let slice = mem::take(&mut slice).as_ref();
+            // Safety:
+            //
+            // `slice` contained in `Slice::Leaked(_)` was created by
+            // `Box::leak` which returns `&'static mut [u8]` which is uniquely
+            // owned by this enum.
+            //
+            // Copies of this reference are handed out by `SymbolTable::get`,
+            // but they have lifetime bound to the `SymbolTable`. This drop can
+            // only occur while the `SymbolTable` is being dropped which
+            // requires unique access and thus no outstanding borrows of this
+            // reference.
+            let slice: *const [u8] = slice;
+            let boxed = unsafe { Box::from_raw(slice as *mut [u8]) };
+            drop(boxed);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/str.rs:53:1: 85:2'
+source = '''
+impl Drop for Slice {
+    fn drop(&mut self) {
+        // If the slice was created via `Box::leak`, turn it back into a boxed
+        // slice and drop it to free the underlying bytes.
+        //
+        // Safety:
+        //
+        // Do not `mem::take(self)` to move out the leaked slice. This causes a
+        // double free reported by miri.
+        //
+        // Instead, replace the contents of the `Leaked` variant with a truly
+        // &'static str that can be safely dropped when it goes out of scope.
+        if let Slice::Leaked(mut slice) = self {
+            // Move the leaked &'static mut str out of the Leaked variant and
+            // replace with a truly static empty "".
+            let slice = mem::take(&mut slice);
+            // Safety:
+            //
+            // `slice` contained in `Slice::Leaked(_)` was created by
+            // `Box::leak` which returns `&'static mut str` which is uniquely
+            // owned by this enum.
+            //
+            // Copies of this reference are handed out by `SymbolTable::get`,
+            // but they have lifetime bound to the `SymbolTable`. This drop can
+            // only occur while the `SymbolTable` is being dropped which
+            // requires unique access and thus no outstanding borrows of this
+            // reference.
+            let slice: *const str = slice;
+            let boxed = unsafe { Box::from_raw(slice as *mut str) };
+            drop(boxed);
+        }
+    }
+}'''

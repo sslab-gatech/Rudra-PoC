@@ -1,0 +1,67 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/xkb/compose.rs:74:1: 80:2'
+source = '''
+impl Drop for Table {
+    fn drop(&mut self) {
+        unsafe {
+            xkb_compose_table_unref(self.ptr)
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/xkb/compose.rs:152:1: 156:2'
+source = '''
+impl Drop for State {
+    fn drop(&mut self) {
+        unsafe { xkb_compose_state_unref(self.ptr) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/xkb/mod.rs:552:1: 558:2'
+source = '''
+impl Drop for Context {
+    fn drop(&mut self) {
+        unsafe {
+            xkb_context_unref(self.ptr);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/xkb/mod.rs:1069:1: 1075:2'
+source = '''
+impl Drop for Keymap {
+    fn drop(&mut self) {
+        unsafe {
+            xkb_keymap_unref(self.ptr);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/xkb/mod.rs:1546:1: 1552:2'
+source = '''
+impl Drop for State {
+    fn drop(&mut self) {
+        unsafe {
+            xkb_state_unref(self.ptr);
+        }
+    }
+}'''

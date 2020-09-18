@@ -1,0 +1,52 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/codegen/llvm2/jit.rs:105:1: 113:2'
+source = '''
+impl Drop for CompiledModule {
+    fn drop(&mut self) {
+        unsafe {
+            // Engine owns the module, so do not drop it explicitly.
+            LLVMDisposeExecutionEngine(self.engine);
+            LLVMContextDispose(self.context);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/codegen/llvm2/mod.rs:1783:1: 1789:2'
+source = '''
+impl<'a> Drop for FunctionContext<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            LLVMDisposeBuilder(self.builder);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/runtime/mod.rs:232:1: 247:2'
+source = '''
+impl Drop for WeldRuntimeContext {
+    fn drop(&mut self) {
+        // Free memory allocated by the run.
+        trace!("Allocations: {}", self.allocations.len());
+        unsafe {
+            for (pointer, layout) in self.allocations.iter() {
+                trace!(
+                    "Freeing pointer {:?} ({} bytes) in drop()",
+                    *pointer,
+                    layout.size()
+                );
+                Allocator.dealloc(*pointer, layout.clone());
+            }
+        }
+    }
+}'''

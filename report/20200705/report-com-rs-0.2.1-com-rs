@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/comptr.rs:178:1: 187:2'
+source = '''
+impl<T: ComInterface> Drop for ComPtr<T> {
+    /// Drops the `ComPtr<T>`. Decrements the internal reference counter by
+    /// calling `IUnknown::release` on the contained COM object
+    /// (if the pointer is non-null).
+    fn drop(&mut self) {
+        if !self.is_null() {
+            unsafe { (*self.as_ptr()).release() };
+        }
+    }
+}'''

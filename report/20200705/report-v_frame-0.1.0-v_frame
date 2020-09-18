@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/plane.rs:133:1: 139:2'
+source = '''
+impl<T: Pixel> std::ops::Drop for PlaneData<T> {
+  fn drop(&mut self) {
+    unsafe {
+      dealloc(self.ptr.as_ptr() as *mut u8, Self::layout(self.len));
+    }
+  }
+}'''

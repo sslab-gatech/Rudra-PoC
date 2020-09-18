@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:81:1: 90:2'
+source = '''
+impl<T: ?Sized> Drop for Malloc<T> {
+    fn drop(&mut self) {
+        if (self.ptr as *mut c_void) != DUMMY_PTR {
+            unsafe {
+                ptr::drop_in_place(self.ptr);
+                libc::free(self.ptr as *mut c_void);
+            }
+        }
+    }
+}'''

@@ -1,0 +1,26 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/subprocess.rs:741:1: 760:2'
+source = '''
+impl Drop for SubprocessSetOs {
+    fn drop(&mut self) {
+        use libc;
+        use errno;
+        use std::ptr;
+
+        unsafe {
+            if libc::sigaction(libc::SIGINT, &mut self.old_int_act, ptr::null_mut()) < 0
+              || libc::sigaction(libc::SIGTERM, &mut self.old_term_act, ptr::null_mut()) < 0
+              || libc::sigaction(libc::SIGHUP, &mut self.old_hup_act, ptr::null_mut()) < 0 {
+                fatal!("sigaction: {}", errno::errno());
+            }
+
+            if libc::sigprocmask(libc::SIG_SETMASK, &mut self.old_mask as _, ptr::null_mut()) < 0 {
+                fatal!("sigprocmask: {}", errno::errno());
+            }
+
+        }        
+    }
+}'''

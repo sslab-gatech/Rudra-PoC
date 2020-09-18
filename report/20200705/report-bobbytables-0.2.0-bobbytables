@@ -1,0 +1,20 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:187:1: 200:2'
+source = '''
+impl Drop for InnerCounter {
+    /// Custom drop implementation to go through and explicitly re-box all the
+    /// heap memory used to store keys within the Vec<HashSlot>. During the
+    /// first call to unsafe_incr() the key is copied into a Box so it will
+    /// persist.
+    fn drop(&mut self) {
+        for hs in &self.slots {
+            let key = hs.key.load(Ordering::Relaxed);
+            if !key.is_null() {
+                let _: Box<HashKey> = unsafe { Box::from_raw(key) };
+            }
+        }
+    }
+}'''

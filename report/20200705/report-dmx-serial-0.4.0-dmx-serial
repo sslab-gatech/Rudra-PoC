@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/posix/tty.rs:117:1: 126:2'
+source = '''
+impl Drop for TTYPort {
+    fn drop(&mut self) {
+        #![allow(unused_must_use)]
+        ioctl::tiocnxcl(self.fd);
+
+        unsafe {
+            libc::close(self.fd);
+        }
+    }
+}'''

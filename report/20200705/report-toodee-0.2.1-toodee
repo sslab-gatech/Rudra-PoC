@@ -1,0 +1,114 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/toodee.rs:887:1: 946:2'
+source = '''
+impl<T> Drop for DrainCol<'_, T> {
+
+    fn drop(&mut self) {
+        /// Continues dropping the remaining elements in the `DrainCol`, then repositions the
+        /// un-`Drain`ed elements to restore the original `TooDee`.
+        struct DropGuard<'r, 'a, T>(&'r mut DrainCol<'a, T>);
+
+        impl<'r, 'a, T> Drop for DropGuard<'r, 'a, T> {
+            fn drop(&mut self) {
+
+                self.0.for_each(drop);
+                
+                let col = self.0.col;
+
+                unsafe {
+                    
+                    let toodee = self.0.toodee.as_mut();
+
+                    let vec = &mut toodee.data;
+
+                    let p = vec.as_mut_ptr();
+                    
+                    let mut dest = p.add(col);
+                    let mut src = dest.add(1);
+                    let orig_cols = toodee.num_cols;
+                    let new_cols = orig_cols - 1;
+                    
+                    let num_rows = toodee.num_rows;
+                    
+                    for _ in 1..num_rows {
+                        ptr::copy(src, dest, new_cols);
+                        src = src.add(orig_cols);
+                        dest = dest.add(new_cols);
+                    }
+                    
+                    ptr::copy(src, dest, orig_cols - col);
+                    
+                    toodee.num_cols -= 1;
+                    if toodee.num_cols == 0 {
+                        toodee.num_rows = 0;
+                    }
+
+                    // Set the new length based on the col/row counts
+                    vec.set_len(toodee.num_cols * toodee.num_rows);
+                }
+                
+            }
+        }
+
+        // exhaust self first
+        while let Some(item) = self.next() {
+            let guard = DropGuard(self);
+            drop(item);
+            mem::forget(guard);
+        }
+
+        // Drop a `DropGuard` to move back the non-drained tail of `self`.
+        DropGuard(self);
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/toodee.rs:894:9: 934:10'
+source = '''
+impl<'r, 'a, T> Drop for DropGuard<'r, 'a, T> {
+            fn drop(&mut self) {
+
+                self.0.for_each(drop);
+                
+                let col = self.0.col;
+
+                unsafe {
+                    
+                    let toodee = self.0.toodee.as_mut();
+
+                    let vec = &mut toodee.data;
+
+                    let p = vec.as_mut_ptr();
+                    
+                    let mut dest = p.add(col);
+                    let mut src = dest.add(1);
+                    let orig_cols = toodee.num_cols;
+                    let new_cols = orig_cols - 1;
+                    
+                    let num_rows = toodee.num_rows;
+                    
+                    for _ in 1..num_rows {
+                        ptr::copy(src, dest, new_cols);
+                        src = src.add(orig_cols);
+                        dest = dest.add(new_cols);
+                    }
+                    
+                    ptr::copy(src, dest, orig_cols - col);
+                    
+                    toodee.num_cols -= 1;
+                    if toodee.num_cols == 0 {
+                        toodee.num_rows = 0;
+                    }
+
+                    // Set the new length based on the col/row counts
+                    vec.set_len(toodee.num_cols * toodee.num_rows);
+                }
+                
+            }
+        }'''

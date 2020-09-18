@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:419:1: 425:2'
+source = '''
+impl<T> Drop for JoinHandle<'_, T> {
+    #[inline]
+    fn drop(&mut self) {
+        // Ignore panics in remote thread
+        let _ = unsafe { self.join_unchecked() };
+    }
+}'''

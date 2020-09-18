@@ -1,0 +1,41 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/code_memory.rs:39:1: 47:2'
+source = '''
+impl Drop for CodeMemoryEntry {
+    fn drop(&mut self) {
+        unsafe {
+            // The registry needs to be dropped before the mmap
+            ManuallyDrop::drop(&mut self.registry);
+            ManuallyDrop::drop(&mut self.mmap);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/unwind/systemv.rs:132:1: 150:2'
+source = '''
+impl Drop for UnwindRegistry {
+    fn drop(&mut self) {
+        if self.published {
+            unsafe {
+                // libgcc stores the frame entries as a linked list in decreasing sort order
+                // based on the PC value of the registered entry.
+                //
+                // As we store the registrations in increasing order, it would be O(N^2) to
+                // deregister in that order.
+                //
+                // To ensure that we just pop off the first element in the list upon every
+                // deregistration, walk our list of registrations backwards.
+                for fde in self.registrations.iter().rev() {
+                    __deregister_frame(*fde as *const _);
+                }
+            }
+        }
+    }
+}'''

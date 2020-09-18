@@ -1,0 +1,17 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:153:1: 163:2'
+source = '''
+impl Drop for Gdbm {
+    fn drop(&mut self) {
+        if self.db_handle.is_null() {
+            // No cleanup needed
+            return;
+        }
+        unsafe {
+            gdbm_close(self.db_handle);
+        }
+    }
+}'''

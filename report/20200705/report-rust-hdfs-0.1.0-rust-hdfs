@@ -1,0 +1,25 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/hdfs_fs.rs:270:1: 288:2'
+source = '''
+impl Drop for HdfsFile {
+    fn drop(&mut self) {
+        match self.opened_file {
+            Some(file) => {
+                unsafe { hdfsCloseFile(self.fs.unwrap(), file); }
+                self.opened_file = None; 
+            }, 
+            _ => {},
+        }
+
+        match self.fs {
+            Some(fs) => {
+                unsafe { hdfsDisconnect(fs); }
+                self.fs = None; 
+            }, 
+            _ => {},
+        }
+    }
+}'''

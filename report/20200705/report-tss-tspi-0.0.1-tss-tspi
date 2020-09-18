@@ -1,0 +1,94 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:120:1: 131:2'
+source = '''
+impl Drop for Context {
+    fn drop(&mut self) {
+        trace!("Tspi_Context_FreeMemory({})", self.inner);
+        unsafe {
+            sys::Tspi_Context_FreeMemory(self.inner, ptr::null_mut());
+        }
+        trace!("Tspi_Context_Close({})", self.inner);
+        unsafe {
+            sys::Tspi_Context_Close(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:551:9: 562:10'
+source = '''
+impl<'ctx> Drop for $obj<'ctx> {
+            fn drop(&mut self) {
+                trace!("Tspi_Context_CloseObject({}, {}) Object({}, {})",
+                    self.ctx.inner.inner,
+                    self.inner,
+                    stringify!($flag),
+                    stringify!($sub_flag));
+                unsafe {
+                    sys::Tspi_Context_CloseObject(self.ctx.inner.inner, self.inner);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:551:9: 562:10'
+source = '''
+impl<'ctx> Drop for $obj<'ctx> {
+            fn drop(&mut self) {
+                trace!("Tspi_Context_CloseObject({}, {}) Object({}, {})",
+                    self.ctx.inner.inner,
+                    self.inner,
+                    stringify!($flag),
+                    stringify!($sub_flag));
+                unsafe {
+                    sys::Tspi_Context_CloseObject(self.ctx.inner.inner, self.inner);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:551:9: 562:10'
+source = '''
+impl<'ctx> Drop for $obj<'ctx> {
+            fn drop(&mut self) {
+                trace!("Tspi_Context_CloseObject({}, {}) Object({}, {})",
+                    self.ctx.inner.inner,
+                    self.inner,
+                    stringify!($flag),
+                    stringify!($sub_flag));
+                unsafe {
+                    sys::Tspi_Context_CloseObject(self.ctx.inner.inner, self.inner);
+                }
+            }
+        }'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:551:9: 562:10'
+source = '''
+impl<'ctx> Drop for $obj<'ctx> {
+            fn drop(&mut self) {
+                trace!("Tspi_Context_CloseObject({}, {}) Object({}, {})",
+                    self.ctx.inner.inner,
+                    self.inner,
+                    stringify!($flag),
+                    stringify!($sub_flag));
+                unsafe {
+                    sys::Tspi_Context_CloseObject(self.ctx.inner.inner, self.inner);
+                }
+            }
+        }'''

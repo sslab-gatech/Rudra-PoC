@@ -1,0 +1,28 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sdl2_ttf/font.rs:262:1: 271:2'
+source = '''
+impl<'a> Drop for Font<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            // avoid close font after quit()
+            if ffi::TTF_WasInit() == 1 {
+                ffi::TTF_CloseFont(self.raw);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sdl2_ttf/context.rs:24:1: 28:2'
+source = '''
+impl Drop for Sdl2TtfContext {
+    fn drop(&mut self) {
+        unsafe { ffi::TTF_Quit(); }
+    }
+}'''

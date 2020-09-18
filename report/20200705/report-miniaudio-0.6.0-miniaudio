@@ -1,0 +1,140 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/channel_conv.rs:239:1: 245:2'
+source = '''
+impl Drop for ChannelConverter {
+    fn drop(&mut self) {
+        unsafe {
+            sys::ma_channel_converter_uninit(&mut self.0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/data_conv.rs:211:1: 217:2'
+source = '''
+impl Drop for DataConverter {
+    fn drop(&mut self) {
+        unsafe {
+            sys::ma_data_converter_uninit(&mut self.0);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/device_io.rs:467:1: 481:2'
+source = '''
+impl Drop for DeviceConfig {
+    fn drop(&mut self) {
+        // It's fine to get rid of this because a device will only use this once
+        // to call the factory functions to get the callbacks at construction, so
+        // it won't keep a reference.
+        let user_data = self.0.pUserData;
+        if !user_data.is_null() {
+            unsafe { Box::from_raw(user_data.cast::<DeviceConfigUserData>()) }; // drop it
+        }
+
+        // Free these in case they allocated:
+        self.playback_mut().internal_free();
+        self.capture_mut().internal_free();
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/device_io.rs:1130:1: 1135:2'
+source = '''
+impl Drop for RawContext {
+    fn drop(&mut self) {
+        Error::from_c_result(unsafe { sys::ma_context_uninit(&mut self.0) })
+            .expect("failed to uninit context");
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/device_io.rs:1354:1: 1376:2'
+source = '''
+impl Drop for RawDevice {
+    fn drop(&mut self) {
+        // We have to copy these before the struct is zeroed.
+        let is_owner_of_context = self.is_owner_of_context();
+        let context_ptr = self.0.pContext;
+        let user_data = self.0.pUserData;
+
+        unsafe { sys::ma_device_uninit(&mut self.0) };
+
+        // We drop this AFTER uninit so that the stop callback can execute correctly.
+        if !user_data.is_null() {
+            unsafe { Box::from_raw(user_data.cast::<DeviceUserData>()) }; // drop it
+        }
+
+        // We only decrement the context ref count if we own it and now the device.
+        if !is_owner_of_context && !context_ptr.is_null() {
+            let context_arc =
+                unsafe { Arc::from_raw(context_ptr as *const _ as *const RawContext) };
+            self.0.pContext = ptr::null_mut();
+            drop(context_arc);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/resampling.rs:248:1: 252:2'
+source = '''
+impl Drop for LinearResampler {
+    fn drop(&mut self) {
+        unsafe { sys::ma_linear_resampler_uninit(self as *mut LinearResampler as *mut _) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/resampling.rs:472:1: 476:2'
+source = '''
+impl Drop for Resampler {
+    fn drop(&mut self) {
+        unsafe { sys::ma_resampler_uninit(&mut self.0) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ring_buffers.rs:341:1: 357:2'
+source = '''
+impl<T: Clone> Drop for RingBuffer<T> {
+    fn drop(&mut self) {
+        unsafe {
+            let buffer_ptr = self.inner.pBuffer;
+            let count = self.inner.subbufferCount;
+            let owns_buffer = from_bool32(self.inner.ownsBuffer());
+
+            sys::ma_rb_uninit(&mut self.inner);
+
+            // If the buffer was not created by miniaudio we drop it from Rust.
+            if !owns_buffer && !buffer_ptr.is_null() {
+                let preallocated_slice = std::slice::from_raw_parts_mut(buffer_ptr, count as usize);
+                let _preallocated_box = Box::from_raw(preallocated_slice.as_mut_ptr());
+            }
+        };
+    }
+}'''

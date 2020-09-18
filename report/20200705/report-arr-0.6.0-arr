@@ -1,0 +1,16 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:165:1: 174:2'
+source = '''
+impl<T> Drop for Array<T> {
+
+    fn drop(&mut self) {
+        let objsize = std::mem::size_of::<T>();
+        let layout = Layout::from_size_align(self.size * objsize, 8).unwrap();
+        unsafe {
+            dealloc(self.ptr as *mut u8, layout);
+        }
+    }
+}'''

@@ -1,0 +1,31 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ring_buffer.rs:92:1: 116:2'
+source = '''
+impl<T: Sized> Drop for RingBuffer<T> {
+    fn drop(&mut self) {
+        let data = unsafe { self.data.get_mut() };
+
+        let head = self.head.load(Ordering::Acquire);
+        let tail = self.tail.load(Ordering::Acquire);
+        let len = data.len();
+
+        let slices = if head <= tail {
+            (head..tail, 0..0)
+        } else {
+            (head..len, 0..tail)
+        };
+
+        let drop = |elem_ref: &mut MaybeUninit<T>| unsafe {
+            mem::replace(elem_ref, MaybeUninit::uninit()).assume_init();
+        };
+        for elem in data[slices.0].iter_mut() {
+            drop(elem);
+        }
+        for elem in data[slices.1].iter_mut() {
+            drop(elem);
+        }
+    }
+}'''

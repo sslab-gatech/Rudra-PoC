@@ -1,0 +1,105 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/io/mod.rs:304:1: 308:2'
+source = '''
+impl<'a> Drop for Guard<'a> {
+    fn drop(&mut self) {
+        unsafe { self.buf.set_len(self.len); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/net/mod.rs:335:1: 363:2'
+source = '''
+impl Drop for Tcp4Stream {
+    fn drop(&mut self) {
+        // TODO: add the code to panic when any of the below calls fail. (Could be difficult) but maybe we can trace something when we do that.
+        unsafe {
+            ((*self.bs).CloseEvent)(self.connect_token.CompletionToken.Event);
+            ((*self.bs).CloseEvent)(self.send_token.CompletionToken.Event);
+            ((*self.bs).CloseEvent)(self.recv_token.CompletionToken.Event);
+
+            self.close_token.AbortOnClose = FALSE;
+
+            ((*self.protocol).Close)(self.protocol, &self.close_token);
+            if self.is_connected { // We don't want want to wait if we weren't connected because then we end up waiting forever
+                if let Err(_) = self.wait_for_evt(&self.close_token.CompletionToken.Event) { // Blocking until the connection is closed for certain
+                     return; // Don't do anything further since we failed to close the connection safely.
+                }
+            }
+
+            // This Configure call and the comment about the bug is copied verbatim from FastBoot protocol in tianocore:
+            // Possible bug in EDK2 TCP4 driver: closing a connection doesn't remove its
+            // PCB from the list of live connections. Subsequent attempts to Configure()
+            // a TCP instance with the same local port will fail with INVALID_PARAMETER.
+            // Calling Configure with NULL is a workaround for this issue.
+            ((*self.protocol).Configure)(self.protocol, ptr::null());
+
+            ((*self.bs).CloseEvent)(self.close_token.CompletionToken.Event);
+            ((*self.binding_protocol).DestroyChild)(self.binding_protocol, &mut self.device_handle);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/net/mod.rs:794:1: 804:2'
+source = '''
+impl Drop for Udp4Socket {
+    fn drop(&mut self) {
+        // TODO: add the code to panic when any of the below calls fail. (Could be difficult) but maybe we can trace something when we do that.
+        unsafe {
+            ((*self.protocol).Configure)(self.protocol, ptr::null());
+            ((*self.bs).CloseEvent)(self.send_token.Event);
+            ((*self.bs).CloseEvent)(self.recv_token.Event);
+            ((*self.binding_protocol).DestroyChild)(self.binding_protocol, &mut self.device_handle);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/image.rs:238:1: 243:2'
+source = '''
+impl Drop for ExitData {
+    fn drop(&mut self) { // The exit data ptr is allocated by the image we loaded but must be deallocated by us as per UEFI spec
+        let bs = (*system_table()).BootServices;
+        unsafe { ((*bs).FreePool)(self.ptr as *const VOID) }; // TODO: Can't do anything if this fails except. So we should log here
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/boxed.rs:47:1: 51:2'
+source = '''
+impl<T> Drop for EfiBox<T> {
+    fn drop(&mut self) {
+        unsafe { ((*system_table().BootServices).FreePool)(self.as_raw() as *const VOID) }; // No need to check status. Can't do anything if it fails.
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/events.rs:257:1: 264:2'
+source = '''
+impl Drop for Timer {
+    fn drop(&mut self) {
+        let bs = system_table().BootServices;
+        unsafe {
+            ((*bs).CloseEvent)(self.0); // Can't do a fucking thing if it returns failure
+        }
+    }
+}'''

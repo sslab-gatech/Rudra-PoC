@@ -1,0 +1,12 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:177:1: 182:2'
+source = '''
+impl Drop for Context {
+    #[inline]
+    fn drop(&mut self) {
+        unsafe { ffi::redisFree(self.raw) };
+    }
+}'''

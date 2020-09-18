@@ -1,0 +1,47 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:25:1: 31:2'
+source = '''
+impl Drop for MyoString
+{
+    fn drop(&mut self)
+    {
+        unsafe { ffi::libmyo_string_free(self.0) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:53:1: 59:2'
+source = '''
+impl Drop for ErrorDetails
+{
+    fn drop(&mut self)
+    {
+        unsafe { ffi::libmyo_free_error_details(self.0) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:192:1: 204:2'
+source = '''
+impl Drop for Hub
+{
+    /// Shutdown
+    fn drop(&mut self)
+    {
+        let mut e = std::ptr::null_mut();
+        let r = unsafe { ffi::libmyo_shutdown_hub(self.0, &mut e) };
+        if r != ResultCode::Success
+        {
+            panic!("Error on drop: {:?}", ErrorDetails(e).message());
+        }
+    }
+}'''

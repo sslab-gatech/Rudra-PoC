@@ -1,0 +1,400 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/backup.rs:182:1: 188:2'
+source = '''
+impl Drop for BackupEngine {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_backup_engine_close(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/backup.rs:190:1: 196:2'
+source = '''
+impl Drop for BackupEngineOptions {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_options_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/backup.rs:198:1: 204:2'
+source = '''
+impl Drop for RestoreOptions {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_restore_options_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/checkpoint.rs:67:1: 73:2'
+source = '''
+impl Drop for Checkpoint {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_checkpoint_object_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/db.rs:162:1: 171:2'
+source = '''
+impl Drop for DB {
+    fn drop(&mut self) {
+        unsafe {
+            for cf in self.cfs.values() {
+                ffi::rocksdb_column_family_handle_destroy(cf.inner);
+            }
+            ffi::rocksdb_close(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/db_iterator.rs:358:1: 364:2'
+source = '''
+impl<'a> Drop for DBRawIterator<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_iter_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/db_options.rs:48:1: 52:2'
+source = '''
+impl Drop for ReadOptions {
+    fn drop(&mut self) {
+        unsafe { ffi::rocksdb_readoptions_destroy(self.inner) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/db_options.rs:214:1: 220:2'
+source = '''
+impl Drop for Options {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_options_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/db_options.rs:222:1: 228:2'
+source = '''
+impl Drop for BlockBasedOptions {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_block_based_options_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/db_options.rs:230:1: 236:2'
+source = '''
+impl Drop for FlushOptions {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_flushoptions_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/db_options.rs:238:1: 244:2'
+source = '''
+impl Drop for WriteOptions {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_writeoptions_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/db_pinnable_slice.rs:63:1: 69:2'
+source = '''
+impl<'a> Drop for DBPinnableSlice<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_pinnableslice_destroy(self.ptr);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/db_vector.rs:46:1: 52:2'
+source = '''
+impl Drop for DBVector {
+    fn drop(&mut self) {
+        unsafe {
+            libc::free(self.base as *mut c_void);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/optimistic_transaction.rs:135:1: 141:2'
+source = '''
+impl Drop for OptimisticTransaction {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_transaction_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/optimistic_transaction.rs:375:1: 381:2'
+source = '''
+impl<'a> Drop for OptimisticTransactionSnapshot<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_free(self.inner as *mut c_void);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/optimistic_transaction_db.rs:143:1: 153:2'
+source = '''
+impl Drop for OptimisticTransactionDB {
+    fn drop(&mut self) {
+        unsafe {
+            for cf in self.cfs.values() {
+                ffi::rocksdb_column_family_handle_destroy(cf.inner);
+            }
+            ffi::rocksdb_optimistictransactiondb_close_base_db(self.base_db);
+            ffi::rocksdb_optimistictransactiondb_close(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/optimistic_transaction_db.rs:200:1: 206:2'
+source = '''
+impl Drop for OptimisticTransactionOptions {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_optimistictransaction_options_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/optimistic_transaction_db.rs:287:1: 293:2'
+source = '''
+impl<'a> Drop for Snapshot<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_release_snapshot(self.db.base_db, self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/read_only_db.rs:160:1: 169:2'
+source = '''
+impl Drop for ReadOnlyDB {
+    fn drop(&mut self) {
+        unsafe {
+            for cf in self.cfs.values() {
+                ffi::rocksdb_column_family_handle_destroy(cf.inner);
+            }
+            ffi::rocksdb_close(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/secondary_db.rs:179:1: 188:2'
+source = '''
+impl Drop for SecondaryDB {
+    fn drop(&mut self) {
+        unsafe {
+            for cf in self.cfs.values() {
+                ffi::rocksdb_column_family_handle_destroy(cf.inner);
+            }
+            ffi::rocksdb_close(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/snapshot.rs:64:1: 70:2'
+source = '''
+impl<'a> Drop for Snapshot<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_release_snapshot(self.db.inner, self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/transaction.rs:136:1: 142:2'
+source = '''
+impl<'a, T> Drop for Transaction<'a, T> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_transaction_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/transaction.rs:378:1: 384:2'
+source = '''
+impl<'a, T> Drop for TransactionSnapshot<'a, T> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_free(self.inner as *mut c_void);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/transaction_db.rs:154:1: 160:2'
+source = '''
+impl Drop for TransactionDB {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_transactiondb_close(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/transaction_db.rs:202:1: 208:2'
+source = '''
+impl Drop for TransactionDBOptions {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_transactiondb_options_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/transaction_db.rs:261:1: 267:2'
+source = '''
+impl Drop for TransactionOptions {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_transaction_options_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/transaction_db.rs:523:1: 529:2'
+source = '''
+impl<'a> Drop for Snapshot<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::rocksdb_transactiondb_release_snapshot(self.db.inner, self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/write_batch.rs:243:1: 247:2'
+source = '''
+impl Drop for WriteBatch {
+    fn drop(&mut self) {
+        unsafe { ffi::rocksdb_writebatch_destroy(self.inner) }
+    }
+}'''

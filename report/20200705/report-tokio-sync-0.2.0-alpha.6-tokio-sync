@@ -1,0 +1,69 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/mpsc/chan.rs:302:1: 319:2'
+source = '''
+impl<T, S> Drop for Rx<T, S>
+where
+    S: Semaphore,
+{
+    fn drop(&mut self) {
+        use super::block::Read::Value;
+
+        self.close();
+
+        self.inner.rx_fields.with_mut(|rx_fields_ptr| {
+            let rx_fields = unsafe { &mut *rx_fields_ptr };
+
+            while let Some(Value(_)) = rx_fields.list.pop(&self.inner.tx) {
+                self.inner.semaphore.add_permit();
+            }
+        })
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/mpsc/chan.rs:323:1: 336:2'
+source = '''
+impl<T, S> Drop for Chan<T, S> {
+    fn drop(&mut self) {
+        use super::block::Read::Value;
+
+        // Safety: the only owner of the rx fields is Chan, and eing
+        // inside its own Drop means we're the last ones to touch it.
+        self.rx_fields.with_mut(|rx_fields_ptr| {
+            let rx_fields = unsafe { &mut *rx_fields_ptr };
+
+            while let Some(Value(_)) = rx_fields.list.pop(&self.tx) {}
+            unsafe { rx_fields.list.free_blocks() };
+        });
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/oneshot.rs:463:1: 479:2'
+source = '''
+impl<T> Drop for Inner<T> {
+    fn drop(&mut self) {
+        let state = State(*self.state.get_mut());
+
+        if state.is_rx_task_set() {
+            unsafe {
+                self.drop_rx_task();
+            }
+        }
+
+        if state.is_tx_task_set() {
+            unsafe {
+                self.drop_tx_task();
+            }
+        }
+    }
+}'''

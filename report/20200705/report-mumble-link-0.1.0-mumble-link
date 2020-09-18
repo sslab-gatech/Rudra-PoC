@@ -1,0 +1,28 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/unix.rs:60:1: 66:2'
+source = '''
+impl Drop for Map {
+    fn drop(&mut self) {
+        unsafe {
+            libc::close(self.fd);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:200:1: 207:2'
+source = '''
+impl Drop for MumbleLink {
+    fn drop(&mut self) {
+        unsafe {
+            // zero the linked memory
+            ptr::write_volatile(self.map.ptr as *mut LinkedMem, mem::zeroed());
+        }
+    }
+}'''

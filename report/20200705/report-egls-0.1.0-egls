@@ -1,0 +1,31 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/env.rs:42:1: 46:2'
+source = '''
+impl Drop for Environment {
+    fn drop(&mut self) {
+        let _ = unsafe { Box::from_raw(self.win) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/so.rs:71:1: 83:2'
+source = '''
+impl Drop for SharedObject {
+    fn drop(&mut self) {
+        if self.handle != std::ptr::null_mut() {
+            unsafe {
+                #[cfg(windows)]
+                FreeLibrary(self.handle);
+                #[cfg(unix)]
+                dlclose(self.handle);
+            }
+            self.handle = std::ptr::null_mut();
+        }
+    }
+}'''

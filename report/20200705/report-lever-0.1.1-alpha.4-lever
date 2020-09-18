@@ -1,0 +1,11 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sync/atomics.rs:98:1: 102:2'
+source = '''
+impl<T: Sized> Drop for AtomicBox<T> {
+    fn drop(&mut self) {
+        unsafe { Arc::from_raw(self.ptr.load(Ordering::Acquire)) };
+    }
+}'''

@@ -1,0 +1,19 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/sort.rs:318:1: 330:2'
+source = '''
+impl<'a, T> Drop for DoubleBuffer<'a, T> {
+    fn drop(&mut self) {
+        let input_slice_is_write = self.write_buf as *const T == self.slice.as_ptr();
+        if input_slice_is_write {
+            // Input slice is the write buffer, copy the consistent state from the read buffer
+            unsafe {
+                // This is safe, `read_buf` is always consistent and the length is the same.
+                self.write_buf.copy_from_nonoverlapping(self.read_buf, self.slice.len());
+                self.swap();
+            }
+        }
+    }
+}'''

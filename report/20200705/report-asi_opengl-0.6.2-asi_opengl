@@ -1,0 +1,35 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/texture.rs:65:1: 69:2'
+source = '''
+impl Drop for TextureContext {
+	fn drop(&mut self) {
+		gl!(self.1, (self.1.get().delete_texture)(1, [self.0].as_ptr()));
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/program.rs:76:1: 80:2'
+source = '''
+impl Drop for ProgramContext {
+	fn drop(&mut self) {
+		gl!(self.1, (self.1.get().delete_program)(self.0));
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buffer.rs:51:1: 55:2'
+source = '''
+impl Drop for BufferContext {
+	fn drop(&mut self) {
+		gl!(self.1, (self.1.get().delete_buffer)(1, [self.0].as_ptr()));
+	}
+}'''

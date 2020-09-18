@@ -1,0 +1,6 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/scoped.rs:24:15: 24:25'
+source = 'PinnedDrop'

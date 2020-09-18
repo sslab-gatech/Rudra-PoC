@@ -1,0 +1,11 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/kstat_ctl.rs:38:1: 42:2'
+source = '''
+impl Drop for KstatCtl {
+    fn drop(&mut self) {
+        let _ = unsafe { ffi::kstat_close(self.inner) };
+    }
+}'''

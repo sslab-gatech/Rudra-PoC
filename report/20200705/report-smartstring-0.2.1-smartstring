@@ -1,0 +1,41 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/iter.rs:63:1: 83:2'
+source = '''
+impl<'a, Mode> Drop for Drain<'a, Mode>
+where
+    Mode: SmartStringMode,
+{
+    fn drop(&mut self) {
+        match self.0 {
+            DrainCast::Boxed {
+                string,
+                ref mut iter,
+            } => unsafe {
+                iter.take();
+                (*string).try_demote();
+            },
+            DrainCast::Inline {
+                string, start, end, ..
+            } => {
+                unsafe { (*string).remove_bytes(start, end) };
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:181:1: 187:2'
+source = '''
+impl<Mode: SmartStringMode> Drop for SmartString<Mode> {
+    fn drop(&mut self) {
+        if let StringCastMut::Boxed(string) = self.cast_mut() {
+            unsafe { drop_in_place(string) };
+        }
+    }
+}'''

@@ -1,0 +1,93 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/aio.rs:525:1: 553:2'
+source = '''
+impl Drop for Inner
+{
+	fn drop(&mut self)
+	{
+		// It is possible for this to be dropping while the pointer is null. The
+		// Inner struct is created before the pointer is allocated and it will be
+		// dropped with a null pointer if the NNG allocation fails.
+		let aiop = self.handle.load(Ordering::Acquire);
+		if !aiop.is_null() {
+			// If the callback has started, it will not be able to upgrade the weak pointer
+			// to a strong one and so it will just return from the callback. Otherwise, the
+			// NNG call to stop the AIO will wait until all callbacks have completed and it
+			// will prevent any more operations from starting.
+			//
+			// I think the call to free will do the same thing as the stop, but the online
+			// docs aren't super clear, the header has a comment saying that the AIO must
+			// not be running an operation when free is called, and the source doesn't
+			// clearly (to my understanding of the code) show that it is being done. Plus,
+			// the manual does suggest cases where stopping first is good.
+			unsafe {
+				nng_sys::nng_aio_stop(aiop);
+				nng_sys::nng_aio_free(aiop);
+
+				// Now that we know nothing is in the callback, we can free it.
+				let _ = Box::from_raw(self.callback.load(Ordering::Relaxed));
+			}
+		}
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/dialer.rs:348:1: 361:2'
+source = '''
+impl Drop for DialerBuilder
+{
+	fn drop(&mut self)
+	{
+		// Closing the dialer should only ever result in success or ECLOSED and
+		// both of those mean that the drop was successful.
+		let rv = unsafe { nng_sys::nng_dialer_close(self.handle) };
+		assert!(
+			rv == 0 || rv == nng_sys::NNG_ECLOSED as i32,
+			"Unexpected error code while closing dialer ({})",
+			rv
+		);
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/listener.rs:322:1: 335:2'
+source = '''
+impl Drop for ListenerBuilder
+{
+	fn drop(&mut self)
+	{
+		// Closing the listener should only ever result in success or ECLOSED
+		// and both of those mean that the drop was successful.
+		let rv = unsafe { nng_sys::nng_listener_close(self.handle) };
+		assert!(
+			rv == 0 || rv == nng_sys::NNG_ECLOSED as i32,
+			"Unexpected error code while closing listener ({})",
+			rv
+		);
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/message.rs:230:1: 238:2'
+source = '''
+impl Drop for Message
+{
+	fn drop(&mut self)
+	{
+		unsafe {
+			nng_sys::nng_msg_free(self.msgp.as_ptr());
+		}
+	}
+}'''

@@ -1,0 +1,23 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:100:1: 116:2'
+source = '''
+impl<T: Send + 'static> Drop for DeferDrop<T> {
+    fn drop(&mut self) {
+        let garbage_can = GARBAGE_CAN.get_or_init(|| {
+            let (sender, receiver) = channel::unbounded();
+            // TODO: drops should ever panic, but if once does, we should
+            // probably abort the process
+            let _ = thread::spawn(move || receiver.into_iter().for_each(drop));
+            sender
+        });
+
+        let value = unsafe { ManuallyDrop::take(&mut self.inner) };
+        let boxed = Box::new(value);
+
+        // This unwrap only panics if the GARBAGE_CAN thread panicked
+        garbage_can.send(boxed).unwrap();
+    }
+}'''

@@ -1,0 +1,26 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/stmt.rs:16:1: 21:2'
+source = '''
+impl<'con> Drop for Stmt<'con> {
+    fn drop(&mut self) {
+        let _c = unsafe { ffi::sqlite3_finalize(self.stmt) };
+        drop(self.con);
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:118:1: 124:2'
+source = '''
+impl Drop for SqliteCon {
+    fn drop(&mut self) {
+        unsafe {
+            ffi::sqlite3_close(self.con);
+        }
+    }
+}'''

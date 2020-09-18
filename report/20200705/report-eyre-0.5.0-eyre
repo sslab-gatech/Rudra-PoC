@@ -1,0 +1,21 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/error.rs:496:1: 510:2'
+source = '''
+impl<H> Drop for Report<H>
+where
+    H: EyreHandler,
+{
+    fn drop(&mut self) {
+        unsafe {
+            // Read Box<ErrorImpl<()>> from self.
+            let inner = ptr::read(&self.inner);
+            let erased = ManuallyDrop::into_inner(inner);
+
+            // Invoke the vtable's drop behavior.
+            (erased.vtable.object_drop)(erased);
+        }
+    }
+}'''

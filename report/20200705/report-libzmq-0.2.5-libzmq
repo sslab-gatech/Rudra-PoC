@@ -1,0 +1,64 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/raw.rs:446:1: 460:2'
+source = '''
+impl Drop for RawSocket {
+    /// Close the ØMQ socket.
+    ///
+    /// See [`zmq_close`].
+    ///
+    /// [`zmq_close`]: http://api.zeromq.org/master:zmq-close
+    fn drop(&mut self) {
+        let rc = unsafe { sys::zmq_close(self.socket_mut_ptr) };
+
+        if rc == -1 {
+            let errno = unsafe { sys::zmq_errno() };
+            error!("error while dropping socket: {}", msg_from_errno(errno));
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/msg.rs:364:1: 378:2'
+source = '''
+impl Drop for Msg {
+    /// Releases the ØMQ message.
+    ///
+    /// See [`zmq_msg_close`].
+    ///
+    /// [`zmq_msg_close`]: http://api.zeromq.org/master:zmq-msg-close
+    fn drop(&mut self) {
+        let rc = unsafe { sys::zmq_msg_close(self.as_mut_ptr()) };
+
+        if rc != 0 {
+            let errno = unsafe { sys::zmq_errno() };
+            error!("error while dropping message: {}", msg_from_errno(errno));
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/poll.rs:819:1: 832:2'
+source = '''
+impl Drop for Poller {
+    fn drop(&mut self) {
+        let rc = unsafe { sys::zmq_poller_destroy(&mut self.poller) };
+
+        if rc != 0 {
+            let errno = unsafe { sys::zmq_errno() };
+
+            match errno {
+                errno::EFAULT => panic!("invalid poller"),
+                _ => panic!(msg_from_errno(errno)),
+            }
+        }
+    }
+}'''

@@ -1,0 +1,127 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/codec/postings/for_util.rs:99:1: 106:2'
+source = '''
+impl Drop for ForUtilInstance {
+    fn drop(&mut self) {
+        unsafe {
+            ptr::drop_in_place(self.decoders.as_mut_ptr());
+            ptr::drop_in_place(self.encoders.as_mut_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/codec/postings/terms_hash_per_field.rs:56:1: 62:2'
+source = '''
+impl<T: PostingsArray> Drop for TermsHashPerFieldBase<T> {
+    fn drop(&mut self) {
+        unsafe {
+            ptr::drop_in_place(self.bytes_hash.as_mut_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/index/writer/doc_writer_delete_queue.rs:275:1: 279:2'
+source = '''
+impl<C: Codec> Drop for DocumentsWriterDeleteQueue<C> {
+    fn drop(&mut self) {
+        let _ = unsafe { Box::from_raw(self.tail.load(Ordering::Relaxed)) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/index/writer/doc_writer_delete_queue.rs:353:1: 371:2'
+source = '''
+impl<C: Codec> Drop for DeleteListNode<C> {
+    fn drop(&mut self) {
+        unsafe {
+            let mut next = self.next.load(Ordering::Acquire);
+            while !next.is_null() {
+                let next2 = (*next).next.load(Ordering::Acquire);
+
+                if let Some(node) = Arc::get_mut(&mut *next) {
+                    node.next = AtomicPtr::default();
+                    Box::from_raw(next);
+                    next = next2;
+                } else {
+                    Box::from_raw(next);
+                    break;
+                }
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/index/writer/doc_writer_per_thread.rs:101:1: 109:2'
+source = '''
+impl<D: Directory + Send + Sync + 'static, C: Codec, MS: MergeScheduler, MP: MergePolicy> Drop
+    for DocumentsWriterPerThread<D, C, MS, MP>
+{
+    fn drop(&mut self) {
+        unsafe {
+            ptr::drop_in_place(self.consumer.as_mut_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/search/query/spans/span_near.rs:347:1: 353:2'
+source = '''
+impl<P: PostingIterator> Drop for NearSpansUnordered<P> {
+    fn drop(&mut self) {
+        unsafe {
+            ptr::drop_in_place(self.conjunction_span.as_mut_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/util/external/deferred.rs:43:1: 49:2'
+source = '''
+impl Drop for Deferred {
+    fn drop(&mut self) {
+        unsafe {
+            ptr::drop_in_place(self.data.as_mut_ptr());
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/core/util/external/binary_heap.rs:282:1: 291:2'
+source = '''
+impl<'a, T> Drop for Hole<'a, T> {
+    #[inline]
+    fn drop(&mut self) {
+        // fill the hole again
+        unsafe {
+            let pos = self.pos;
+            ptr::write(self.data.get_unchecked_mut(pos), self.elt.take().unwrap());
+        }
+    }
+}'''

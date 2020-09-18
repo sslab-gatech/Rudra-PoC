@@ -1,0 +1,18 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:284:1: 295:2'
+source = '''
+impl<T> Drop for OptionProxy<'_, T> {
+    fn drop(&mut self) {
+        if let Some(value) = self.value.take() {
+            // data_slot is valid and contains uninitialized memory
+            // so do not drop it, but it is valid to write to
+            unsafe {
+                self.data.as_mut_ptr().write(value);
+                *self.flag = true;
+            }
+        }
+    }
+}'''

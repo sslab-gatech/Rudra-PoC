@@ -1,0 +1,68 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:122:1: 126:2'
+source = '''
+impl<T> Drop for OggRefDecoder<T> {
+    fn drop(&mut self) {
+        unsafe { ogg_sync_clear(&mut *self.sync); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:134:1: 138:2'
+source = '''
+impl Drop for OggDecoderStream {
+    fn drop(&mut self) {
+        unsafe { ogg_stream_clear(&mut *self.state); }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:226:1: 234:2'
+source = '''
+impl Drop for VorbisRefDecoder {
+    fn drop(&mut self) {
+        self.synth = None;
+        unsafe {
+            vorbis_comment_clear(&mut *self.comment);
+            vorbis_info_clear(&mut *self.info);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:264:1: 271:2'
+source = '''
+impl Drop for DecoderSynthState {
+    fn drop(&mut self) {
+        unsafe {
+            vorbis_block_clear(&mut *self.block);
+            vorbis_dsp_clear(&mut *self.dsp);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:314:1: 320:2'
+source = '''
+impl Drop for MdctRef {
+    fn drop(&mut self) {
+        unsafe {
+            mdct_clear(&mut *self.lookup);
+        }
+    }
+}'''

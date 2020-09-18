@@ -1,0 +1,29 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/parser.rs:14:1: 21:2'
+source = '''
+impl Drop for Parser {
+  fn drop(&mut self) {
+    self.free_input();
+    unsafe {
+      cabocha_destroy(self.inner);
+    }
+  }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/tree.rs:16:1: 23:2'
+source = '''
+impl Drop for Tree {
+  fn drop(&mut self) {
+    self.free_input();
+    unsafe {
+      cabocha_tree_destroy(self.inner);
+    }
+  }
+}'''

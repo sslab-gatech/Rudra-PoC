@@ -1,0 +1,75 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/call_reply.rs:103:1: 107:2'
+source = '''
+impl Drop for CallReply {
+    fn drop(&mut self) {
+        unsafe { raw::RedisModule_FreeCallReply.unwrap()(self.ptr) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/context/mod.rs:944:1: 952:2'
+source = '''
+impl Drop for ThreadSafeContext {
+    fn drop(&mut self) {
+        unsafe {
+            raw::RedisModule_FreeThreadSafeContext.unwrap()(
+                self.get_ctx().lock().unwrap().get_ptr(),
+            )
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/key.rs:28:1: 32:2'
+source = '''
+impl Drop for ReadKey {
+    fn drop(&mut self) {
+        unsafe { raw::RedisModule_CloseKey.unwrap()(self.ptr) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/scan_cursor.rs:29:1: 33:2'
+source = '''
+impl Drop for ScanCursor {
+    fn drop(&mut self) {
+        unsafe { raw::RedisModule_ScanCursorDestroy.unwrap()(self.ptr) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/string.rs:77:1: 81:2'
+source = '''
+impl Drop for RString {
+    fn drop(&mut self) {
+        unsafe { raw::RedisModule_FreeString.unwrap()(0 as *mut raw::RedisModuleCtx, self.ptr) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/user.rs:62:1: 66:2'
+source = '''
+impl Drop for User {
+    fn drop(&mut self) {
+        unsafe { raw::RedisModule_FreeModuleUser.unwrap()(self.ptr) }
+    }
+}'''

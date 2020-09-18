@@ -1,0 +1,71 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:63:1: 77:2'
+source = '''
+impl<T> Drop for QueueSender<T> {
+    fn drop(&mut self) {
+        let mut in_queue = Arc::new(AtomicPtr::default());
+
+        mem::swap(&mut in_queue, &mut self.in_queue);
+
+        if let Ok(head) = Arc::try_unwrap(in_queue) {
+            let head = head.swap(ptr::null_mut(), Ordering::SeqCst);
+
+            if !head.is_null() {
+                unsafe { Box::from_raw(head) };
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:140:1: 182:2'
+source = '''
+impl<T> Drop for QueueReceiver<T> {
+    fn drop(&mut self) {
+        let last = Box::into_raw(Box::new(QueueHead {
+            element: None,
+            next: ptr::null_mut(),
+        }));
+
+        let mut head = ptr::null_mut();
+
+        loop {
+            match self
+                .in_queue
+                .compare_exchange(head, last, Ordering::SeqCst, Ordering::SeqCst)
+            {
+                Ok(_) => {
+                    while !head.is_null() {
+                        let boxed = unsafe { Box::from_raw(head) };
+
+                        head = boxed.next;
+                    }
+
+                    break;
+                }
+
+                Err(actual) => {
+                    head = actual;
+                }
+            }
+        }
+
+        let mut in_queue = Arc::new(AtomicPtr::default());
+
+        mem::swap(&mut in_queue, &mut self.in_queue);
+
+        if let Ok(head) = Arc::try_unwrap(in_queue) {
+            let head = head.swap(ptr::null_mut(), Ordering::SeqCst);
+
+            if !head.is_null() {
+                unsafe { Box::from_raw(head) };
+            }
+        }
+    }
+}'''

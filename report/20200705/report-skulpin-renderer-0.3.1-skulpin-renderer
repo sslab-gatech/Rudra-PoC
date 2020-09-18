@@ -1,0 +1,187 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/instance.rs:186:1: 197:2'
+source = '''
+impl Drop for VkInstance {
+    fn drop(&mut self) {
+        debug!("destroying VkInstance");
+        std::mem::drop(self.debug_reporter.take());
+
+        unsafe {
+            self.instance.destroy_instance(None);
+        }
+
+        debug!("destroyed VkInstance");
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/device.rs:319:1: 329:2'
+source = '''
+impl Drop for VkDevice {
+    fn drop(&mut self) {
+        debug!("destroying VkDevice");
+        unsafe {
+            self.logical_device.destroy_device(None);
+            self.surface_loader.destroy_surface(self.surface, None);
+        }
+
+        debug!("destroyed VkDevice");
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/swapchain.rs:357:1: 384:2'
+source = '''
+impl Drop for VkSwapchain {
+    fn drop(&mut self) {
+        debug!("destroying VkSwapchain");
+
+        unsafe {
+            for &semaphore in self.image_available_semaphores.iter() {
+                self.device.destroy_semaphore(semaphore, None);
+            }
+
+            for &semaphore in self.render_finished_semaphores.iter() {
+                self.device.destroy_semaphore(semaphore, None);
+            }
+
+            for &fence in self.in_flight_fences.iter() {
+                self.device.destroy_fence(fence, None);
+            }
+
+            for &swapchain_image_view in self.swapchain_image_views.iter() {
+                self.device.destroy_image_view(swapchain_image_view, None);
+            }
+
+            self.swapchain_loader
+                .destroy_swapchain(self.swapchain, None);
+        }
+
+        debug!("destroyed VkSwapchain");
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/skia_renderpass.rs:739:1: 768:2'
+source = '''
+impl Drop for VkSkiaRenderPass {
+    fn drop(&mut self) {
+        debug!("destroying VkSkiaRenderPass");
+
+        unsafe {
+            self.device.destroy_sampler(self.image_sampler, None);
+
+            ManuallyDrop::drop(&mut self.vertex_buffer);
+            ManuallyDrop::drop(&mut self.index_buffer);
+
+            self.device.destroy_command_pool(self.command_pool, None);
+
+            for framebuffer in &self.framebuffers {
+                self.device.destroy_framebuffer(*framebuffer, None);
+            }
+
+            self.device.destroy_pipeline(self.pipeline, None);
+            self.device
+                .destroy_pipeline_layout(self.pipeline_layout, None);
+            self.device.destroy_render_pass(self.renderpass, None);
+
+            self.device
+                .destroy_descriptor_pool(self.descriptor_pool, None);
+            self.device
+                .destroy_descriptor_set_layout(self.descriptor_set_layout, None);
+        }
+
+        debug!("destroyed VkSkiaRenderPass");
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/skia_support.rs:196:1: 203:2'
+source = '''
+impl Drop for VkSkiaSurface {
+    fn drop(&mut self) {
+        unsafe {
+            //self.device.destroy_sampler(self.sampler, None);
+            self.device.destroy_image_view(self.image_view, None);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/buffer.rs:149:1: 160:2'
+source = '''
+impl Drop for VkBuffer {
+    fn drop(&mut self) {
+        trace!("destroying VkBuffer");
+
+        unsafe {
+            self.device.destroy_buffer(self.buffer, None);
+            self.device.free_memory(self.buffer_memory, None);
+        }
+
+        trace!("destroyed VkBuffer");
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/debug_reporter.rs:42:1: 51:2'
+source = '''
+impl Drop for VkDebugReporter {
+    fn drop(&mut self) {
+        unsafe {
+            debug!("destroying VkDebugReporter");
+            self.debug_report_loader
+                .destroy_debug_report_callback(self.debug_callback, None);
+            debug!("destroyed VkDebugReporter");
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/renderer.rs:552:1: 572:2'
+source = '''
+impl Drop for Renderer {
+    fn drop(&mut self) {
+        debug!("destroying Renderer");
+
+        unsafe {
+            self.device.logical_device.device_wait_idle().unwrap();
+            ManuallyDrop::drop(&mut self.skia_renderpass);
+
+            for plugin in &mut self.plugins {
+                plugin.swapchain_destroyed();
+            }
+
+            ManuallyDrop::drop(&mut self.swapchain);
+            ManuallyDrop::drop(&mut self.skia_context);
+            ManuallyDrop::drop(&mut self.device);
+            ManuallyDrop::drop(&mut self.instance);
+        }
+
+        debug!("destroyed Renderer");
+    }
+}'''

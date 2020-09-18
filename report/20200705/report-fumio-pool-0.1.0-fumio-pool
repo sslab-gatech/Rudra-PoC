@@ -1,0 +1,58 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/fumio-utils-0.1.0/src/mpsc.rs:270:4: 274:5'
+source = '''
+impl Drop for $head_name {
+				fn drop(&mut self) {
+					for _ in unsafe { self.start_pop() } {}
+				}
+			}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pool/task.rs:111:3: 121:4'
+source = '''
+impl Drop for PollList {
+			fn drop(&mut self) {
+				// pop all to readd them on panic
+				while let Some(task) = unsafe { self.pending.pop_back() } {
+					let task = unsafe { &*task };
+					if task.alive.get() && task.local_pending_link.is_unlinked() {
+						unsafe { task.task_list().local_pending.prepend(task); }
+					}
+				}
+			}
+		}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pool/task.rs:178:1: 185:2'
+source = '''
+impl Drop for LocalTaskList {
+	fn drop(&mut self) {
+		while let Some(task) = unsafe { self.task_list.local_all.pop_front() } {
+			// local_clear will drop the refcount from local_all
+			unsafe { &*task }.local_clear();
+		}
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pool/task.rs:281:1: 287:2'
+source = '''
+impl Drop for Task {
+	fn drop(&mut self) {
+		// can't drop future in a thread-safe manner; needs to be dropped manually before
+		assert!(!self.alive.get());
+		debug_assert!(self.task_list.is_none() || unsafe { self.local_future() }.is_none());
+	}
+}'''

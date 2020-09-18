@@ -1,0 +1,39 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/group.rs:44:1: 52:2'
+source = '''
+impl Drop for Group {
+	fn drop(&mut self) {
+		unsafe {
+			assert!(!self.as_ptr().is_null());
+			
+			EC_GROUP_free(self.as_mut_ptr());
+		}
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/big_number.rs:70:1: 74:2'
+source = '''
+impl Drop for BigNumber {
+	fn drop(&mut self) {
+		unsafe { BN_free(self.ptr) }
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/big_number.rs:99:1: 103:2'
+source = '''
+impl Drop for BigNumberContext {
+	fn drop(&mut self) {
+		unsafe { BN_CTX_free(self.ptr) };
+	}
+}'''

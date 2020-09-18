@@ -1,0 +1,13 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.5.0/src/lib.rs:248:9: 248:51'
+source = '$crate::foreign_type_impl!($crate $($t)*);'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = '/home/yechan/.cargo/registry/src/github.com-1ecc6299db9ec823/foreign-types-0.5.0/src/lib.rs:248:9: 248:51'
+source = '$crate::foreign_type_impl!($crate $($t)*);'

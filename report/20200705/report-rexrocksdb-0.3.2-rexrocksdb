@@ -1,0 +1,368 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb.rs:43:1: 49:2'
+source = '''
+impl Drop for CFHandle {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_column_family_handle_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb.rs:275:1: 279:2'
+source = '''
+impl<D: Deref<Target = DB>> Drop for Snapshot<D> {
+    fn drop(&mut self) {
+        unsafe { self.db.release_snap(&self.snap) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb.rs:1453:1: 1457:2'
+source = '''
+impl Drop for WriteBatch {
+    fn drop(&mut self) {
+        unsafe { crocksdb_ffi::crocksdb_writebatch_destroy(self.inner) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb.rs:1459:1: 1466:2'
+source = '''
+impl Drop for DB {
+    fn drop(&mut self) {
+        unsafe {
+            self.cfs.clear();
+            crocksdb_ffi::crocksdb_close(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb.rs:1629:1: 1635:2'
+source = '''
+impl Drop for DBVector {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_pinnableslice_destroy(self.pinned_slice);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb.rs:1679:1: 1685:2'
+source = '''
+impl Drop for BackupEngine {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_backup_engine_close(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb.rs:1788:1: 1792:2'
+source = '''
+impl Drop for SstFileWriter {
+    fn drop(&mut self) {
+        unsafe { crocksdb_ffi::crocksdb_sstfilewriter_destroy(self.inner) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb.rs:1845:1: 1851:2'
+source = '''
+impl Drop for ExternalSstFileInfo {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_externalsstfileinfo_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb.rs:1923:1: 1929:2'
+source = '''
+impl Drop for Env {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_env_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb.rs:1969:1: 1975:2'
+source = '''
+impl Drop for SequentialFile {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_sequential_file_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb.rs:2114:1: 2120:2'
+source = '''
+impl Drop for UnsafeIter {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_iter_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb_options.rs:50:1: 56:2'
+source = '''
+impl Drop for BlockBasedOptions {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_block_based_options_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb_options.rs:218:1: 222:2'
+source = '''
+impl Drop for RateLimiter {
+    fn drop(&mut self) {
+        unsafe { crocksdb_ffi::crocksdb_ratelimiter_destroy(self.inner) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb_options.rs:257:1: 261:2'
+source = '''
+impl Drop for ReadOptions {
+    fn drop(&mut self) {
+        unsafe { crocksdb_ffi::crocksdb_readoptions_destroy(self.inner) }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb_options.rs:409:1: 415:2'
+source = '''
+impl Drop for WriteOptions {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_writeoptions_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb_options.rs:500:1: 506:2'
+source = '''
+impl Drop for CompactOptions {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_compactoptions_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb_options.rs:512:1: 518:2'
+source = '''
+impl Drop for DBOptions {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_options_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb_options.rs:895:1: 901:2'
+source = '''
+impl Drop for ColumnFamilyOptions {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_options_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb_options.rs:1371:1: 1377:2'
+source = '''
+impl Drop for FlushOptions {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_flushoptions_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb_options.rs:1437:1: 1443:2'
+source = '''
+impl Drop for IngestExternalFileOptions {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_ingestexternalfileoptions_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb_options.rs:1460:1: 1466:2'
+source = '''
+impl Drop for EnvOptions {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_envoptions_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb_options.rs:1491:1: 1497:2'
+source = '''
+impl Drop for RestoreOptions {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_restore_options_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rocksdb_options.rs:1537:1: 1543:2'
+source = '''
+impl Drop for FifoCompactionOptions {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_fifo_compaction_options_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/compaction_filter.rs:61:1: 67:2'
+source = '''
+impl Drop for CompactionFilterHandle {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_compactionfilter_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/table_properties.rs:61:1: 67:2'
+source = '''
+impl<'a> Drop for TablePropertiesCollectionIter<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_table_properties_collection_iter_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/table_properties.rs:106:1: 112:2'
+source = '''
+impl Drop for TablePropertiesCollection {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_table_properties_collection_destroy(self.inner);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/table_properties.rs:287:1: 293:2'
+source = '''
+impl<'a> Drop for UserCollectedPropertiesIter<'a> {
+    fn drop(&mut self) {
+        unsafe {
+            crocksdb_ffi::crocksdb_user_collected_properties_iter_destroy(self.inner);
+        }
+    }
+}'''

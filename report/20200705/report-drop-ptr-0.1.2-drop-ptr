@@ -1,0 +1,10 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/lib.rs:22:1: 25:2'
+source = '''
+impl<'a, A: ?Sized + DropPtr> Drop for Box<'a, A> {
+    #[inline]
+    fn drop(&mut self) { unsafe { A::drop_ptr(self.0) } }
+}'''

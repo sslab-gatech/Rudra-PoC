@@ -1,0 +1,6 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/rpc/client/channel.rs:147:15: 147:25'
+source = 'PinnedDrop'

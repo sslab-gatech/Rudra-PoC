@@ -1,0 +1,157 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/inotify/InotifyWatchDescriptor.rs:13:1: 41:2'
+source = '''
+impl Drop for InotifyWatchDescriptor
+{
+	#[inline(always)]
+	fn drop(&mut self)
+	{
+		if let Some(parent) = self.parent.upgrade()
+		{
+			let result = unsafe { inotify_rm_watch(parent.as_raw_fd(), self.watch_descriptor) };
+			if likely!(result == 0)
+			{
+				return
+			}
+			else if likely!(result == -1)
+			{
+				match errno().0
+				{
+					EBADF => panic!("`fd` is not a valid file descriptor"),
+					EINVAL => panic!("The watch descriptor `wd` is not valid; or `fd` is not an inotify file descriptor"),
+					_ => unreachable!(),
+				}
+			}
+			else
+			{
+				unreachable!()
+			}
+		}
+
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/signalfd/SignalFileDescriptor.rs:9:1: 21:2'
+source = '''
+impl Drop for SignalFileDescriptor
+{
+	#[inline(always)]
+	fn drop(&mut self)
+	{
+		// Please see <http://austingroupbugs.net/view.php?id=529> and <http://austingroupbugs.net/view.php?id=529> for why ignoring the `EINTR` error on close is actually sane.
+		//
+		// Frankly, the defects here are those of POSIX: (a) signals, and (b) using a file descriptor so small that it isn't thread safe.
+		//
+		// To be far, both signals and file descriptors predate threads by a long way.
+		unsafe { close(self.0) };
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/socket/DatagramClientSocketFileDescriptor.rs:9:1: 35:2'
+source = '''
+impl<SD: SocketData> Drop for DatagramClientSocketFileDescriptor<SD>
+{
+	#[inline(always)]
+	fn drop(&mut self)
+	{
+		let result = unsafe { shutdown(self.as_raw_fd(), SHUT_RDWR) };
+		if likely!(result == 0)
+		{
+			return
+		}
+		else if likely!(result != -1)
+		{
+			match errno().0
+			{
+				EBADF => panic!("The argument `sockfd` is an invalid descriptor"),
+				EINVAL => panic!("An invalid value was specified in `how`"),
+				ENOTCONN => panic!("The socket is associated with a connection-oriented protocol and has not been connected"),
+				ENOTSOCK => panic!("The argument `sockfd` does not refer to a socket"),
+				_ => unreachable!(),
+			}
+		}
+		else
+		{
+			unreachable!()
+		}
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/socket/DatagramServerListenerSocketFileDescriptor.rs:9:1: 35:2'
+source = '''
+impl<SD: SocketData> Drop for DatagramServerListenerSocketFileDescriptor<SD>
+{
+	#[inline(always)]
+	fn drop(&mut self)
+	{
+		let result = unsafe { shutdown(self.as_raw_fd(), SHUT_RDWR) };
+		if likely!(result == 0)
+		{
+			return
+		}
+		else if likely!(result != -1)
+		{
+			match errno().0
+			{
+				EBADF => panic!("The argument `sockfd` is an invalid descriptor"),
+				EINVAL => panic!("An invalid value was specified in `how`"),
+				ENOTCONN => panic!("The socket is associated with a connection-oriented protocol and has not been connected"),
+				ENOTSOCK => panic!("The argument `sockfd` does not refer to a socket"),
+				_ => unreachable!(),
+			}
+		}
+		else
+		{
+			unreachable!()
+		}
+	}
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/socket/StreamingSocketFileDescriptor.rs:9:1: 35:2'
+source = '''
+impl<SD: SocketData> Drop for StreamingSocketFileDescriptor<SD>
+{
+	#[inline(always)]
+	fn drop(&mut self)
+	{
+		let result = unsafe { shutdown(self.as_raw_fd(), SHUT_RDWR) };
+		if likely!(result == 0)
+		{
+			return
+		}
+		else if likely!(result != -1)
+		{
+			match errno().0
+			{
+				EBADF => panic!("The argument `sockfd` is an invalid descriptor"),
+				EINVAL => panic!("An invalid value was specified in `how`"),
+				ENOTCONN => panic!("The socket is associated with a connection-oriented protocol and has not been connected"),
+				ENOTSOCK => panic!("The argument `sockfd` does not refer to a socket"),
+				_ => unreachable!(),
+			}
+		}
+		else
+		{
+			unreachable!()
+		}
+	}
+}'''

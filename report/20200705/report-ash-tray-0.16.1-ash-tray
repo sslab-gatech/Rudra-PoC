@@ -1,0 +1,255 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:871:1: 880:2'
+source = '''
+impl<T: Clone> Drop for RcCommandBuffer<T> {
+    fn drop(&mut self) {
+        self.fence_wait(std::u64::MAX).unwrap();
+        unsafe {
+            self.command_pool
+                .device
+                .free_command_buffers(**self.command_pool, slice::from_ref(&**self));
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:925:1: 931:2'
+source = '''
+impl<T: Clone> Drop for RcCommandPool<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.device.destroy_command_pool(**self, None);
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:976:1: 982:2'
+source = '''
+impl<T: Clone> Drop for RcDescriptorPool<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.device.destroy_descriptor_pool(**self, None);
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:1266:1: 1274:2'
+source = '''
+impl<T: Clone> Drop for RcDescriptorSet<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.descriptor_pool
+                .device
+                .free_descriptor_sets(**self.descriptor_pool, slice::from_ref(&*self));
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:1334:1: 1340:2'
+source = '''
+impl<T: Clone> Drop for RcDescriptorSetLayout<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.device.destroy_descriptor_set_layout(**self, None);
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:1386:1: 1392:2'
+source = '''
+impl<T: Clone> Drop for RcDevice<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.inner.destroy_device(None);
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:1433:1: 1439:2'
+source = '''
+impl<T: Clone> Drop for RcFence<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.device.inner.destroy_fence(**self, None);
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:1492:1: 1498:2'
+source = '''
+impl<T: Clone> Drop for RcFramebuffer<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.render_pass.device.destroy_framebuffer(**self, None);
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:1634:1: 1641:2'
+source = '''
+impl<T: Clone> Drop for RcImageView<T> {
+    fn drop(&mut self) {
+        let device = self.image.get_device();
+        unsafe {
+            device.destroy_image_view(**self, None);
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:1690:1: 1694:2'
+source = '''
+impl<T: Clone> Drop for RcInstance<T> {
+    fn drop(&mut self) {
+        unsafe { self.destroy_instance(None) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:1819:1: 1825:2'
+source = '''
+impl<T: Clone> Drop for RcPipeline<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.pipeline_layout.device.destroy_pipeline(**self, None);
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:1875:1: 1881:2'
+source = '''
+impl<T: Clone> Drop for RcPipelineLayout<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.device.destroy_pipeline_layout(**self, None);
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:1961:1: 1967:2'
+source = '''
+impl<T: Clone> Drop for RcRenderPass<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.device.destroy_render_pass(**self, None);
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:2008:1: 2014:2'
+source = '''
+impl<T: Clone> Drop for RcSampler<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.device.0.inner.destroy_sampler(**self, None);
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:2055:1: 2061:2'
+source = '''
+impl<T: Clone> Drop for RcSemaphore<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.device.destroy_semaphore(**self, None);
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:2120:1: 2126:2'
+source = '''
+impl<T: Clone> Drop for RcShaderModule<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.device.destroy_shader_module(**self, None);
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:2227:1: 2233:2'
+source = '''
+impl<T: Clone> Drop for RcSurfaceKHR<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.surface_loader.destroy_surface(**self, None);
+        };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/vk_helper.rs:2344:1: 2350:2'
+source = '''
+impl<T: Clone> Drop for RcSwapchainKHR<T> {
+    fn drop(&mut self) {
+        unsafe {
+            self.swapchain_loader.destroy_swapchain(**self, None);
+        };
+    }
+}'''

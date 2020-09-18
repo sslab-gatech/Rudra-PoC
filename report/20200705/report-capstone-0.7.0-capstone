@@ -1,0 +1,27 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/capstone.rs:406:1: 410:2'
+source = '''
+impl Drop for Capstone {
+    fn drop(&mut self) {
+        unsafe { cs_close(&mut self.csh()) };
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/instruction.rs:117:1: 125:2'
+source = '''
+impl<'a> Drop for Instructions<'a> {
+    fn drop(&mut self) {
+        if !self.is_empty() {
+            unsafe {
+                cs_free(self.0.as_mut_ptr(), self.len());
+            }
+        }
+    }
+}'''

@@ -1,0 +1,39 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/utils.rs:270:1: 287:2'
+source = '''
+impl Drop for FsUidGuard {
+    fn drop(&mut self) {
+        if self.0 {
+            unsafe { setfsuid(0) };
+            if unsafe { setfsuid(0) } != 0 {
+                let err = io::Error::last_os_error();
+                error!("Can't return fs uid back to zero: {}. Aborting.", err);
+                panic!("Can't return fs uid back to zero: {}. Aborting.", err);
+            }
+            unsafe { setfsgid(0) };
+            if unsafe { setfsgid(0) } != 0 {
+                let err = io::Error::last_os_error();
+                error!("Can't return fs gid back to zero: {}. Aborting.", err);
+                panic!("Can't return fs gid back to zero: {}. Aborting.", err);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/pipe.rs:52:1: 59:2'
+source = '''
+impl Drop for CPipe {
+    fn drop(&mut self) {
+        unsafe {
+            close(self.reader);
+            close(self.writer);
+        }
+    }
+}'''

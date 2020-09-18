@@ -1,0 +1,44 @@
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ffi/packet.rs:52:1: 61:2'
+source = '''
+impl<'a> Drop for Packet<'a> {
+    fn drop(&mut self) {
+        // TODO: really shitty :( I hope there is no valid state where the packet contains no data!
+        if !self.contains_data() {
+            unsafe {
+                libc::free(self.packet as *mut libc::c_void);
+            }
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ffi/quic_ctx.rs:164:1: 170:2'
+source = '''
+impl Drop for QuicCtx {
+    fn drop(&mut self) {
+        unsafe {
+            picoquic_free(self.quic);
+        }
+    }
+}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDestructor'
+description = 'unsafe block detected in drop'
+location = 'src/ffi/stateless_packet.rs:47:1: 53:2'
+source = '''
+impl Drop for StatelessPacket {
+    fn drop(&mut self) {
+        unsafe {
+            picoquic_delete_stateless_packet(self.packet);
+        }
+    }
+}'''
