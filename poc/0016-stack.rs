@@ -12,7 +12,7 @@ cargo_flags = ["--release"]
 title = "Missing check in ArrayVec leads to out-of-bounds write."
 description = """
 ArrayVec::insert allows insertion of an element into the array object into the
-specified index. Due to a missing check on the upperbound of this index, it is
+specified index. Due to a missing check on the upper bound of this index, it is
 possible to write out of bounds.
 """
 code_snippets = []
@@ -20,6 +20,7 @@ patched = []
 issue_url = "https://github.com/arcnmx/stack-rs/issues/4"
 issue_date = 2020-09-24
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/392"
+rustsec_id = "RUSTSEC-2020-0042"
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -21,6 +21,7 @@ issue_url = "https://github.com/raviqqe/array-queue/issues/2"
 issue_date = 2020-09-26
 affected_functions = ["array_queue::ArrayQueue::pop_back"]
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/396"
+rustsec_id = "RUSTSEC-2020-0047"
 ```
 !*/
 #![forbid(unsafe_code)]

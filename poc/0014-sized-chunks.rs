@@ -29,6 +29,7 @@ patched = []
 issue_url = "https://github.com/bodil/sized-chunks/issues/11"
 issue_date = 2020-09-06
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/381"
+rustsec_id = "RUSTSEC-2020-0041"
 ```
 !*/
 #![forbid(unsafe_code)]

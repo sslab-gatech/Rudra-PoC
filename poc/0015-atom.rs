@@ -19,6 +19,7 @@ patched = []
 issue_url = "https://github.com/slide-rs/atom/issues/13"
 issue_date = 2020-09-21
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/390"
+rustsec_id = "RUSTSEC-2020-0044"
 ```
 !*/
 #![forbid(unsafe_code)]
@@ -41,7 +42,7 @@ fn main() {
     // to memory safety issues like use-after-frees.
     //
     // As such, we demonstrate this issue by creating a Rc on one thread and
-    // creating `n` clones of it. Simaltaneously, we send the Rc to another
+    // creating `n` clones of it. Simultaneously, we send the Rc to another
     // thread and have it do the same. With an atomic counting mechanism we
     // would expect the reference count to be increased by `2n`. However, since
     // Rc is not atomic and was never meant to be sent across threads, we see
