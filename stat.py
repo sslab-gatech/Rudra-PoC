@@ -68,7 +68,9 @@ for log_file_name in os.listdir(log_dir):
     assert_message = f"Assertion failure in {log_file_name}"
     crate_status = Status.OKAY
     cur_stat = {
-        "num_target": 0
+        "num_target": 0,
+        "e2e_time": datetime.timedelta(),  # end to end time including dependency compilation
+        "rudra_time": datetime.timedelta(),  # total time taken for Rudra analysis
     }
     for analyzer in ANALYZERS:
         cur_stat[analyzer] = {
@@ -106,6 +108,9 @@ for log_file_name in os.listdir(log_dir):
                     crate_status = Status.METADATA_ERROR
                     break
 
+                if "Running cargo rudra" in line:
+                    crate_start_time = datetime.datetime.strptime(line[:TIME_LEN], TIME_FORMAT)
+
                 idx = line.find(TARGET_START_PREFIX)
                 if idx != -1:
                     # target analysis started
@@ -116,6 +121,8 @@ for log_file_name in os.listdir(log_dir):
 
                 if "cargo rudra finished" in line.strip():
                     # gracefully exit
+                    crate_end_time = datetime.datetime.strptime(line[:TIME_LEN], TIME_FORMAT)
+                    cur_stat["e2e_time"] = crate_end_time - crate_start_time
                     break
             else:
                 if analyzer_idx == -1:
@@ -127,6 +134,7 @@ for log_file_name in os.listdir(log_dir):
                         break
 
                     assert "Rudra started" in line, assert_message
+                    target_start_time = datetime.datetime.strptime(line[:TIME_LEN], TIME_FORMAT)
 
                     # initialize target
                     analyzer_idx = 0
@@ -162,6 +170,8 @@ for log_file_name in os.listdir(log_dir):
                         target_stat[analyzer][AnalyzerField.NUM_REPORTS] = 0
 
                     if "Rudra finished" in line:
+                        target_end_time = datetime.datetime.strptime(line[:TIME_LEN], TIME_FORMAT)
+
                         # Report counting
                         report_file_path = os.path.join(report_dir, report_file_name)
                         if os.path.exists(report_file_path):
@@ -173,6 +183,8 @@ for log_file_name in os.listdir(log_dir):
                         # Accumulate target stat to crate stat
                         if crate_status == Status.OKAY:
                             cur_stat["num_target"] += 1
+                            cur_stat["rudra_time"] += target_end_time - target_start_time
+
                             for analyzer in ANALYZERS:
                                 if analyzer in target_stat:
                                     for field in AnalyzerField:
@@ -193,13 +205,13 @@ for log_file_name in os.listdir(log_dir):
 
 print(crate_stat["status_acc"])
 
-# TODO: measure end-to-end execution time
+one_ms = datetime.timedelta(milliseconds=1)
 
 # CSV export of successful crates
 with open(f"stat-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
     csv_writer = csv.writer(csvfile, quoting=csv.QUOTE_MINIMAL)
 
-    header_row = ["name", "targets"]
+    header_row = ["name", "targets", "e2e-time", "rudra-time"]
     for analyzer in ANALYZERS:
         header_row.append(f"{analyzer}-time")
         header_row.append(f"{analyzer}-num-reports")
@@ -208,9 +220,14 @@ with open(f"stat-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
     for (i, name) in enumerate(crate_stat["names"]):
         if crate_stat["status"][i] == Status.OKAY:
             stat = crate_stat["stats"][i]
-            crate_row = [name, stat["num_target"]]
+            crate_row = [
+                name,
+                stat["num_target"],
+                stat["e2e_time"] / one_ms,
+                stat["rudra_time"] / one_ms,
+            ]
             for analyzer in ANALYZERS:
-                crate_row.append(stat[analyzer][AnalyzerField.TIME] / datetime.timedelta(milliseconds=1))  # ms taken
+                crate_row.append(stat[analyzer][AnalyzerField.TIME] / one_ms)  # ms taken
                 crate_row.append(stat[analyzer][AnalyzerField.NUM_REPORTS])
             csv_writer.writerow(crate_row)
 
