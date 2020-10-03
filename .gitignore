@@ -4,3 +4,7 @@ poc-debug/
 # local files
 advisory-db
 config.toml
+
+# result files
+stat-*.csv
+status-*.csv
