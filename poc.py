@@ -9,7 +9,7 @@ import subprocess
 import requests
 import sys
 import tempfile
-import toml
+import tomlkit
 
 from subprocess import PIPE, STDOUT
 from urllib.parse import urlparse
@@ -76,7 +76,7 @@ if not os.path.exists("config.toml"):
 
 with open("config.toml") as config_file:
     config_text = config_file.read()
-    config = toml.loads(config_text)
+    config = tomlkit.loads(config_text)
 
 user_name = config["name"]
 user_email = config["email"]
@@ -96,7 +96,7 @@ os_version = subprocess.check_output(["lsb_release", "-sd"]).decode().strip()
 # Prepare Git repository
 if not os.path.exists("advisory-db"):
     os.system(f"git clone {rustsec_fork_url} advisory-db")
-    os.system(f"git remote add rustsec https://github.com/RustSec/advisory-db.git")
+    os.system(f"cd advisory-db; git remote add rustsec https://github.com/RustSec/advisory-db.git")
 
 # Map PoC number to PoC name
 # Note that the name doesn't contain `.rs` extension
@@ -142,7 +142,7 @@ def read_metadata(poc_id):
         if lines[0] == "/*!\n" and lines[1] == "```crux-poc\n":
             idx = lines.index("```\n")
             toml_str = ''.join(lines[2:idx])
-            return toml.loads(toml_str)
+            return tomlkit.loads(toml_str)
 
     return None
 
@@ -158,7 +158,7 @@ def append_metadata(poc_id, dict):
         else:
             raise Exception("PoC metadata comment not found")
 
-    dict_toml = toml.dumps(dict)
+    dict_toml = tomlkit.dumps(dict)
 
     with open(f"poc/{poc_name}.rs", "w") as poc_file:
         poc_file.write("".join(lines[:idx]))
@@ -466,7 +466,7 @@ def cmd_report_rustsec(poc_id, report):
     if "unaffected" in metadata["report"]:
         version_dict["unaffected"] = metadata["report"]["unaffected"]
 
-    version_str = toml.dumps(version_dict)
+    version_str = tomlkit.dumps(version_dict)
 
 
     def run_in_advisory_db(args, silent=False):
