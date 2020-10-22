@@ -5,7 +5,7 @@ crate = "atom"
 version = "0.3.5"
 
 [test]
-analyzers = ["manual"]
+analyzers = ["SendSyncChecker"]
 
 [report]
 title = "Unsafe Send implementation in Atom allows data races"

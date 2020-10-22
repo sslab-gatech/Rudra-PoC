@@ -13,17 +13,23 @@
     * `T: Sync` is required for `fn(&Container) -> &T` (usually `Deref`)
     * `T: Send` is required for `fn(&Container) -> T` (atomic replacement)
 
-- Mutex-like
+- Mutex
     * `&Self -> &mut T`
     * T:Send for Send
     * T:Send for Sync
-- Box/Vec/MessageQueue
+- RwLock
+    * T:Send for Send
+    * T:Send+Sync for Sync
+- Box/Vec/slice
     * T:Send for Send
     * (T:Sync for Sync)
 - &
     * T:Sync for Send
 - &mut
     * T:Send for Send
+- Cow
+    * T:Sync(borrowed)/Send(owned) for Send
+    * T:Sync/Sync for Sync
 - Arc
     * T:Send+Sync for Send
     * T:Send+Sync for Sync
