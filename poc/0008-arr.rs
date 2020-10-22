@@ -9,7 +9,7 @@ crate = "crossbeam-utils"
 version = "0.7.2"
 
 [test]
-analyzers = ["manual", "UnsafeDestructor"]
+analyzers = ["manual", "UnsafeDestructor", "SendSyncChecker"]
 cargo_flags = ["--release"]
 cargo_toolchain = "nightly"
 

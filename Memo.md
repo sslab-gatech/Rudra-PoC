@@ -17,7 +17,7 @@
     * `&Self -> &mut T`
     * T:Send for Send
     * T:Send for Sync
-- Vec/MessageQueue
+- Box/Vec/MessageQueue
     * T:Send for Send
     * (T:Sync for Sync)
 - &
