@@ -221,7 +221,7 @@ def prepare_report(poc_id):
         else:
             exit_code_str = str(exit_code)
 
-    report_content = "Hello, we have noticed a soundness issue and/or a potential security vulnerability in this crate while performing a security scan on crates.io.\n\n"
+    report_content = "Hello, we have noticed a soundness/memory safety issue in this crate which allows safe Rust code to trigger undefined behavior while scanning crates.io.\n\n"
 
     report_content += "".join(
         map(lambda s: s + "\n\n", code_snippets)
