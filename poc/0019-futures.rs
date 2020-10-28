@@ -9,7 +9,7 @@ crate = "crossbeam-utils"
 version = "0.8.0"
 
 [test]
-analyzers = []
+analyzers = ["SendSyncChecker"]
 
 [report]
 title = "MappedMutexGuard Send/Sync bound is unsound"
