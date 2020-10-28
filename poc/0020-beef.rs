@@ -76,10 +76,10 @@ fn main() {
     #[derive(Debug, Clone)]
     enum RefOrInt<'a> {
         Ref(&'a u64),
-        Int(u64)
+        Int(u64),
     }
 
-    let some_int : u64 = 42;
+    let some_int: u64 = 42;
     let cell2 = [RefCell::new(RefOrInt::Ref(&some_int))];
 
     thread::scope(|s| {
