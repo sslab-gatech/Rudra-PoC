@@ -22,13 +22,14 @@ data race. This allows objects like `RefCell` that implement `Send` but not
 code_snippets = ["https://github.com/maciejhirsz/beef/blob/0b4685143e680749991c295836d8d09565fd6814/src/generic.rs#L531"]
 patched = []
 informational = "unsound"
+issue_url = "https://github.com/maciejhirsz/beef/issues/37"
+issue_date = "2020-10-28"
 ```
 !*/
 #![forbid(unsafe_code)]
 
 use crossbeam_utils::thread;
 use std::cell::Cell;
-use std::rc::Rc;
 
 use std::cell::RefCell;
 use std::sync::mpsc;
