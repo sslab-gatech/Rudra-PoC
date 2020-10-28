@@ -29,9 +29,7 @@ issue_date = "2020-10-28"
 #![forbid(unsafe_code)]
 
 use crossbeam_utils::thread;
-use std::cell::Cell;
-
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 use std::sync::mpsc;
 use std::thread::sleep;
 use std::time;
@@ -39,13 +37,13 @@ use std::time;
 use beef::Cow;
 
 fn main() {
-    let x = [Cell::new(42)];
+    let cell1 = [Cell::new(42)];
 
     // A simple proof-of-concept demonstrating how a loose bound on Cow's
     // Send trait allows non-`Sync` but `Send`able objects to be shared across
     // threads.
     thread::scope(|s| {
-        let cow1: Cow<[Cell<i32>]> = Cow::borrowed(&x[..]);
+        let cow1: Cow<[Cell<i32>]> = Cow::borrowed(&cell1[..]);
         let cow2: Cow<[Cell<i32>]> = cow1.clone();
 
         let child = s.spawn(|_| {
@@ -60,7 +58,7 @@ fn main() {
 
         // This should print the same address as above indicating the underlying
         // `Cell` in x is now shared across threads, a violation of `!Sync`.
-        println!("{:?}, {:p}", x, &x[0]);
+        println!("{:?}, {:p}", cell1, &cell1[0]);
     });
 
     // A simple tagged union used to demonstrate the problems with data races
@@ -72,10 +70,9 @@ fn main() {
     // underlying object.
     //
     // In this particular example, we show how a shared RefCell can lead to a
-    // null pointer derference. Our main thread pattern matches on the `Ref`
+    // a controlled pointer. Our main thread pattern matches on the `Ref`
     // version of the enum while the other thread changes the underlying memory
-    // to an `Int(0)`. Interpreted as a `Ref` this causes a null pointer to be
-    // dereferenced.
+    // to an `Int`.
     #[derive(Debug, Clone)]
     enum RefOrInt<'a> {
         Ref(&'a u64),
@@ -83,7 +80,7 @@ fn main() {
     }
 
     let some_int : u64 = 42;
-    let y = [RefCell::new(RefOrInt::Ref(&some_int))];
+    let cell2 = [RefCell::new(RefOrInt::Ref(&some_int))];
 
     thread::scope(|s| {
         // Set up channels so the threads can communicate whether they managed
@@ -91,7 +88,7 @@ fn main() {
         let (tx_thread_result, rx_thread_result) = mpsc::channel();
         let (tx_main_result, rx_main_result) = mpsc::channel();
 
-        let cow1: Cow<[RefCell<RefOrInt>]> = Cow::borrowed(&y[..]);
+        let cow1: Cow<[RefCell<RefOrInt>]> = Cow::borrowed(&cell2[..]);
         let cow2: Cow<[RefCell<RefOrInt>]> = cow1.clone();
 
         let child = s.spawn(move |_| {
@@ -102,47 +99,38 @@ fn main() {
                 let borrow_result = smuggled[0].try_borrow_mut();
                 // Send over our result, whether our borrow was successful or not.
                 tx_thread_result.send(borrow_result.is_ok()).unwrap();
+
                 // Get their result, whether their borrow was successful or not.
                 let main_thread_result = rx_main_result.recv().unwrap();
-
-                // Cool, we both managed to borrow successfully.
                 if (main_thread_result && borrow_result.is_ok()) {
                     println!("Borrowed mutably! - Thread");
-
-                    // Allow the other thread some time to pattern-match on
-                    // the enum and extract it as a Ref.
+                    // Allow the other to pattern-match on the enum and extract
+                    // it as a Ref.
                     sleep(time::Duration::from_millis(10));
-
-                    // Now change over the enum to an Int(0).
-                    *borrow_result.unwrap() = RefOrInt::Int(0);
+                    // Now change over the enum to an Int.
+                    *borrow_result.unwrap() = RefOrInt::Int(0xcafebabe);
                 }
             }
         });
 
         loop {
-            // Try to borrow the RefCell mutably.
-            let borrow_result = y[0].try_borrow_mut();
-            // Send over our result, whether our borrow was successful or not.
+            // Same process as the thread to race `try_borrow_mut`.
+            let borrow_result = cell2[0].try_borrow_mut();
             tx_main_result.send(borrow_result.is_ok()).unwrap();
-            // Get their result, whether their borrow was successful or not.
-            let other_thread_result = rx_thread_result.recv().unwrap();
 
-            // Cool, we both managed to borrow successfully.
+            let other_thread_result = rx_thread_result.recv().unwrap();
             if (other_thread_result && borrow_result.is_ok()) {
                 println!("Borrowed mutably! - Main");
-
                 // Pattern match on the enum to pull out the reference.
                 if let RefOrInt::Ref(ref mut internal_ref) = *borrow_result.unwrap() {
                     println!("Initial destructure: {}", internal_ref);
 
-                    // Allow the other thread to change the pointed-to enum to
-                    // a null pointer.
+                    // Allow the other thread to change the pointed-to enum.
                     sleep(time::Duration::from_millis(50));
-
                     // We still hold a &u64 here as part of `internal_ref` but
                     // the underlying memory has been changed to 0 at this
                     // point, the print will now cause a null pointer deref.
-                    println!("About to dereference ptr again");
+                    println!("Pointer is now: {:p}", *internal_ref);
                     println!("Second dereference: {}", internal_ref);
                 }
             }
