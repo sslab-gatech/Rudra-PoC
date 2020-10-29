@@ -29,110 +29,51 @@ issue_date = "2020-10-28"
 #![forbid(unsafe_code)]
 
 use crossbeam_utils::thread;
-use std::cell::{Cell, RefCell};
-use std::sync::mpsc;
-use std::thread::sleep;
-use std::time;
+use std::cell::Cell;
 
 use beef::Cow;
 
+static SOME_INT: u64 = 123;
+
 fn main() {
-    let cell1 = [Cell::new(42)];
-
-    // A simple proof-of-concept demonstrating how a loose bound on Cow's
-    // Send trait allows non-`Sync` but `Send`able objects to be shared across
-    // threads.
-    thread::scope(|s| {
-        let cow1: Cow<[Cell<i32>]> = Cow::borrowed(&cell1[..]);
-        let cow2: Cow<[Cell<i32>]> = cow1.clone();
-
-        let child = s.spawn(|_| {
-            let smuggled = cow2.unwrap_borrowed();
-            smuggled[0].set(2);
-
-            // Print the value of the Cow-value and the address of the
-            // underlying Cell.
-            println!("{:?}, {:p}", smuggled, &smuggled[0]);
-        });
-        child.join().unwrap();
-
-        // This should print the same address as above indicating the underlying
-        // `Cell` in x is now shared across threads, a violation of `!Sync`.
-        println!("{:?}, {:p}", cell1, &cell1[0]);
-    });
-
     // A simple tagged union used to demonstrate the problems with data races
-    // in RefCells. Since RefCell has no synchronization methods, it is possible
-    // for two threads to end up breaking the usual borrowing rules.
-    //
-    // For example, given the right timing, RefCell::borrow_mut can succeed on
-    // both threads which then end up holding mutable references to the same
-    // underlying object.
-    //
-    // In this particular example, we show how a shared RefCell can lead to a
-    // a controlled pointer. Our main thread pattern matches on the `Ref`
-    // version of the enum while the other thread changes the underlying memory
-    // to an `Int`.
-    #[derive(Debug, Clone)]
+    // in Cell. Cell is designed for single threads and has no synchronization
+    // methods. Thus if it is allowed to be used simaltaneously by two threads,
+    // it is possible to race its interior mutability methods to derference an
+    // arbitrary pointer.
+    #[derive(Debug, Clone, Copy)]
     enum RefOrInt<'a> {
         Ref(&'a u64),
         Int(u64),
     }
 
-    let some_int: u64 = 42;
-    let cell2 = [RefCell::new(RefOrInt::Ref(&some_int))];
-
+    let cell_array = [Cell::new(RefOrInt::Ref(&SOME_INT))];
     thread::scope(|s| {
-        // Set up channels so the threads can communicate whether they managed
-        // to data-race successfully.
-        let (tx_thread_result, rx_thread_result) = mpsc::channel();
-        let (tx_main_result, rx_main_result) = mpsc::channel();
-
-        let cow1: Cow<[RefCell<RefOrInt>]> = Cow::borrowed(&cell2[..]);
-        let cow2: Cow<[RefCell<RefOrInt>]> = cow1.clone();
+        let cow1: Cow<[Cell<RefOrInt>]> = Cow::borrowed(cell_array.as_ref());
+        let cow2: Cow<[Cell<RefOrInt>]> = cow1.clone();
 
         let child = s.spawn(move |_| {
-            let smuggled = cow2.unwrap_borrowed();
-
+            // We've now smuggled the cell from above into this thread.
+            let smuggled_cell = cow2.unwrap_borrowed();
             loop {
-                // Try to borrow the RefCell mutably.
-                let borrow_result = smuggled[0].try_borrow_mut();
-                // Send over our result, whether our borrow was successful or not.
-                tx_thread_result.send(borrow_result.is_ok()).unwrap();
-
-                // Get their result, whether their borrow was successful or not.
-                let main_thread_result = rx_main_result.recv().unwrap();
-                if (main_thread_result && borrow_result.is_ok()) {
-                    println!("Borrowed mutably! - Thread");
-                    // Allow the other to pattern-match on the enum and extract
-                    // it as a Ref.
-                    sleep(time::Duration::from_millis(10));
-                    // Now change over the enum to an Int.
-                    *borrow_result.unwrap() = RefOrInt::Int(0xcafebabe);
-                }
+                // Repeatedly write Ref(&addr) and Int(0xdeadbeef) into the cell.
+                smuggled_cell[0].set(RefOrInt::Ref(&SOME_INT));
+                smuggled_cell[0].set(RefOrInt::Int(0xdeadbeef));
             }
         });
 
         loop {
-            // Same process as the thread to race `try_borrow_mut`.
-            let borrow_result = cell2[0].try_borrow_mut();
-            tx_main_result.send(borrow_result.is_ok()).unwrap();
-
-            let other_thread_result = rx_thread_result.recv().unwrap();
-            if (other_thread_result && borrow_result.is_ok()) {
-                println!("Borrowed mutably! - Main");
-                // Pattern match on the enum to pull out the reference.
-                if let RefOrInt::Ref(ref mut internal_ref) = *borrow_result.unwrap() {
-                    println!("Initial destructure: {}", internal_ref);
-
-                    // Allow the other thread to change the pointed-to enum.
-                    sleep(time::Duration::from_millis(50));
-                    // We still hold a &u64 here as part of `internal_ref` but
-                    // the underlying memory has been changed to 0 at this
-                    // point, the print will now cause a null pointer deref.
-                    println!("Pointer is now: {:p}", *internal_ref);
-                    println!("Second dereference: {}", internal_ref);
+            let main_thread_cell = (*cow1)[0].clone().into_inner();
+            if let RefOrInt::Ref(addr) = main_thread_cell {
+                // Hope that between the time we pattern match the object as a
+                // `Ref`, it gets written to by the other thread.
+                if addr as *const u64 == &SOME_INT as *const u64 {
+                    continue;
                 }
+
+                // Due to the data race, obtaining Ref(0xdeadbeef) is possible
+                println!("Pointer is now: {:p}", addr);
+                println!("Dereferencing addr will now segfault: {}", *addr);
             }
         }
     });
