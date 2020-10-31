@@ -12,18 +12,25 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "issue title"
+title = "futures_intrusive's GenericMutexGuard lacks !Sync allowing for data races"
 description = """
-issue description"""
+The GenericMutexGuard, meant to act as an RII lock acquisition guard is
+automatically marked as Sync by Rust. However, it allows multiple threads to
+read out a non-Sync object `T` so long as it implements Send.
+
+This opens up the possibility for data-races if a GenericMutexGuard is sent
+across threads.
+"""
 code_snippets = []
 patched = []
 informational = "unsound"
+issue_url = "https://github.com/Matthias247/futures-intrusive/issues/53"
+issue_date = "2020-10-31"
 ```
 !*/
 #![forbid(unsafe_code)]
-#![feature(async_closure)]
 
-use futures_intrusive::sync::{GenericMutex, Mutex};
+use futures_intrusive::sync::{GenericMutexGuard, Mutex};
 
 use crossbeam_utils::thread;
 use std::cell::Cell;
@@ -39,7 +46,7 @@ fn main() {
     let cell = Cell::new(RefOrInt::Ref(&SOME_INT));
 
     let futures_mutex: Mutex<Cell<_>> = Mutex::new(cell, false);
-    let mutex_guard = futures_mutex.try_lock().unwrap();
+    let mutex_guard: GenericMutexGuard<_, Cell<_>> = futures_mutex.try_lock().unwrap();
 
     thread::scope(|s| {
         let guard_ref = &mutex_guard;
