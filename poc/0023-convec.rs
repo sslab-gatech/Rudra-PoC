@@ -29,7 +29,7 @@ use std::cell::Cell;
 use convec::*;
 use crossbeam_utils::thread;
 
-static SOME_INT: u64 = 0x41414141;
+static SOME_INT: u128 = 0x41414141;
 
 fn main() {
     // A simple tagged union used to demonstrate the problems with data races
@@ -39,8 +39,8 @@ fn main() {
     // arbitrary pointer.
     #[derive(Debug, Clone, Copy)]
     enum RefOrInt<'a> {
-        Ref(&'a u64),
-        Int(u64),
+        Ref(&'a u128),
+        Int(u128),
     }
 
     let mut vec: AoVec<Cell<RefOrInt>> = AoVec::new();
@@ -65,7 +65,7 @@ fn main() {
             if let RefOrInt::Ref(addr) = main_cell.clone().into_inner() {
                 // Hope that between the time we pattern match the object as a
                 // `Ref`, it gets written to by the child thread.
-                if addr as *const u64 == &SOME_INT as *const u64 {
+                if addr as *const u128 == &SOME_INT as *const u128 {
                     continue;
                 }
 
