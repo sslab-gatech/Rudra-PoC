@@ -38,8 +38,8 @@ static SOME_INT: u64 = 123;
 fn main() {
     // A simple tagged union used to demonstrate the problems with data races
     // in Cell. Cell is designed for single threads and has no synchronization
-    // methods. Thus if it is allowed to be used simaltaneously by two threads,
-    // it is possible to race its interior mutability methods to derference an
+    // methods. Thus if it is allowed to be used simultaneously by two threads,
+    // it is possible to race its interior mutability methods to dereference an
     // arbitrary pointer.
     #[derive(Debug, Clone, Copy)]
     enum RefOrInt<'a> {
