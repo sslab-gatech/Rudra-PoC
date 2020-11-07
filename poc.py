@@ -278,8 +278,11 @@ log = "0.4"
 
         if "peer" in metadata["target"]:
             for crate in metadata["target"]["peer"]:
-                manifest_content += f'''{crate["crate"]} = "={crate["version"]}"\n'''
-
+                manifest_content += f'{crate["crate"]} = {{ '
+                manifest_content += f'''version = "={crate["version"]}"'''
+                if "features" in crate:
+                    manifest_content += f''', features = {crate["features"]}'''
+                manifest_content += '}\n'
         manifest_file.write(manifest_content)
 
     # build.rs
