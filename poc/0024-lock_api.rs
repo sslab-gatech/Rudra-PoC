@@ -8,6 +8,7 @@ version = "0.4.1"
 crate = "parking_lot"
 version = "0.11.0"
 features = ["send_guard"]
+
 [[target.peer]]
 crate = "crossbeam-utils"
 version = "0.8.0"
@@ -16,12 +17,17 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "issue title"
+title = "lock_api's Mapped Guard objects allow for data races with non-Sync objects"
 description = """
-issue description"""
-code_snippets = []
+MappedMutexGuard, MappedRwLockReadGuard and MappedRwLockWriteGuard lack Send
+bounds on their T types. This allows for data races when sending these guard
+objects across threads.
+"""
+code_snippets = ["https://github.com/Amanieu/parking_lot/blob/5ac2971da40006f678fa78117201b7521e9df1fd/lock_api/src/mutex.rs#L604-L607", "https://github.com/Amanieu/parking_lot/blob/master/lock_api/src/rwlock.rs#L1517"]
 patched = []
 informational = "unsound"
+issue_url = "https://github.com/Amanieu/parking_lot/issues/258"
+issue_date = "2020-11-08"
 ```
 !*/
 #![forbid(unsafe_code)]
@@ -31,15 +37,14 @@ use std::cell::Cell;
 
 use crossbeam_utils::thread;
 
+#[derive(Debug, Clone, Copy)]
+enum RefOrInt<'a> {
+    Ref(&'a u64),
+    Int(u64),
+}
 static SOME_INT: u64 = 123;
 
 fn main() {
-    #[derive(Debug, Clone, Copy)]
-    enum RefOrInt<'a> {
-        Ref(&'a u64),
-        Int(u64),
-    }
-
     let cell = Cell::new(RefOrInt::Ref(&SOME_INT));
     let mutex = Mutex::new(&cell);
 
