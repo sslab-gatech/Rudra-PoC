@@ -25,7 +25,7 @@ code_snippets = []
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/Matthias247/futures-intrusive/issues/53"
-issue_date = "2020-10-31"
+issue_date = 2020-10-31
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -27,7 +27,7 @@ code_snippets = ["https://github.com/Amanieu/parking_lot/blob/5ac2971da40006f678
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/Amanieu/parking_lot/issues/258"
-issue_date = "2020-11-08"
+issue_date = 2020-11-08
 ```
 !*/
 #![forbid(unsafe_code)]

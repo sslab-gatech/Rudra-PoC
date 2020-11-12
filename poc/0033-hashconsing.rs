@@ -19,7 +19,7 @@ code_snippets = ["https://github.com/AdrienChampion/hashconsing/blob/1b91c147fa2
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/AdrienChampion/hashconsing/issues/1"
-issue_date = "2020-11-10"
+issue_date = 2020-11-10
 ```
 !*/
 #![forbid(unsafe_code)]

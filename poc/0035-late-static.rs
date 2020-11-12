@@ -15,7 +15,7 @@ code_snippets = ["https://github.com/Richard-W/late-static/blob/3b72ba58df151a82
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/Richard-W/late-static/issues/1"
-issue_date = "2020-11-10"
+issue_date = 2020-11-10
 ```
 !*/
 

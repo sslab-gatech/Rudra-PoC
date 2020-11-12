@@ -22,7 +22,7 @@ code_snippets = ["https://github.com/reem/rust-atomic-option/blob/a1c645731b5cc4
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/reem/rust-atomic-option/issues/4"
-issue_date = "2020-10-31"
+issue_date = 2020-10-31
 ```
 !*/
 #![forbid(unsafe_code)]

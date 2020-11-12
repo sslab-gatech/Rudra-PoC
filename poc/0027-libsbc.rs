@@ -19,7 +19,7 @@ code_snippets = ["https://github.com/mvertescher/libsbc-rs/blob/7278b23901f93d95
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/mvertescher/libsbc-rs/issues/4"
-issue_date = "2020-11-10"
+issue_date = 2020-11-10
 ```
 !*/
 #![forbid(unsafe_code)]

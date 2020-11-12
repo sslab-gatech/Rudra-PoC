@@ -21,7 +21,7 @@ code_snippets = ["https://github.com/Xudong-Huang/may/blob/0abc40e67034b297614fd
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/Xudong-Huang/may/issues/88"
-issue_date = "2020-11-10"
+issue_date = 2020-11-10
 ```
 !*/
 #![forbid(unsafe_code)]

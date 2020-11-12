@@ -22,7 +22,7 @@ code_snippets = ["https://github.com/bodil/im-rs/blob/22f6907e89cb7d895c3ef72963
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/bodil/im-rs/issues/157"
-issue_date = "2020-11-09"
+issue_date = 2020-11-09
 ```
 !*/
 #![forbid(unsafe_code)]

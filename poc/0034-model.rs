@@ -19,7 +19,7 @@ code_snippets = ["https://github.com/spacejam/model/blob/b50d9eef17a80297a45772a
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/spacejam/model/issues/3"
-issue_date = "2020-11-10"
+issue_date = 2020-11-10
 ```
 !*/
 #![forbid(unsafe_code)]

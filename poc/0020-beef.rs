@@ -23,7 +23,7 @@ code_snippets = ["https://github.com/maciejhirsz/beef/blob/0b4685143e680749991c2
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/maciejhirsz/beef/issues/37"
-issue_date = "2020-10-28"
+issue_date = 2020-10-28
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -19,7 +19,7 @@ code_snippets = ["https://github.com/vertexclique/lever/blob/15a96c7f99e91f3d50c
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/vertexclique/lever/issues/15"
-issue_date = "2020-11-10"
+issue_date = 2020-11-10
 ```
 !*/
 #![forbid(unsafe_code)]

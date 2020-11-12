@@ -19,7 +19,7 @@ code_snippets = ["https://gitlab.com/nathanfaucett/rs-lexer/-/blob/6b350b73c27e4
 patched = []
 informational = "unsound"
 issue_url = "https://gitlab.com/nathanfaucett/rs-lexer/-/issues/2"
-issue_date = "2020-11-10"
+issue_date = 2020-11-10
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -19,7 +19,7 @@ code_snippets = ["https://github.com/SonicFrog/abox/blob/5abe75222bc49af6b62ea37
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/SonicFrog/abox/issues/1"
-issue_date = "2020-11-10"
+issue_date = 2020-11-10
 ```
 !*/
 #![forbid(unsafe_code)]
