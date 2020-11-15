@@ -15,7 +15,7 @@ analyzers = ["SendSyncChecker"]
 title = "CopyCell<T> implements Send for all types potentially allowing for data races"
 description = """
 issue description"""
-code_snippets = []
+code_snippets = ["https://github.com/rossdylan/rust-scottqueue/blob/875491d79cc6d2e222afaeed6cd51902b523c3c9/src/tlqueue.rs#L27-L28"]
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/ratel-rust/toolshed/issues/12"
