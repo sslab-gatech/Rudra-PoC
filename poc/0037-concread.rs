@@ -15,7 +15,7 @@ code_snippets = [https://github.com/kanidm/concread/blob/08b258f4dbe7228ac7236f5
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/kanidm/concread/issues/48"
-issue_date = 2020-10-28
+issue_date = 2020-11-13
 ```
 !*/
 #![forbid(unsafe_code)]
