@@ -5,7 +5,7 @@ crate = "ruspiro-singleton"
 version = "0.4.0"
 
 [test]
-analyzers = []
+analyzers = ["SendSyncChecker"]
 
 [report]
 title = "Singleton<T> implements Send/Sync without any bounds"

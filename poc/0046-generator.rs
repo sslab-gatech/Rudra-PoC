@@ -5,7 +5,7 @@ crate = "generator"
 version = "0.6.23"
 
 [test]
-analyzers = []
+analyzers = ["SendSyncChecker"]
 
 [report]
 title = "Generator<_, _, T> lacks a `T: Send` bound on its Send trait allowing data races"
