@@ -18,6 +18,8 @@ issue description"""
 code_snippets = ["https://github.com/mpdn/try-mutex/blob/9775aef4516135958fa428ce08b346325c0493f3/src/lib.rs#L127"]
 patched = []
 informational = "unsound"
+issue_url = "https://github.com/mpdn/try-mutex/issues/2"
+issue_date = 2020-11-17
 ```
 !*/
 #![forbid(unsafe_code)]
