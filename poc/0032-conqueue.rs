@@ -12,13 +12,23 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = ""
+title = "QueueSender's Send trait and Sync trait should have bounds"
 description = """
+Hi there, we (Rust group @sslab-gatech) are scanning crates on crates.io for potential soundness bugs.
+We noticed that the `QueueSender` object implements the Send and Sync traits for all types:
 
+https://github.com/longshorej/conqueue/blob/61f02f82370eadf4bfbf9c42c7de059d622799ea/src/lib.rs#L79-L81
+
+However, this should probably be bounded by T: Send and T: Sync.
+Otherwise, it's possible to smuggle non-Send types across thread boundaries or share non-Sync types across thread boundaries.
+
+Here's an example of a data race in safe Rust code through a `conqueue::Queue`.
 """
-code_snippets = ["https://github.com/longshorej/conqueue/blob/61f02f82370eadf4bfbf9c42c7de059d622799ea/src/lib.rs#L79"]
+code_snippets = ["https://github.com/longshorej/conqueue/blob/61f02f82370eadf4bfbf9c42c7de059d622799ea/src/lib.rs#L79-L81"]
 patched = []
 informational = "unsound"
+issue_url = "https://github.com/longshorej/conqueue/issues/9"
+issue_date = 2020-11-24
 ```
 !*/
 #![forbid(unsafe_code)]
