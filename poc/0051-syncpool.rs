@@ -11,7 +11,7 @@ analyzers = ["SendSyncChecker"]
 title = "Send bound needed on T (for Send impl of `Bucket2`)"
 description = """
 issue description"""
-code_snippets = [https://github.com/Chopinsky/byte_buffer/blob/79b1a5c23a4962cbcd1539af9aadbfc277981442/syncpool/src/bucket.rs#L336]
+code_snippets = ["https://github.com/Chopinsky/byte_buffer/blob/79b1a5c23a4962cbcd1539af9aadbfc277981442/syncpool/src/bucket.rs#L336"]
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/Chopinsky/byte_buffer/issues/2"
