@@ -1,6 +1,7 @@
 pub mod cmd;
 pub mod poc;
 pub mod prelude;
+pub mod util;
 
 use crate::cmd::{cmd_add, cmd_run, AddArgs, RunArgs};
 use crate::prelude::*;

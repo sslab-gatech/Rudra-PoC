@@ -1,4 +1,4 @@
-use crate::poc::{cargo_command, exit_status_string, PocMap};
+use crate::poc::PocMap;
 use crate::prelude::*;
 
 use structopt::StructOpt;
@@ -33,14 +33,14 @@ pub fn cmd_run(args: RunArgs) -> Result<()> {
     // cargo run
     let metadata = poc_map.read_metadata(args.id)?;
 
-    let mut cmd = cargo_command("build", &metadata);
+    let mut cmd = util::cargo_command("build", &metadata);
     if !cmd.current_dir(&workspace_path).spawn()?.wait()?.success() {
         anyhow::bail!("`cargo build` failed");
     }
 
-    let mut cmd = cargo_command("run", &metadata);
+    let mut cmd = util::cargo_command("run", &metadata);
     let exit_status = cmd.current_dir(&workspace_path).spawn()?.wait()?;
-    println!("\n{}", exit_status_string(&exit_status));
+    println!("\n{}", util::exit_status_string(&exit_status));
 
     Ok(())
 }

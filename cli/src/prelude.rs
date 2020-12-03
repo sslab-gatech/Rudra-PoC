@@ -6,6 +6,8 @@ use std::{
 
 use once_cell::sync::Lazy;
 
+pub use crate::util;
+
 pub use anyhow::{Context, Result};
 pub use regex::Regex;
 
