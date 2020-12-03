@@ -11,7 +11,7 @@ analyzers = ["SendSyncChecker"]
 title = ""
 description = """
 issue description"""
-code_snippets = [https://github.com/kanidm/concread/blob/08b258f4dbe7228ac7236f5b0f9d1a5f3c64f14f/src/arcache/mod.rs#L168]
+code_snippets = ["https://github.com/kanidm/concread/blob/08b258f4dbe7228ac7236f5b0f9d1a5f3c64f14f/src/arcache/mod.rs#L168"]
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/kanidm/concread/issues/48"

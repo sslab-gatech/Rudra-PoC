@@ -11,7 +11,7 @@ analyzers = ["SendSyncChecker"]
 title = "issue title"
 description = """
 issue description"""
-code_snippets = [https://docs.rs/rcu_cell/0.1.8/src/rcu_cell/lib.rs.html#375-376]
+code_snippets = ["https://docs.rs/rcu_cell/0.1.8/src/rcu_cell/lib.rs.html#375-376"]
 patched = []
 informational = "unsound"
 issue_url = "https://github.com/Xudong-Huang/rcu_cell/issues/3"

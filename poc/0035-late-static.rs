@@ -5,7 +5,7 @@ crate = "late-static"
 version = "0.3.0"
 
 [test]
-analyzers = []
+analyzers = ["SendSyncChecker"]
 
 [report]
 title = "LateStatic lacks a Sync bound on its contained type allowing for data races"

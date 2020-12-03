@@ -5,7 +5,7 @@ crate = "reffers"
 version = "0.6.0"
 
 [test]
-analyzers = []
+analyzers = ["SendSyncChecker"]
 
 [report]
 title = "Unsound: can make `ARefss` contain a !Send, !Sync object"
