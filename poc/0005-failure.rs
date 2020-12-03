@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "failure"
 version = "0.1.8"

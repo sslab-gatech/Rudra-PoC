@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "im"
 version = "15.0.0"
@@ -28,9 +28,9 @@ issue_date = 2020-11-09
 #![forbid(unsafe_code)]
 
 use im::vector;
-use im::vector::{Vector, Focus};
+use im::vector::{Focus, Vector};
 
-use std::{iter, iter::FromIterator, cell::Cell};
+use std::{cell::Cell, iter, iter::FromIterator};
 
 use crossbeam_utils::thread;
 
@@ -44,8 +44,7 @@ static SOME_INT: u64 = 123;
 fn main() {
     let cell = Cell::new(RefOrInt::Ref(&SOME_INT));
     // Make the Vector big enough so that it gets promoted to a RRB tree.
-    let mut vec: Vector<&Cell<RefOrInt>> = Vector::from_iter(
-        iter::repeat(&cell).take(1024*5));
+    let mut vec: Vector<&Cell<RefOrInt>> = Vector::from_iter(iter::repeat(&cell).take(1024 * 5));
 
     let focus = vec.focus();
     if let Focus::Full(tree_focus) = focus {
@@ -68,7 +67,7 @@ fn main() {
                     if addr as *const u64 == &SOME_INT as *const u64 {
                         continue;
                     }
-    
+
                     // Due to the data race, obtaining Ref(0xdeadbeef) is possible
                     println!("Pointer is now: {:p}", addr);
                     println!("Dereferencing addr will now segfault: {}", *addr);

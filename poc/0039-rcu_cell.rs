@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "rcu_cell"
 version = "0.1.8"
@@ -29,7 +29,7 @@ fn main() {
     // `Rc` is neither `Send` nor `Sync`
     let rcu_cell = RcuCell::new(Some(Rc::new(0_i32)));
     let arc_parent = Arc::new(rcu_cell);
-    
+
     let mut child_threads = vec![];
     for _ in 0..5 {
         let arc_child = Arc::clone(&arc_parent);

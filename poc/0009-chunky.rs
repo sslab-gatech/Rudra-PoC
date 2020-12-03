@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "chunky"
 version = "0.3.7"

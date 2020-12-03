@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "stack"
 version = "0.3.0"
@@ -25,7 +25,7 @@ rustsec_id = "RUSTSEC-2020-0042"
 !*/
 #![forbid(unsafe_code)]
 
-use stack::{ArrayVec, Vector, Array};
+use stack::{Array, ArrayVec, Vector};
 
 fn main() {
     // 1. `Vector::insert` is missing an upper bounds-check on its index
@@ -35,7 +35,7 @@ fn main() {
     // segfaults the program when it writes junk into the heap.
     //
     // https://github.com/arcnmx/stack-rs/blob/76cc1855a3ce966182bcf6fb2dc6a1d765cb5138/src/vector.rs#L51-L60
-    let mut vec : ArrayVec<[u8; 2]> = ArrayVec::with_capacity(2);
+    let mut vec: ArrayVec<[u8; 2]> = ArrayVec::with_capacity(2);
     vec.insert(5, 0x41);
 
     // 2. The `array` in `ArrayVec` uses `std::mem::uninitialized`. While this

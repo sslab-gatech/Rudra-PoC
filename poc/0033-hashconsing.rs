@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "hashconsing"
 version = "1.0.1"
@@ -24,11 +24,11 @@ issue_date = 2020-11-10
 !*/
 #![forbid(unsafe_code)]
 
-use hashconsing::{HConsign, HConsed, HashConsign};
+use hashconsing::{HConsed, HConsign, HashConsign};
 
-use std::hash::{Hash, Hasher};
-use std::cell::Cell;
 use crossbeam_utils::thread;
+use std::cell::Cell;
+use std::hash::{Hash, Hasher};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum RefOrInt<'a> {
@@ -37,7 +37,9 @@ enum RefOrInt<'a> {
 }
 
 #[derive(PartialEq, Eq)]
-struct HashableCell<T: Eq + PartialEq + Copy> { cell: Cell<T> }
+struct HashableCell<T: Eq + PartialEq + Copy> {
+    cell: Cell<T>,
+}
 // Fake hashing function just so we can get a HConsed going.
 impl<T: Eq + PartialEq + Copy> Hash for HashableCell<T> {
     fn hash<H: Hasher>(&self, state: &mut H) {
@@ -49,7 +51,7 @@ static SOME_INT: u64 = 123;
 
 fn main() {
     let cell = Cell::new(RefOrInt::Ref(&SOME_INT));
-    let hashable_cell = HashableCell { cell : cell };
+    let hashable_cell = HashableCell { cell: cell };
 
     let mut factory: HConsign<_> = HConsign::empty();
     let hcons_cell_ref = factory.mk(&hashable_cell);

@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "libsbc"
 version = "0.1.4"
@@ -26,10 +26,10 @@ issue_date = 2020-11-10
 
 use libsbc::Decoder;
 
+use static_assertions::{assert_impl_all, assert_not_impl_all};
 use std::io;
-use static_assertions::{assert_not_impl_all, assert_impl_all};
 
 fn main() {
-    assert_not_impl_all!(io::StdinLock : Send);
+    assert_not_impl_all!(io::StdinLock: Send);
     assert_not_impl_all!(Decoder<io::StdinLock> : Send);
 }

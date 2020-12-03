@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "abox"
 version = "0.4.0"
@@ -26,11 +26,14 @@ issue_date = 2020-11-10
 
 use abox::AtomicBox;
 
-use std::cell::Cell;
 use crossbeam_utils::thread;
+use std::cell::Cell;
 
 #[derive(Debug, Clone, Copy)]
-enum RefOrInt<'a> { Ref(&'a u64), Int(u64) }
+enum RefOrInt<'a> {
+    Ref(&'a u64),
+    Int(u64),
+}
 static SOME_INT: u64 = 123;
 
 fn main() {

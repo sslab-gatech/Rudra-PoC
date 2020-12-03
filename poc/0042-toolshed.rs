@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "toolshed"
 version = "0.8.1"
@@ -26,8 +26,8 @@ issue_date = 2020-11-15
 
 use toolshed::CopyCell;
 
-use std::cell::Cell;
 use crossbeam_utils::thread;
+use std::cell::Cell;
 
 fn main() {
     let cell = Cell::new(42);

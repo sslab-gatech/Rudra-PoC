@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "dync"
 version = "0.4.0"
@@ -25,7 +25,7 @@ rustsec_id = "RUSTSEC-2020-0050"
 
 mod boilerplate;
 
-use dync::{VecCopy, VTable};
+use dync::{VTable, VecCopy};
 
 #[repr(align(256))]
 #[derive(Copy, Clone)]

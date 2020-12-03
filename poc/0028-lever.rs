@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "lever"
 version = "0.1.1-alpha.11"
@@ -26,8 +26,8 @@ issue_date = 2020-11-10
 
 use lever::sync::atomics::AtomicBox;
 
-use std::cell::Cell;
 use crossbeam_utils::thread;
+use std::cell::Cell;
 
 #[derive(Debug, Clone, Copy)]
 enum RefOrInt<'a> {

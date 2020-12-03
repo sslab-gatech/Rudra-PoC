@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "scottqueue"
 version = "0.1.0"
@@ -26,12 +26,15 @@ issue_date = 2020-11-15
 
 use scottqueue::tlqueue::Queue;
 
-use std::cell::Cell;
 use crossbeam_utils::thread;
+use std::cell::Cell;
 
 // A simple tagged union used to demonstrate problems with data races in Cell.
 #[derive(Debug, Clone, Copy)]
-enum RefOrInt { Ref(&'static u64), Int(u64) }
+enum RefOrInt {
+    Ref(&'static u64),
+    Int(u64),
+}
 static SOME_INT: u64 = 123;
 
 fn main() {
@@ -40,7 +43,7 @@ fn main() {
     let queue = Queue::new();
     queue.push(&cell);
 
-    thread::scope(|s| {    
+    thread::scope(|s| {
         s.spawn(|_| {
             let smuggled_cell = queue.pop().unwrap();
             loop {
@@ -54,7 +57,9 @@ fn main() {
             if let RefOrInt::Ref(addr) = cell.get() {
                 // Hope that between the time we pattern match the object as a
                 // `Ref`, it gets written to by the other thread.
-                if addr as *const u64 == &SOME_INT as *const u64 { continue; }
+                if addr as *const u64 == &SOME_INT as *const u64 {
+                    continue;
+                }
 
                 println!("Pointer is now: {:p}", addr);
                 println!("Dereferencing addr will now segfault: {}", *addr);

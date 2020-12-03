@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "magnetic"
 version = "2.0.0"
@@ -21,8 +21,8 @@ issue_date = 2020-11-29
 #![forbid(unsafe_code)]
 
 use magnetic::buffer::dynamic::DynamicBuffer;
-use magnetic::{Producer, Consumer};
-use magnetic::mpmc::mpmc_queue; 
+use magnetic::mpmc::mpmc_queue;
+use magnetic::{Consumer, Producer};
 
 use std::rc::Rc;
 

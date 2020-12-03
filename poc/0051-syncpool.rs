@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "syncpool"
 version = "0.1.5"
@@ -45,7 +45,7 @@ fn main() {
             // Moved `pool` to child thread.
             let mut pool = pool;
             let boxed_rc = pool.get();
-    
+
             for _ in 0..N_ITER {
                 // Data race on the internal ref count of `Rc`.
                 Rc::clone(boxed_rc.as_ref());

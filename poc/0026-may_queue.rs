@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "may_queue"
 version = "0.1.7"
@@ -28,8 +28,8 @@ issue_date = 2020-11-10
 
 use may_queue::mpsc_list::Queue;
 
-use std::cell::Cell;
 use crossbeam_utils::thread;
+use std::cell::Cell;
 
 #[derive(Debug, Clone, Copy)]
 enum RefOrInt<'a> {

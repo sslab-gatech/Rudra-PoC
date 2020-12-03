@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "parc"
 version = "1.0.1"
@@ -35,7 +35,7 @@ fn main() {
                 // `weak` is moved into child thread.
                 let child = weak.upgrade();
                 match child {
-					Some(rc) => {
+                    Some(rc) => {
                         for _ in 0..2000 {
                             // `strong_count` of `rc`
                             // is updated by multiple threads without synchronization.
@@ -43,7 +43,7 @@ fn main() {
                         }
                         break;
                     }
-					None => continue,
+                    None => continue,
                 }
             }
         });
@@ -52,7 +52,7 @@ fn main() {
     for child_thr in children {
         child_thr.join().expect("Failed to join with child thread");
     }
- 
+
     let rc = parent.block_into_inner();
 
     // if (`strong_count` > 1): indicates a memory leak

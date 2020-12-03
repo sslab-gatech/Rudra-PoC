@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "ruspiro-singleton"
 version = "0.4.0"
@@ -25,12 +25,14 @@ use ruspiro_singleton::Singleton;
 use std::{cell::Cell, thread};
 
 #[derive(Debug, Clone, Copy)]
-enum RefOrInt<'a> { Ref(&'a u64), Int(u64) }
+enum RefOrInt<'a> {
+    Ref(&'a u64),
+    Int(u64),
+}
 static SOME_INT: u64 = 123;
 
-static STATIC_CELL : Singleton<Cell<RefOrInt>> = Singleton::lazy(&|| {
-    Cell::new(RefOrInt::Ref(&SOME_INT))
-});
+static STATIC_CELL: Singleton<Cell<RefOrInt>> =
+    Singleton::lazy(&|| Cell::new(RefOrInt::Ref(&SOME_INT)));
 
 fn main() {
     thread::spawn(move || {
@@ -48,8 +50,10 @@ fn main() {
             if let RefOrInt::Ref(addr) = cell.get() {
                 // Hope that between the time we pattern match the object as a
                 // `Ref`, it gets written to by the other thread.
-                if addr as *const u64 == &SOME_INT as *const u64 { continue; }
-    
+                if addr as *const u64 == &SOME_INT as *const u64 {
+                    continue;
+                }
+
                 // Due to the data race, obtaining Ref(0xdeadbeef) is possible
                 println!("Pointer is now: {:p}", addr);
                 println!("Dereferencing addr will now segfault: {}", *addr);

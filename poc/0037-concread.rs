@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "concread"
 version = "0.2.5"
@@ -21,8 +21,8 @@ issue_date = 2020-11-13
 #![forbid(unsafe_code)]
 use concread::arcache::ARCache;
 
-use std::sync::Arc;
 use std::rc::Rc;
+use std::sync::Arc;
 
 fn main() {
     let non_sync_item = Rc::new(0); // neither `Send` nor `Sync`
@@ -41,10 +41,10 @@ fn main() {
         let child_handle = std::thread::spawn(move || {
             let reader = arc_child.read(); // new Reader of ARCache
             let smuggled_rc = reader.get(&0).unwrap();
-            
+
             for _ in 0..1000 {
                 let _dummy_clone = Rc::clone(&smuggled_rc); // Increment `strong_count` of `Rc`
-                // When `_dummy_clone` is dropped, `strong_count` is decremented.
+                                                            // When `_dummy_clone` is dropped, `strong_count` is decremented.
             }
         });
         handles.push(child_handle);

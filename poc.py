@@ -139,7 +139,7 @@ def read_metadata(poc_id):
         # ```crux-test
         # <parse this portion as toml>
         # ````
-        if lines[0] == "/*!\n" and lines[1] == "```crux-poc\n":
+        if lines[0] == "/*!\n" and lines[1] == "```rudra-poc\n":
             idx = lines.index("```\n")
             toml_str = ''.join(lines[2:idx])
             return tomlkit.loads(toml_str)
@@ -153,7 +153,7 @@ def append_metadata(poc_id, dict):
 
     with open(f"poc/{poc_name}.rs") as poc_file:
         lines = poc_file.readlines()
-        if lines[0] == "/*!\n" and lines[1] == "```crux-poc\n":
+        if lines[0] == "/*!\n" and lines[1] == "```rudra-poc\n":
             idx = lines.index("```\n")
         else:
             raise Exception("PoC metadata comment not found")
@@ -171,7 +171,7 @@ def read_code(poc_id):
 
     with open(f"poc/{poc_name}.rs") as poc_file:
         lines = poc_file.readlines()
-        if lines[0] == "/*!\n" and lines[1] == "```crux-poc\n":
+        if lines[0] == "/*!\n" and lines[1] == "```rudra-poc\n":
             idx = lines.index("!*/\n")
             return "".join(lines[idx+1:]).strip()
 
@@ -262,7 +262,7 @@ def prepare_cargo_dir(poc_id, cargo_dir):
     # Cargo.toml
     with open(f"{cargo_dir}/Cargo.toml", "w") as manifest_file:
         manifest_content = f"""[package]
-name = "crux-poc-{poc_id}"
+name = "rudra-poc-{poc_id}"
 version = "0.1.0"
 authors = ["{user_name} <{user_email}>"]
 edition = "2018"
@@ -334,7 +334,7 @@ def cmd_add(args):
 
     with open(new_poc_file, "w") as f:
         f.write(f"""/*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "{args.crate}"
 version = "{args.version}"

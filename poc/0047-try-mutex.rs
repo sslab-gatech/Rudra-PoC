@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "try-mutex"
 version = "0.2.0"
@@ -26,15 +26,15 @@ issue_date = 2020-11-17
 
 use try_mutex::TryMutex;
 
-use std::rc::Rc;
 use crossbeam_utils::thread;
+use std::rc::Rc;
 
 fn main() {
     let rc = Rc::new(());
     let rc_clone = rc.clone();
 
     let try_mutex = TryMutex::new(rc_clone);
-    thread::scope(|s| {    
+    thread::scope(|s| {
         s.spawn(|_| {
             let smuggled_rc = try_mutex.try_lock().unwrap();
             println!("RC in thread: {:p}", *smuggled_rc);

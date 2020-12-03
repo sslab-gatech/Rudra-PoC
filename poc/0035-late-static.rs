@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "late-static"
 version = "0.3.0"
@@ -25,7 +25,10 @@ use std::cell::Cell;
 use std::thread;
 
 #[derive(Debug, Clone, Copy)]
-enum RefOrInt<'a> { Ref(&'a u64), Int(u64) }
+enum RefOrInt<'a> {
+    Ref(&'a u64),
+    Int(u64),
+}
 static SOME_INT: u64 = 123;
 
 static STATIC_CELL: LateStatic<Cell<RefOrInt>> = LateStatic::new();

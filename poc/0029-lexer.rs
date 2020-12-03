@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "lexer"
 version = "0.1.16"
@@ -26,8 +26,8 @@ issue_date = 2020-11-10
 
 use lexer::ReaderResult;
 
-use std::cell::Cell;
 use crossbeam_utils::thread;
+use std::cell::Cell;
 
 #[derive(Debug, Clone, Copy)]
 enum RefOrInt<'a> {
@@ -37,8 +37,8 @@ enum RefOrInt<'a> {
 static SOME_INT: u64 = 123;
 
 fn main() {
-    let reader_result : ReaderResult<_, ()> = ReaderResult::Some(
-        Cell::new(RefOrInt::Ref(&SOME_INT)));
+    let reader_result: ReaderResult<_, ()> =
+        ReaderResult::Some(Cell::new(RefOrInt::Ref(&SOME_INT)));
 
     thread::scope(|s| {
         let reader_result_ref = &reader_result;
@@ -50,7 +50,7 @@ fn main() {
                     smuggled_cell.set(RefOrInt::Ref(&SOME_INT));
                     smuggled_cell.set(RefOrInt::Int(0xdeadbeef));
                 }
-            } 
+            }
         });
 
         if let ReaderResult::Some(cell) = reader_result_ref {
@@ -61,7 +61,7 @@ fn main() {
                     if addr as *const u64 == &SOME_INT as *const u64 {
                         continue;
                     }
-    
+
                     // Due to the data race, obtaining Ref(0xdeadbeef) is possible
                     println!("Pointer is now: {:p}", addr);
                     println!("Dereferencing addr will now segfault: {}", *addr);

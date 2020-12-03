@@ -1,5 +1,5 @@
 /*!
-```crux-poc
+```rudra-poc
 [target]
 crate = "atom"
 version = "0.3.5"
@@ -27,7 +27,7 @@ rustsec_id = "RUSTSEC-2020-0044"
 use atom::Atom;
 use std::rc::Rc;
 use std::sync::mpsc;
-use std::{thread, time, mem};
+use std::{mem, thread, time};
 
 const NUM_CLONES: usize = 10000000;
 
