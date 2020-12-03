@@ -1,7 +1,8 @@
-use std::{collections::HashMap, fs, path::PathBuf};
+use std::{collections::HashMap, fs, os::unix::fs::symlink, path::Path, path::PathBuf};
 
 use crate::prelude::*;
 
+use askama::Template;
 use once_cell::sync::Lazy;
 use semver::Version;
 use serde::{Deserialize, Serialize};
@@ -103,11 +104,14 @@ impl PocMap {
         panic!("No more PoC can be added!");
     }
 
-    pub fn read_metadata(&self, poc_id: PocId) -> Result<Metadata> {
-        let poc_data = self
-            .0
+    fn get(&self, poc_id: PocId) -> Result<&PocData> {
+        self.0
             .get(&poc_id)
-            .with_context(|| format!("PoC {} not found", poc_id))?;
+            .with_context(|| format!("PoC {} not found", poc_id))
+    }
+
+    pub fn read_metadata(&self, poc_id: PocId) -> Result<Metadata> {
+        let poc_data = self.get(poc_id)?;
 
         let content = fs::read_to_string(&poc_data.path)
             .with_context(|| format!("Cannot read {}", poc_data.name))?;
@@ -124,8 +128,68 @@ impl PocMap {
             _ => anyhow::bail!("PoC header was not found in {}", poc_data.name),
         };
 
-        println!("{}", toml::to_string(&metadata).unwrap());
-
         Ok(metadata)
+    }
+
+    pub fn prepare_poc_workspace(
+        &self,
+        poc_id: PocId,
+        workspace_dir: impl AsRef<Path>,
+    ) -> Result<()> {
+        #[derive(Template)]
+        #[template(path = "poc-debug/Cargo.toml", escape = "none")]
+        struct CargoTomlTemplate {
+            poc_id: PocId,
+            metadata: Metadata,
+        }
+
+        #[derive(Template)]
+        #[template(path = "poc-debug/build.rs", escape = "none")]
+        struct BuildRsTemplate {
+            dependency_path: PathBuf,
+        }
+
+        mod filters {
+            pub fn feature_filter(features: &Vec<String>) -> askama::Result<String> {
+                Ok(features
+                    .iter()
+                    .map(|s| format!("\"{}\"", s))
+                    .collect::<Vec<_>>()
+                    .join(", "))
+            }
+        }
+
+        let workspace_dir = workspace_dir.as_ref();
+        if workspace_dir.exists() {
+            fs::remove_dir_all(workspace_dir)?;
+        }
+
+        let src_dir = workspace_dir.join("src");
+        fs::create_dir_all(src_dir)?;
+
+        // Cargo.toml
+        let template = CargoTomlTemplate {
+            poc_id,
+            metadata: self.read_metadata(poc_id)?,
+        };
+        fs::write(workspace_dir.join("Cargo.toml"), template.render()?)?;
+
+        // build.rs
+        let template = BuildRsTemplate {
+            dependency_path: PROJECT_PATH.join("dependencies"),
+        };
+        fs::write(workspace_dir.join("build.rs"), template.render()?)?;
+
+        // src/{poc_name}.rs
+        let poc_data = self.get(poc_id)?;
+        symlink(&poc_data.path, workspace_dir.join("src/main.rs"))?;
+
+        // src/boilerplate.rs
+        symlink(
+            PROJECT_PATH.join("poc/boilerplate.rs"),
+            workspace_dir.join("src/boilerplate.rs"),
+        )?;
+
+        Ok(())
     }
 }

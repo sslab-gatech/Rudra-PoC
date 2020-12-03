@@ -29,7 +29,9 @@ pub fn cmd_add(args: AddArgs) -> Result<()> {
     fs::write(&new_poc_path, args.render().unwrap())
         .with_context(|| format!("Failed to write to {}", new_poc_path.display()))?;
 
-    // TODO: Setup poc-debug directory
+    // Setup poc-debug directory
+    let poc_map = PocMap::new()?;
+    poc_map.prepare_poc_workspace(new_poc_id, PROJECT_PATH.join("poc-debug"))?;
 
     println!("Successfully added {}", new_poc_name);
 

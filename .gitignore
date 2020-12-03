@@ -1,9 +1,9 @@
 .vscode/
-poc-debug/
+/poc-debug/
 
 # local files
-advisory-db
-config.toml
+/advisory-db
+/config.toml
 
 # result files
 stat-*.csv
