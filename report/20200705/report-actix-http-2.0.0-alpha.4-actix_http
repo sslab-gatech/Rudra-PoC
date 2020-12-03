@@ -1,6 +1,0 @@
-[[reports]]
-level = 'Warning'
-analyzer = 'UnsafeDestructor'
-description = 'unsafe block detected in drop'
-location = 'src/client/pool.rs:486:28: 486:38'
-source = 'PinnedDrop'
