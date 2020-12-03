@@ -1,6 +1,6 @@
-use std::{collections::HashSet, fs};
+use std::fs;
 
-use crate::common::get_poc_id_set;
+use crate::poc::PocMap;
 use crate::prelude::*;
 
 use askama::Template;
@@ -18,20 +18,10 @@ pub struct AddArgs {
     version: semver::Version,
 }
 
-fn find_next_poc_id(id_set: &HashSet<PocId>) -> PocId {
-    for id in PocId::iter_all() {
-        if !id_set.contains(&id) {
-            return id;
-        }
-    }
+pub fn cmd_add(args: AddArgs) -> Result<()> {
+    let poc_map = PocMap::new()?;
 
-    panic!("No more PoC can be added!");
-}
-
-pub fn add_cmd(args: AddArgs) -> Result<()> {
-    // Parse existing PoC IDs
-    let id_set = get_poc_id_set()?;
-    let new_poc_id = find_next_poc_id(&id_set);
+    let new_poc_id = poc_map.next_empty_id();
     let new_poc_name = format!("{}-{}", new_poc_id, args.krate);
     let new_poc_path = PROJECT_PATH.join(format!("poc/{}.rs", &new_poc_name));
 

@@ -1,5 +1,7 @@
 use crate::prelude::*;
 
+use crate::poc::PocMap;
+
 use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
@@ -10,6 +12,10 @@ pub struct RunArgs {
     copy: bool,
 }
 
-pub fn run_cmd(args: RunArgs) -> Result<()> {
+pub fn cmd_run(args: RunArgs) -> Result<()> {
+    let poc_map = PocMap::new()?;
+
+    let metadata = poc_map.read_metadata(args.id)?;
+
     todo!()
 }

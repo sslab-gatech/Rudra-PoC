@@ -1,11 +1,9 @@
-pub mod add;
-pub mod common;
+pub mod cmd;
+pub mod poc;
 pub mod prelude;
-pub mod run;
 
-use crate::add::{add_cmd, AddArgs};
+use crate::cmd::{cmd_add, cmd_run, AddArgs, RunArgs};
 use crate::prelude::*;
-use crate::run::{run_cmd, RunArgs};
 
 use structopt::StructOpt;
 
@@ -48,8 +46,8 @@ fn main() -> Result<()> {
 
     let cmd = Command::from_args();
     let result = match cmd {
-        Command::Add(args) => add_cmd(args),
-        Command::Run(args) => run_cmd(args),
+        Command::Add(args) => cmd_add(args),
+        Command::Run(args) => cmd_run(args),
     };
 
     result
