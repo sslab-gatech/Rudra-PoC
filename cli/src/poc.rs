@@ -1,4 +1,7 @@
-use std::{collections::HashMap, fs, os::unix::fs::symlink, path::Path, path::PathBuf};
+use std::{
+    collections::HashMap, fs, os::unix::fs::symlink, path::Path, path::PathBuf, process::Command,
+    process::ExitStatus,
+};
 
 use crate::prelude::*;
 
@@ -8,14 +11,17 @@ use semver::Version;
 use serde::{Deserialize, Serialize};
 use toml::value::Datetime;
 
-#[derive(Debug, Serialize, Deserialize)]
+static METADATA_HEADER: &str = "/*!\n```rudra-poc\n";
+static METADATA_FOOTER: &str = "```\n";
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Metadata {
     pub target: TargetMetadata,
     pub test: TestMetadata,
     pub report: ReportMetadata,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TargetMetadata {
     #[serde(rename = "crate")]
     pub krate: String,
@@ -24,7 +30,7 @@ pub struct TargetMetadata {
     pub peer: Vec<PeerMetadata>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PeerMetadata {
     #[serde(rename = "crate")]
     pub krate: String,
@@ -33,7 +39,7 @@ pub struct PeerMetadata {
     pub features: Vec<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Analyzer {
     #[serde(rename = "manual")]
     Manual,
@@ -41,12 +47,15 @@ pub enum Analyzer {
     SendSyncChecker,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TestMetadata {
     pub analyzers: Vec<Analyzer>,
+    #[serde(default)]
+    pub cargo_flags: Vec<String>,
+    pub cargo_toolchain: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ReportMetadata {
     pub issue_url: Option<String>,
     pub issue_date: Option<Datetime>,
@@ -54,8 +63,72 @@ pub struct ReportMetadata {
     pub rustsec_id: Option<String>,
 }
 
-static METADATA_HEADER: &str = "/*!\n```rudra-poc\n";
-static METADATA_FOOTER: &str = "```\n";
+pub fn cargo_command(subcommand: &str, metadata: &Metadata) -> Command {
+    let mut command = Command::new("cargo");
+
+    if let Some(toolchain) = &metadata.test.cargo_toolchain {
+        command.arg(format!("+{}", toolchain));
+    }
+
+    command.arg(subcommand);
+    command.args(&metadata.test.cargo_flags);
+
+    command
+}
+
+// https://man7.org/linux/man-pages/man7/signal.7.html
+pub fn signal_name(signal: i32) -> &'static str {
+    match signal {
+        1 => "SIGHUP",
+        2 => "SIGINT",
+        3 => "SIGQUIT",
+        4 => "SIGILL",
+        5 => "SIGTRAP",
+        6 => "SIGABRT",
+        7 => "SIGBUS",
+        8 => "SIGFPE",
+        9 => "SIGKILL",
+        10 => "SIGUSR1",
+        11 => "SIGSEGV",
+        12 => "SIGUSR2",
+        13 => "SIGPIPE",
+        14 => "SIGALRM",
+        15 => "SIGTERM",
+        16 => "SIGTKFLT",
+        17 => "SIGCHLD",
+        18 => "SIGCONT",
+        19 => "SIGSTOP",
+        20 => "SIGTSTP",
+        21 => "SIGTTIN",
+        22 => "SIGTTOU",
+        23 => "SIGURG",
+        24 => "SIGXCPU",
+        25 => "SIGXFSZ",
+        26 => "SIGVTARLM",
+        27 => "SIGPROF",
+        28 => "SIGWINCH",
+        29 => "SIGIO",
+        30 => "SIGPWR",
+        31 => "SIGSYS",
+        _ => "Unknown",
+    }
+}
+
+pub fn exit_status_string(exit_status: &ExitStatus) -> String {
+    use std::os::unix::process::ExitStatusExt;
+
+    if let Some(signal) = exit_status.signal() {
+        format!(
+            "Terminated with signal {} ({})",
+            signal,
+            signal_name(signal)
+        )
+    } else if let Some(return_code) = exit_status.code() {
+        format!("Return code {}", return_code)
+    } else {
+        String::from("Unknown return status")
+    }
+}
 
 struct PocData {
     name: String,
