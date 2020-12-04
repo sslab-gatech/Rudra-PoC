@@ -9,7 +9,7 @@ use once_cell::sync::Lazy;
 use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
-pub struct SyncArgs {}
+pub struct UpdateArgs {}
 
 enum LinkStyle {
     Image { alt_text: String, image_url: String },
@@ -199,7 +199,7 @@ mod filters {
     }
 }
 
-pub fn cmd_sync(_args: SyncArgs) -> Result<()> {
+pub fn update_readme() -> Result<()> {
     let poc_map = PocMap::new()?;
 
     let mut readme_template = ReadmeTemplate::new();
@@ -246,9 +246,17 @@ pub fn cmd_sync(_args: SyncArgs) -> Result<()> {
     let readme_content = readme_template.render()?;
     fs::write(PROJECT_PATH.join("README.md"), readme_content)?;
 
+    println!("Successfully updated README.md");
+
+    Ok(())
+}
+
+pub fn cmd_update(_args: UpdateArgs) -> Result<()> {
     // TODO: detect and update RUSTSEC ID from git repository
     let git_client = GitClient::new_with_config_file()?;
     let _repository = git_client.prepare_rustsec_local()?;
+
+    update_readme()?;
 
     Ok(())
 }

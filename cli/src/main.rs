@@ -4,7 +4,7 @@ pub mod poc;
 pub mod prelude;
 pub mod util;
 
-use crate::cmd::{cmd_add, cmd_run, cmd_sync, AddArgs, RunArgs, SyncArgs};
+use crate::cmd::{cmd_add, cmd_run, cmd_update, AddArgs, RunArgs, UpdateArgs};
 use crate::prelude::*;
 
 use structopt::StructOpt;
@@ -16,8 +16,8 @@ enum Command {
     Add(AddArgs),
     #[structopt(about = "Runs specified PoC and checks the result")]
     Run(RunArgs),
-    #[structopt(about = "Synchronizes PoC status and generates README.md")]
-    Sync(SyncArgs),
+    #[structopt(about = "Updates README.md")]
+    Update(UpdateArgs),
 }
 
 fn update_env() {
@@ -52,7 +52,7 @@ fn main() -> Result<()> {
     let result = match cmd {
         Command::Add(args) => cmd_add(args),
         Command::Run(args) => cmd_run(args),
-        Command::Sync(args) => cmd_sync(args),
+        Command::Update(args) => cmd_update(args),
     };
 
     result
