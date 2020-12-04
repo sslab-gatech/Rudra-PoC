@@ -2,7 +2,7 @@
 
 This repository contains the list of memory safety and soundness bugs found during the Rudra project.
 
-See [DEV.md](./DEV.md) for the technical detail.
+Contributors: See [REPORTING.md](./REPORTING.md) for the reporting guideline.
 
 | ID | Crate | Method | Issue Report | RustSec ID |
 | -- | ----- | ------ | ------------ | ---------- |
