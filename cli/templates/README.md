@@ -4,8 +4,8 @@ This repository contains the list of memory safety and soundness bugs found duri
 
 See [DEV.md](./DEV.md) for the technical detail.
 
-| ID | Crate | Method | Issue URL | RustSec ID |
-| -- | ----- | ------ | --------- | ---------- |
+| ID | Crate | Method | Issue Report | RustSec ID |
+| -- | ----- | ------ | ------------ | ---------- |
 {% for line in lines -%}
-| {{ line.poc_id }} | {{ line.krate }} | {{ line.analyzers|unordered_list }} | {{ line.issue_url|na }} | {{ line.rustsec_id|na }} |
+| {{ line.poc_id }} | {{ line.krate }} | {{ line.analyzers|unordered_list }} | {{ line.issue_url|unwrap_or("N/A") }} | {{ line.rustsec_link|unwrap_or("Not Reported Yet") }} |
 {% endfor %}

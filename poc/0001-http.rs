@@ -23,6 +23,7 @@ code_snippets = [
     "https://github.com/hyperium/http/blob/9c05e391e00474abaa8c14a86bcb0fc5eff1120e/src/header/map.rs#L2140-L2148",
 ]
 patched = [">= 0.1.20"]
+issue_url = "hyperium/http#353 and hyperium/http#354"
 issue_date = 2019-11-16
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/218"
 rustsec_id = "RUSTSEC-2019-0034"
