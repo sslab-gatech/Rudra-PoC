@@ -44,6 +44,17 @@ pub enum Analyzer {
     SendSyncChecker,
 }
 
+impl std::fmt::Display for Analyzer {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let name = match self {
+            Analyzer::Manual => "manual",
+            Analyzer::UnsafeDestructor => "UnsafeDestructor",
+            Analyzer::SendSyncChecker => "SendSyncChecker",
+        };
+        write!(f, "{}", name)
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TestMetadata {
     pub analyzers: Vec<Analyzer>,
@@ -194,5 +205,11 @@ impl PocMap {
         )?;
 
         Ok(())
+    }
+
+    pub fn iter_ids(&self) -> impl Iterator<Item = PocId> {
+        let mut vec: Vec<_> = self.0.keys().map(|key| *key).collect();
+        vec.sort();
+        vec.into_iter()
     }
 }
