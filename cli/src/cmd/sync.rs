@@ -175,13 +175,16 @@ struct ReadmeTemplateLine {
 mod filters {
     pub fn unordered_list(vec: &Vec<String>) -> askama::Result<String> {
         let mut s = String::new();
-        s.push_str("<ul>");
-        for analyzer_name in vec.iter() {
-            s.push_str("<li>");
+
+        let mut iter = vec.iter();
+        s.push_str("- ");
+        s.push_str(iter.next().unwrap());
+
+        for analyzer_name in iter {
+            s.push_str("<br>- ");
             s.push_str(analyzer_name);
-            s.push_str("</li>");
         }
-        s.push_str("</ul>");
+
         Ok(s)
     }
 
