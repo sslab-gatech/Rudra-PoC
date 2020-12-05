@@ -84,7 +84,7 @@ fn issue_link(url: &str) -> MdLink {
 
         let label = format!("{}%2f{}%23{}", user, repo, number);
         let image_url = format!(
-            "https://img.shields.io/github/{}/detail/state/{}/{}/{}?label={}&logo=GitHub&style=flat-square",
+            "https://img.shields.io/github/{}/detail/state/{}/{}/{}?label={}&logo=GitHub&cacheSeconds=3600&style=flat-square",
             if issue_or_pr == "pull" {
                 "pulls"
             } else {
