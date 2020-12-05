@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use toml::value::Datetime;
 
 static METADATA_HEADER: &str = "/*!\n```rudra-poc\n";
-static METADATA_FOOTER: &str = "```\n";
+static METADATA_FOOTER: &str = "```\n!*/\n";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Metadata {
@@ -23,8 +23,8 @@ pub struct TargetMetadata {
     #[serde(rename = "crate")]
     pub krate: String,
     pub version: Version,
-    #[serde(default)]
-    pub peer: Vec<PeerMetadata>,
+    #[serde(default, rename = "peer")]
+    pub peer_dependencies: Vec<PeerMetadata>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -34,6 +34,22 @@ pub struct PeerMetadata {
     pub version: Version,
     #[serde(default)]
     pub features: Vec<String>,
+}
+
+impl std::fmt::Display for PeerMetadata {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} = {{ version = \"{}\"", self.krate, self.version)?;
+        if !self.features.is_empty() {
+            let mut iter = self.features.iter();
+            write!(f, ", features = [\"{}\"", iter.next().unwrap())?;
+            for feature in iter {
+                write!(f, ", \"{}\"", feature)?;
+            }
+            write!(f, "]")?;
+        }
+        write!(f, " }}")?;
+        Ok(())
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -135,16 +151,39 @@ impl PocMap {
         let header_index = content.find(METADATA_HEADER);
         let footer_index = content.find(METADATA_FOOTER);
 
-        let metadata = match (header_index, footer_index) {
+        match (header_index, footer_index) {
             (Some(0), Some(end)) => {
                 let metadata_str = &content[METADATA_HEADER.len()..end];
-                toml::from_str(metadata_str)
-                    .with_context(|| format!("Failed to parse metadata of {}", poc_data.name))?
+                let metadata = toml::from_str(metadata_str)
+                    .with_context(|| format!("Failed to parse metadata of {}", poc_data.name))?;
+
+                Ok(metadata)
             }
             _ => anyhow::bail!("PoC header was not found in {}", poc_data.name),
-        };
+        }
+    }
 
-        Ok(metadata)
+    pub fn read_metadata_and_code(&self, poc_id: PocId) -> Result<(Metadata, String)> {
+        let poc_data = self.get(poc_id)?;
+
+        let content = fs::read_to_string(&poc_data.path)
+            .with_context(|| format!("Cannot read {}", poc_data.name))?;
+
+        let header_index = content.find(METADATA_HEADER);
+        let footer_index = content.find(METADATA_FOOTER);
+
+        match (header_index, footer_index) {
+            (Some(0), Some(end)) => {
+                let metadata_str = &content[METADATA_HEADER.len()..end];
+                let metadata = toml::from_str(metadata_str)
+                    .with_context(|| format!("Failed to parse metadata of {}", poc_data.name))?;
+
+                let poc_code = content[end + METADATA_FOOTER.len()..].to_owned();
+
+                Ok((metadata, poc_code))
+            }
+            _ => anyhow::bail!("PoC header was not found in {}", poc_data.name),
+        }
     }
 
     pub fn prepare_poc_workspace(
@@ -153,26 +192,16 @@ impl PocMap {
         workspace_dir: impl AsRef<Path>,
     ) -> Result<()> {
         #[derive(Template)]
-        #[template(path = "poc-debug/Cargo.toml", escape = "none")]
+        #[template(path = "workspace/Cargo.toml", escape = "none")]
         struct CargoTomlTemplate {
             poc_id: PocId,
             metadata: Metadata,
         }
 
         #[derive(Template)]
-        #[template(path = "poc-debug/build.rs", escape = "none")]
+        #[template(path = "workspace/build.rs", escape = "none")]
         struct BuildRsTemplate {
             dependency_path: PathBuf,
-        }
-
-        mod filters {
-            pub fn feature_filter(features: &Vec<String>) -> askama::Result<String> {
-                Ok(features
-                    .iter()
-                    .map(|s| format!("\"{}\"", s))
-                    .collect::<Vec<_>>()
-                    .join(", "))
-            }
         }
 
         let workspace_dir = workspace_dir.as_ref();

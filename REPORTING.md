@@ -81,9 +81,11 @@ Then, use `run` subcommand to verify the output. This executes the PoC program w
 ### 2. Reporting PoC (WIP)
 
 ```shell
-rudra-poc generate [issue|rustsec|rustsec-direct]
-rudra-poc report [issue|rustsec|rustsec-direct]
+rudra-poc generate [issue|rustsec|rustsec-direct] <PoC ID>
+rudra-poc report [issue|rustsec] <PoC ID>
 ```
+
+(TODO)
 
 ## Tips
 

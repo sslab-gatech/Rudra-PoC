@@ -4,7 +4,9 @@ pub mod poc;
 pub mod prelude;
 pub mod util;
 
-use crate::cmd::{cmd_add, cmd_run, cmd_update, AddArgs, RunArgs, UpdateArgs};
+use crate::cmd::{
+    cmd_add, cmd_generate, cmd_run, cmd_update, AddArgs, GenerateArgs, RunArgs, UpdateArgs,
+};
 use crate::prelude::*;
 
 use structopt::StructOpt;
@@ -18,6 +20,8 @@ enum Command {
     Run(RunArgs),
     #[structopt(about = "Updates README.md")]
     Update(UpdateArgs),
+    #[structopt(about = "Generates issue template for reporting")]
+    Generate(GenerateArgs),
 }
 
 fn update_env() {
@@ -53,6 +57,7 @@ fn main() -> Result<()> {
         Command::Add(args) => cmd_add(args),
         Command::Run(args) => cmd_run(args),
         Command::Update(args) => cmd_update(args),
+        Command::Generate(args) => cmd_generate(args),
     };
 
     result

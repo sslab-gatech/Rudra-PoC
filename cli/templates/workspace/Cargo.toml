@@ -10,9 +10,6 @@ build = "build.rs"
 logging-allocator = "0.1.1"
 log = "0.4"
 {{ metadata.target.krate }} = "={{ metadata.target.version }}"
-{% for peer in metadata.target.peer -%}
-{{ peer.krate }} = { version = "={{ peer.version }}"
-{%- if !peer.features.is_empty() -%}
-, features = [{{ peer.features|feature_filter }}]
-{%- endif %} }
+{% for peer in metadata.target.peer_dependencies -%}
+{{ peer }}
 {% endfor %}

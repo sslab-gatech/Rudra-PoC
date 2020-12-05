@@ -1,18 +1,37 @@
-use std::process::{Command, ExitStatus};
+use std::{path::Path, process::ExitStatus};
 
-use crate::poc::Metadata;
+use crate::poc::TestMetadata;
 
-pub fn cargo_command(subcommand: &str, metadata: &Metadata) -> Command {
-    let mut command = Command::new("cargo");
+use duct::{cmd, Expression};
 
-    if let Some(toolchain) = &metadata.test.cargo_toolchain {
-        command.arg(format!("+{}", toolchain));
+pub fn cargo_command(
+    subcommand: &str,
+    metadata: &TestMetadata,
+    path: impl AsRef<Path>,
+) -> Expression {
+    let command_vec = cargo_command_vec(subcommand, metadata);
+    cmd(&command_vec[0], &command_vec[1..]).dir(path.as_ref())
+}
+
+pub fn cargo_command_str(subcommand: &str, metadata: &TestMetadata) -> String {
+    let command_vec = cargo_command_vec(subcommand, metadata);
+    command_vec.join(" ")
+}
+
+pub fn cargo_command_vec(subcommand: &str, metadata: &TestMetadata) -> Vec<String> {
+    let mut command_vec = vec![String::from("cargo")];
+
+    if let Some(toolchain) = &metadata.cargo_toolchain {
+        command_vec.push(format!("+{}", toolchain));
     }
 
-    command.arg(subcommand);
-    command.args(&metadata.test.cargo_flags);
+    command_vec.push(String::from(subcommand));
 
-    command
+    for flag in &metadata.cargo_flags {
+        command_vec.push(flag.clone());
+    }
+
+    command_vec
 }
 
 // https://man7.org/linux/man-pages/man7/signal.7.html
