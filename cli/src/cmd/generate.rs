@@ -34,7 +34,7 @@ struct IssueTemplateData {
     peer_dependencies: Vec<PeerMetadata>,
     os_version: String,
     rustc_version: String,
-    cargo_command: String,
+    cargo_flags: Vec<String>,
     poc_code: String,
     poc_output: String,
 }
@@ -89,26 +89,14 @@ fn issue_data_from_id(poc_id: PocId) -> Result<IssueTemplateData> {
         report: _,
     } = metadata;
 
-    let cargo_command = util::cargo_command_str("run", &test_metadata);
+    let cargo_flags = test_metadata.cargo_flags.clone();
 
     let os_version = cmd!("lsb_release", "-sd")
         .read()
         .context("Failed to read OS version from `lsb_release` command")?;
 
-    let rustc_version_command = util::cargo_command(
-        "rustc",
-        &TestMetadata {
-            analyzers: Vec::new(),
-            cargo_flags: vec![
-                String::from("--quiet"),
-                String::from("--"),
-                String::from("--version"),
-            ],
-            cargo_toolchain: None,
-        },
-        temp_dir.path(),
-    );
-    let rustc_version = rustc_version_command
+    let rustc_version = util::remove_cargo_envs(cmd!("rustc", "--version"))
+        .dir(temp_dir.path())
         .read()
         .context("Failed to read rustc version")?;
 
@@ -134,7 +122,7 @@ fn issue_data_from_id(poc_id: PocId) -> Result<IssueTemplateData> {
         peer_dependencies,
         os_version,
         rustc_version,
-        cargo_command,
+        cargo_flags,
         poc_code,
         poc_output,
     })

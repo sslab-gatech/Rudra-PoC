@@ -23,10 +23,12 @@ Output:
 * Version: {{ data.version }}
 * OS: {{ data.os_version }}
 * Rustc version: {{ data.rustc_version }}
-* Cargo command: {{ data.cargo_command }}
-{% if !data.peer_dependencies.is_empty() -%}
-* 3rd party dependencies used in reproduction:
+{%- if !data.cargo_flags.is_empty() %}
+* Cargo flags: {{ data.cargo_flags|join(" ") }}
+{%- endif -%}
+{%- if !data.peer_dependencies.is_empty() %}
+* 3rd party dependencies:
 {%- for peer in data.peer_dependencies %}
   * `{{ peer }}`
-{%- endfor %}
-{%- endif %}
+{%- endfor -%}
+{%- endif -%}

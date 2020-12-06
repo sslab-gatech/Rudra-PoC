@@ -10,20 +10,11 @@ pub fn cargo_command(
     path: impl AsRef<Path>,
 ) -> Expression {
     let command_vec = cargo_command_vec(subcommand, metadata);
-    cmd(&command_vec[0], &command_vec[1..]).dir(path.as_ref())
-}
-
-pub fn cargo_command_str(subcommand: &str, metadata: &TestMetadata) -> String {
-    let command_vec = cargo_command_vec(subcommand, metadata);
-    command_vec.join(" ")
+    remove_cargo_envs(cmd(&command_vec[0], &command_vec[1..]).dir(path.as_ref()))
 }
 
 pub fn cargo_command_vec(subcommand: &str, metadata: &TestMetadata) -> Vec<String> {
     let mut command_vec = vec![String::from("cargo")];
-
-    if let Some(toolchain) = &metadata.cargo_toolchain {
-        command_vec.push(format!("+{}", toolchain));
-    }
 
     command_vec.push(String::from(subcommand));
 
@@ -32,6 +23,32 @@ pub fn cargo_command_vec(subcommand: &str, metadata: &TestMetadata) -> Vec<Strin
     }
 
     command_vec
+}
+
+pub fn remove_cargo_envs(mut expression: Expression) -> Expression {
+    for env_name in &[
+        "CARGO",
+        "CARGO_HOME",
+        "CARGO_MANIFEST_DIR",
+        "CARGO_PKG_AUTHORS",
+        "CARGO_PKG_DESCRIPTIOn",
+        "CARGO_PKG_HOMEPAGE",
+        "CARGO_PKG_LICENSE",
+        "CARGO_PKG_LICENSE_FILE",
+        "CARGO_PKG_NAME",
+        "CARGO_PKG_REPOSITORY",
+        "CARGO_PKG_VERSION",
+        "CARGO_PKG_VERSION_MAJOR",
+        "CARGO_PKG_VERSION_MINOR",
+        "CARGO_PKG_VERSION_PATCH",
+        "CARGO_PKG_VERSION_PRE",
+        "RUSTUP_HOME",
+        "RUSTUP_TOOLCHAIN",
+        "RUSTUP_RECURSION",
+    ] {
+        expression = expression.env_remove(env_name);
+    }
+    expression
 }
 
 // https://man7.org/linux/man-pages/man7/signal.7.html

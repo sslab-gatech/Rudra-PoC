@@ -212,11 +212,19 @@ impl PocMap {
         let src_dir = workspace_dir.join("src");
         fs::create_dir_all(src_dir)?;
 
+        let metadata = self.read_metadata(poc_id)?;
+
+        // rust-toolchain
+        fs::write(
+            workspace_dir.join("rust-toolchain"),
+            match metadata.test.cargo_toolchain.as_ref() {
+                Some(s) => s.as_ref(),
+                None => "stable",
+            },
+        )?;
+
         // Cargo.toml
-        let template = CargoTomlTemplate {
-            poc_id,
-            metadata: self.read_metadata(poc_id)?,
-        };
+        let template = CargoTomlTemplate { poc_id, metadata };
         fs::write(workspace_dir.join("Cargo.toml"), template.render()?)?;
 
         // build.rs
