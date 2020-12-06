@@ -2,6 +2,7 @@ use std::{fs, path::PathBuf};
 
 use crate::prelude::*;
 
+use once_cell::sync::Lazy;
 use reqwest::{blocking::Client, header};
 use serde::Deserialize;
 
@@ -23,10 +24,53 @@ impl AuthConfig {
     }
 }
 
+#[derive(Deserialize)]
+pub struct GitHubIssue {
+    id: u64,
+    number: u64,
+    state: String,
+    title: String,
+    body: String,
+}
+
+impl GitHubIssue {
+    pub fn id(&self) -> u64 {
+        self.id
+    }
+
+    pub fn number(&self) -> u64 {
+        self.number
+    }
+
+    pub fn state(&self) -> &str {
+        &self.state
+    }
+
+    pub fn title(&self) -> &str {
+        &self.title
+    }
+
+    pub fn body(&self) -> &str {
+        &self.body
+    }
+}
+
 pub struct GitClient {
     auth_config: AuthConfig,
     github_client: Client,
 }
+
+static GITHUB_ISSUE_REGEX: Lazy<Regex> = Lazy::new(|| {
+    Regex::new(
+        r"^https://github.com/(?P<owner>[^/]+)/(?P<repo>[^/]+)/issues/(?P<issue_number>\d+)$",
+    )
+    .unwrap()
+});
+
+static GITHUB_PULL_REGEX: Lazy<Regex> = Lazy::new(|| {
+    Regex::new(r"^https://github.com/(?P<owner>[^/]+)/(?P<repo>[^/]+)/pull/(?P<pull_number>\d+)$")
+        .unwrap()
+});
 
 impl GitClient {
     pub fn new(auth_config: AuthConfig) -> Result<Self> {
@@ -56,7 +100,7 @@ impl GitClient {
         Self::new(AuthConfig::from_config_file()?)
     }
 
-    pub fn github_remote_callbacks(&self) -> git2::RemoteCallbacks<'_> {
+    fn github_remote_callbacks(&self) -> git2::RemoteCallbacks<'_> {
         let mut callbacks = git2::RemoteCallbacks::new();
         callbacks.credentials(move |_url, _username, _allowed_types| {
             git2::Cred::userpass_plaintext(&self.auth_config.github_id, &self.auth_config.token)
@@ -102,6 +146,46 @@ impl GitClient {
             repository.remote("rustsec", "https://github.com/RustSec/advisory-db.git")?;
 
             Ok(repository)
+        }
+    }
+
+    pub fn issue_status(&self, url: &str) -> Result<Option<GitHubIssue>> {
+        if let Some(captures) = GITHUB_ISSUE_REGEX.captures(url) {
+            // GitHub issues
+            let owner = captures.name("owner").unwrap().as_str();
+            let repo = captures.name("repo").unwrap().as_str();
+            let issue_number = captures.name("issue_number").unwrap().as_str();
+
+            let response: GitHubIssue = self
+                .github_client
+                .get(&format!(
+                    "https://api.github.com/repos/{}/{}/issues/{}",
+                    owner, repo, issue_number
+                ))
+                .send()?
+                .json()
+                .with_context(|| format!("Failed to read fetch data for {}", url))?;
+
+            Ok(Some(response))
+        } else if let Some(captures) = GITHUB_PULL_REGEX.captures(url) {
+            // GitHub pulls
+            let owner = captures.name("owner").unwrap().as_str();
+            let repo = captures.name("repo").unwrap().as_str();
+            let issue_number = captures.name("issue_number").unwrap().as_str();
+
+            let response: GitHubIssue = self
+                .github_client
+                .get(&format!(
+                    "https://api.github.com/repos/{}/{}/pulls/{}",
+                    owner, repo, issue_number
+                ))
+                .send()?
+                .json()
+                .with_context(|| format!("Failed to read fetch data for {}", url))?;
+
+            Ok(Some(response))
+        } else {
+            Ok(None)
         }
     }
 }

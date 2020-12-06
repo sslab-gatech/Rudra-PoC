@@ -1,7 +1,14 @@
-use crate::poc::{Metadata, PeerMetadata, PocMap, TargetMetadata, TestMetadata};
-use crate::prelude::*;
+use std::{fs, str::FromStr};
 
+use crate::prelude::*;
+use crate::{
+    git::GitClient,
+    poc::{Metadata, PeerMetadata, PocMap, TargetMetadata},
+};
+
+use anyhow::bail;
 use askama::Template;
+use chrono::prelude::*;
 use duct::cmd;
 use semver::Version;
 use structopt::StructOpt;
@@ -64,7 +71,7 @@ struct RustsecIssueTemplate {
 struct AdvisoryTemplate {
     krate: String,
     original_issue_title: String,
-    original_issue_url: String,
+    original_issue_url: Option<String>,
     original_issue_date: Datetime,
 }
 
@@ -129,20 +136,96 @@ fn issue_data_from_id(poc_id: PocId) -> Result<IssueTemplateData> {
 }
 
 pub fn cmd_generate(args: GenerateArgs) -> Result<()> {
-    match args {
-        GenerateArgs::Issue { poc_id } => {
-            let issue_data = issue_data_from_id(poc_id)?;
-            println!("{}", IssueTemplate { data: issue_data }.render()?);
-        }
-        GenerateArgs::Rustsec { poc_id } => todo!(),
-        GenerateArgs::RustsecDirect { poc_id } => {
-            let issue_data = issue_data_from_id(poc_id)?;
-            println!(
-                "{}",
-                RustsecDirectIssueTemplate { data: issue_data }.render()?
-            );
-        }
+    if !promptly::prompt(
+        "This command will overwrite `issue_report.md` and `advisory.md` in the project directory. Is it okay?",
+    )? {
+        println!("No files were generated");
+        return Ok(())
     }
 
-    todo!()
+    let (issue_report_content, advisory_content) = match args {
+        GenerateArgs::Issue { poc_id } => {
+            let issue_data = issue_data_from_id(poc_id)?;
+            (
+                IssueTemplate { data: issue_data }.render()?,
+                String::from("Issue report does not use `advisory.md`."),
+            )
+        }
+        GenerateArgs::Rustsec { poc_id } => {
+            let poc_map = PocMap::new()?;
+            let metadata = poc_map.read_metadata(poc_id)?;
+
+            match (metadata.report.issue_url, metadata.report.issue_date) {
+                (None, _) => bail!(
+                    "Issue URL not found in PoC {}. \
+                    Create an issue report first with `rust-poc generate issue <PoC ID>`, \
+                    or use `rust-poc generate rustsec-direct <PoC ID>` \
+                    if there is no issue tracker for the crate.",
+                    poc_id,
+                ),
+                (Some(_), None) => bail!(
+                    "Issue date was not found in PoC {}. \
+                    Please fill in the issue_date field and try again.",
+                    poc_id
+                ),
+                (Some(issue_url), Some(issue_date)) => {
+                    let git_client = GitClient::new_with_config_file()?;
+                    let issue_status = git_client.issue_status(&issue_url)?;
+
+                    let issue_title = issue_status
+                        .as_ref()
+                        .map(|issue| issue.title())
+                        .unwrap_or("(( Title of the original issue ))")
+                        .to_owned();
+
+                    let issue_report_content = RustsecIssueTemplate {
+                        krate: metadata.target.krate.clone(),
+                        original_issue_title: issue_title.clone(),
+                        original_issue_url: issue_url.clone(),
+                    }
+                    .render()?;
+
+                    let advisory_content = AdvisoryTemplate {
+                        krate: metadata.target.krate,
+                        original_issue_title: issue_title,
+                        original_issue_url: Some(issue_url),
+                        original_issue_date: issue_date,
+                    }
+                    .render()?;
+
+                    (issue_report_content, advisory_content)
+                }
+            }
+        }
+        GenerateArgs::RustsecDirect { poc_id } => {
+            let poc_map = PocMap::new()?;
+            let metadata = poc_map.read_metadata(poc_id)?;
+            let issue_data = issue_data_from_id(poc_id)?;
+
+            let issue_report_content = RustsecDirectIssueTemplate { data: issue_data }.render()?;
+
+            let local_now: DateTime<Local> = Local::now();
+            let today_date: toml::value::Datetime =
+                FromStr::from_str(&local_now.format("%Y-%m-%d").to_string()).unwrap();
+
+            let advisory_content = AdvisoryTemplate {
+                krate: metadata.target.krate,
+                original_issue_title: String::from("((Issue Title))"),
+                original_issue_url: None,
+                original_issue_date: today_date,
+            }
+            .render()?;
+
+            (issue_report_content, advisory_content)
+        }
+    };
+
+    fs::write(PROJECT_PATH.join("issue_report.md"), issue_report_content)
+        .context("Failed to write to `issue_report.md`")?;
+    fs::write(PROJECT_PATH.join("advisory.md"), advisory_content)
+        .context("Failed to write to `advisory.md`")?;
+
+    println!("Generated `issue_report.md` and `advisory.md`");
+
+    Ok(())
 }

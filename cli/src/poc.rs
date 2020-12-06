@@ -178,7 +178,7 @@ impl PocMap {
                 let metadata = toml::from_str(metadata_str)
                     .with_context(|| format!("Failed to parse metadata of {}", poc_data.name))?;
 
-                let poc_code = content[end + METADATA_FOOTER.len()..].to_owned();
+                let poc_code = content[end + METADATA_FOOTER.len()..].trim().to_owned();
 
                 Ok((metadata, poc_code))
             }

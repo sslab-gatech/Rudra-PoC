@@ -1,10 +1,13 @@
 ## Issue Description
 
-((Fill issue description here))
+((Fill the issue description here))
 
 ## Reproduction
 
 Below is an example program that exhibits undefined behavior using safe APIs of `{{ data.krate }}`.
+
+<details><summary>Show Detail</summary>
+<p>
 
 ((Optional description about the PoC construction))
 
@@ -31,4 +34,7 @@ Output:
 {%- for peer in data.peer_dependencies %}
   * `{{ peer }}`
 {%- endfor -%}
-{%- endif -%}
+{%- endif %}
+
+</p>
+</details>
