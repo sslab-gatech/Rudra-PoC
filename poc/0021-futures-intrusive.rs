@@ -26,6 +26,8 @@ patched = []
 informational = "unsound"
 issue_url = "https://github.com/Matthias247/futures-intrusive/issues/53"
 issue_date = 2020-10-31
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/482"
+rustsec_id = "RUSTSEC-2020-0072"
 ```
 !*/
 #![forbid(unsafe_code)]

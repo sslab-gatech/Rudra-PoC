@@ -28,6 +28,8 @@ patched = []
 informational = "unsound"
 issue_url = "https://github.com/Amanieu/parking_lot/issues/258"
 issue_date = 2020-11-08
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/483"
+rustsec_id = "RUSTSEC-2020-0070"
 ```
 !*/
 #![forbid(unsafe_code)]
