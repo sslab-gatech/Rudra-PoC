@@ -5,7 +5,8 @@ pub mod prelude;
 pub mod util;
 
 use crate::cmd::{
-    cmd_add, cmd_generate, cmd_run, cmd_update, AddArgs, GenerateArgs, RunArgs, UpdateArgs,
+    cmd_add, cmd_generate, cmd_report, cmd_run, cmd_update, AddArgs, GenerateArgs, ReportArgs,
+    RunArgs, UpdateArgs,
 };
 use crate::prelude::*;
 
@@ -22,6 +23,8 @@ enum Command {
     Update(UpdateArgs),
     #[structopt(about = "Generates issue template for reporting")]
     Generate(GenerateArgs),
+    #[structopt(about = "Reports issues to the crate repository or RustSec advisory DB")]
+    Report(ReportArgs),
 }
 
 fn update_env() {
@@ -58,6 +61,7 @@ fn main() -> Result<()> {
         Command::Run(args) => cmd_run(args),
         Command::Update(args) => cmd_update(args),
         Command::Generate(args) => cmd_generate(args),
+        Command::Report(args) => cmd_report(args),
     };
 
     result

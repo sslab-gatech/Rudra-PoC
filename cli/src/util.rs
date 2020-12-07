@@ -10,7 +10,7 @@ pub fn cargo_command(
     path: impl AsRef<Path>,
 ) -> Expression {
     let command_vec = cargo_command_vec(subcommand, metadata);
-    remove_cargo_envs(cmd(&command_vec[0], &command_vec[1..]).dir(path.as_ref()))
+    cmd_remove_cargo_envs(cmd(&command_vec[0], &command_vec[1..]).dir(path.as_ref()))
 }
 
 pub fn cargo_command_vec(subcommand: &str, metadata: &TestMetadata) -> Vec<String> {
@@ -25,7 +25,7 @@ pub fn cargo_command_vec(subcommand: &str, metadata: &TestMetadata) -> Vec<Strin
     command_vec
 }
 
-pub fn remove_cargo_envs(mut expression: Expression) -> Expression {
+pub fn cmd_remove_cargo_envs(mut expression: Expression) -> Expression {
     for env_name in &[
         "CARGO",
         "CARGO_HOME",
@@ -49,6 +49,10 @@ pub fn remove_cargo_envs(mut expression: Expression) -> Expression {
         expression = expression.env_remove(env_name);
     }
     expression
+}
+
+pub fn cmd_run_silent(expression: Expression, path: impl AsRef<Path>) -> Expression {
+    expression.stdout_null().stderr_null().dir(path.as_ref())
 }
 
 // https://man7.org/linux/man-pages/man7/signal.7.html

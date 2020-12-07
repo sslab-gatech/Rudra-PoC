@@ -11,6 +11,8 @@ url = "{{ original_issue_url.as_ref().unwrap() }}"
 # "code-execution", "crypto-failure", "denial-of-service", "file-disclosure"
 # "format-injection", "memory-corruption", "memory-exposure", "privilege-escalation"
 categories = ["memory-corruption"]
+# Optional: See "Tips" section in `REPORTING.md` for a guideline
+informational = "unsound"
 
 [versions]
 # Versions which include fixes for this vulnerability

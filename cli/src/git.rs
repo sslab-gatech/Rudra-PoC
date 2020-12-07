@@ -1,7 +1,12 @@
-use std::{fs, path::PathBuf};
+use std::{
+    collections::HashMap,
+    fs,
+    path::{Path, PathBuf},
+};
 
 use crate::prelude::*;
 
+use duct::cmd;
 use once_cell::sync::Lazy;
 use reqwest::{blocking::Client, header};
 use serde::Deserialize;
@@ -187,5 +192,116 @@ impl GitClient {
         } else {
             Ok(None)
         }
+    }
+
+    pub fn push_branch(&self, branch_name: &str) -> Result<()> {
+        println!("Pushing branch {}...", branch_name);
+
+        let repo_path = GitClient::rustsec_local_path();
+        let repository = git2::Repository::open(&repo_path)
+            .with_context(|| format!("Failed to open {} as git repository", repo_path.display()))?;
+
+        let mut remote = repository
+            .find_remote("origin")
+            .context("Can't find remote origin")?;
+
+        let refspecs: &[String] = &[format!(
+            "refs/heads/{}:refs/heads/{}",
+            branch_name, branch_name
+        )];
+        remote
+            .push(
+                refspecs,
+                Some(git2::PushOptions::new().remote_callbacks(self.github_remote_callbacks())),
+            )
+            .with_context(|| format!("Failed to push {} branch", branch_name))?;
+
+        Ok(())
+    }
+
+    pub fn commit_and_push(
+        &self,
+        branch_name: &str,
+        path: impl AsRef<Path>,
+        content: &str,
+    ) -> Result<()> {
+        // Prepare the repository, but unlock it immediately
+        // We will use git commandline when we don't need a credential
+        drop(self.prepare_rustsec_local()?);
+
+        let repo_path = GitClient::rustsec_local_path();
+
+        // Update master
+        println!("Updating master branch...");
+        util::cmd_run_silent(cmd!("git", "checkout", "master"), &repo_path).run()?;
+        util::cmd_run_silent(cmd!("git", "fetch", "rustsec"), &repo_path).run()?;
+        util::cmd_run_silent(
+            cmd!("git", "merge", "rustsec/master", "--ff-only"),
+            &repo_path,
+        )
+        .run()?;
+
+        self.push_branch("master")?;
+
+        // Create and push the PoC branch
+        println!("Creating branch {}...", branch_name);
+        util::cmd_run_silent(cmd!("git", "checkout", "-b", &branch_name), &repo_path)
+            .run()
+            .context("Failed to checkout, maybe the branch already exists?")?;
+
+        let advisory_path = repo_path.join(path.as_ref());
+        let parent_dir = advisory_path.parent().unwrap();
+        fs::create_dir_all(parent_dir)
+            .with_context(|| format!("Failed to create dir {}", parent_dir.display()))?;
+        fs::write(&advisory_path, content)
+            .with_context(|| format!("Failed to write to {}", advisory_path.display()))?;
+
+        util::cmd_run_silent(cmd!("git", "add", "-A"), &repo_path).run()?;
+        util::cmd_run_silent(
+            cmd!(
+                "git",
+                "commit",
+                "-m",
+                format!("Report {} to RustSec", branch_name)
+            ),
+            &repo_path,
+        )
+        .run()?;
+
+        self.push_branch(branch_name)?;
+
+        util::cmd_run_silent(
+            cmd!("git", "branch", "-u", &format!("origin/{}", branch_name)),
+            &repo_path,
+        )
+        .run()
+        .with_context(|| format!("Failed to set upstream for branch {}", branch_name))?;
+
+        Ok(())
+    }
+
+    pub fn create_rustsec_pr(&self, branch_name: &str, title: &str, body: &str) -> Result<String> {
+        let head_str = format!("{}:{}", self.auth_config.github_id, branch_name);
+        let mut req_body = HashMap::new();
+        req_body.insert("title", title);
+        req_body.insert("head", &head_str);
+        req_body.insert("base", "master");
+        req_body.insert("body", body);
+
+        #[derive(Deserialize)]
+        struct PrBodyResponse {
+            // Ignore all unnecessary fields
+            html_url: String,
+        }
+
+        let res_body: PrBodyResponse = self
+            .github_client
+            .post("https://api.github.com/repos/RustSec/advisory-db/pulls")
+            .json(&req_body)
+            .send()?
+            .json()
+            .context("Failed to parse API response as json")?;
+
+        Ok(res_body.html_url)
     }
 }

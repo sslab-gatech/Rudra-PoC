@@ -8,14 +8,9 @@ version = "2.0.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "Send bound needed on T (for Send/Sync impl of Producer/Consumer types)"
-description = """
-issue description"""
-code_snippets = ["http://johnshaw.github.io/magnetic/doc/src/magnetic/src/mpmc.rs.html#45-46"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/johnshaw/magnetic/issues/9"
 issue_date = 2020-11-29
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/519"
 ```
 !*/
 #![forbid(unsafe_code)]

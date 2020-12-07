@@ -1,6 +1,5 @@
 use std::fs;
 
-use crate::git::GitClient;
 use crate::poc::PocMap;
 use crate::prelude::*;
 
@@ -252,11 +251,6 @@ pub fn update_readme() -> Result<()> {
 }
 
 pub fn cmd_update(_args: UpdateArgs) -> Result<()> {
-    // TODO: detect and update RUSTSEC ID from git repository
-    let git_client = GitClient::new_with_config_file()?;
-    let _repository = git_client.prepare_rustsec_local()?;
-
     update_readme()?;
-
     Ok(())
 }

@@ -12,14 +12,9 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "TryMutex<T> lacks a Send bound on its contained type"
-description = """
-issue description"""
-code_snippets = ["https://github.com/mpdn/try-mutex/blob/9775aef4516135958fa428ce08b346325c0493f3/src/lib.rs#L127"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/mpdn/try-mutex/issues/2"
 issue_date = 2020-11-17
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/517"
 ```
 !*/
 #![forbid(unsafe_code)]

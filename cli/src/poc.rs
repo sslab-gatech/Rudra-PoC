@@ -2,6 +2,7 @@ use std::{collections::HashMap, fs, os::unix::fs::symlink, path::Path, path::Pat
 
 use crate::prelude::*;
 
+use anyhow::bail;
 use askama::Template;
 use once_cell::sync::Lazy;
 use semver::Version;
@@ -23,7 +24,7 @@ pub struct TargetMetadata {
     #[serde(rename = "crate")]
     pub krate: String,
     pub version: Version,
-    #[serde(default, rename = "peer")]
+    #[serde(default, rename = "peer", skip_serializing_if = "Vec::is_empty")]
     pub peer_dependencies: Vec<PeerMetadata>,
 }
 
@@ -32,7 +33,7 @@ pub struct PeerMetadata {
     #[serde(rename = "crate")]
     pub krate: String,
     pub version: Version,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub features: Vec<String>,
 }
 
@@ -74,7 +75,7 @@ impl std::fmt::Display for Analyzer {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TestMetadata {
     pub analyzers: Vec<Analyzer>,
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub cargo_flags: Vec<String>,
     pub cargo_toolchain: Option<String>,
 }
@@ -159,7 +160,7 @@ impl PocMap {
 
                 Ok(metadata)
             }
-            _ => anyhow::bail!("PoC header was not found in {}", poc_data.name),
+            _ => bail!("PoC header was not found in {}", poc_data.name),
         }
     }
 
@@ -182,7 +183,37 @@ impl PocMap {
 
                 Ok((metadata, poc_code))
             }
-            _ => anyhow::bail!("PoC header was not found in {}", poc_data.name),
+            _ => bail!("PoC header was not found in {}", poc_data.name),
+        }
+    }
+
+    pub fn write_metadata(self, poc_id: PocId, metadata: Metadata) -> Result<()> {
+        let poc_data = self.get(poc_id)?;
+
+        let content = fs::read_to_string(&poc_data.path)
+            .with_context(|| format!("Cannot read {}", poc_data.name))?;
+
+        let header_index = content.find(METADATA_HEADER);
+        let footer_index = content.find(METADATA_FOOTER);
+
+        match (header_index, footer_index) {
+            (Some(0), Some(end)) => {
+                let metadata_header = format!(
+                    "{}{}{}",
+                    METADATA_HEADER,
+                    toml::to_string(&metadata)?,
+                    METADATA_FOOTER
+                );
+                let poc_code = content[end + METADATA_FOOTER.len()..].trim();
+
+                fs::write(&poc_data.path, format!("{}{}\n", metadata_header, poc_code))
+                    .with_context(|| {
+                        format!("Failed to write to `{}`", &poc_data.path.display())
+                    })?;
+
+                Ok(())
+            }
+            _ => bail!("PoC header was not found in {}", poc_data.name),
         }
     }
 

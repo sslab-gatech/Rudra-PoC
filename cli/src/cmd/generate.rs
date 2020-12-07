@@ -102,7 +102,7 @@ fn issue_data_from_id(poc_id: PocId) -> Result<IssueTemplateData> {
         .read()
         .context("Failed to read OS version from `lsb_release` command")?;
 
-    let rustc_version = util::remove_cargo_envs(cmd!("rustc", "--version"))
+    let rustc_version = util::cmd_remove_cargo_envs(cmd!("rustc", "--version"))
         .dir(temp_dir.path())
         .read()
         .context("Failed to read rustc version")?;
@@ -143,7 +143,7 @@ pub fn cmd_generate(args: GenerateArgs) -> Result<()> {
         return Ok(())
     }
 
-    let (issue_report_content, advisory_content) = match args {
+    let (issue_report_content, mut advisory_content) = match args {
         GenerateArgs::Issue { poc_id } => {
             let issue_data = issue_data_from_id(poc_id)?;
             (
@@ -219,6 +219,7 @@ pub fn cmd_generate(args: GenerateArgs) -> Result<()> {
             (issue_report_content, advisory_content)
         }
     };
+    advisory_content.push('\n');
 
     fs::write(PROJECT_PATH.join("issue_report.md"), issue_report_content)
         .context("Failed to write to `issue_report.md`")?;
