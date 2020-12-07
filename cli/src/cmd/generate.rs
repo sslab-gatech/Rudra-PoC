@@ -75,10 +75,8 @@ struct AdvisoryTemplate {
     original_issue_date: Datetime,
 }
 
-fn issue_data_from_id(poc_id: PocId) -> Result<IssueTemplateData> {
+fn issue_data_from_id(poc_map: &PocMap, poc_id: PocId) -> Result<IssueTemplateData> {
     println!("Generating the issue template from PoC...");
-
-    let poc_map = PocMap::new()?;
 
     let temp_dir = TempDir::new("rudra-poc").context("Failed to create a temp directory")?;
     poc_map.prepare_poc_workspace(poc_id, temp_dir.path())?;
@@ -143,9 +141,21 @@ pub fn cmd_generate(args: GenerateArgs) -> Result<()> {
         return Ok(())
     }
 
+    static WARNING_ISSUE_EXISTS: &str =
+        "Warning: This PoC was already reported to the crate repository";
+    static WARNING_RUSTSEC_EXISTS: &str =
+        "Warning: This PoC was already reported to RustSec advisory DB";
+
     let (issue_report_content, mut advisory_content) = match args {
         GenerateArgs::Issue { poc_id } => {
-            let issue_data = issue_data_from_id(poc_id)?;
+            let poc_map = PocMap::new()?;
+            let metadata = poc_map.read_metadata(poc_id)?;
+
+            if metadata.report.issue_url.is_some() {
+                println!("{}", WARNING_ISSUE_EXISTS);
+            }
+
+            let issue_data = issue_data_from_id(&poc_map, poc_id)?;
             (
                 IssueTemplate { data: issue_data }.render()?,
                 String::from("Issue report does not use `advisory.md`."),
@@ -169,6 +179,10 @@ pub fn cmd_generate(args: GenerateArgs) -> Result<()> {
                     poc_id
                 ),
                 (Some(issue_url), Some(issue_date)) => {
+                    if metadata.report.rustsec_url.is_some() {
+                        println!("{}", WARNING_RUSTSEC_EXISTS);
+                    }
+
                     let git_client = GitClient::new_with_config_file()?;
                     let issue_status = git_client.issue_status(&issue_url)?;
 
@@ -200,8 +214,14 @@ pub fn cmd_generate(args: GenerateArgs) -> Result<()> {
         GenerateArgs::RustsecDirect { poc_id } => {
             let poc_map = PocMap::new()?;
             let metadata = poc_map.read_metadata(poc_id)?;
-            let issue_data = issue_data_from_id(poc_id)?;
 
+            if metadata.report.issue_url.is_some() {
+                println!("{}", WARNING_ISSUE_EXISTS);
+            } else if metadata.report.rustsec_url.is_some() {
+                println!("{}", WARNING_RUSTSEC_EXISTS);
+            }
+
+            let issue_data = issue_data_from_id(&poc_map, poc_id)?;
             let issue_report_content = RustsecDirectIssueTemplate { data: issue_data }.render()?;
 
             let local_now: DateTime<Local> = Local::now();
