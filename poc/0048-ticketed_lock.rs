@@ -12,12 +12,6 @@ version = "0.1.14"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "ReadTicket<T> and WriteTicket<T> allow sending non-Send types across thread boundaries"
-description = """
-issue description"""
-code_snippets = ["https://github.com/kvark/ticketed_lock/blob/6d85af9eb5d8bb7cf142de8e832ce3af7e47e306/src/lib.rs#L53", "https://github.com/kvark/ticketed_lock/blob/6d85af9eb5d8bb7cf142de8e832ce3af7e47e306/src/lib.rs#L115"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/kvark/ticketed_lock/issues/7"
 issue_date = 2020-11-17
 ```

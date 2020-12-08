@@ -12,12 +12,6 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "HConsed implements Send and Sync unconditionally allowing data races"
-description = """
-issue description"""
-code_snippets = ["https://github.com/AdrienChampion/hashconsing/blob/1b91c147fa232a816daa2ae58557d197a662ab01/src/lib.rs#L354-L355"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/AdrienChampion/hashconsing/issues/1"
 issue_date = 2020-11-10
 ```

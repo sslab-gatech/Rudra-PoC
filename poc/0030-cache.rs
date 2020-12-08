@@ -12,21 +12,6 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "Cache's Send trait and Sync trait should have bounds"
-description = """
-Hi there, we (Rust group @sslab-gatech) are scanning crates on crates.io for potential soundness bugs.
-We noticed that the `Cache` object implements the Send and Sync traits for all types:
-
-https://github.com/krl/cache/blob/65e4eb4e6e40a4b4b8a9fdbd7fe4c45dd58f1637/src/lib.rs#L85-L86
-
-However, this should probably be bounded by K: Send and K: Sync.
-Otherwise, it's possible to smuggle non-Send types across thread boundaries or share non-Sync types across thread boundaries.
-
-Here's an example of a data race in safe Rust code through a Cache.
-"""
-code_snippets = ["https://github.com/krl/cache/blob/65e4eb4e6e40a4b4b8a9fdbd7fe4c45dd58f1637/src/lib.rs#L85-L86"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/krl/cache/issues/1"
 issue_date = 2020-11-24
 ```

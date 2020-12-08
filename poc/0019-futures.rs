@@ -12,13 +12,6 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "MappedMutexGuard Send/Sync bound is unsound"
-description = """
-Send/Sync implementation for MappedMutexGuard only considers variance on T, while MappedMutexGuard dereferences to U.
-This can lead to data race in safe Rust code when a closure used in `MutexGuard::map()` returns U that is unrelated to T."""
-code_snippets = ["https://github.com/rust-lang/futures-rs/blob/7340d3d5d6fe8082a73069582b048ebaef6626b1/futures-util/src/lock/mutex.rs#L404-L405"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/rust-lang/futures-rs/issues/2239"
 issue_date = 2020-10-23
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/455"

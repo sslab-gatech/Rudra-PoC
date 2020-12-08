@@ -12,14 +12,6 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "may's Queue object lacks a Send bound on its Send/Sync traits allowing for data races"
-description = """
-The Queue object in Send implements the Send trait unconditionally, potentially
-allowing for data races across threads.
-"""
-code_snippets = ["https://github.com/Xudong-Huang/may/blob/0abc40e67034b297614fd01517b46c224b8f79eb/may_queue/src/mpsc_list_v1.rs#L150-L151"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/Xudong-Huang/may/issues/88"
 issue_date = 2020-11-10
 ```

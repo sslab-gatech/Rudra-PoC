@@ -12,12 +12,6 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "PinSlab<T> and Unordered<T, S> need proper bounds on their Send/Sync traits"
-description = """
-issue description"""
-code_snippets = ["https://github.com/udoprog/unicycle/blob/f5a283826ef91e5a07f4b43fea9ec8ae281f84cb/src/pin_slab.rs#L43-L44", "https://github.com/udoprog/unicycle/blob/f5a283826ef91e5a07f4b43fea9ec8ae281f84cb/src/lib.rs#L380-L381"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/udoprog/unicycle/issues/8"
 issue_date = 2020-11-15
 ```

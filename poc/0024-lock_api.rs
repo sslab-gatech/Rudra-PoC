@@ -17,15 +17,6 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "lock_api's Mapped Guard objects allow for data races with non-Sync objects"
-description = """
-MappedMutexGuard, MappedRwLockReadGuard and MappedRwLockWriteGuard lack Send
-bounds on their T types. This allows for data races when sending these guard
-objects across threads.
-"""
-code_snippets = ["https://github.com/Amanieu/parking_lot/blob/5ac2971da40006f678fa78117201b7521e9df1fd/lock_api/src/mutex.rs#L604-L607", "https://github.com/Amanieu/parking_lot/blob/master/lock_api/src/rwlock.rs#L1517"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/Amanieu/parking_lot/issues/258"
 issue_date = 2020-11-08
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/483"

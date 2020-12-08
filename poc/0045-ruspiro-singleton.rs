@@ -8,12 +8,6 @@ version = "0.4.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "Singleton<T> implements Send/Sync without any bounds"
-description = """
-issue description"""
-code_snippets = ["https://github.com/RusPiRo/ruspiro-singleton/blob/203f1ae3501d3b531233365b0275124a364f546e/src/lib.rs#L82-L85"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/RusPiRo/ruspiro-singleton/issues/10"
 issue_date = 2020-11-16
 ```

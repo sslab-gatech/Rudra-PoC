@@ -8,12 +8,6 @@ version = "0.2.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "issue title"
-description = """
-issue description"""
-code_snippets = ["https://github.com/krl/appendix/blob/b279bc230bfd5df4695c7a095f687d5c3a184e97/src/lib.rs#L61-L62"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/krl/appendix/issues/6"
 issue_date = 2020-11-15
 ```

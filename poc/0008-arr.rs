@@ -14,15 +14,6 @@ cargo_flags = ["--release"]
 cargo_toolchain = "nightly"
 
 [report]
-title = "Multiple security issues including data race, buffer overflow, and uninitialized memory drop"
-description = """
-`arr` crate contains multiple security issues. Specifically,
-
-1. It incorrectly implements Sync/Send bounds, which allows to smuggle non-Sync/Send types across the thread boundary.
-2. `Index` and `IndexMut` implementation does not check the array bound.
-3. `Array::new_from_template()` drops uninitialized memory."""
-code_snippets = []
-patched = []
 issue_url = "https://github.com/sjep/array/issues/1"
 issue_date = 2020-08-25
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/364"

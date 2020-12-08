@@ -12,12 +12,6 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "SyncChannel<T> lacks a Send bound on its Send and Sync traits"
-description = """
-issue description"""
-code_snippets = ["https://github.com/kitsuneninetails/signal-rust/blob/2d671bde04b87c741134e5e1a5cd491ae54768e6/src/channel.rs#L58-L59"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/kitsuneninetails/signal-rust/issues/2"
 issue_date = 2020-11-15
 ```

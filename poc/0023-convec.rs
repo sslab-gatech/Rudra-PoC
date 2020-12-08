@@ -12,19 +12,6 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "convec::ConVec lacks a bound on its Send trait and Sync trait"
-description = """
-Hi there, we (Rust group @sslab-gatech) are scanning crates on crates.io for potential soundness bugs.
-We noticed that the `convec::ConVec` object implements the Send and Sync traits for all types:
-
-https://github.com/krl/convec/blob/1591dcdda05fdbc5483333411c0c7ac7e16f61c7/src/convec.rs#L16-L17
-
-This allows objects like `Cell` that doesn't implement `Sync` to be shared across threads leading to undefined behavior.
-The code below crashes due to the data race.
-"""
-code_snippets = ["https://github.com/krl/convec/blob/1591dcdda05fdbc5483333411c0c7ac7e16f61c7/src/convec.rs#L16-L17"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/krl/convec/issues/2"
 issue_date = 2020-11-24
 ```

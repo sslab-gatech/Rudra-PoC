@@ -12,12 +12,6 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "model's Shared lacks bounds on its Send/Sync traits allowing data races"
-description = """
-issue description"""
-code_snippets = ["https://github.com/spacejam/model/blob/b50d9eef17a80297a45772af4aa8a7413aa66c2c/src/lib.rs#L110-L112"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/spacejam/model/issues/3"
 issue_date = 2020-11-10
 ```

@@ -12,12 +12,6 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "lexer's ReaderResult lacks proper bounds on it Sync constraints allowing data races"
-description = """
-issue description"""
-code_snippets = ["https://gitlab.com/nathanfaucett/rs-lexer/-/blob/6b350b73c27e415f2adacaaeae4b83cd8738dc62/src/reader_result.rs#L15-20"]
-patched = []
-informational = "unsound"
 issue_url = "https://gitlab.com/nathanfaucett/rs-lexer/-/issues/2"
 issue_date = 2020-11-10
 ```

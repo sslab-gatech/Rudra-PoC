@@ -9,12 +9,6 @@ analyzers = ["manual", "UnsafeDestructor"]
 cargo_toolchain = "nightly"
 
 [report]
-title = "Chunk API does not respect align requirement"
-description = """
-Chunk API does not respect the align requirement of types. Unaligned reference can be created with the API, which is an undefined behavior."""
-code_snippets = ["https://github.com/aeplay/chunky/blob/ef8533aec961eb5f415414dcd81ec4b395bae177/src/value.rs#L29-L41"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/aeplay/chunky/issues/2"
 issue_date = 2020-08-25
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/366"

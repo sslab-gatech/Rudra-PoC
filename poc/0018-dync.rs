@@ -8,13 +8,6 @@ version = "0.4.0"
 analyzers = ["manual"]
 
 [report]
-title = "VecCopy allows misaligned access to elements"
-description = """
-`VecCopy::data` is created as a Vec of u8 but can be used to store and retrieve
-elements of different types leading to misaligned access."""
-code_snippets = []
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/elrnv/dync/issues/4"
 issue_date = 2020-09-27
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/411"

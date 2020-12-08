@@ -8,21 +8,6 @@ version = "0.1.19"
 analyzers = ["manual"]
 
 [report]
-title = "HeaderMap::Drain API is unsound"
-description = """
-Affected versions of this crate incorrectly used raw pointer,
-which introduced unsoundness in its public safe API.
-
-[Failing to drop the Drain struct causes double-free](https://github.com/hyperium/http/issues/354),
-and [it is possible to violate Rust's alias rule and cause data race with Drain's Iterator implementation](https://github.com/hyperium/http/issues/355).
-
-The flaw was corrected in 0.1.20 release of `http` crate."""
-code_snippets = [
-    "https://github.com/hyperium/http/blob/9c05e391e00474abaa8c14a86bcb0fc5eff1120e/src/header/map.rs#L2099-L2102",
-    "https://github.com/hyperium/http/blob/9c05e391e00474abaa8c14a86bcb0fc5eff1120e/src/header/map.rs#L2115-L2122",
-    "https://github.com/hyperium/http/blob/9c05e391e00474abaa8c14a86bcb0fc5eff1120e/src/header/map.rs#L2140-L2148",
-]
-patched = [">= 0.1.20"]
 issue_url = "hyperium/http#353 and hyperium/http#354"
 issue_date = 2019-11-16
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/218"

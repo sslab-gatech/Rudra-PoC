@@ -13,12 +13,6 @@ features = ["thread-pool"]
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "Slock<T> allows sending non-Send types across thread boundaries"
-description = """
-issue description"""
-code_snippets = ["https://github.com/BrokenLamp/slock-rs/blob/301f598fbbea005bd07b12f2e31abf2e47ddd3c9/src/lib.rs#L268-L269"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/BrokenLamp/slock-rs/issues/2"
 issue_date = 2020-11-17
 ```

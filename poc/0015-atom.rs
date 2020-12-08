@@ -8,14 +8,6 @@ version = "0.3.5"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "Unsafe Send implementation in Atom allows data races"
-description = """
-The `atom` crate contains a security issue revolving around its implementation
-of the Send trait. It incorrectly allows any arbitrary type to be sent across
-threads potentially leading to use-after-free issues through memory races.
-"""
-code_snippets = []
-patched = []
 issue_url = "https://github.com/slide-rs/atom/issues/13"
 issue_date = 2020-09-21
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/390"

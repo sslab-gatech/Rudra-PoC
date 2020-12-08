@@ -8,13 +8,6 @@ version = "0.1.24"
 analyzers = ["UnsafeDestructor"]
 
 [report]
-title = "StrcCtx deallocates a memory region that it doesn't own"
-description = """
-`StrcCtx` deallocate a memory region that it doesn't own when `StrcCtx` is created without using `StrcCtx::new`.
-This can introduce memory safety issues such as double-free and use-after-free to client programs."""
-code_snippets = ["https://github.com/pigeonhands/rust-arch/blob/8458c22a161cb8996659fd124de49972f8164712/alpm-rs/src/macros.rs#L18-L38"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/pigeonhands/rust-arch/issues/2"
 issue_date = 2020-08-20
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/360"

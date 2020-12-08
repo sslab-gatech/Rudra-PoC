@@ -8,14 +8,6 @@ version = "0.1.8"
 analyzers = ["manual"]
 
 [report]
-title = "Type confusion if __private_get_type_id__ is overriden"
-description = """
-Safe Rust code can implement malfunctioning `__private_get_type_id__` and cause
-type confusion when downcasting, which is an undefined behavior.
-Users who derive `Fail` trait are not affected."""
-code_snippets = ["https://github.com/rust-lang-nursery/failure/blob/master/src/lib.rs#L196-L199"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/rust-lang-nursery/failure/issues/336"
 issue_date = 2019-11-13
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/318"

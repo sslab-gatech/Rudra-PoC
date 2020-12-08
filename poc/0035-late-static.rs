@@ -8,17 +8,10 @@ version = "0.3.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "LateStatic lacks a Sync bound on its contained type allowing for data races"
-description = """
-"""
-code_snippets = ["https://github.com/Richard-W/late-static/blob/3b72ba58df151a821405551358edbe0b015545f3/src/lib.rs#L29-L30"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/Richard-W/late-static/issues/1"
 issue_date = 2020-11-10
 ```
 !*/
-
 use late_static::LateStatic;
 
 use std::cell::Cell;

@@ -12,12 +12,6 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "Queue<T> is missing a Send bound on its Send/Sync traits"
-description = """
-issue description"""
-code_snippets = ["https://github.com/rossdylan/rust-scottqueue/blob/875491d79cc6d2e222afaeed6cd51902b523c3c9/src/tlqueue.rs#L27-L28"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/rossdylan/rust-scottqueue/issues/1"
 issue_date = 2020-11-15
 ```

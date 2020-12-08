@@ -8,12 +8,6 @@ version = "0.1.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "'impl Sync for Bunch<T>' need a Sync bound on T"
-description = """
-issue description"""
-code_snippets = ["https://docs.rs/bunch/0.1.0/src/bunch/lib.rs.html#36"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/krl/bunch/issues/1"
 issue_date = 2020-11-12
 ```

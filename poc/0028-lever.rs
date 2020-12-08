@@ -12,12 +12,6 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "lever's AtomicBox lacks bounds on its Send/Sync traits allowing data races"
-description = """
-"""
-code_snippets = ["https://github.com/vertexclique/lever/blob/15a96c7f99e91f3d50c97ebba1147b3905f9f3dc/src/sync/atomics.rs#L104-L105"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/vertexclique/lever/issues/15"
 issue_date = 2020-11-10
 ```

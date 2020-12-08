@@ -8,12 +8,6 @@ version = "1.0.1"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "issue title"
-description = """
-issue description"""
-code_snippets = []
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/hyyking/rustracts/pull/6"
 issue_date = 2020-11-14
 ```

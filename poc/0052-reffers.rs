@@ -8,12 +8,6 @@ version = "0.6.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "Unsound: can make `ARefss` contain a !Send, !Sync object"
-description = """
-issue description"""
-code_snippets = ["https://docs.rs/reffers/0.6.0/src/reffers/aref.rs.html#206-208"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/diwic/reffers-rs/issues/7"
 issue_date = 2020-12-01
 ```

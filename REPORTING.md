@@ -1,6 +1,6 @@
 # Reporting Guide
 
-https://github.com/joeyespo/grip
+Please do not create a merge commit. Instead, use `git pull --rebase origin master`.
 
 ## Install the Reporting Utility
 
@@ -10,7 +10,8 @@ https://github.com/joeyespo/grip
 - Copy `config.toml.template` to `config.toml` and fill it with your own data.
 - Run `sudo ./setup.sh` to install dependencies. (TODO: check if it is still necessary)
 - Run `cargo install --path cli`. This installs `rudra-poc` binary.
-  - This program is working directory-agnostic. It remembers the location of `rudra-poc` project when compiling.
+  - This program is working directory agnostic. It remembers the location of `rudra-poc` project when compiling.
+  - Don't forget to reinstall the program after fetching the remote.
 
 ## Metadata Format
 
@@ -78,14 +79,16 @@ rudra-poc run <PoC ID>
 
 Then, use `run` subcommand to verify the output. This executes the PoC program with `cargo run` command with `cargo_flags` and `cargo_toolchain` specified the metadata (you have to add them manually when you are working inside `poc-debug`). If `run` subcommand generates the desired output, proceed to report the issue. Note that you can use `rudra-poc run --debug <PoC ID>` to re-populate `poc-debug` directory with specific PoC.
 
-### 2. Reporting PoC (WIP)
+### 2. Reporting PoC
 
 ```shell
 rudra-poc generate [issue|rustsec|rustsec-direct] <PoC ID>
 rudra-poc report [issue|rustsec] <PoC ID>
 ```
 
-(TODO)
+(It works, the description is coming soon)
+
+https://github.com/joeyespo/grip
 
 ## Tips
 

@@ -12,16 +12,6 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "beef::Cow lacks a Sync bound on its Send trait allowing for data races"
-description = """
-`beef::Cow` implements `Send` for any type that implements `Send`. However,
-it allows multiple read-only references to the underlying data creating a read
-data race. This allows objects like `RefCell` that implement `Send` but not
-`Sync` to be shared across threads leading to undefined behavior.
-"""
-code_snippets = ["https://github.com/maciejhirsz/beef/blob/0b4685143e680749991c295836d8d09565fd6814/src/generic.rs#L531"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/maciejhirsz/beef/issues/37"
 issue_date = 2020-10-28
 ```

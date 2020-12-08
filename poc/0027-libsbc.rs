@@ -12,12 +12,6 @@ version = "1.1.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "libsbc lacks a Send constraint on its Send trait"
-description = """
-"""
-code_snippets = ["https://github.com/mvertescher/libsbc-rs/blob/7278b23901f93d956d9739fdfc4ced147cc3f242/src/lib.rs#L34-L38"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/mvertescher/libsbc-rs/issues/4"
 issue_date = 2020-11-10
 ```

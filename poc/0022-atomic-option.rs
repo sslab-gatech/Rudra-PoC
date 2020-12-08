@@ -12,15 +12,6 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "atomic-option allows using non-Sync types across threads leading to data races"
-description = """
-atomic_option::AtomicOption implements the Sync trait without a bound on its
-generic type `T`. This allows sending across non-Sync objects across threads
-such as `Cell` leading to data-races.
-"""
-code_snippets = ["https://github.com/reem/rust-atomic-option/blob/a1c645731b5cc4e01924dd10dadea222c425d576/src/lib.rs#L23"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/reem/rust-atomic-option/issues/4"
 issue_date = 2020-10-31
 ```

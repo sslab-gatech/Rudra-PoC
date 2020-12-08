@@ -12,18 +12,6 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "futures_intrusive's GenericMutexGuard lacks !Sync allowing for data races"
-description = """
-The GenericMutexGuard, meant to act as an RII lock acquisition guard is
-automatically marked as Sync by Rust. However, it allows multiple threads to
-read out a non-Sync object `T` so long as it implements Send.
-
-This opens up the possibility for data-races if a GenericMutexGuard is sent
-across threads.
-"""
-code_snippets = []
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/Matthias247/futures-intrusive/issues/53"
 issue_date = 2020-10-31
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/482"

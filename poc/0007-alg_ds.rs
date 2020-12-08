@@ -9,15 +9,6 @@ analyzers = ["UnsafeDestructor"]
 cargo_flags = ["--release"]
 
 [report]
-title = "Matrix::new() drops uninitialized memory"
-description = """
-`Matrix::new()` internally calls `Matrix::fill_with()` which uses `*ptr = value` pattern to initialize the buffer.
-This pattern assumes that there is an initialized struct at the address and drops it, which results in dropping of uninitialized struct."""
-code_snippets = [
-    "https://gitlab.com/dvshapkin/alg-ds/-/blob/a533f2a1520dc1a3688e8bd3a1e7c0b60eb5f3a9/src/ds/matrix.rs#L106-112",
-    "https://gitlab.com/dvshapkin/alg-ds/-/blob/a533f2a1520dc1a3688e8bd3a1e7c0b60eb5f3a9/src/ds/matrix.rs#L140-142",
-]
-patched = []
 issue_url = "https://gitlab.com/dvshapkin/alg-ds/-/issues/1"
 issue_date = 2020-08-25
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/362"

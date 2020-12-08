@@ -12,12 +12,6 @@ version = "0.8.0"
 analyzers = ["SendSyncChecker"]
 
 [report]
-title = "abox's AtomicBox lacks bounds on its Send/Sync traits allowing data races"
-description = """
-issue description"""
-code_snippets = ["https://github.com/SonicFrog/abox/blob/5abe75222bc49af6b62ea37f87d7be0c56973310/src/lib.rs#L92-L93"]
-patched = []
-informational = "unsound"
 issue_url = "https://github.com/SonicFrog/abox/issues/1"
 issue_date = 2020-11-10
 ```
