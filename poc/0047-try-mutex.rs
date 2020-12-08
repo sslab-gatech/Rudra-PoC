@@ -15,6 +15,7 @@ analyzers = ["SendSyncChecker"]
 issue_url = "https://github.com/mpdn/try-mutex/issues/2"
 issue_date = 2020-11-17
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/517"
+rustsec_id = "RUSTSEC-2020-0087"
 ```
 !*/
 #![forbid(unsafe_code)]

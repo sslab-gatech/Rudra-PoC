@@ -35,5 +35,7 @@ pub fn cmd_add(args: AddArgs) -> Result<()> {
 
     println!("Successfully added {}", new_poc_name);
 
+    crate::cmd::update::update_readme()?;
+
     Ok(())
 }

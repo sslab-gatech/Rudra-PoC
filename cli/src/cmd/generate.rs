@@ -1,4 +1,4 @@
-use std::{fs, str::FromStr};
+use std::fs;
 
 use crate::prelude::*;
 use crate::{
@@ -8,7 +8,6 @@ use crate::{
 
 use anyhow::bail;
 use askama::Template;
-use chrono::prelude::*;
 use duct::cmd;
 use semver::Version;
 use structopt::StructOpt;
@@ -224,15 +223,11 @@ pub fn cmd_generate(args: GenerateArgs) -> Result<()> {
             let issue_data = issue_data_from_id(&poc_map, poc_id)?;
             let issue_report_content = RustsecDirectIssueTemplate { data: issue_data }.render()?;
 
-            let local_now: DateTime<Local> = Local::now();
-            let today_date: toml::value::Datetime =
-                FromStr::from_str(&local_now.format("%Y-%m-%d").to_string()).unwrap();
-
             let advisory_content = AdvisoryTemplate {
                 krate: metadata.target.krate,
                 original_issue_title: String::from("((Issue Title))"),
                 original_issue_url: None,
-                original_issue_date: today_date,
+                original_issue_date: util::today_toml_date(),
             }
             .render()?;
 

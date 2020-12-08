@@ -2,7 +2,7 @@ use std::fs;
 
 use crate::prelude::*;
 use crate::{
-    git::GitClient,
+    git::{CratesIoClient, GitClient},
     poc::{Metadata, PocMap},
 };
 
@@ -97,12 +97,77 @@ fn validate_advisory(metadata: &Metadata) -> Result<String> {
 }
 
 fn report_to_crate_repository(args: IssueArgs) -> Result<()> {
-    todo!()
+    let poc_map = PocMap::new()?;
+    let mut metadata = poc_map.read_metadata(args.poc_id)?;
+
+    if metadata.report.issue_url.is_some() {
+        bail!("This PoC was already reported to the crate repository!");
+    }
+
+    let issue_data = parse_issue()?;
+    println!("[[ Issue Title ]]\n{}", issue_data.title);
+    println!("[[ Issue Body ]]\n{}", issue_data.body);
+
+    if !promptly::prompt(
+        "Do you want to submit an issue to the crate repository with the content above?",
+    )? {
+        println!("The issue was not submitted");
+        return Ok(());
+    }
+
+    let crate_name = &metadata.target.krate;
+    println!(
+        "Fetching the repository URL for `{}` from crates.io...",
+        crate_name
+    );
+    let crates_io_client = CratesIoClient::new()?;
+    let repository_url = crates_io_client.repository_url(crate_name)?;
+
+    if let Some(url) = &repository_url {
+        static GITHUB_REPOSITORY_URL: Lazy<Regex> = Lazy::new(|| {
+            Regex::new(r"^https://github.com/(?P<owner>[^/]+)/(?P<repo>[^/]+)").unwrap()
+        });
+
+        if let Some(captures) = GITHUB_REPOSITORY_URL.captures(url) {
+            let owner = captures.name("owner").unwrap().as_str();
+            let repo = captures.name("repo").unwrap().as_str();
+
+            println!("Reporting to GitHub repository {}/{}...", owner, repo);
+            let git_client = GitClient::new_with_config_file()?;
+            let repo_url =
+                git_client.create_github_issue(owner, repo, &issue_data.title, &issue_data.body)?;
+
+            metadata.report.issue_url = Some(repo_url);
+            metadata.report.issue_date = Some(util::today_toml_date());
+            poc_map.write_metadata(args.poc_id, metadata)?;
+
+            crate::cmd::update::update_readme()?;
+
+            return Ok(());
+        }
+    }
+
+    // Gracefully handling the fallback case
+    let url = match &repository_url {
+        Some(url) => url,
+        None => "<not found>",
+    };
+
+    println!(
+        "Automatic issue submission is not supported for URL {}",
+        url
+    );
+
+    Ok(())
 }
 
 fn report_to_rustsec(args: RustsecArgs) -> Result<()> {
     let poc_map = PocMap::new()?;
     let mut metadata = poc_map.read_metadata(args.poc_id)?;
+
+    if metadata.report.rustsec_url.is_some() {
+        bail!("This PoC was already reported to RustSec advisory DB!");
+    }
 
     let issue_data = parse_issue()?;
     let advisory_content = validate_advisory(&metadata)?;
@@ -133,11 +198,9 @@ fn report_to_rustsec(args: RustsecArgs) -> Result<()> {
     let pr_url = git_client.create_rustsec_pr(&branch_name, &issue_data.title, &issue_data.body)?;
     println!("Successfully submitted a PR: {}", pr_url);
 
-    println!("Updating PoC metadata...");
     metadata.report.rustsec_url = Some(pr_url);
     poc_map.write_metadata(args.poc_id, metadata)?;
 
-    println!("Generating README.md...");
     crate::cmd::update::update_readme()?;
 
     Ok(())

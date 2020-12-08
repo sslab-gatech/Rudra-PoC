@@ -1,7 +1,8 @@
-use std::{path::Path, process::ExitStatus};
+use std::{path::Path, process::ExitStatus, str::FromStr};
 
 use crate::poc::TestMetadata;
 
+use chrono::{DateTime, Local};
 use duct::{cmd, Expression};
 
 pub fn cargo_command(
@@ -107,4 +108,14 @@ pub fn exit_status_string(exit_status: &ExitStatus) -> String {
     } else {
         String::from("Unknown return status")
     }
+}
+
+/// Local date in "%Y-%m-%d" format
+pub fn today_str() -> String {
+    let local_now: DateTime<Local> = Local::now();
+    local_now.format("%Y-%m-%d").to_string()
+}
+
+pub fn today_toml_date() -> toml::value::Datetime {
+    FromStr::from_str(&today_str()).unwrap()
 }

@@ -6,9 +6,10 @@ use std::{
 
 use crate::prelude::*;
 
+use anyhow::bail;
 use duct::cmd;
 use once_cell::sync::Lazy;
-use reqwest::{blocking::Client, header};
+use reqwest::{blocking::Client, header, StatusCode};
 use serde::Deserialize;
 
 #[derive(Debug, Clone, Deserialize)]
@@ -57,6 +58,53 @@ impl GitHubIssue {
 
     pub fn body(&self) -> &str {
         &self.body
+    }
+}
+
+pub struct CratesIoClient {
+    client: Client,
+}
+
+impl CratesIoClient {
+    pub fn new() -> Result<Self> {
+        let mut crates_io_headers = header::HeaderMap::new();
+        crates_io_headers.insert(
+            header::USER_AGENT,
+            header::HeaderValue::from_str("Rudra project (sslab@cc.gatech.edu)").unwrap(),
+        );
+        let client = Client::builder()
+            .default_headers(crates_io_headers)
+            .build()?;
+
+        Ok(CratesIoClient { client })
+    }
+
+    pub fn repository_url(&self, crate_name: &str) -> Result<Option<String>> {
+        #[derive(Deserialize)]
+        struct CrateMetadata {
+            #[serde(rename = "crate")]
+            krate: CrateMetadataInner,
+        }
+
+        #[derive(Deserialize)]
+        struct CrateMetadataInner {
+            repository: Option<String>,
+        }
+
+        let response = self
+            .client
+            .get(&format!("https://crates.io/api/v1/crates/{}", crate_name))
+            .send()?;
+
+        if response.status() != StatusCode::OK {
+            bail!(
+                "Failed to read crate metadata from crates.io - status code {}",
+                response.status().as_u16()
+            );
+        }
+
+        let res_body: CrateMetadata = response.json()?;
+        Ok(res_body.krate.repository)
     }
 }
 
@@ -289,19 +337,64 @@ impl GitClient {
         req_body.insert("body", body);
 
         #[derive(Deserialize)]
-        struct PrBodyResponse {
+        struct PrCreationResponse {
             // Ignore all unnecessary fields
             html_url: String,
         }
 
-        let res_body: PrBodyResponse = self
+        let response = self
             .github_client
             .post("https://api.github.com/repos/RustSec/advisory-db/pulls")
             .json(&req_body)
-            .send()?
-            .json()
-            .context("Failed to parse API response as json")?;
+            .send()?;
 
+        if response.status() != StatusCode::CREATED {
+            bail!(
+                "Failed to create a RustSec pull request - status code {}",
+                response.status().as_u16()
+            );
+        }
+
+        let res_body: PrCreationResponse = response.json()?;
         Ok(res_body.html_url)
+    }
+
+    pub fn create_github_issue(
+        &self,
+        owner: &str,
+        repo: &str,
+        title: &str,
+        body: &str,
+    ) -> Result<String> {
+        let mut req_body = HashMap::new();
+        req_body.insert("title", title);
+        req_body.insert("body", body);
+
+        let response = self
+            .github_client
+            .post(&format!(
+                "https://api.github.com/repos/{}/{}/issues",
+                owner, repo
+            ))
+            .json(&req_body)
+            .send()?;
+
+        if response.status() == StatusCode::GONE {
+            bail!("The issue tracker is disabled on the repository");
+        } else if response.status() != StatusCode::CREATED {
+            bail!(
+                "Failed to create an issue - status code {}",
+                response.status().as_u16()
+            );
+        }
+
+        #[derive(Deserialize)]
+        struct IssueCreationResponse {
+            // Ignore all unnecessary fields
+            url: String,
+        }
+
+        let res_body: IssueCreationResponse = response.json()?;
+        Ok(res_body.url)
     }
 }

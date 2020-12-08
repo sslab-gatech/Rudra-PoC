@@ -173,18 +173,22 @@ struct ReadmeTemplateLine {
 
 mod filters {
     pub fn unordered_list(vec: &Vec<String>) -> askama::Result<String> {
-        let mut s = String::new();
+        if vec.is_empty() {
+            Ok(String::from("(empty)"))
+        } else {
+            let mut s = String::new();
 
-        let mut iter = vec.iter();
-        s.push_str("- ");
-        s.push_str(iter.next().unwrap());
+            let mut iter = vec.iter();
+            s.push_str("- ");
+            s.push_str(iter.next().unwrap());
 
-        for analyzer_name in iter {
-            s.push_str("<br>- ");
-            s.push_str(analyzer_name);
+            for analyzer_name in iter {
+                s.push_str("<br>- ");
+                s.push_str(analyzer_name);
+            }
+
+            Ok(s)
         }
-
-        Ok(s)
     }
 
     pub fn unwrap_or(
@@ -199,6 +203,7 @@ mod filters {
 }
 
 pub fn update_readme() -> Result<()> {
+    println!("Updating README.md...");
     let poc_map = PocMap::new()?;
 
     let mut readme_template = ReadmeTemplate::new();

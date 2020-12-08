@@ -188,6 +188,8 @@ impl PocMap {
     }
 
     pub fn write_metadata(self, poc_id: PocId, metadata: Metadata) -> Result<()> {
+        println!("Updating PoC metadata for {}...", poc_id);
+
         let poc_data = self.get(poc_id)?;
 
         let content = fs::read_to_string(&poc_data.path)

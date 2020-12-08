@@ -11,6 +11,7 @@ analyzers = ["SendSyncChecker"]
 issue_url = "https://github.com/johnshaw/magnetic/issues/9"
 issue_date = 2020-11-29
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/519"
+rustsec_id = "RUSTSEC-2020-0088"
 ```
 !*/
 #![forbid(unsafe_code)]
