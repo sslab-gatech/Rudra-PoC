@@ -10,6 +10,7 @@ analyzers = ["SendSyncChecker"]
 [report]
 issue_date = 2020-12-08
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/523"
+rustsec_id = "RUSTSEC-2020-0090"
 ```
 !*/
 #![forbid(unsafe_code)]
