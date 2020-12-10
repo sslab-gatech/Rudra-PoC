@@ -69,6 +69,13 @@ static GITLAB_ISSUE_REGEX: Lazy<Regex> = Lazy::new(|| {
         .unwrap()
 });
 
+static GITLAB_REDOX_ISSUE_REGEX: Lazy<Regex> = Lazy::new(|| {
+    Regex::new(
+        r"^https://gitlab.redox-os.org/(?P<user>[^/]+)/(?P<repo>[^/]+)/-/issues/(?P<number>\d+)$",
+    )
+    .unwrap()
+});
+
 static ADVISORY_DB_PR_REGEX: Lazy<Regex> = Lazy::new(|| {
     Regex::new(r"^https://github.com/RustSec/advisory-db/pull/(?P<pr_number>\d+)$").unwrap()
 });
@@ -95,7 +102,10 @@ fn issue_link(url: &str) -> MdLink {
             label
         );
         MdLink::image("GitHub issue or PR", image_url, url)
-    } else if let Some(captures) = GITLAB_ISSUE_REGEX.captures(url) {
+    } else if let Some(captures) = GITLAB_ISSUE_REGEX
+        .captures(url)
+        .or_else(|| GITLAB_REDOX_ISSUE_REGEX.captures(url))
+    {
         // GitLab
         let user = captures.name("user").unwrap().as_str();
         let repo = captures.name("repo").unwrap().as_str();
