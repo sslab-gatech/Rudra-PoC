@@ -8,7 +8,7 @@ version = "1.0.0"
 analyzers = ["manual", "SendSyncChecker"]
 
 [report]
-issue_url = "https://api.github.com/repos/vorner/arc-swap/issues/45"
+issue_url = "https://github.com/vorner/arc-swap/issues/45"
 issue_date = 2020-12-09
 ```
 !*/

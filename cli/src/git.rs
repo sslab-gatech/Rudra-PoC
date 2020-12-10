@@ -336,12 +336,6 @@ impl GitClient {
         req_body.insert("base", "master");
         req_body.insert("body", body);
 
-        #[derive(Deserialize)]
-        struct PrCreationResponse {
-            // Ignore all unnecessary fields
-            html_url: String,
-        }
-
         let response = self
             .github_client
             .post("https://api.github.com/repos/RustSec/advisory-db/pulls")
@@ -353,6 +347,12 @@ impl GitClient {
                 "Failed to create a RustSec pull request - status code {}",
                 response.status().as_u16()
             );
+        }
+
+        #[derive(Deserialize)]
+        struct PrCreationResponse {
+            // Ignore all unnecessary fields
+            html_url: String,
         }
 
         let res_body: PrCreationResponse = response.json()?;
@@ -391,10 +391,10 @@ impl GitClient {
         #[derive(Deserialize)]
         struct IssueCreationResponse {
             // Ignore all unnecessary fields
-            url: String,
+            html_url: String,
         }
 
         let res_body: IssueCreationResponse = response.json()?;
-        Ok(res_body.url)
+        Ok(res_body.html_url)
     }
 }
