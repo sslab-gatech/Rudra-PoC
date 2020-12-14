@@ -10,6 +10,7 @@ analyzers = ["SendSyncChecker"]
 [report]
 issue_url = "https://github.com/kanidm/concread/issues/48"
 issue_date = 2020-11-13
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/532"
 ```
 !*/
 #![forbid(unsafe_code)]
