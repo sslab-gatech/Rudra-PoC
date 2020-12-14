@@ -10,6 +10,7 @@ analyzers = ["SendSyncChecker"]
 [report]
 issue_url = "https://github.com/diwic/reffers-rs/issues/7"
 issue_date = 2020-12-01
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/533"
 ```
 !*/
 #![forbid(unsafe_code)]
