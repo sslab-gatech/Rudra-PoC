@@ -30,8 +30,11 @@ enum Command {
 fn update_env() {
     use std::env::{set_var, var};
 
-    // Override rustc to enable the build cache
-    set_var("RUSTC_WRAPPER", "sccache");
+    // (except CI run) Override rustc to enable the build cache
+    match var("CI") {
+        Err(_) => set_var("RUSTC_WRAPPER", "sccache"),
+        _ => {},
+    }
 
     // Set LD_LIBRARY_PATH
     const LD_LIBRARY_PATH: &str = "LD_LIBRARY_PATH";

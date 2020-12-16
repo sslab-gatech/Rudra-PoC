@@ -1,0 +1,33 @@
+name: Validate PoC
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+          fetch-depth: 2
+
+    - name: Cache rudra-poc-cli
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-rudra-poc-cli
+      with:
+        path: cli
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('cli/Cargo.toml', 'cli/Cargo.lock', 'cli/**/*.rs') }}
+    - name: Build cli
+      run: 'test -f cli/target/release/rudra-poc || ci/build_cli.sh'
+
+    - name: Test new PoCs
+      run: ./test_all_poc.py
