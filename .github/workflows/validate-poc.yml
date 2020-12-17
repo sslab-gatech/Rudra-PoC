@@ -25,13 +25,13 @@ jobs:
         cache-name: cache-rust-toolchain
       with:
         path: ~/.rustup/toolchains
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('ci/toolchain_setup.sh') }}
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('ci/setup_toolchains.sh') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
-    - name: Toolchain setup
-      run: ci/toolchain_setup.sh
+    - name: Setup toolchains
+      run: ci/setup_toolchains.sh
 
     - name: Cache rudra-poc-cli
       uses: actions/cache@v2
