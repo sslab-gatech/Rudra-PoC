@@ -18,45 +18,65 @@ issue_date = 2020-12-17
 !*/
 #![forbid(unsafe_code)]
 
-#[macro_use]
-extern crate static_assertions;
-
-use disrustor::internal::RingBuffer;
-
-use std::marker::PhantomData;
+use std::cell::Cell;
+use std::sync::Arc;
 use std::thread;
 
-struct NonSend {
-    created_thread: thread::ThreadId,
-    // Mark this struct as `NonSend`
-    _marker: PhantomData<*mut ()>,
+use disrustor::internal::RingBuffer;
+use disrustor::DisrustorBuilder;
+use disrustor::EventProducer;
+
+// A simple tagged union used to demonstrate problems with data races in Cell.
+#[derive(Clone, Copy)]
+enum RefOrInt {
+    Ref(&'static u64),
+    Int(u64),
 }
 
-assert_not_impl_all!(NonSend: Send);
+static STATIC_INT: u64 = 123;
 
-impl Default for NonSend {
+impl Default for RefOrInt {
     fn default() -> Self {
-        NonSend {
-            created_thread: thread::current().id(),
-            _marker: PhantomData,
-        }
-    }
-}
-
-impl Drop for NonSend {
-    fn drop(&mut self) {
-        if thread::current().id() != self.created_thread {
-            panic!("NonSend destructor is running on a wrong thread!");
-        }
+        RefOrInt::Ref(&STATIC_INT)
     }
 }
 
 fn main() {
-    let buffer = RingBuffer::<NonSend>::new(1);
+    let provider = Arc::new(RingBuffer::<Cell<RefOrInt>>::new(1));
+    let provider_cloned = provider.clone();
 
-    let handle = thread::spawn(move || {
-        drop(buffer);
+    thread::spawn(move || {
+        let (_executor, producer) = DisrustorBuilder::new(provider_cloned)
+            .with_spin_wait()
+            .with_single_producer()
+            .with_barrier(|_| {})
+            .build();
+
+        producer.write(std::iter::once(()), |slot, _seq, _item| loop {
+            // Repeatedly write Ref(&addr) and Int(0xdeadbeef) into the cell.
+            *slot.get_mut() = RefOrInt::Ref(&STATIC_INT);
+            *slot.get_mut() = RefOrInt::Int(0xdeadbeef);
+        });
     });
 
-    handle.join().unwrap();
+    let (_executor, producer) = DisrustorBuilder::new(provider.clone())
+        .with_spin_wait()
+        .with_single_producer()
+        .with_barrier(|_| {})
+        .build();
+
+    producer.write(std::iter::once(()), |slot, _seq, _item| {
+        loop {
+            if let RefOrInt::Ref(addr) = slot.get() {
+                // Hope that between the time we pattern match the object as a
+                // `Ref`, it gets written to by the other thread.
+                if addr as *const u64 == &STATIC_INT as *const u64 {
+                    continue;
+                }
+
+                println!("Pointer is now: {:p}", addr);
+                println!("Dereferencing addr will now segfault: {}", *addr);
+            }
+        }
+    });
 }
