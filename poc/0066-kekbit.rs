@@ -9,7 +9,7 @@ crate = "tempdir"
 version = "0.3.7"
 
 [test]
-analyzers = []
+analyzers = ["SendSyncChecker"]
 
 [report]
 issue_url = "https://github.com/motoras/kekbit/issues/34"

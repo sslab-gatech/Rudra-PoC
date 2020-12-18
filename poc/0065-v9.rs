@@ -5,7 +5,7 @@ crate = "v9"
 version = "0.1.41"
 
 [test]
-analyzers = []
+analyzers = ["SendSyncChecker"]
 
 [report]
 issue_url = "https://github.com/purpleposeidon/v9/issues/1"

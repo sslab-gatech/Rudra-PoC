@@ -9,7 +9,7 @@ crate = "static_assertions"
 version = "1.1.0"
 
 [test]
-analyzers = []
+analyzers = ["SendSyncChecker"]
 
 [report]
 issue_url = "https://github.com/sklose/disrustor/issues/1"
