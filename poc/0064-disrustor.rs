@@ -4,10 +4,6 @@
 crate = "disrustor"
 version = "0.2.0"
 
-[[target.peer]]
-crate = "static_assertions"
-version = "1.1.0"
-
 [test]
 analyzers = ["SendSyncChecker"]
 
