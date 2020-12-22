@@ -174,7 +174,7 @@ impl ReadmeTemplate {
 }
 
 struct ReadmeTemplateLine {
-    poc_id: PocId,
+    poc_id: MdLink,
     krate: MdLink,
     analyzers: Vec<String>,
     issue_url: Option<MdLink>,
@@ -246,8 +246,14 @@ pub fn update_readme() -> Result<()> {
             _ => None,
         };
 
+        let poc_path = poc_map
+            .get_path_to_poc_code(poc_id)?
+            .strip_prefix(&*PROJECT_PATH)?
+            .to_string_lossy()
+            .into_owned();
+
         let line = ReadmeTemplateLine {
-            poc_id,
+            poc_id: MdLink::text(poc_id, poc_path),
             krate,
             analyzers,
             issue_url,

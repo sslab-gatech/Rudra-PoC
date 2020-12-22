@@ -143,6 +143,11 @@ impl PocMap {
             .with_context(|| format!("PoC {} not found", poc_id))
     }
 
+    pub fn get_path_to_poc_code(&self, poc_id: PocId) -> Result<&PathBuf> {
+        let poc_data = self.get(poc_id)?;
+        Ok(&poc_data.path)
+    }
+
     pub fn read_metadata(&self, poc_id: PocId) -> Result<Metadata> {
         let poc_data = self.get(poc_id)?;
 
