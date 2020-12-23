@@ -1,7 +1,7 @@
 /*!
 ```rudra-poc
 [target]
-crate = "conquer_once"
+crate = "conquer-once"
 version = "0.2.1"
 
 [[target.peer]]
