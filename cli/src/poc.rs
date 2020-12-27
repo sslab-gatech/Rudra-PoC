@@ -59,6 +59,7 @@ pub enum Analyzer {
     Manual,
     UnsafeDestructor,
     SendSyncChecker,
+    PanicSafety,
 }
 
 impl std::fmt::Display for Analyzer {
@@ -67,6 +68,7 @@ impl std::fmt::Display for Analyzer {
             Analyzer::Manual => "manual",
             Analyzer::UnsafeDestructor => "UnsafeDestructor",
             Analyzer::SendSyncChecker => "SendSyncChecker",
+            Analyzer::PanicSafety => "PanicSafety",
         };
         write!(f, "{}", name)
     }
