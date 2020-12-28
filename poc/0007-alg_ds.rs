@@ -5,7 +5,7 @@ crate = "alg_ds"
 version = "0.3.1"
 
 [test]
-analyzers = ["UnsafeDestructor"]
+analyzers = ["UnsafeDestructor", "PanicSafety"]
 cargo_flags = ["--release"]
 
 [report]
