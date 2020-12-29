@@ -5,8 +5,8 @@ pub mod prelude;
 pub mod util;
 
 use crate::cmd::{
-    cmd_add, cmd_generate, cmd_report, cmd_run, cmd_update, AddArgs, GenerateArgs, ReportArgs,
-    RunArgs, UpdateArgs,
+    cmd_add, cmd_generate, cmd_report, cmd_run, cmd_update, cmd_prioritize,
+    AddArgs, GenerateArgs, ReportArgs, RunArgs, UpdateArgs, PrioritizeArgs
 };
 use crate::prelude::*;
 
@@ -25,6 +25,8 @@ enum Command {
     Generate(GenerateArgs),
     #[structopt(about = "Reports issues to the crate repository or RustSec advisory DB")]
     Report(ReportArgs),
+    #[structopt(about = "Prioritizes issues to report to RustSec")]
+    Prioritize(PrioritizeArgs),
 }
 
 fn update_env() {
@@ -65,6 +67,7 @@ fn main() -> Result<()> {
         Command::Update(args) => cmd_update(args),
         Command::Generate(args) => cmd_generate(args),
         Command::Report(args) => cmd_report(args),
+        Command::Prioritize(args) => cmd_prioritize(args),
     };
 
     result

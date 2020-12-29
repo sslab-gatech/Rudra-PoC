@@ -11,3 +11,5 @@
 
 /stat-*.csv
 /status-*.csv
+
+cargo-tally.json.gz
