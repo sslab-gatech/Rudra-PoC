@@ -12,7 +12,7 @@ version = "0.4.2"
 
 [test]
 analyzers = ["PanicSafety"]
-cargo_toolchain = "1.20.0"
+cargo_toolchain = "nightly"
 
 [report]
 issue_url = "https://github.com/binast/binjs-ref/issues/460"
