@@ -1,13 +1,8 @@
 /*!
 ```rudra-poc
-#[target]
-#crate = "fil-ocl"
-#version = "0.19.4"
-
-# Dummy Target, just to make CI work..
 [target]
-crate = "rulinalg"
-version = "0.4.2"
+crate = "fil-ocl"
+version = "0.19.4"
 
 [test]
 analyzers = ["PanicSafety"]
@@ -53,7 +48,8 @@ fn main() {
     dbg!(eventlist);
 }
 */
-
+/*
 fn main() {
     panic!("PoC requires OpenCL to build.. See comments for actual poc code.");
 }
+*/
