@@ -4,6 +4,11 @@
 #crate = "fil-ocl"
 #version = "0.19.4"
 
+# Dummy Target, just to make CI work..
+[target]
+crate = "rulinalg"
+version = "0.4.2"
+
 [test]
 analyzers = ["PanicSafety"]
 

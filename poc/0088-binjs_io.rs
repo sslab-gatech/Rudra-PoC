@@ -4,6 +4,12 @@
 #crate = "binjs_io"
 #version = "0.2.1"
 
+# Dummy Target, just to make CI work..
+# `binjs_io` crate currently fails to build.
+[target]
+crate = "rulinalg"
+version = "0.4.2"
+
 [test]
 analyzers = ["PanicSafety"]
 cargo_toolchain = "1.20.0"
