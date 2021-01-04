@@ -1,7 +1,7 @@
 /*!
 ```rudra-poc
 [target]
-crate = "endian"
+crate = "endian_trait"
 version = "0.6.0"
 
 [test]

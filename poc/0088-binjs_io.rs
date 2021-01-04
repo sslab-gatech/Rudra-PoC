@@ -14,4 +14,6 @@ issue_date = 2021-01-03
 ```
 !*/
 
-// This crate won't build on CI
+fn main() {
+    panic!("This crate fails to build on CI");
+}
