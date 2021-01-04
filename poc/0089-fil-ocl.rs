@@ -1,8 +1,8 @@
 /*!
 ```rudra-poc
-[target]
-crate = "fil-ocl"
-version = "0.19.4"
+#[target]
+#crate = "fil-ocl"
+#version = "0.19.4"
 
 [test]
 analyzers = ["PanicSafety"]
@@ -18,6 +18,7 @@ issue_date = 2021-01-04
 // CI will probably fail to build & run this poc.
 // Thus I changed the file extension of this PoC so that our CI will not build this example.
 
+/*
 use fil_ocl::{Event, EventList};
 use std::convert::Into;
 
@@ -45,4 +46,9 @@ impl Drop for Foo {
 fn main() {
     let eventlist: EventList = [Foo(None)].into();
     dbg!(eventlist);
+}
+*/
+
+fn main() {
+    panic!("PoC requires OpenCL to build.. See comments for actual poc code.");
 }

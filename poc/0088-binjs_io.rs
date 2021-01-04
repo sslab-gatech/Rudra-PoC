@@ -1,8 +1,8 @@
 /*!
 ```rudra-poc
-[target]
-crate = "binjs_io"
-version = "0.2.1"
+#[target]
+#crate = "binjs_io"
+#version = "0.2.1"
 
 [test]
 analyzers = ["PanicSafety"]
