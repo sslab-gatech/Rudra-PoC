@@ -13,7 +13,17 @@ issue_date = 2021-01-06
 ```
 !*/
 #![forbid(unsafe_code)]
+use glium::buffer::Content;
 
 fn main() {
-    panic!("This issue was reported without PoC");
+    let size = std::mem::size_of::<&i32>();
+    let x = <[&i32; 1] as Content>::read(size, |x| {
+        println!("ADDRESS: {:X}", x as *const _ as usize);
+        println!("SEGFAULT HERE: {}", x[0]);
+        Err(())
+    });
+    
+    if x.is_err() {
+        panic!("Program will segfault before reaching this point.");
+    }
 }
