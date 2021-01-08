@@ -116,7 +116,7 @@ fn issue_data_from_id(poc_map: &PocMap, poc_id: PocId) -> Result<IssueTemplateDa
 
     let poc_output = format!(
         "{}\n{}",
-        String::from_utf8(poc_run_output.stdout).unwrap(),
+        String::from_utf8_lossy(&poc_run_output.stdout),
         util::exit_status_string(&poc_run_output.status)
     );
 
