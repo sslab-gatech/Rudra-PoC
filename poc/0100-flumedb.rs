@@ -8,7 +8,7 @@ version = "0.1.4"
 analyzers = ["PanicSafety"]
 
 [report]
-issue_url = "https://github.com/sunrise-choir/flumedb-rs/blob/master/src/offset_log.rs"
+issue_url = "https://github.com/sunrise-choir/flumedb-rs/issues/10"
 issue_date = 2021-01-07
 ```
 !*/
