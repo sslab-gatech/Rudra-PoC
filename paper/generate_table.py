@@ -135,7 +135,9 @@ def main():
         'Bug Location': [['str.rs', 'mod.rs']],
         'Algorithm': [['PanicSafety']],
         'Bug Identifiers': [['rust-lang/rust#80335', 'rust-lang/rust#80894']],
-        'Size (LoC)': [0]
+        # Computed with:
+        #   cloc ~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library
+        'Size (LoC)': [282518]
     }
     metadata = pd.concat([pd.DataFrame.from_dict(std_bug), metadata])
 
