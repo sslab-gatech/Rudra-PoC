@@ -15,6 +15,7 @@ version = "0.2.0"
 [test]
 analyzers = ["UnsafeDataflow"]
 bug_classes = ["PanicSafety"]
+cargo_toolchain = "nightly"
 
 [report]
 issue_url = "https://github.com/strake/containers.rs/issues/2"
