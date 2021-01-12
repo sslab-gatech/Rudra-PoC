@@ -103,6 +103,10 @@ def main():
     metadata['Bug Location'] = metadata['Bug Location'].fillna(value='')
     metadata['Bug Location'] = metadata['Bug Location'].apply(lambda x: x.split(';'))
 
+    # Split multiple latent times
+    metadata['L'] = metadata['L'].fillna(value='--')
+    metadata['L'] = metadata['L'].apply(lambda x: x.split(';'))
+
     # Drop the Comment column, it's only for humans to add comments in the
     # metadata table.
     metadata = metadata.drop(columns=['Comment'])
@@ -137,7 +141,8 @@ def main():
         'Bug Identifiers': [['rust-lang/rust#80335', 'rust-lang/rust#80894']],
         # Computed with:
         #   cloc ~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library
-        'Size (LoC)': [282518]
+        'Size (LoC)': [282518],
+        'L': [['3y', '2y']]
     }
     metadata = pd.concat([pd.DataFrame.from_dict(std_bug), metadata])
 
@@ -159,6 +164,7 @@ def print_table(table):
     table['Bug Location'] = table['Bug Location'].apply(format_list_for_latex_table)
     table['Algorithm'] = table['Algorithm'].apply(format_list_for_latex_table)
     table['Bug Identifiers'] = table['Bug Identifiers'].apply(format_list_for_latex_table)
+    table['L'] = table['L'].apply(format_list_for_latex_table)
 
     table['Downloads'] = table['Downloads'].apply(lambda x: '{:,.0f}'.format(x))
     # Round LoC to nearest hundred
@@ -167,7 +173,10 @@ def print_table(table):
     # Drop the ID column
     table = table.drop(columns=['ID'])
 
-    as_latex = table.to_latex(na_rep='--', index=False)
+    as_latex = table.to_latex(na_rep='--', index=False, columns = [
+        'Crate', 'Bug Location', 'Downloads', 'Size (LoC)',
+        'Algorithm', 'Description', 'L', 'Bug Identifiers'
+    ])
     as_latex = as_latex.replace('ReplaceWithDoubleBackslash', r'\\')
     as_latex = as_latex.replace('ReplaceWithMakeCell', r'\makecell[tl]{')
     as_latex = as_latex.replace('ReplaceWithEndCurly', r'}')
