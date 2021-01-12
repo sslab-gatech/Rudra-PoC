@@ -107,6 +107,10 @@ def main():
     metadata['L'] = metadata['L'].fillna(value='--')
     metadata['L'] = metadata['L'].apply(lambda x: x.split(';'))
 
+    # Split multiple descriptions
+    metadata['Description'] = metadata['Description'].fillna(value='--')
+    metadata['Description'] = metadata['Description'].apply(lambda x: x.split(';'))
+
     # Drop the Comment column, it's only for humans to add comments in the
     # metadata table.
     metadata = metadata.drop(columns=['Comment'])
@@ -142,7 +146,8 @@ def main():
         # Computed with:
         #   cloc ~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library
         'Size (LoC)': [282518],
-        'L': [['3y', '2y']]
+        'L': [['3y', '2y']],
+        'Description': [['Uninit memory read in join', 'Heap buffer overflow']],
     }
     metadata = pd.concat([pd.DataFrame.from_dict(std_bug), metadata])
 
@@ -165,6 +170,7 @@ def print_table(table):
     table['Algorithm'] = table['Algorithm'].apply(format_list_for_latex_table)
     table['Bug Identifiers'] = table['Bug Identifiers'].apply(format_list_for_latex_table)
     table['L'] = table['L'].apply(format_list_for_latex_table)
+    table['Description'] = table['Description'].apply(format_list_for_latex_table)
 
     table['Downloads'] = table['Downloads'].apply(lambda x: '{:,.0f}'.format(x))
     # Round LoC to nearest hundred

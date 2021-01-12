@@ -1,13 +1,13 @@
 ID,Crate,Bug Location,Downloads,Size (LoC),L,Description,Comment
-103,smallvec,lib.rs,25616565,2338,3y,,L = Latent Time
-19,futures,mutex.rs,18321404,4984,1y,,
-24,lock_api,mutex.rs;rwlock.rs,17066598,1893,3y,,
-59,arc-swap,access.rs,8078267,2708,2y,,
-104,lexical-core,sequence.rs,3134846,33976,2y,,
-25,im,focus.rs,1108718,12732,2y,,
-63,xcb,base.rs,710481,1068,5y,,
-46,generator,gen_impl.rs,511115,2094,4y,,
-93,glium,mod.rs,497024,38538,6y,,
+103,smallvec,lib.rs,25616565,2338,3y,Buffer overflow in insert_many,L = Latent Time
+19,futures,mutex.rs,18321404,4984,1y,Data race in MappedMutexGuard,
+24,lock_api,mutex.rs;rwlock.rs,17066598,1893,3y,Multiple data races,
+59,arc-swap,access.rs,8078267,2708,2y,Dangling pointer read,
+104,lexical-core,sequence.rs,3134846,33976,2y,Buffer overflow,
+25,im,focus.rs,1108718,12732,2y,Data race in TreeFocus,
+63,xcb,base.rs,710481,1068,5y,Use-After-Free in Error,
+46,generator,gen_impl.rs,511115,2094,4y,Data race in Generator,
+93,glium,mod.rs,497024,38538,6y,Unint memory read in Content,
 15,atom,lib.rs,458802,636,2y,,
 34,model,lib.rs,280033,288,2y,,
 99,claxon,metadata.rs,251257,3040,6y,,
