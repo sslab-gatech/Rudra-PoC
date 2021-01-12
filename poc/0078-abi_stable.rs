@@ -6,6 +6,7 @@ version = "0.9.0"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["PanicSafety"]
 
 [report]
 issue_url = "https://github.com/rodrimati1992/abi_stable_crates/issues/44"

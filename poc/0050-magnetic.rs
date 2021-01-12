@@ -6,6 +6,7 @@ version = "2.0.0"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/johnshaw/magnetic/issues/9"

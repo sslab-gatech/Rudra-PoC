@@ -5,11 +5,12 @@ crate = "xcb"
 version = "0.9.0"
 
 [test]
-analyzers = ["Manual"]
+analyzers = ["Manual", "SendSyncVariance"]
+bug_classes = ["Other"]
 
 [report]
-issue_date = 2020-12-10
 issue_url = "https://github.com/rtbo/rust-xcb/issues/93"
+issue_date = 2020-12-10
 ```
 !*/
 #![forbid(unsafe_code)]

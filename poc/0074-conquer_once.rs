@@ -10,10 +10,11 @@ version = "0.8.1"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
-issue_date = 2020-12-22
 issue_url = "https://github.com/oliver-giersch/conquer-once/issues/3"
+issue_date = 2020-12-22
 ```
 !*/
 #![forbid(unsafe_code)]

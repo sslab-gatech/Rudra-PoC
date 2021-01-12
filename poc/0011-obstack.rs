@@ -6,6 +6,7 @@ version = "0.1.3"
 
 [test]
 analyzers = ["Manual"]
+bug_classes = ["Other"]
 cargo_flags = ["--release"]
 
 [report]

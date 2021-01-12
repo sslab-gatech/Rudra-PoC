@@ -9,12 +9,13 @@ crate = "crossbeam-utils"
 version = "0.8.0"
 
 [test]
-analyzers = ["SendSyncVariance", "Manual"]
+analyzers = ["Manual", "SendSyncVariance"]
+bug_classes = ["SendSyncVariance", "Other"]
 cargo_toolchain = "nightly"
 
 [report]
-issue_date = 2020-12-23
 issue_url = "https://github.com/gzp-crey/shine/issues/1"
+issue_date = 2020-12-23
 ```
 !*/
 #![forbid(unsafe_code)]

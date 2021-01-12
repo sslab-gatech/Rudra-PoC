@@ -6,6 +6,7 @@ version = "0.6.0"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/diwic/reffers-rs/issues/7"

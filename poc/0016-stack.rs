@@ -6,6 +6,7 @@ version = "0.3.0"
 
 [test]
 analyzers = ["UnsafeDestructor"]
+bug_classes = ["Other"]
 cargo_flags = ["--release"]
 
 [report]

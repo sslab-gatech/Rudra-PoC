@@ -6,6 +6,7 @@ version = "2.0.0"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["UninitExposure"]
 
 [report]
 issue_url = "https://github.com/netvl/acc_reader/issues/1"

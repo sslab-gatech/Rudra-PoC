@@ -10,6 +10,7 @@ version = "0.1.14"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/kvark/ticketed_lock/issues/7"

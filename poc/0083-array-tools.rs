@@ -6,6 +6,7 @@ version = "0.2.10"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["PanicSafety"]
 cargo_toolchain = "nightly"
 
 [report]

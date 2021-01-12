@@ -6,6 +6,7 @@ version = "0.4.0"
 
 [test]
 analyzers = ["Manual"]
+bug_classes = ["Other"]
 
 [report]
 issue_url = "https://github.com/elrnv/dync/issues/4"

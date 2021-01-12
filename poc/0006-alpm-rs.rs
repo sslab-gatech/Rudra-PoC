@@ -6,6 +6,7 @@ version = "0.1.24"
 
 [test]
 analyzers = ["UnsafeDestructor"]
+bug_classes = ["Other"]
 
 [report]
 issue_url = "https://github.com/pigeonhands/rust-arch/issues/2"

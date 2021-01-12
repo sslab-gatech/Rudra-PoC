@@ -6,10 +6,11 @@ version = "1.1.0"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
-issue_date = 2020-12-10
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/528"
+issue_date = 2020-12-10
 ```
 !*/
 #![forbid(unsafe_code)]

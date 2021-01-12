@@ -6,6 +6,7 @@ version = "0.1.8"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/Xudong-Huang/rcu_cell/issues/3"

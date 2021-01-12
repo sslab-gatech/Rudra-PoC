@@ -6,10 +6,11 @@ version = "0.0.3"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
-issue_date = 2020-12-22
 issue_url = "https://github.com/video-audio/va-ts/issues/4"
+issue_date = 2020-12-22
 ```
 !*/
 #![forbid(unsafe_code)]

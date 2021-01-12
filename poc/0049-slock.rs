@@ -11,6 +11,7 @@ features = ["thread-pool"]
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/BrokenLamp/slock-rs/issues/2"

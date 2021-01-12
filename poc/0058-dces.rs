@@ -6,6 +6,7 @@ version = "0.2.0"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_date = 2020-12-09

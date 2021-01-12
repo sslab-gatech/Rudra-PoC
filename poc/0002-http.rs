@@ -6,6 +6,7 @@ version = "0.1.19"
 
 [test]
 analyzers = ["Manual"]
+bug_classes = ["Other"]
 
 [report]
 issue_url = "https://github.com/hyperium/http/issues/352"

@@ -5,7 +5,8 @@ crate = "foreignc"
 version = "0.1.2"
 
 [test]
-analyzers = ["Manual"]
+analyzers = ["Manual", "UnsafeDataflow"]
+bug_classes = ["Other"]
 
 [report]
 issue_url = "https://github.com/mart368b/foreignc/issues/1"

@@ -6,6 +6,7 @@ version = "0.2.5"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/kanidm/concread/issues/48"

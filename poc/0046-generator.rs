@@ -6,6 +6,7 @@ version = "0.6.23"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/Xudong-Huang/generator-rs/issues/27"

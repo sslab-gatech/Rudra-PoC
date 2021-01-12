@@ -6,6 +6,7 @@ version = "0.4.2"
 
 [test]
 analyzers = ["Manual"]
+bug_classes = ["Other"]
 
 [report]
 issue_url = "https://github.com/AtheMathmo/rulinalg/issues/201"

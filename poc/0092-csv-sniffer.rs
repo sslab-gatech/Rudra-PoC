@@ -6,6 +6,7 @@ version = "0.1.1"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["UninitExposure"]
 
 [report]
 issue_url = "https://github.com/jblondin/csv-sniffer/issues/1"

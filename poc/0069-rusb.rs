@@ -6,6 +6,7 @@ version = "0.6.5"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/a1ien/rusb/issues/44"

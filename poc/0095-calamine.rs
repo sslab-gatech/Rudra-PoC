@@ -5,7 +5,8 @@ crate = "calamine"
 version = "0.16.2"
 
 [test]
-analyzers = ["UnsafeDataflow"]
+analyzers = ["Manual", "UnsafeDataflow"]
+bug_classes = ["UninitExposure", "Other"]
 
 [report]
 issue_url = "https://github.com/tafia/calamine/issues/199"

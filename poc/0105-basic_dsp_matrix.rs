@@ -6,6 +6,7 @@ version = "0.9.0"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["PanicSafety"]
 
 [report]
 issue_url = "https://github.com/liebharc/basic_dsp/issues/47"

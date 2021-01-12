@@ -6,6 +6,7 @@ version = "0.2.1"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["UninitExposure"]
 cargo_toolchain = "nightly"
 
 [report]

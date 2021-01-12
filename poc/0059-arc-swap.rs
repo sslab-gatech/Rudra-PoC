@@ -6,6 +6,7 @@ version = "1.0.0"
 
 [test]
 analyzers = ["Manual", "SendSyncVariance"]
+bug_classes = ["Other"]
 
 [report]
 issue_url = "https://github.com/vorner/arc-swap/issues/45"

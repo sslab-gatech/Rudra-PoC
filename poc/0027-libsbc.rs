@@ -10,6 +10,7 @@ version = "1.1.0"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/mvertescher/libsbc-rs/issues/4"

@@ -85,8 +85,43 @@ impl Analyzer {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum BugClass {
+    SendSyncVariance,
+    UninitExposure,
+    InconsistencyAmplification,
+    PanicSafety,
+    Other,
+}
+
+impl std::fmt::Display for BugClass {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let name = match self {
+            BugClass::SendSyncVariance => "SendSyncVariance",
+            BugClass::UninitExposure => "UninitExposure",
+            BugClass::InconsistencyAmplification => "InconsistencyAmplification",
+            BugClass::PanicSafety => "PanicSafety",
+            BugClass::Other => "Other",
+        };
+        write!(f, "{}", name)
+    }
+}
+
+impl BugClass {
+    pub fn initial(&self) -> &'static str {
+        match self {
+            BugClass::SendSyncVariance => "SV",
+            BugClass::UninitExposure => "UE",
+            BugClass::InconsistencyAmplification => "IA",
+            BugClass::PanicSafety => "PS",
+            BugClass::Other => "O",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TestMetadata {
     pub analyzers: Vec<Analyzer>,
+    pub bug_classes: Vec<BugClass>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub cargo_flags: Vec<String>,
     pub cargo_toolchain: Option<String>,

@@ -6,6 +6,7 @@ version = "0.7.1"
 
 [test]
 analyzers = ["Manual", "UnsafeDestructor"]
+bug_classes = ["InconsistencyAmplification"]
 
 [report]
 issue_url = "https://github.com/shawnscode/crayon/issues/87"

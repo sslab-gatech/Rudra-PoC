@@ -6,6 +6,7 @@ version = "0.7.4"
 
 [test]
 analyzers = ["Manual", "UnsafeDataflow"]
+bug_classes = ["InconsistencyAmplification", "Other"]
 
 [report]
 issue_url = "https://github.com/Alexhuszagh/rust-lexical/issues/53"

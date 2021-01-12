@@ -15,6 +15,7 @@ version = "0.8.0"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/Amanieu/parking_lot/issues/258"

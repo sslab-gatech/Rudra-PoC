@@ -6,6 +6,7 @@ version = "1.2.0"
 
 [test]
 analyzers = ["Manual", "UnsafeDataflow"]
+bug_classes = ["InconsistencyAmplification"]
 
 [report]
 issue_url = "https://gitlab.com/kevincox/array_iterator.rs/-/issues/1"

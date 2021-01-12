@@ -6,6 +6,7 @@ version = "0.2.3"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["UninitExposure"]
 
 [report]
 issue_url = "https://github.com/hrektts/cdr-rs/issues/10"

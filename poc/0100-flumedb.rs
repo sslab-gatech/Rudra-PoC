@@ -6,6 +6,7 @@ version = "0.1.4"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["UninitExposure"]
 
 [report]
 issue_url = "https://github.com/sunrise-choir/flumedb-rs/issues/10"

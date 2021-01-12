@@ -6,6 +6,7 @@ version = "0.4.0"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/RusPiRo/ruspiro-singleton/issues/10"

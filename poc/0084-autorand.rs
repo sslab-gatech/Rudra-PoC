@@ -6,6 +6,7 @@ version = "0.2.2"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["PanicSafety"]
 
 [report]
 issue_url = "https://github.com/mersinvald/autorand-rs/issues/5"

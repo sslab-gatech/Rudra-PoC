@@ -6,6 +6,7 @@ version = "0.3.2"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/KizzyCode/tiny_future/issues/1"

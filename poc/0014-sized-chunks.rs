@@ -10,6 +10,7 @@ version = "1.11.2"
 
 [test]
 analyzers = ["Manual"]
+bug_classes = ["PanicSafety", "Other"]
 cargo_flags = ["--release"]
 
 [report]

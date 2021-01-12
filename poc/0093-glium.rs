@@ -6,6 +6,7 @@ version = "0.29.0"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["UninitExposure"]
 
 [report]
 issue_url = "https://github.com/glium/glium/issues/1907"

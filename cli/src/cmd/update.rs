@@ -1,6 +1,6 @@
 use std::fs;
 
-use crate::poc::{Analyzer, PocMap};
+use crate::poc::{Analyzer, BugClass, PocMap};
 use crate::prelude::*;
 
 use askama::Template;
@@ -177,18 +177,28 @@ struct ReadmeTemplateLine {
     poc_id: MdLink,
     krate: MdLink,
     analyzers: Vec<Analyzer>,
+    bug_classes: Vec<BugClass>,
     issue_url: Option<MdLink>,
     rustsec_link: Option<MdLink>,
 }
 
 mod filters {
-    use crate::poc::Analyzer;
+    use crate::poc::{Analyzer, BugClass};
 
-    pub fn unordered_list(vec: &Vec<Analyzer>) -> askama::Result<String> {
+    pub fn analyzer_join(vec: &Vec<Analyzer>) -> askama::Result<String> {
         if vec.is_empty() {
             Ok(String::from("(empty)"))
         } else {
             let initials: Vec<_> = vec.iter().map(|analyzer| analyzer.initial()).collect();
+            Ok(initials.join("/"))
+        }
+    }
+
+    pub fn bug_class_join(vec: &Vec<BugClass>) -> askama::Result<String> {
+        if vec.is_empty() {
+            Ok(String::from("(empty)"))
+        } else {
+            let initials: Vec<_> = vec.iter().map(|bug_class| bug_class.initial()).collect();
             Ok(initials.join("/"))
         }
     }
@@ -219,7 +229,9 @@ pub fn update_readme() -> Result<()> {
             format!("https://crates.io/crates/{}", krate_name),
         );
 
-        let analyzers: Vec<_> = metadata.test.analyzers.clone();
+        let analyzers = metadata.test.analyzers.clone();
+        let bug_classes = metadata.test.bug_classes.clone();
+
         let issue_url = metadata.report.issue_url.as_ref().map(|s| issue_link(s));
         let rustsec_link = match (
             metadata.report.rustsec_id.as_ref(),
@@ -243,6 +255,7 @@ pub fn update_readme() -> Result<()> {
             poc_id: MdLink::text(poc_id, poc_path),
             krate,
             analyzers,
+            bug_classes,
             issue_url,
             rustsec_link,
         };

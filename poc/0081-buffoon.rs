@@ -6,6 +6,7 @@ version = "0.5.0"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["UninitExposure"]
 
 [report]
 issue_url = "https://github.com/carllerche/buffoon/issues/2"

@@ -6,6 +6,7 @@ version = "0.3.7"
 
 [test]
 analyzers = ["Manual", "UnsafeDestructor"]
+bug_classes = ["Other"]
 cargo_toolchain = "nightly"
 
 [report]

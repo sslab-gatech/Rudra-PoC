@@ -6,6 +6,7 @@ version = "0.3.2"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["PanicSafety"]
 
 [report]
 issue_url = "https://github.com/rustgd/glsl-layout/pull/10"

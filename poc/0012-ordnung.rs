@@ -6,6 +6,7 @@ version = "0.0.1"
 
 [test]
 analyzers = ["Manual", "UnsafeDestructor"]
+bug_classes = ["PanicSafety", "Other"]
 
 [report]
 issue_url = "https://github.com/maciejhirsz/ordnung/issues/8"

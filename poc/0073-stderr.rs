@@ -5,11 +5,12 @@ crate = "stderr"
 version = "0.8.0"
 
 [test]
-analyzers = ["SendSyncVariance"]
+analyzers = ["Manual", "SendSyncVariance"]
+bug_classes = ["SendSyncVariance", "Other"]
 
 [report]
-issue_date = 2020-12-22
 issue_url = "https://github.com/biluohc/stderr/issues/5"
+issue_date = 2020-12-22
 ```
 !*/
 #![forbid(unsafe_code)]

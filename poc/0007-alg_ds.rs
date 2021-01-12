@@ -6,6 +6,7 @@ version = "0.3.1"
 
 [test]
 analyzers = ["UnsafeDestructor", "UnsafeDataflow"]
+bug_classes = ["Other"]
 cargo_flags = ["--release"]
 
 [report]

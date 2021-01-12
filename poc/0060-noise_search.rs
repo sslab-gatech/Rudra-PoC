@@ -6,10 +6,11 @@ version = "0.7.0"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
-issue_date = 2020-12-10
 issue_url = "https://github.com/pipedown/noise/issues/72"
+issue_date = 2020-12-10
 ```
 !*/
 #![forbid(unsafe_code)]

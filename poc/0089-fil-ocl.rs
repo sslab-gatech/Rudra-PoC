@@ -6,6 +6,7 @@ version = "0.19.4"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["PanicSafety"]
 
 [report]
 issue_url = "https://github.com/cogciprocate/ocl/issues/194"

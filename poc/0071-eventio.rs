@@ -14,6 +14,7 @@ version = "0.9.3"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/petabi/eventio/issues/33"

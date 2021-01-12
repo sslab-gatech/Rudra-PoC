@@ -6,10 +6,11 @@ version = "0.4.0"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
-issue_date = 2020-12-10
 issue_url = "https://github.com/playXE/cgc/issues/5"
+issue_date = 2020-12-10
 ```
 !*/
 #![forbid(unsafe_code)]

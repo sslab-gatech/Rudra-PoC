@@ -6,6 +6,7 @@ version = "0.3.0"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/Richard-W/late-static/issues/1"

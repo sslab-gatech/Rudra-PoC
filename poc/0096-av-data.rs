@@ -6,6 +6,7 @@ version = "0.2.1"
 
 [test]
 analyzers = ["Manual", "UnsafeDataflow"]
+bug_classes = ["Other"]
 
 [report]
 issue_url = "https://github.com/rust-av/rust-av/issues/136"

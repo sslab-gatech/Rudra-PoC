@@ -6,6 +6,7 @@ version = "0.7.0"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["UninitExposure"]
 
 [report]
 issue_url = "https://github.com/gfx-rs/gfx/issues/3567"

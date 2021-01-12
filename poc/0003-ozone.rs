@@ -6,6 +6,7 @@ version = "0.1.0"
 
 [test]
 analyzers = ["Manual"]
+bug_classes = ["Other"]
 
 [report]
 issue_date = 2020-07-04

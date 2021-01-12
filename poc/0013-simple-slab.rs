@@ -6,6 +6,7 @@ version = "0.3.2"
 
 [test]
 analyzers = ["UnsafeDestructor"]
+bug_classes = ["Other"]
 
 [report]
 issue_url = "https://github.com/nathansizemore/simple-slab/issues/2"

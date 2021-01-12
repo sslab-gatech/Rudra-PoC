@@ -10,6 +10,7 @@ version = "0.7.2"
 
 [test]
 analyzers = ["Manual", "UnsafeDestructor", "SendSyncVariance"]
+bug_classes = ["SendSyncVariance", "Other"]
 cargo_flags = ["--release"]
 cargo_toolchain = "nightly"
 

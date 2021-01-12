@@ -6,6 +6,7 @@ version = "0.1.2"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["UninitExposure"]
 
 [report]
 issue_url = "https://github.com/AlexPikalov/cassandra-proto/issues/3"

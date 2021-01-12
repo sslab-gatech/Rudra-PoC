@@ -6,6 +6,7 @@ version = "0.3.3"
 
 [test]
 analyzers = ["Manual"]
+bug_classes = ["Other"]
 
 [report]
 issue_url = "https://github.com/raviqqe/array-queue/issues/2"

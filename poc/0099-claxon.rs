@@ -6,6 +6,7 @@ version = "0.4.3"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["UninitExposure"]
 
 [report]
 issue_url = "https://github.com/ruuda/claxon/issues/26"

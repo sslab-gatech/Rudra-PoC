@@ -10,6 +10,7 @@ version = "0.1.27"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/abbychau/multiqueue2/issues/10"

@@ -11,6 +11,7 @@ features = ["attributes"]
 
 [test]
 analyzers = ["Manual", "SendSyncVariance"]
+bug_classes = ["Other"]
 cargo_toolchain = "nightly"
 
 [report]

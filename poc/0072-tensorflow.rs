@@ -6,6 +6,7 @@ version = "0.15.0"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance", "InconsistencyAmplification"]
 
 [report]
 issue_url = "https://github.com/tensorflow/rust/issues/284"

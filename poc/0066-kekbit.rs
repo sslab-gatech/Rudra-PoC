@@ -10,6 +10,7 @@ version = "0.3.7"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/motoras/kekbit/issues/34"

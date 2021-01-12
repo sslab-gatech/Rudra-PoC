@@ -6,6 +6,7 @@ version = "0.6.0"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["PanicSafety"]
 
 [report]
 issue_url = "https://gitlab.com/myrrlyn/endian_trait/-/issues/1"

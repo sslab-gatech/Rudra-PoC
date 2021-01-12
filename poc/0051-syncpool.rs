@@ -6,6 +6,7 @@ version = "0.1.5"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/Chopinsky/byte_buffer/issues/2"

@@ -14,6 +14,7 @@ version = "0.14.4"
 
 [test]
 analyzers = ["UnsafeDataflow"]
+bug_classes = ["PanicSafety"]
 
 [report]
 issue_url = "https://github.com/charles-r-earp/adtensor/issues/4"

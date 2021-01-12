@@ -6,6 +6,7 @@ version = "0.1.0"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/krl/bunch/issues/1"

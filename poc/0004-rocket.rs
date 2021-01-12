@@ -14,6 +14,7 @@ version = "0.4.4"
 
 [test]
 analyzers = ["Manual"]
+bug_classes = ["Other"]
 cargo_toolchain = "nightly"
 
 [report]

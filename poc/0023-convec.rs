@@ -10,6 +10,7 @@ version = "0.8.0"
 
 [test]
 analyzers = ["SendSyncVariance"]
+bug_classes = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/krl/convec/issues/2"
