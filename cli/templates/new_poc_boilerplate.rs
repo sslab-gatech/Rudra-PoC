@@ -6,6 +6,7 @@ version = "{{ version }}"
 
 [test]
 analyzers = []
+bug_classes = []
 
 [report]
 ```
