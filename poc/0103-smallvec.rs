@@ -6,7 +6,7 @@ version = "1.6.0"
 
 [test]
 analyzers = ["Manual", "UnsafeDataflow"]
-bug_classes = ["InconsistencyAmplification", "Other"]
+bug_classes = ["Other"]
 
 [report]
 issue_url = "https://github.com/servo/rust-smallvec/issues/252"
