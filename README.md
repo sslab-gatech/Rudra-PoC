@@ -7,11 +7,11 @@ Contributors: See [REPORTING.md](./REPORTING.md) for the reporting guideline.
 Method
 * M: Manual
 * D: UnsafeDestructor
-* SV: Send/SyncVariance
+* SV: SendSyncVariance
 * UD: UnsafeDataflow
 
 Bug Class
-* SV: Send/SyncVariance
+* SV: SendSyncVariance
 * UE: UninitExposure
 * IA: InconsistencyAmplification
 * PS: PanicSafety
