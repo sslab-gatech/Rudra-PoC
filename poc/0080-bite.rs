@@ -5,7 +5,7 @@ crate = "bite"
 version = "0.0.5"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 cargo_toolchain = "nightly"
 
 [report]

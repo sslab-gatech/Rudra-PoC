@@ -5,7 +5,7 @@ crate = "bra"
 version = "0.1.0"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/Enet4/bra-rs/issues/1"

@@ -5,7 +5,7 @@ crate = "tensorflow"
 version = "0.15.0"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/tensorflow/rust/issues/284"

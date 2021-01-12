@@ -5,7 +5,7 @@ crate = "glsl-layout"
 version = "0.3.2"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/rustgd/glsl-layout/pull/10"

@@ -5,7 +5,7 @@ crate = "crayon"
 version = "0.7.1"
 
 [test]
-analyzers = ["manual", "UnsafeDestructor"]
+analyzers = ["Manual", "UnsafeDestructor"]
 
 [report]
 issue_url = "https://github.com/shawnscode/crayon/issues/87"

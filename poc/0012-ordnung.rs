@@ -5,7 +5,7 @@ crate = "ordnung"
 version = "0.0.1"
 
 [test]
-analyzers = ["manual", "UnsafeDestructor"]
+analyzers = ["Manual", "UnsafeDestructor"]
 
 [report]
 issue_url = "https://github.com/maciejhirsz/ordnung/issues/8"

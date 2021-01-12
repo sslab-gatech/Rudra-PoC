@@ -5,7 +5,7 @@ crate = "concread"
 version = "0.2.5"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/kanidm/concread/issues/48"

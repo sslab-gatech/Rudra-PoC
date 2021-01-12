@@ -5,7 +5,7 @@ crate = "endian_trait"
 version = "0.6.0"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://gitlab.com/myrrlyn/endian_trait/-/issues/1"
@@ -20,15 +20,18 @@ struct Foo(Box<Option<i32>>);
 
 impl Endian for Foo {
     fn to_be(self) -> Self {
-        println!(
-            "PANIC BY MISTAKE {}",
-            self.0.as_ref().as_ref().unwrap()
-        );
+        println!("PANIC BY MISTAKE {}", self.0.as_ref().as_ref().unwrap());
         self
     }
-    fn to_le(self) -> Self { self }
-    fn from_be(self) -> Self { self }
-    fn from_le(self) -> Self { self }
+    fn to_le(self) -> Self {
+        self
+    }
+    fn from_be(self) -> Self {
+        self
+    }
+    fn from_le(self) -> Self {
+        self
+    }
 }
 
 fn main() {

@@ -5,7 +5,7 @@ crate = "atom"
 version = "0.3.5"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/slide-rs/atom/issues/13"

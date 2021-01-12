@@ -5,7 +5,7 @@ crate = "dync"
 version = "0.4.0"
 
 [test]
-analyzers = ["manual"]
+analyzers = ["Manual"]
 
 [report]
 issue_url = "https://github.com/elrnv/dync/issues/4"

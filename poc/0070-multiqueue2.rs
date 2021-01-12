@@ -9,7 +9,7 @@ crate = "futures"
 version = "0.1.27"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/abbychau/multiqueue2/issues/10"
@@ -17,8 +17,8 @@ issue_date = 2020-12-19
 ```
 !*/
 #![forbid(unsafe_code)]
-use std::sync::Arc;
 use std::cell::Cell;
+use std::sync::Arc;
 use std::thread;
 // futures = "0.1.27"
 use futures::{Future, Sink, Stream};
@@ -42,7 +42,7 @@ fn main() {
 
         // parent thread sent us an object that is not `Send`!
         let smuggled_cell = rx.next().unwrap().unwrap();
-    
+
         loop {
             smuggled_cell.set(RefOrInt::Int(0xdeadbeef));
             smuggled_cell.set(RefOrInt::Ref(&X))

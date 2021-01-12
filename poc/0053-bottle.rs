@@ -10,7 +10,7 @@ version = "1.7.0"
 features = ["attributes"]
 
 [test]
-analyzers = ["manual", "SendSyncChecker"]
+analyzers = ["Manual", "SendSyncVariance"]
 cargo_toolchain = "nightly"
 
 [report]

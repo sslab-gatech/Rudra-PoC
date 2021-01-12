@@ -13,7 +13,7 @@ crate = "pcap-parser"
 version = "0.9.3"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/petabi/eventio/issues/33"
@@ -26,8 +26,8 @@ use crossbeam_channel::unbounded;
 use eventio::{pcap, Input};
 use pcap_parser::{LegacyPcapBlock, PcapHeader, ToVec};
 use std::{
-    io::{self, Cursor},
     cell::Cell,
+    io::{self, Cursor},
     rc::Rc,
     sync::atomic::{AtomicUsize, Ordering},
     thread,
@@ -40,10 +40,7 @@ struct CustomRead {
     atomic_cnt: bool,
 }
 impl CustomRead {
-    fn new(
-        non_send_counter: Rc<Cell<usize>>,
-        atomic_cnt: bool,
-    ) -> Self {
+    fn new(non_send_counter: Rc<Cell<usize>>, atomic_cnt: bool) -> Self {
         CustomRead {
             read: Self::create_pcap(),
             non_send_counter,
@@ -93,7 +90,7 @@ fn experiment(atomic_cnt: bool) -> usize {
     // Non-Sync counter that counts the # of read events that happen within this thread.
     // This counter should only be updated within a single thread.
     // Updating this counter concurrently from multiple threads will result in incorrect counts.
-    let read_cnt_in_thread= Rc::new(Cell::new(0_usize));
+    let read_cnt_in_thread = Rc::new(Cell::new(0_usize));
 
     let mut children = Vec::with_capacity(NTHREADS);
     for _ in 0..NTHREADS {
@@ -126,8 +123,5 @@ fn experiment(atomic_cnt: bool) -> usize {
 
 fn main() {
     // Check that `read_cnt_in_thread` maintains incorrect count of events.
-    assert_eq!(
-        experiment(true),
-        experiment(false),
-    );
+    assert_eq!(experiment(true), experiment(false),);
 }

@@ -5,7 +5,7 @@ crate = "av-data"
 version = "0.2.1"
 
 [test]
-analyzers = ["manual", "PanicSafety"]
+analyzers = ["Manual", "UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/rust-av/rust-av/issues/136"
@@ -25,14 +25,11 @@ fn main() {
         height: 42,
         format: fm,
     };
-    let mut frame = new_default_frame(
-        MediaKind::Video(video_info),
-        None
-    );
+    let mut frame = new_default_frame(MediaKind::Video(video_info), None);
 
     frame.copy_from_raw_parts(
-        vec![0 as usize as *const u8; 2].into_iter(), 
-        vec![40; 2].into_iter()
+        vec![0 as usize as *const u8; 2].into_iter(),
+        vec![40; 2].into_iter(),
     );
 
     println!("Program segfaults before reaching this point");

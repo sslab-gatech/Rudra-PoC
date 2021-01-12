@@ -4,6 +4,12 @@ This repository contains the list of memory safety and soundness bugs found duri
 
 Contributors: See [REPORTING.md](./REPORTING.md) for the reporting guideline.
 
+Method
+* M: Manual
+* D: UnsafeDestructor
+* SV: Send/SyncVariance
+* UD: UnsafeDataflow
+
 | ID | Crate | Method | Issue Report | RustSec ID |
 | -- | ----- | ------ | ------------ | ---------- |
 {% for line in lines -%}

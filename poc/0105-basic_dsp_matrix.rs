@@ -5,7 +5,7 @@ crate = "basic_dsp_matrix"
 version = "0.9.0"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/liebharc/basic_dsp/issues/47"

@@ -5,7 +5,7 @@ crate = "xcb"
 version = "0.9.0"
 
 [test]
-analyzers = ["manual"]
+analyzers = ["Manual"]
 
 [report]
 issue_date = 2020-12-10

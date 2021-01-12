@@ -5,7 +5,7 @@ crate = "failure"
 version = "0.1.8"
 
 [test]
-analyzers = ["manual"]
+analyzers = ["Manual"]
 
 [report]
 issue_url = "https://github.com/rust-lang-nursery/failure/issues/336"

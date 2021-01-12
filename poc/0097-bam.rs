@@ -5,7 +5,7 @@ crate = "bam"
 version = "0.1.2"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://gitlab.com/tprodanov/bam/-/issues/4"

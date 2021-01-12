@@ -5,7 +5,7 @@ crate = "abi_stable"
 version = "0.9.0"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/rodrimati1992/abi_stable_crates/issues/44"

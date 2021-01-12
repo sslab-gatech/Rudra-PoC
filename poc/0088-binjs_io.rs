@@ -5,7 +5,7 @@ crate = "binjs_io"
 version = "0.2.1"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 cargo_toolchain = "nightly"
 
 [report]

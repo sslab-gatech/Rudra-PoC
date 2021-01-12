@@ -55,22 +55,32 @@ impl std::fmt::Display for PeerMetadata {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Analyzer {
-    #[serde(rename = "manual")]
     Manual,
     UnsafeDestructor,
-    SendSyncChecker,
-    PanicSafety,
+    SendSyncVariance,
+    UnsafeDataflow,
 }
 
 impl std::fmt::Display for Analyzer {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let name = match self {
-            Analyzer::Manual => "manual",
+            Analyzer::Manual => "Manual",
             Analyzer::UnsafeDestructor => "UnsafeDestructor",
-            Analyzer::SendSyncChecker => "SendSyncChecker",
-            Analyzer::PanicSafety => "PanicSafety",
+            Analyzer::SendSyncVariance => "SendSyncVariance",
+            Analyzer::UnsafeDataflow => "UnsafeDataflow",
         };
         write!(f, "{}", name)
+    }
+}
+
+impl Analyzer {
+    pub fn initial(&self) -> &'static str {
+        match self {
+            Analyzer::Manual => "M",
+            Analyzer::UnsafeDestructor => "D",
+            Analyzer::SendSyncVariance => "SV",
+            Analyzer::UnsafeDataflow => "UD",
+        }
     }
 }
 

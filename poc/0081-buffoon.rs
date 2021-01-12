@@ -5,7 +5,7 @@ crate = "buffoon"
 version = "0.5.0"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/carllerche/buffoon/issues/2"

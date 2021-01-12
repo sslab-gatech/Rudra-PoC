@@ -5,7 +5,7 @@ crate = "max7301"
 version = "0.1.0"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/edarc/max7301/issues/1"

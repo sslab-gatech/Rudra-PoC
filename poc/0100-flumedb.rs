@@ -5,7 +5,7 @@ crate = "flumedb"
 version = "0.1.4"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/sunrise-choir/flumedb-rs/issues/10"

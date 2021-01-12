@@ -5,7 +5,7 @@ crate = "bunch"
 version = "0.1.0"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/krl/bunch/issues/1"

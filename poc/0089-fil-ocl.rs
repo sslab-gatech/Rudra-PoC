@@ -5,7 +5,7 @@ crate = "fil-ocl"
 version = "0.19.4"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/cogciprocate/ocl/issues/194"
@@ -31,7 +31,7 @@ impl Into<Event> for Foo {
         so it's possible for a user-provided `into()` to panic..
         */
         println!("LOUSY PANIC : {}", self.0.unwrap());
-        
+
         Event::empty()
     }
 }
@@ -46,5 +46,3 @@ fn main() {
     let eventlist: EventList = [Foo(None)].into();
     dbg!(eventlist);
 }
-
-

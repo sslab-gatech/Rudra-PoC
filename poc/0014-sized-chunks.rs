@@ -9,7 +9,7 @@ crate = "typenum"
 version = "1.11.2"
 
 [test]
-analyzers = ["manual"]
+analyzers = ["Manual"]
 cargo_flags = ["--release"]
 
 [report]

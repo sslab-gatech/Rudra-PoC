@@ -5,7 +5,7 @@ crate = "autorand"
 version = "0.2.2"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/mersinvald/autorand-rs/issues/5"

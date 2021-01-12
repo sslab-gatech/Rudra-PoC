@@ -9,7 +9,7 @@ crate = "crossbeam-utils"
 version = "0.8.0"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_date = 2020-12-08
@@ -55,7 +55,9 @@ fn main() {
             if let RefOrInt::Ref(addr) = cell.get() {
                 // Hope that between the time we pattern match the object as a
                 // `Ref`, it gets written to by the other thread.
-                if addr as *const u64 == &SOME_INT as *const u64 { continue; }
+                if addr as *const u64 == &SOME_INT as *const u64 {
+                    continue;
+                }
 
                 println!("Pointer is now: {:p}", addr);
                 println!("Dereferencing addr will now segfault: {}", *addr);

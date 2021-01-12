@@ -13,7 +13,7 @@ crate = "rocket_http"
 version = "0.4.4"
 
 [test]
-analyzers = ["manual"]
+analyzers = ["Manual"]
 cargo_toolchain = "nightly"
 
 [report]

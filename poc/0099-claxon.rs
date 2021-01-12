@@ -5,7 +5,7 @@ crate = "claxon"
 version = "0.4.3"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/ruuda/claxon/issues/26"

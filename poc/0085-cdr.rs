@@ -5,7 +5,7 @@ crate = "cdr"
 version = "0.2.3"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/hrektts/cdr-rs/issues/10"

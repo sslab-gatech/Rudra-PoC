@@ -5,7 +5,7 @@ crate = "generator"
 version = "0.6.23"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/Xudong-Huang/generator-rs/issues/27"

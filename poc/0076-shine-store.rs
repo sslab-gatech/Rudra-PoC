@@ -9,7 +9,7 @@ crate = "crossbeam-utils"
 version = "0.8.0"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 cargo_toolchain = "nightly"
 
 [report]
@@ -31,12 +31,15 @@ impl Key for MyKey {}
 
 // A simple tagged union used to demonstrate problems with data-races.
 #[derive(Debug, Clone, Copy)]
-enum RefOrInt { Ref(&'static u64), Int(u128) }
+enum RefOrInt {
+    Ref(&'static u64),
+    Int(u128),
+}
 
 static STATIC_INT: u64 = 123;
 
 // Type that implements From<K> for HashStore.
-struct RefOrIntCell (Cell<RefOrInt>);
+struct RefOrIntCell(Cell<RefOrInt>);
 
 impl From<MyKey> for RefOrIntCell {
     fn from(key: MyKey) -> Self {
@@ -68,7 +71,9 @@ fn main() {
             if let RefOrInt::Ref(addr) = cell.0.get() {
                 // Hope that between the time we pattern match the object as a
                 // `Ref`, it gets written to by the other thread.
-                if addr as *const u64 == &STATIC_INT as *const u64 { continue; }
+                if addr as *const u64 == &STATIC_INT as *const u64 {
+                    continue;
+                }
 
                 println!("Pointer is now: {:p}", addr);
                 println!("Dereferencing addr will now segfault: {}", *addr);

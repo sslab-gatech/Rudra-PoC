@@ -5,7 +5,7 @@ crate = "va-ts"
 version = "0.0.3"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_date = 2020-12-22
@@ -13,15 +13,15 @@ issue_url = "https://github.com/video-audio/va-ts/issues/4"
 ```
 !*/
 #![forbid(unsafe_code)]
-use va_ts::{Demuxer, DemuxerEvents, SubtableID, DemuxedPacket, DemuxedTable};
+use std::ops::Drop;
 use std::sync::{Mutex, MutexGuard};
 use std::thread::{self, ThreadId};
-use std::ops::Drop;
+use va_ts::{DemuxedPacket, DemuxedTable, Demuxer, DemuxerEvents, SubtableID};
 
 struct X(MutexGuard<'static, u64>, ThreadId);
 impl DemuxerEvents for X {
-    fn on_table(&mut self, _: SubtableID, _: &DemuxedTable) { }
-    fn on_packet(&mut self, _: &DemuxedPacket) { }
+    fn on_table(&mut self, _: SubtableID, _: &DemuxedTable) {}
+    fn on_packet(&mut self, _: &DemuxedPacket) {}
 }
 impl Drop for X {
     fn drop(&mut self) {
@@ -44,5 +44,7 @@ fn main() {
         let demuxer = demuxer;
 
         // demuxer is dropped here, along with `MutexGuard`.
-    }).join().unwrap();
+    })
+    .join()
+    .unwrap();
 }

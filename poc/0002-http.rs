@@ -5,7 +5,7 @@ crate = "http"
 version = "0.1.19"
 
 [test]
-analyzers = ["manual"]
+analyzers = ["Manual"]
 
 [report]
 issue_url = "https://github.com/hyperium/http/issues/352"

@@ -5,7 +5,7 @@ crate = "obstack"
 version = "0.1.3"
 
 [test]
-analyzers = ["manual"]
+analyzers = ["Manual"]
 cargo_flags = ["--release"]
 
 [report]

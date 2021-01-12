@@ -5,7 +5,7 @@ crate = "array_iterator"
 version = "1.2.0"
 
 [test]
-analyzers = ["manual", "PanicSafety"]
+analyzers = ["Manual", "UnsafeDataflow"]
 
 [report]
 issue_url = "https://gitlab.com/kevincox/array_iterator.rs/-/issues/1"
@@ -20,11 +20,15 @@ use array_iterator::{Array, ArrayIterator};
 struct MyArr(Vec<String>);
 impl Array<String> for MyArr {
     type MaybeUninit = Vec<MaybeUninit<String>>;
-    
-    fn into_maybeunint(self) -> Self::MaybeUninit {
-        debug_assert_eq!(std::mem::size_of::<Self::MaybeUninit>(), std::mem::size_of::<Self>());
 
-        let mut partial: Self::MaybeUninit = self.0.into_iter().map(|x| MaybeUninit::new(x)).collect();
+    fn into_maybeunint(self) -> Self::MaybeUninit {
+        debug_assert_eq!(
+            std::mem::size_of::<Self::MaybeUninit>(),
+            std::mem::size_of::<Self>()
+        );
+
+        let mut partial: Self::MaybeUninit =
+            self.0.into_iter().map(|x| MaybeUninit::new(x)).collect();
 
         // DANGEROUS! Appending uninitialized objects to iterator..
         for _ in 0..10 {
@@ -36,10 +40,7 @@ impl Array<String> for MyArr {
 }
 
 fn main() {
-    let my_arr = MyArr(vec![
-        String::from("Hello"),
-        String::from("World")
-    ]);
+    let my_arr = MyArr(vec![String::from("Hello"), String::from("World")]);
     for x in ArrayIterator::new(my_arr) {
         println!("{} {:?}, {}", x.len(), x.as_bytes(), x);
     }

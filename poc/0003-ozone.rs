@@ -5,7 +5,7 @@ crate = "ozone"
 version = "0.1.0"
 
 [test]
-analyzers = ["manual"]
+analyzers = ["Manual"]
 
 [report]
 issue_date = 2020-07-04

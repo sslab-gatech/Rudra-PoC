@@ -5,7 +5,7 @@ crate = "cgc"
 version = "0.4.0"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_date = 2020-12-10
@@ -39,7 +39,10 @@ fn wild_sync() {
 
 // A simple tagged union used to demonstrate problems with aliasing.
 #[derive(Debug, Clone, Copy)]
-enum RefOrInt { Ref(&'static u64), Int(u64) }
+enum RefOrInt {
+    Ref(&'static u64),
+    Int(u64),
+}
 
 fn aliasing() {
     // 2. Aliasing violation

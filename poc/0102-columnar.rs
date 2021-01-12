@@ -5,7 +5,7 @@ crate = "columnar"
 version = "0.0.19"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/frankmcsherry/columnar/issues/6"

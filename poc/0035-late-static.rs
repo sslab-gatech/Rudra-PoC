@@ -5,7 +5,7 @@ crate = "late-static"
 version = "0.3.0"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/Richard-W/late-static/issues/1"

@@ -5,7 +5,7 @@ crate = "rulinalg"
 version = "0.4.2"
 
 [test]
-analyzers = ["manual"]
+analyzers = ["Manual"]
 
 [report]
 issue_url = "https://github.com/AtheMathmo/rulinalg/issues/201"

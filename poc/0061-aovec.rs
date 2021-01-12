@@ -5,7 +5,7 @@ crate = "aovec"
 version = "1.1.0"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_date = 2020-12-10

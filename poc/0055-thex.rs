@@ -5,7 +5,7 @@ crate = "thex"
 version = "0.1.0"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_date = 2020-12-08
@@ -15,8 +15,8 @@ rustsec_id = "RUSTSEC-2020-0090"
 !*/
 #![forbid(unsafe_code)]
 
-use thex::Thex;
 use std::rc::Rc;
+use thex::Thex;
 
 fn main() {
     let rc = Rc::new(());

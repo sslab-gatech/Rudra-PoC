@@ -5,7 +5,7 @@ crate = "csv-sniffer"
 version = "0.1.1"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/jblondin/csv-sniffer/issues/1"

@@ -9,7 +9,7 @@ crate = "futures"
 version = "0.3.8"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/buttplugio/buttplug-rs/issues/225"
@@ -32,7 +32,7 @@ enum RefOrInt<'a> {
 static X: u64 = 0;
 
 fn main() {
-    let future = ButtplugFuture::default();    
+    let future = ButtplugFuture::default();
     let shared = future.get_state_clone();
 
     thread::spawn(move || {

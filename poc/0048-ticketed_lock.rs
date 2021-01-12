@@ -9,7 +9,7 @@ crate = "futures"
 version = "0.1.14"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/kvark/ticketed_lock/issues/7"

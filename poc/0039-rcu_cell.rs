@@ -5,7 +5,7 @@ crate = "rcu_cell"
 version = "0.1.8"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/Xudong-Huang/rcu_cell/issues/3"

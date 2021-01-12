@@ -5,7 +5,7 @@ crate = "stderr"
 version = "0.8.0"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_date = 2020-12-22
@@ -18,7 +18,10 @@ use stderr::StaticMut;
 
 // A simple tagged union used to demonstrate problems with aliasing.
 #[derive(Debug, Clone, Copy)]
-enum RefOrInt { Ref(&'static u64), Int(u128) }
+enum RefOrInt {
+    Ref(&'static u64),
+    Int(u128),
+}
 
 fn main() {
     let ptr = StaticMut::new(RefOrInt::Ref(&42));

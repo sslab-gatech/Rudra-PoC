@@ -10,7 +10,7 @@ version = "0.3.8"
 features = ["thread-pool"]
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/BrokenLamp/slock-rs/issues/2"

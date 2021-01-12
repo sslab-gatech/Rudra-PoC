@@ -5,7 +5,7 @@ crate = "arc-swap"
 version = "1.0.0"
 
 [test]
-analyzers = ["manual", "SendSyncChecker"]
+analyzers = ["Manual", "SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/vorner/arc-swap/issues/45"

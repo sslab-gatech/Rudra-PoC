@@ -5,7 +5,7 @@ crate = "cassandra-proto"
 version = "0.1.2"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/AlexPikalov/cassandra-proto/issues/3"

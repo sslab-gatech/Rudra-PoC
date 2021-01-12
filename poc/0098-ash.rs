@@ -5,7 +5,7 @@ crate = "ash"
 version = "0.31.0"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/MaikKlein/ash/issues/354"

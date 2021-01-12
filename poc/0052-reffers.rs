@@ -5,7 +5,7 @@ crate = "reffers"
 version = "0.6.0"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/diwic/reffers-rs/issues/7"

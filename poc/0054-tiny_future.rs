@@ -5,7 +5,7 @@ crate = "tiny_future"
 version = "0.3.2"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/KizzyCode/tiny_future/issues/1"
@@ -14,8 +14,8 @@ issue_date = 2020-12-08
 !*/
 #![forbid(unsafe_code)]
 
+use std::{rc::Rc, thread};
 use tiny_future::Future;
-use std::{thread, rc::Rc};
 
 fn main() {
     let rc = Rc::new(());

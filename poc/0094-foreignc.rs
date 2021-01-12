@@ -5,7 +5,7 @@ crate = "foreignc"
 version = "0.1.2"
 
 [test]
-analyzers = ["manual"]
+analyzers = ["Manual"]
 
 [report]
 issue_url = "https://github.com/mart368b/foreignc/issues/1"
@@ -14,7 +14,7 @@ issue_date = 2021-01-06
 !*/
 #![forbid(unsafe_code)]
 
-use foreignc::{FromFFi, FFiResult};
+use foreignc::{FFiResult, FromFFi};
 
 use std::mem::MaybeUninit;
 

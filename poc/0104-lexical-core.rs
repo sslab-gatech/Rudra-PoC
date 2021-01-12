@@ -5,7 +5,7 @@ crate = "lexical-core"
 version = "0.7.4"
 
 [test]
-analyzers = ["manual", "PanicSafety"]
+analyzers = ["Manual", "UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/Alexhuszagh/rust-lexical/issues/53"

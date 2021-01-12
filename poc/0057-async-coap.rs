@@ -9,7 +9,7 @@ crate = "crossbeam-utils"
 version = "0.8.0"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 cargo_toolchain = "nightly"
 
 [report]
@@ -21,8 +21,8 @@ issue_url = "https://github.com/google/rust-async-coap/issues/33"
 
 use async_coap::arc_guard::ArcGuard;
 
-use std::{cell::Cell, sync::Arc};
 use crossbeam_utils::thread;
+use std::{cell::Cell, sync::Arc};
 
 // A simple tagged union used to demonstrate problems with data races in Cell.
 #[derive(Debug, Clone, Copy)]
@@ -52,7 +52,9 @@ fn main() {
             if let RefOrInt::Ref(addr) = (**arc_guard.head()).get() {
                 // Hope that between the time we pattern match the object as a
                 // `Ref`, it gets written to by the other thread.
-                if addr as *const u64 == &SOME_INT as *const u64 { continue; }
+                if addr as *const u64 == &SOME_INT as *const u64 {
+                    continue;
+                }
 
                 println!("Pointer is now: {:p}", addr);
                 println!("Dereferencing addr will now segfault: {}", *addr);

@@ -5,7 +5,7 @@ crate = "array-tools"
 version = "0.2.10"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 cargo_toolchain = "nightly"
 
 [report]

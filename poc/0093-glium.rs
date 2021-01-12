@@ -5,7 +5,7 @@ crate = "glium"
 version = "0.29.0"
 
 [test]
-analyzers = ["PanicSafety"]
+analyzers = ["UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/glium/glium/issues/1907"
@@ -22,7 +22,7 @@ fn main() {
         println!("SEGFAULT HERE: {}", x[0]);
         Err(())
     });
-    
+
     if x.is_err() {
         panic!("Program will segfault before reaching this point.");
     }

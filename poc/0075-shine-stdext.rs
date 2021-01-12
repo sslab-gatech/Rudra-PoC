@@ -9,7 +9,7 @@ crate = "crossbeam-utils"
 version = "0.8.0"
 
 [test]
-analyzers = ["SendSyncChecker", "manual"]
+analyzers = ["SendSyncVariance", "Manual"]
 cargo_toolchain = "nightly"
 
 [report]
@@ -21,12 +21,15 @@ issue_url = "https://github.com/gzp-crey/shine/issues/1"
 
 use shine_stdext::unnamedstore::Store;
 
-use std::cell::Cell;
 use crossbeam_utils::thread;
+use std::cell::Cell;
 
 // A simple tagged union used to demonstrate problems with data-races.
 #[derive(Debug, Clone, Copy)]
-enum RefOrInt { Ref(&'static u64), Int(u128) }
+enum RefOrInt {
+    Ref(&'static u64),
+    Int(u128),
+}
 
 static STATIC_INT: u64 = 123;
 
@@ -53,7 +56,9 @@ fn wild_send_sync_unnamed_store() {
             if let RefOrInt::Ref(addr) = cell.get() {
                 // Hope that between the time we pattern match the object as a
                 // `Ref`, it gets written to by the other thread.
-                if addr as *const u64 == &STATIC_INT as *const u64 { continue; }
+                if addr as *const u64 == &STATIC_INT as *const u64 {
+                    continue;
+                }
 
                 println!("Pointer is now: {:p}", addr);
                 println!("Dereferencing addr will now segfault: {}", *addr);
@@ -69,7 +74,9 @@ use shine_stdext::spscstate::state_channel;
 struct RefOrIntCellContainer(Cell<RefOrInt>);
 
 impl Default for RefOrIntCellContainer {
-    fn default() -> Self { Self(Cell::new(RefOrInt::Ref(&STATIC_INT))) }
+    fn default() -> Self {
+        Self(Cell::new(RefOrInt::Ref(&STATIC_INT)))
+    }
 }
 
 // 2. shine_stdext::spscstate::RefSendBuffer automatically implements Send and
@@ -94,8 +101,10 @@ fn wild_send_sync_state_channel() {
             if let RefOrInt::Ref(addr) = send_buffer.0.get() {
                 // Hope that between the time we pattern match the object as a
                 // `Ref`, it gets written to by the other thread.
-                if addr as *const u64 == &STATIC_INT as *const u64 { continue; }
-    
+                if addr as *const u64 == &STATIC_INT as *const u64 {
+                    continue;
+                }
+
                 println!("Pointer is now: {:p}", addr);
                 println!("Dereferencing addr will now segfault: {}", *addr);
             }

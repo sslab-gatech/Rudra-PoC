@@ -5,7 +5,7 @@ crate = "rusb"
 version = "0.6.5"
 
 [test]
-analyzers = ["SendSyncChecker"]
+analyzers = ["SendSyncVariance"]
 
 [report]
 issue_url = "https://github.com/a1ien/rusb/issues/44"

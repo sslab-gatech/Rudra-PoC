@@ -5,7 +5,7 @@ crate = "smallvec"
 version = "1.6.0"
 
 [test]
-analyzers = ["manual", "PanicSafety"]
+analyzers = ["Manual", "UnsafeDataflow"]
 
 [report]
 issue_url = "https://github.com/servo/rust-smallvec/issues/252"

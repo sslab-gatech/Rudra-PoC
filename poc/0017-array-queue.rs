@@ -5,7 +5,7 @@ crate = "array-queue"
 version = "0.3.3"
 
 [test]
-analyzers = ["manual"]
+analyzers = ["Manual"]
 
 [report]
 issue_url = "https://github.com/raviqqe/array-queue/issues/2"

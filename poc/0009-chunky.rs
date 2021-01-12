@@ -5,7 +5,7 @@ crate = "chunky"
 version = "0.3.7"
 
 [test]
-analyzers = ["manual", "UnsafeDestructor"]
+analyzers = ["Manual", "UnsafeDestructor"]
 cargo_toolchain = "nightly"
 
 [report]
