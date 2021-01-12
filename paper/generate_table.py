@@ -72,7 +72,11 @@ def get_poc_metadata():
 
 def get_bug_algorithm(poc_id, poc_metadata):
     analyzers = poc_metadata[poc_id]['test']['analyzers']
-    return [a for a in analyzers if a != 'manual']
+    without_manual = [a for a in analyzers if a != 'manual']
+    # Mark bug that have manual in the analyzers with a dagger.
+    if 'manual' in analyzers:
+        without_manual[0] += 'ReplaceWithDagger'
+    return without_manual
 
 def get_bug_identifiers(row, poc_metadata, rustsec_metadata):
     identifiers = []
@@ -124,6 +128,17 @@ def main():
 
     # Only do the first 40 bugs for now
     metadata = metadata.head(40)
+
+    # Manually put in the std library bugs.
+    std_bug = {
+        'Crate': ['std'],
+        'Bug Location': [['str.rs', 'mod.rs']],
+        'Algorithm': [['PanicSafety']],
+        'Bug Identifiers': [['rust-lang/rust#80335', 'rust-lang/rust#80894']],
+        'Size (LoC)': [0]
+    }
+    metadata = pd.concat([pd.DataFrame.from_dict(std_bug), metadata])
+
     print_table(metadata)
 
 def format_list_for_latex_table(pandas_list):
@@ -143,7 +158,9 @@ def print_table(table):
     table['Algorithm'] = table['Algorithm'].apply(format_list_for_latex_table)
     table['Bug Identifiers'] = table['Bug Identifiers'].apply(format_list_for_latex_table)
 
-    table['Downloads'] = table['Downloads'].apply(lambda x: '{:,}'.format(x))
+    table['Downloads'] = table['Downloads'].apply(lambda x: '{:,.0f}'.format(x))
+    # Round LoC to nearest hundred
+    table['Size (LoC)'] = table['Size (LoC)'].apply(lambda x: '{:,.0f}'.format(int(x / 100) * 100))
 
     # Drop the ID column
     table = table.drop(columns=['ID'])
@@ -152,6 +169,7 @@ def print_table(table):
     as_latex = as_latex.replace('ReplaceWithDoubleBackslash', r'\\')
     as_latex = as_latex.replace('ReplaceWithMakeCell', r'\makecell[tl]{')
     as_latex = as_latex.replace('ReplaceWithEndCurly', r'}')
+    as_latex = as_latex.replace('ReplaceWithDagger', r'$^\dagger$')
     print(as_latex)
 
 if __name__ == '__main__':
