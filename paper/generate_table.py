@@ -189,6 +189,10 @@ def format_number_abreviation(x):
     return str(int(x))
 
 def print_table(table):
+    # Contract "RUSTSEC-" to "RSC-" in bug identifiers.
+    table['Bug Identifiers'] = table['Bug Identifiers'].apply(
+        lambda bug_list: [x.replace('RUSTSEC-', 'RSC-') for x in bug_list])
+
     # Apply any formatting touches and print the table.
     table['Bug Location'] = table['Bug Location'].apply(format_list_for_latex_table)
     table['Bug Identifiers'] = table['Bug Identifiers'].apply(format_list_for_latex_table)
@@ -214,7 +218,7 @@ def print_table(table):
     })
 
     as_latex = table.to_latex(na_rep='--', index=False,
-        column_format = 'llrrllrl',
+        column_format = 'llrrlp{7cm}rl',
         columns = [
             'Crate', 'Bug Location', 'DLs', 'LoC',
             'Algo', 'Description', 'L', 'Bug Identifiers'
