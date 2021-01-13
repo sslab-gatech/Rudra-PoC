@@ -134,8 +134,8 @@ def main():
     metadata['Bug Identifiers'] = metadata.apply(get_bug_identifiers, axis=1,
         poc_metadata=poc_metadata, rustsec_metadata=rustsec_metadata)
 
-    # Only do the first 40 bugs for now
-    metadata = metadata.head(40)
+    # Only do the first 35 bugs for now
+    metadata = metadata.head(35)
 
     # Manually put in the std library bugs.
     std_bug = {
@@ -147,7 +147,7 @@ def main():
         #   cloc ~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library
         'Size (LoC)': [282518],
         'L': [['3y', '2y']],
-        'Description': [['Uninit memory read in join', 'Heap buffer overflow']],
+        'Description': [['Uninit memory read in join']],
     }
     metadata = pd.concat([pd.DataFrame.from_dict(std_bug), metadata])
 
@@ -164,6 +164,20 @@ def format_list_for_latex_table(pandas_list):
     with_latex_newlines = 'ReplaceWithDoubleBackslash'.join(pandas_list)
     return 'ReplaceWithMakeCell' + with_latex_newlines + 'ReplaceWithEndCurly'
 
+# Turn numbers into stuff like 10k, 5M, 101k, 200 etc.
+def format_number_abreviation(x):
+    if pd.isnull(x):
+        return "--"
+
+    if x > 1_000_000:
+        x = "{}M".format(int(x / 1_000_000))
+    elif x > 1_000:
+        x = "{}K".format(int(x / 1_000))
+    elif x > 100:
+        # Round to nearest hundrendth
+        return str(int(x / 100) * 100)
+    return x
+
 def print_table(table):
     # Apply any formatting touches and print the table.
     table['Bug Location'] = table['Bug Location'].apply(format_list_for_latex_table)
@@ -172,9 +186,10 @@ def print_table(table):
     table['L'] = table['L'].apply(format_list_for_latex_table)
     table['Description'] = table['Description'].apply(format_list_for_latex_table)
 
-    table['Downloads'] = table['Downloads'].apply(lambda x: '{:,.0f}'.format(x))
+    table['Downloads'] = table['Downloads'].apply(format_number_abreviation)
     # Round LoC to nearest hundred
-    table['Size (LoC)'] = table['Size (LoC)'].apply(lambda x: '{:,.0f}'.format(int(x / 100) * 100))
+    table['Size (LoC)'] = table['Size (LoC)'].apply(format_number_abreviation)
+    #table['Size (LoC)'] = table['Size (LoC)'].apply(lambda x: '{:,.0f}'.format(int(x / 100) * 100))
 
     # Drop the ID column
     table = table.drop(columns=['ID'])

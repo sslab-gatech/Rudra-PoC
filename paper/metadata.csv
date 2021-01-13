@@ -1,7 +1,7 @@
 ID,Crate,Bug Location,Downloads,Size (LoC),L,Description,Comment
 103,smallvec,lib.rs,25616565,2338,3y,Buffer overflow in insert_many,L = Latent Time
 19,futures,mutex.rs,18321404,4984,1y,Data race in MappedMutexGuard,
-24,lock_api,mutex.rs;rwlock.rs,17066598,1893,3y,Multiple data races,
+24,lock_api,rwlock.rs,17066598,1893,3y,Multiple data races,
 59,arc-swap,access.rs,8078267,2708,2y,Dangling pointer read,
 104,lexical-core,sequence.rs,3134846,33976,2y,Buffer overflow,
 25,im,focus.rs,1108718,12732,2y,Data race in TreeFocus,
