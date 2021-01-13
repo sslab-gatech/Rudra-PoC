@@ -71,12 +71,7 @@ def get_poc_metadata():
     return poc_metadata
 
 def get_bug_algorithm(poc_id, poc_metadata):
-    analyzers = poc_metadata[poc_id]['test']['analyzers']
-    without_manual = [a for a in analyzers if a != 'manual']
-    # Mark bug that have manual in the analyzers with a dagger.
-    if 'manual' in analyzers:
-        without_manual[0] += 'ReplaceWithDagger'
-    return without_manual
+    return poc_metadata[poc_id]['test']['analyzers']
 
 def get_bug_identifiers(row, poc_metadata, rustsec_metadata):
     identifiers = []
@@ -122,7 +117,7 @@ def main():
     purely_manual_pocs = set([
         id
         for id, poc in poc_metadata.items()
-        if poc['test']['analyzers'] == ['manual']
+        if poc['test']['analyzers'] == ['Manual']
     ])
     metadata = metadata[~metadata['ID'].isin(purely_manual_pocs)]
 
@@ -164,24 +159,38 @@ def format_list_for_latex_table(pandas_list):
     with_latex_newlines = 'ReplaceWithDoubleBackslash'.join(pandas_list)
     return 'ReplaceWithMakeCell' + with_latex_newlines + 'ReplaceWithEndCurly'
 
+ALGORITHM_NAMES_SHORT = {
+    'PanicSafety': 'PS',
+    'SendSyncVariance': 'SV',
+    'UnsafeDataflow': 'UD',
+    'D': 'UnsafeDestructor'
+}
+def format_algorithm_names(algos):
+    without_manual = [a for a in algos if a != 'Manual']
+    short_names = [ALGORITHM_NAMES_SHORT[a] for a in without_manual]
+
+    cell = '/'.join(short_names)
+    if 'Manual' in algos:
+        cell += 'ReplaceWithDagger'
+    return cell
+
 # Turn numbers into stuff like 10k, 5M, 101k, 200 etc.
 def format_number_abreviation(x):
     if pd.isnull(x):
         return "--"
 
     if x > 1_000_000:
-        x = "{}M".format(int(x / 1_000_000))
+        return "{}M".format(int(x / 1_000_000))
     elif x > 1_000:
-        x = "{}K".format(int(x / 1_000))
+        return "{}K".format(int(x / 1_000))
     elif x > 100:
         # Round to nearest hundrendth
         return str(int(x / 100) * 100)
-    return x
+    return str(int(x))
 
 def print_table(table):
     # Apply any formatting touches and print the table.
     table['Bug Location'] = table['Bug Location'].apply(format_list_for_latex_table)
-    table['Algorithm'] = table['Algorithm'].apply(format_list_for_latex_table)
     table['Bug Identifiers'] = table['Bug Identifiers'].apply(format_list_for_latex_table)
     table['L'] = table['L'].apply(format_list_for_latex_table)
     table['Description'] = table['Description'].apply(format_list_for_latex_table)
@@ -194,10 +203,23 @@ def print_table(table):
     # Drop the ID column
     table = table.drop(columns=['ID'])
 
-    as_latex = table.to_latex(na_rep='--', index=False, columns = [
-        'Crate', 'Bug Location', 'Downloads', 'Size (LoC)',
-        'Algorithm', 'Description', 'L', 'Bug Identifiers'
-    ])
+    # Use short names for the algorithm column
+    table['Algorithm'] = table['Algorithm'].apply(format_algorithm_names)
+
+    # Abbreviate some column names.
+    table = table.rename(columns={
+        'Downloads': 'DLs',
+        'Size (LoC)': 'LoC',
+        'Algorithm': 'Algo'
+    })
+
+    as_latex = table.to_latex(na_rep='--', index=False,
+        column_format = 'llrrllrl',
+        columns = [
+            'Crate', 'Bug Location', 'DLs', 'LoC',
+            'Algo', 'Description', 'L', 'Bug Identifiers'
+        ]
+    )
     as_latex = as_latex.replace('ReplaceWithDoubleBackslash', r'\\')
     as_latex = as_latex.replace('ReplaceWithMakeCell', r'\makecell[tl]{')
     as_latex = as_latex.replace('ReplaceWithEndCurly', r'}')
