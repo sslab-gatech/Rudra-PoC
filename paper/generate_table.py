@@ -232,10 +232,10 @@ def print_table(table):
     )
 
     # Add little footnotes to the contracted columns.
-    as_latex = as_latex.replace('DLs', r'DLs\textsuperscript{$a$}')
-    as_latex = as_latex.replace('LoC', r'LoC\textsuperscript{$b$}')
-    as_latex = as_latex.replace('Algo', r'Algo\textsuperscript{$c$}')
-    as_latex = as_latex.replace('Latent Time', r'L\textsuperscript{$d$}')
+    as_latex = as_latex.replace('DLs', r'DLs\textsuperscript{$1$}')
+    as_latex = as_latex.replace('LoC', r'LoC\textsuperscript{$2$}')
+    as_latex = as_latex.replace('Algo', r'Algo\textsuperscript{$3$}')
+    as_latex = as_latex.replace('Latent Time', r'L\textsuperscript{$4$}')
 
     as_latex = as_latex.replace('ReplaceWithDoubleBackslash', r'\\')
     as_latex = as_latex.replace('ReplaceWithMakeCell', r'\makecell[tl]{')
