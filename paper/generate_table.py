@@ -132,7 +132,7 @@ def main():
     std_bug = {
         'Crate': ['std'],
         'Bug Location': [['str.rs', 'mod.rs']],
-        'Algorithm': [['PanicSafety']],
+        'Algorithm': [['UnsafeDataflow']],
         'Bug Identifiers': [['rust#80335', 'rust#80894']],
         # Computed with:
         #   cloc ~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library
