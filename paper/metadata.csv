@@ -8,7 +8,7 @@ ID,Crate,Bug Location,Downloads,Size (LoC),L,Description,Comment
 63,xcb,base.rs,710481,1068,5y,\texttt{Error} drops objects without ownership leading to use-after-free.,
 46,generator,gen_impl.rs,511115,2094,4y,\texttt{Generator}s can be sent across threads leading to data races.,
 93,glium,mod.rs,497024,38538,6y,\texttt{Content} passes uninitialized memory to safe functions.,
-98,ash,util.rs,478335,89015,2y,\texttt{read_spv} returns uninitialized bytes when reading incompletely .,
+98,ash,util.rs,478335,89015,2y,\texttt{read_spv} returns uninitialized bytes when reading incompletely.,
 15,atom,lib.rs,458802,636,2y,\texttt{Atom<T>} can be instantiated with any \texttt{T} allowing data races for non thread safe types when used concurrently.,
 34,model,lib.rs,280033,288,2y,\texttt{Shared} bypasses concurrency safety without being marked \texttt{unsafe}.,
 99,claxon,metadata.rs,251257,3040,6y,\texttt{metadata::read} methods return unitialized memory.,
