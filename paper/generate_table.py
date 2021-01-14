@@ -219,16 +219,24 @@ def print_table(table):
     table = table.rename(columns={
         'Downloads': 'DLs',
         'Size (LoC)': 'LoC',
-        'Algorithm': 'Algo'
+        'Algorithm': 'Algo',
+        'L': 'Latent Time'
     })
 
     as_latex = table.to_latex(na_rep='--', index=False,
         column_format = 'llrrlp{7.6cm}rl',
         columns = [
             'Crate', 'Bug Location', 'DLs', 'LoC',
-            'Algo', 'Description', 'L', 'Bug Identifiers'
+            'Algo', 'Description', 'Latent Time', 'Bug Identifiers'
         ]
     )
+
+    # Add little footnotes to the contracted columns.
+    as_latex = as_latex.replace('DLs', r'DLs\textsuperscript{$a$}')
+    as_latex = as_latex.replace('LoC', r'LoC\textsuperscript{$b$}')
+    as_latex = as_latex.replace('Algo', r'Algo\textsuperscript{$c$}')
+    as_latex = as_latex.replace('Latent Time', r'L\textsuperscript{$d$}')
+
     as_latex = as_latex.replace('ReplaceWithDoubleBackslash', r'\\')
     as_latex = as_latex.replace('ReplaceWithMakeCell', r'\makecell[tl]{')
     as_latex = as_latex.replace('ReplaceWithEndCurly', r'}')
