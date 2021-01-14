@@ -102,10 +102,6 @@ def main():
     metadata['L'] = metadata['L'].fillna(value='--')
     metadata['L'] = metadata['L'].apply(lambda x: x.split(';'))
 
-    # Split multiple descriptions
-    metadata['Description'] = metadata['Description'].fillna(value='--')
-    metadata['Description'] = metadata['Description'].apply(lambda x: x.split(';'))
-
     # Drop the Comment column, it's only for humans to add comments in the
     # metadata table.
     metadata = metadata.drop(columns=['Comment'])
@@ -129,20 +125,23 @@ def main():
     metadata['Bug Identifiers'] = metadata.apply(get_bug_identifiers, axis=1,
         poc_metadata=poc_metadata, rustsec_metadata=rustsec_metadata)
 
-    # Only do the first 35 bugs for now
-    metadata = metadata.head(35)
+    # Only do the first 34 bugs for now
+    metadata = metadata.head(34)
 
     # Manually put in the std library bugs.
     std_bug = {
         'Crate': ['std'],
         'Bug Location': [['str.rs', 'mod.rs']],
         'Algorithm': [['PanicSafety']],
-        'Bug Identifiers': [['rust-lang/rust#80335', 'rust-lang/rust#80894']],
+        'Bug Identifiers': [['rust#80335', 'rust#80894']],
         # Computed with:
         #   cloc ~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library
         'Size (LoC)': [282518],
         'L': [['3y', '2y']],
-        'Description': [['Uninit memory read in join']],
+        'Description': [
+            r'The \texttt{join} method can return uninitialized memory when string length changes. '
+            r'\texttt{read_to_string} and \texttt{read_to_end} methods '
+            r'overflow the heap and read past the provided buffer.'],
     }
     metadata = pd.concat([pd.DataFrame.from_dict(std_bug), metadata])
 
@@ -191,13 +190,19 @@ def format_number_abreviation(x):
 def print_table(table):
     # Contract "RUSTSEC-" to "RSC-" in bug identifiers.
     table['Bug Identifiers'] = table['Bug Identifiers'].apply(
-        lambda bug_list: [x.replace('RUSTSEC-', 'RSC-') for x in bug_list])
+        lambda bug_list: [x.replace('RUSTSEC-', 'R-').replace('CVE-', 'C-') for x in bug_list])
 
     # Apply any formatting touches and print the table.
     table['Bug Location'] = table['Bug Location'].apply(format_list_for_latex_table)
     table['Bug Identifiers'] = table['Bug Identifiers'].apply(format_list_for_latex_table)
     table['L'] = table['L'].apply(format_list_for_latex_table)
-    table['Description'] = table['Description'].apply(format_list_for_latex_table)
+
+    # Perform some convenience replacements to use LaTeX in description.
+    table['Description'] = table['Description'].fillna(value='')
+    table['Description'] = table['Description'].apply(
+        lambda desc: desc.replace(r'\texttt{', 'ReplaceWithTextTTT')
+                         .replace(r'}', 'ReplaceWithEndCurly')
+    )
 
     table['Downloads'] = table['Downloads'].apply(format_number_abreviation)
     # Round LoC to nearest hundred
@@ -218,7 +223,7 @@ def print_table(table):
     })
 
     as_latex = table.to_latex(na_rep='--', index=False,
-        column_format = 'llrrlp{7cm}rl',
+        column_format = 'llrrlp{7.6cm}rl',
         columns = [
             'Crate', 'Bug Location', 'DLs', 'LoC',
             'Algo', 'Description', 'L', 'Bug Identifiers'
@@ -228,6 +233,7 @@ def print_table(table):
     as_latex = as_latex.replace('ReplaceWithMakeCell', r'\makecell[tl]{')
     as_latex = as_latex.replace('ReplaceWithEndCurly', r'}')
     as_latex = as_latex.replace('ReplaceWithDagger', r'$^\dagger$')
+    as_latex = as_latex.replace('ReplaceWithTextTTT', r'\texttt{')
     print(as_latex)
 
 if __name__ == '__main__':
