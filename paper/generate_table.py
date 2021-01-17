@@ -1,0 +1,185 @@
+#!/usr/bin/env python3
+import pandas as pd
+import ratelimit
+import requests
+
+from common import *
+
+pd.set_option('display.max_colwidth', 10000)
+
+# As per https://crates.io/policies
+#   > limit their request rate to 1 request per second or less
+# So we limit ourselves to 1 request every 2 seconds.
+@ratelimit.limits(calls=30, period=60)
+def get_downloads_for_crate_from_cargo_api(crate):
+    headers = {'User-Agent': 'Download-Stats (github.com/ammaraskar)'}
+
+    r = requests.get("https://crates.io/api/v1/crates/{}".format(crate), headers=headers)
+    r.raise_for_status()
+
+    return r.json()['crate']['downloads']
+
+def fetch_missing_download_counts(row):
+    if pd.isnull(row['Downloads']):
+        return int(get_downloads_for_crate_from_cargo_api(row['Crate']))
+    return row['Downloads']
+
+def main():
+    metadata = pd.read_csv(PROJECT_DIRECTORY / 'paper' / 'metadata.csv')
+
+    # Fetch any missing download entries and then save the csv back.
+    metadata['Downloads'] = metadata.apply(fetch_missing_download_counts, axis=1)
+    metadata.to_csv(PROJECT_DIRECTORY / 'paper' / 'metadata.csv', index=False)
+
+    # Split multiple locations
+    metadata['Bug Location'] = metadata['Bug Location'].fillna(value='')
+    metadata['Bug Location'] = metadata['Bug Location'].apply(lambda x: x.split(';'))
+
+    # Split multiple latent times
+    metadata['L'] = metadata['L'].fillna(value='--')
+    metadata['L'] = metadata['L'].apply(lambda x: x.split(';'))
+
+    # Drop the Comment column, it's only for humans to add comments in the
+    # metadata table.
+    metadata = metadata.drop(columns=['Comment'])
+
+    poc_metadata = get_poc_metadata()
+    rustsec_metadata = get_rustsec_metadata()
+
+    # Drop any purely manually found bugs.
+    purely_manual_pocs = set([
+        id
+        for id, poc in poc_metadata.items()
+        if poc['test']['analyzers'] == ['Manual']
+    ])
+    metadata = metadata[~metadata['ID'].isin(purely_manual_pocs)]
+
+    # Column for algorithm used.
+    metadata['Algorithm'] = metadata['ID'].apply(get_bug_algorithm,
+        poc_metadata=poc_metadata)
+
+    # Add a column containing bug identifiers for the crates
+    metadata['Bug Identifiers'] = metadata.apply(get_bug_identifiers, axis=1,
+        poc_metadata=poc_metadata, rustsec_metadata=rustsec_metadata)
+
+    # Only do the first 34 bugs for now
+    metadata = metadata.head(34)
+
+    # Manually put in the std library bugs.
+    std_bug = {
+        'Crate': ['std'],
+        'Bug Location': [['str.rs', 'mod.rs']],
+        'Algorithm': [['UnsafeDataflow']],
+        'Bug Identifiers': [['rust#80335', 'rust#80894']],
+        # Computed with:
+        #   cloc ~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library
+        'Size (LoC)': [282518],
+        'L': [['3y', '2y']],
+        'Description': [
+            r'The \texttt{join} method can return uninitialized memory when string length changes. '
+            r'\texttt{read_to_string} and \texttt{read_to_end} methods '
+            r'overflow the heap and read past the provided buffer.'],
+    }
+    metadata = pd.concat([pd.DataFrame.from_dict(std_bug), metadata])
+
+    print_table(metadata)
+
+def format_list_for_latex_table(pandas_list):
+    if len(pandas_list) == 0:
+        return '--'
+    if len(pandas_list) == 1:
+        return pandas_list[0]
+
+    # Note that we use a special identifier here to avoid panda's auto escaping,
+    # this will get fixed afterwards
+    with_latex_newlines = 'ReplaceWithDoubleBackslash'.join(pandas_list)
+    return 'ReplaceWithMakeCell' + with_latex_newlines + 'ReplaceWithEndCurly'
+
+ALGORITHM_NAMES_SHORT = {
+    'PanicSafety': 'PS',
+    'SendSyncVariance': 'SV',
+    'UnsafeDataflow': 'UD',
+    'D': 'UnsafeDestructor'
+}
+def format_algorithm_names(algos):
+    without_manual = [a for a in algos if a != 'Manual']
+    short_names = [ALGORITHM_NAMES_SHORT[a] for a in without_manual]
+
+    cell = '/'.join(short_names)
+    if 'Manual' in algos:
+        cell += 'ReplaceWithDagger'
+    return cell
+
+# Turn numbers into stuff like 10k, 5M, 101k, 200 etc.
+def format_number_abreviation(x):
+    if pd.isnull(x):
+        return "--"
+
+    if x > 1_000_000:
+        return "{}M".format(int(x / 1_000_000))
+    elif x > 1_000:
+        return "{}K".format(int(x / 1_000))
+    elif x > 100:
+        # Round to nearest hundrendth
+        return str(int(x / 100) * 100)
+    return str(int(x))
+
+def print_table(table):
+    # Contract "RUSTSEC-" to "RSC-" in bug identifiers.
+    table['Bug Identifiers'] = table['Bug Identifiers'].apply(
+        lambda bug_list: [x.replace('RUSTSEC-', 'R-').replace('CVE-', 'C-') for x in bug_list])
+
+    # Apply any formatting touches and print the table.
+    table['Bug Location'] = table['Bug Location'].apply(format_list_for_latex_table)
+    table['Bug Identifiers'] = table['Bug Identifiers'].apply(format_list_for_latex_table)
+    table['L'] = table['L'].apply(format_list_for_latex_table)
+
+    # Perform some convenience replacements to use LaTeX in description.
+    table['Description'] = table['Description'].fillna(value='')
+    table['Description'] = table['Description'].apply(
+        lambda desc: desc.replace(r'\texttt{', 'ReplaceWithTextTTT')
+                         .replace(r'}', 'ReplaceWithEndCurly')
+    )
+
+    table['Downloads'] = table['Downloads'].apply(format_number_abreviation)
+    # Round LoC to nearest hundred
+    table['Size (LoC)'] = table['Size (LoC)'].apply(format_number_abreviation)
+    #table['Size (LoC)'] = table['Size (LoC)'].apply(lambda x: '{:,.0f}'.format(int(x / 100) * 100))
+
+    # Drop the ID column
+    table = table.drop(columns=['ID'])
+
+    # Use short names for the algorithm column
+    table['Algorithm'] = table['Algorithm'].apply(format_algorithm_names)
+
+    # Abbreviate some column names.
+    table = table.rename(columns={
+        'Downloads': 'DLs',
+        'Size (LoC)': 'LoC',
+        'Algorithm': 'Algo',
+        'L': 'Latent Time'
+    })
+
+    as_latex = table.to_latex(na_rep='--', index=False,
+        column_format = 'llrrlp{7.6cm}rl',
+        columns = [
+            'Crate', 'Bug Location', 'DLs', 'LoC',
+            'Algo', 'Description', 'Latent Time', 'Bug Identifiers'
+        ]
+    )
+
+    # Add little footnotes to the contracted columns.
+    as_latex = as_latex.replace('DLs', r'DLs\textsuperscript{$1$}')
+    as_latex = as_latex.replace('LoC', r'LoC\textsuperscript{$2$}')
+    as_latex = as_latex.replace('Algo', r'Algo\textsuperscript{$3$}')
+    as_latex = as_latex.replace('Latent Time', r'L\textsuperscript{$4$}')
+
+    as_latex = as_latex.replace('ReplaceWithDoubleBackslash', r'\\')
+    as_latex = as_latex.replace('ReplaceWithMakeCell', r'\makecell[tl]{')
+    as_latex = as_latex.replace('ReplaceWithEndCurly', r'}')
+    as_latex = as_latex.replace('ReplaceWithDagger', r'$^\dagger$')
+    as_latex = as_latex.replace('ReplaceWithTextTTT', r'\texttt{')
+    print(as_latex)
+
+if __name__ == '__main__':
+    main()
