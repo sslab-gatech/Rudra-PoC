@@ -8,8 +8,14 @@ from enum import Enum, auto
 
 # The order here should exactly match the actual analysis order of Rudra
 ANALYZERS = [
-    "CallGraph",  # will be removed in the future run
     "UnsafeDestructor",
+    "SendSyncVariance",
+    "UnsafeDataflow",
+]
+
+EXCLUDED_CRATES = [
+    "sarekt",
+    "xss-probe",
 ]
 
 TARGET_START_PREFIX = "Running rudra for target "
@@ -25,9 +31,6 @@ class Status(Enum):
     LINT_COMPILE_ERROR = auto()  # late compile error related to linting
     EMPTY_TARGET = auto()
     METADATA_ERROR = auto()
-    RLIB_ERROR = auto()  # this was mistake on my side, it should become OKAY after fix
-    ICE_TYPECK_ERROR = auto()  # this was mistake on my side, it should become OKAY after fix
-    ICE_IN_CALL_GRAPH_ERROR = auto()  # this was mistake on my side, it should become OKAY after fix
     ONLY_MAC_OS_ERROR = auto()
 
 TIME_FORMAT = '%Y-%m-%d %H:%M:%S.%f'
@@ -40,7 +43,7 @@ if len(sys.argv) < 2:
     print(f"Usage: {sys.argv[0]} <experiment-date>")
 
     print("List:")
-    for entry in os.listdir(report_dir):
+    for entry in sorted(os.listdir(report_dir)):
         print(f"- {entry}")
     exit(1)
 
@@ -65,6 +68,9 @@ for status in list(Status):
     crate_stat["status_acc"][status] = 0
 
 for log_file_name in os.listdir(log_dir):
+    if any(map(lambda name: log_file_name.startswith(f"log-{name}"), EXCLUDED_CRATES)):
+        continue
+
     assert_message = f"Assertion failure in {log_file_name}"
     crate_status = Status.OKAY
     cur_stat = {
@@ -91,9 +97,7 @@ for log_file_name in os.listdir(log_dir):
                 if "Finished with non-zero exit code" in line:
                     log_file.seek(0)
                     full_log = log_file.read()
-                    if "extern location for" in full_log:
-                        crate_status = Status.RLIB_ERROR
-                    elif "native frameworks are only available on macOS targets" in full_log:
+                    if "native frameworks are only available on macOS targets" in full_log:
                         crate_status = Status.ONLY_MAC_OS_ERROR
                     elif ("reached the type-length limit while instantiating" in full_log
                         or "overflow representing the type" in full_log):
@@ -141,14 +145,7 @@ for log_file_name in os.listdir(log_dir):
                 else:
                     if "Finished with non-zero exit code" in line:
                         log_file.seek(0)
-                        full_log = log_file.read()
-                        if "CallGraph analysis started" in prev_line:
-                            crate_status = Status.ICE_IN_CALL_GRAPH_ERROR
-                        elif "can't type-check body of" in full_log:
-                            crate_status = Status.ICE_TYPECK_ERROR
-                        else:
-                            assert False, assert_message
-                        break
+                        assert False, assert_message
 
                     if "analysis finished" in line:
                         while ANALYZERS[analyzer_idx] not in line:
@@ -176,7 +173,9 @@ for log_file_name in os.listdir(log_dir):
                         report_file_path = os.path.join(report_dir, report_file_name)
                         if os.path.exists(report_file_path):
                             with open(report_file_path, "r") as report_file:
-                                report_dict = tomlkit.loads(report_file.read())
+                                # match this with Rudra implementation
+                                report_file_str = report_file.read().replace("\t", "\\t").replace("\u001B", "\\u001B")
+                                report_dict = tomlkit.loads(report_file_str)
                             for report in report_dict["reports"]:
                                 target_stat[report["analyzer"]][AnalyzerField.NUM_REPORTS] += 1
 
