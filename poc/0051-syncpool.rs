@@ -11,6 +11,7 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/Chopinsky/byte_buffer/issues/2"
 issue_date = 2020-11-29
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

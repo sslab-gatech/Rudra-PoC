@@ -20,6 +20,7 @@ cargo_toolchain = "nightly"
 [report]
 issue_url = "https://github.com/strake/containers.rs/issues/2"
 issue_date = 2021-01-12
+unique_bugs = 2
 ```
 !*/
 #![forbid(unsafe_code)]

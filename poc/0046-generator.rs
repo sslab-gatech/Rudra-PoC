@@ -11,6 +11,7 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/Xudong-Huang/generator-rs/issues/27"
 issue_date = 2020-11-16
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

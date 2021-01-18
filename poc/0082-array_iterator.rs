@@ -11,6 +11,7 @@ bug_classes = ["InconsistencyAmplification"]
 [report]
 issue_url = "https://gitlab.com/kevincox/array_iterator.rs/-/issues/1"
 issue_date = 2020-12-31
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

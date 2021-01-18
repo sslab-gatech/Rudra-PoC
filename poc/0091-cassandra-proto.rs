@@ -11,6 +11,7 @@ bug_classes = ["UninitExposure"]
 [report]
 issue_url = "https://github.com/AlexPikalov/cassandra-proto/issues/3"
 issue_date = 2021-01-05
+unique_bugs = 2
 ```
 !*/
 #![forbid(unsafe_code)]

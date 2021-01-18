@@ -12,6 +12,7 @@ cargo_toolchain = "nightly"
 [report]
 issue_url = "https://github.com/L117/array-tools/issues/2"
 issue_date = 2020-12-31
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

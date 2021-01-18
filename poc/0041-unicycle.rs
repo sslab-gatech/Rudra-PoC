@@ -15,6 +15,8 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/udoprog/unicycle/issues/8"
 issue_date = 2020-11-15
+unique_bugs = 2
+additional_send_sync_violations = 2
 ```
 !*/
 #![forbid(unsafe_code)]

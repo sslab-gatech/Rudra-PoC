@@ -15,6 +15,7 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/maciejhirsz/beef/issues/37"
 issue_date = 2020-10-28
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

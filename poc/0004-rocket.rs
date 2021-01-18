@@ -22,6 +22,7 @@ issue_url = "https://github.com/SergioBenitez/Rocket/issues/1312"
 issue_date = 2020-05-27
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/320"
 rustsec_id = "RUSTSEC-2020-0028"
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

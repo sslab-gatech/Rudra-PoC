@@ -13,6 +13,7 @@ issue_url = "https://github.com/vorner/arc-swap/issues/45"
 issue_date = 2020-12-09
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/530"
 rustsec_id = "RUSTSEC-2020-0091"
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

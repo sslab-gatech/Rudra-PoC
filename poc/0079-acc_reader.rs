@@ -11,6 +11,7 @@ bug_classes = ["UninitExposure"]
 [report]
 issue_url = "https://github.com/netvl/acc_reader/issues/1"
 issue_date = 2020-12-27
+unique_bugs = 2
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -11,6 +11,7 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/purpleposeidon/v9/issues/1"
 issue_date = 2020-12-18
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

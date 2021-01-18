@@ -15,6 +15,8 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/krl/convec/issues/2"
 issue_date = 2020-11-24
+unique_bugs = 1
+additional_send_sync_violations = 1
 ```
 !*/
 #![forbid(unsafe_code)]

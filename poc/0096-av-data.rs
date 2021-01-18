@@ -11,6 +11,7 @@ bug_classes = ["Other"]
 [report]
 issue_url = "https://github.com/rust-av/rust-av/issues/136"
 issue_date = 2021-01-07
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

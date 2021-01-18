@@ -14,6 +14,7 @@ issue_url = "https://github.com/arcnmx/stack-rs/issues/4"
 issue_date = 2020-09-24
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/392"
 rustsec_id = "RUSTSEC-2020-0042"
+unique_bugs = 2
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -19,6 +19,7 @@ bug_classes = ["PanicSafety"]
 [report]
 issue_url = "https://github.com/charles-r-earp/adtensor/issues/4"
 issue_date = 2021-01-11
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

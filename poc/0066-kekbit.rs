@@ -15,6 +15,7 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/motoras/kekbit/issues/34"
 issue_date = 2020-12-18
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -16,6 +16,7 @@ cargo_toolchain = "nightly"
 [report]
 issue_url = "https://github.com/gzp-crey/shine/issues/1"
 issue_date = 2020-12-23
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

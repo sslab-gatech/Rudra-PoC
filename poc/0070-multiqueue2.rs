@@ -15,6 +15,8 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/abbychau/multiqueue2/issues/10"
 issue_date = 2020-12-19
+unique_bugs = 2
+additional_send_sync_violations = 2
 ```
 !*/
 #![forbid(unsafe_code)]

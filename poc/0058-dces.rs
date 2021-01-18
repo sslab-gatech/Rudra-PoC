@@ -11,6 +11,7 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_date = 2020-12-09
 issue_url = "https://gitlab.redox-os.org/redox-os/dces-rust/-/issues/8"
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -11,6 +11,8 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/playXE/cgc/issues/5"
 issue_date = 2020-12-10
+unique_bugs = 3
+additional_send_sync_violations = 1
 ```
 !*/
 #![forbid(unsafe_code)]

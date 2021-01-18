@@ -13,6 +13,7 @@ issue_url = "https://github.com/rust-lang-nursery/failure/issues/336"
 issue_date = 2019-11-13
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/318"
 rustsec_id = "RUSTSEC-2019-0036"
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

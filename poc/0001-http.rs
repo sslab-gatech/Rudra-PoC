@@ -13,6 +13,7 @@ issue_url = "hyperium/http#353 and hyperium/http#354"
 issue_date = 2019-11-16
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/218"
 rustsec_id = "RUSTSEC-2019-0034"
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

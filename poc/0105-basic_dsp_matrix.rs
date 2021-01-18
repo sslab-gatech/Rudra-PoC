@@ -11,6 +11,7 @@ bug_classes = ["PanicSafety"]
 [report]
 issue_url = "https://github.com/liebharc/basic_dsp/issues/47"
 issue_date = 2021-01-10
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

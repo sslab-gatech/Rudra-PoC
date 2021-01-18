@@ -14,6 +14,7 @@ issue_url = "https://github.com/petertodd/rust-obstack/issues/4"
 issue_date = 2020-09-03
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/373"
 rustsec_id = "RUSTSEC-2020-0040"
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

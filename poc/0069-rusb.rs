@@ -11,6 +11,8 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/a1ien/rusb/issues/44"
 issue_date = 2020-12-18
+unique_bugs = 2
+additional_send_sync_violations = 2
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -17,6 +17,7 @@ issue_url = "https://github.com/rust-lang/futures-rs/issues/2239"
 issue_date = 2020-10-23
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/455"
 rustsec_id = "RUSTSEC-2020-0059"
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

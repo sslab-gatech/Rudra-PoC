@@ -17,6 +17,7 @@ cargo_toolchain = "nightly"
 [report]
 issue_url = "https://github.com/timothee-haudebourg/bottle/issues/1"
 issue_date = 2020-12-07
+unique_bugs = 2
 ```
 !*/
 #![forbid(unsafe_code)]
