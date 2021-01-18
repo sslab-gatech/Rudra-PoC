@@ -12,6 +12,7 @@ bug_classes = ["PanicSafety"]
 issue_url = "https://github.com/rustgd/glsl-layout/pull/10"
 issue_date = 2021-01-10
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/568"
+rustsec_id = "RUSTSEC-2021-0005"
 unique_bugs = 1
 ```
 !*/
