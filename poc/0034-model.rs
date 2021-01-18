@@ -15,6 +15,7 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/spacejam/model/issues/3"
 issue_date = 2020-11-10
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/578"
 unique_bugs = 1
 additional_send_sync_violations = 1
 ```
