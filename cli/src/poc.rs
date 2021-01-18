@@ -127,12 +127,20 @@ pub struct TestMetadata {
     pub cargo_toolchain: Option<String>,
 }
 
+fn usize_is_zero(val: &usize) -> bool {
+    *val == 0
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ReportMetadata {
     pub issue_url: Option<String>,
     pub issue_date: Option<Datetime>,
     pub rustsec_url: Option<String>,
     pub rustsec_id: Option<String>,
+    // TODO: move this to test section
+    pub unique_bugs: usize,
+    #[serde(default, skip_serializing_if = "usize_is_zero")]
+    pub additional_send_sync_violations: usize,
 }
 
 struct PocData {
