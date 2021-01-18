@@ -11,6 +11,7 @@ bug_classes = ["SendSyncVariance", "Other"]
 [report]
 issue_url = "https://github.com/biluohc/stderr/issues/5"
 issue_date = 2020-12-22
+unique_bugs = 2
 ```
 !*/
 #![forbid(unsafe_code)]

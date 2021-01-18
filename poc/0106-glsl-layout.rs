@@ -11,6 +11,7 @@ bug_classes = ["PanicSafety"]
 [report]
 issue_url = "https://github.com/rustgd/glsl-layout/pull/10"
 issue_date = 2021-01-10
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

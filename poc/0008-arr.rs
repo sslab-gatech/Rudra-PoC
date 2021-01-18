@@ -19,6 +19,8 @@ issue_url = "https://github.com/sjep/array/issues/1"
 issue_date = 2020-08-25
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/364"
 rustsec_id = "RUSTSEC-2020-0034"
+unique_bugs = 3
+additional_send_sync_violations = 1
 ```
 !*/
 #![forbid(unsafe_code)]

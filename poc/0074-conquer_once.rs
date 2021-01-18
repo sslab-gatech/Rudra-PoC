@@ -15,6 +15,7 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/oliver-giersch/conquer-once/issues/3"
 issue_date = 2020-12-22
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

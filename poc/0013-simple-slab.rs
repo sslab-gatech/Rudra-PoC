@@ -13,6 +13,7 @@ issue_url = "https://github.com/nathansizemore/simple-slab/issues/2"
 issue_date = 2020-09-03
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/376"
 rustsec_id = "RUSTSEC-2020-0039"
+unique_bugs = 2
 ```
 !*/
 #![forbid(unsafe_code)]

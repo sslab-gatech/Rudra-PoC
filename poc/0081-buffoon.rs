@@ -11,6 +11,7 @@ bug_classes = ["UninitExposure"]
 [report]
 issue_url = "https://github.com/carllerche/buffoon/issues/2"
 issue_date = 2020-12-31
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

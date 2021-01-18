@@ -11,6 +11,8 @@ bug_classes = ["SendSyncVariance", "Other"]
 [report]
 issue_url = "https://github.com/sklose/disrustor/issues/1"
 issue_date = 2020-12-17
+unique_bugs = 2
+additional_send_sync_violations = 1
 ```
 !*/
 #![forbid(unsafe_code)]

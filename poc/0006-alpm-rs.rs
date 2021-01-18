@@ -13,6 +13,7 @@ issue_url = "https://github.com/pigeonhands/rust-arch/issues/2"
 issue_date = 2020-08-20
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/360"
 rustsec_id = "RUSTSEC-2020-0032"
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

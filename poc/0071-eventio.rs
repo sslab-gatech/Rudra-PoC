@@ -19,6 +19,7 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/petabi/eventio/issues/33"
 issue_date = 2020-12-20
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

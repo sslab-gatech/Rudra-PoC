@@ -11,6 +11,7 @@ bug_classes = ["PanicSafety"]
 [report]
 issue_url = "https://github.com/cogciprocate/ocl/issues/194"
 issue_date = 2021-01-04
+unique_bugs = 2
 ```
 !*/
 #![forbid(unsafe_code)]

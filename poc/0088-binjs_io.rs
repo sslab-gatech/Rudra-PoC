@@ -12,6 +12,7 @@ cargo_toolchain = "nightly"
 [report]
 issue_url = "https://github.com/binast/binjs-ref/issues/460"
 issue_date = 2021-01-03
+unique_bugs = 4
 ```
 !*/
 

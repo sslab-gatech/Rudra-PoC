@@ -11,6 +11,7 @@ bug_classes = ["PanicSafety"]
 [report]
 issue_url = "https://gitlab.com/myrrlyn/endian_trait/-/issues/1"
 issue_date = 2021-01-04
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

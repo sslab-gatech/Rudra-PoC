@@ -13,6 +13,8 @@ issue_url = "https://github.com/slide-rs/atom/issues/13"
 issue_date = 2020-09-21
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/390"
 rustsec_id = "RUSTSEC-2020-0044"
+unique_bugs = 1
+additional_send_sync_violations = 1
 ```
 !*/
 #![forbid(unsafe_code)]

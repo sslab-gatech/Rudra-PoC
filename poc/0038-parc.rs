@@ -11,6 +11,7 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/hyyking/rustracts/pull/6"
 issue_date = 2020-11-14
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

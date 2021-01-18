@@ -15,6 +15,8 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_date = 2020-12-08
 issue_url = "https://github.com/Devolutions/gfwx-rs/issues/7"
+unique_bugs = 1
+additional_send_sync_violations = 1
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -15,6 +15,8 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/bodil/im-rs/issues/157"
 issue_date = 2020-11-09
+unique_bugs = 1
+additional_send_sync_violations = 1
 ```
 !*/
 #![forbid(unsafe_code)]

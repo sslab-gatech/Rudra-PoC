@@ -13,6 +13,7 @@ issue_url = "https://github.com/shawnscode/crayon/issues/87"
 issue_date = 2020-08-31
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/371"
 rustsec_id = "RUSTSEC-2020-0037"
+unique_bugs = 1
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -11,6 +11,8 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/krl/bunch/issues/1"
 issue_date = 2020-11-12
+unique_bugs = 1
+additional_send_sync_violations = 1
 ```
 !*/
 #![forbid(unsafe_code)]

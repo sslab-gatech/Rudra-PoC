@@ -16,6 +16,8 @@ cargo_toolchain = "nightly"
 [report]
 issue_date = 2020-12-08
 issue_url = "https://github.com/google/rust-async-coap/issues/33"
+unique_bugs = 1
+additional_send_sync_violations = 1
 ```
 !*/
 #![forbid(unsafe_code)]
