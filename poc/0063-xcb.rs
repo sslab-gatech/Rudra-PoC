@@ -11,6 +11,7 @@ bug_classes = ["Other"]
 [report]
 issue_url = "https://github.com/rtbo/rust-xcb/issues/93"
 issue_date = 2020-12-10
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/575"
 unique_bugs = 1
 ```
 !*/
