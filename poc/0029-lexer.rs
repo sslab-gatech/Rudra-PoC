@@ -15,6 +15,7 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://gitlab.com/nathanfaucett/rs-lexer/-/issues/2"
 issue_date = 2020-11-10
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/595"
 unique_bugs = 1
 ```
 !*/
