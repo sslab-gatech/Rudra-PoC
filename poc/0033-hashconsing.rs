@@ -13,6 +13,7 @@ analyzers = ["SendSyncVariance"]
 bug_classes = ["SendSyncVariance"]
 
 [report]
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/584"
 issue_url = "https://github.com/AdrienChampion/hashconsing/issues/1"
 issue_date = 2020-11-10
 unique_bugs = 1

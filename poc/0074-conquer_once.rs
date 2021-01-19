@@ -13,6 +13,7 @@ analyzers = ["SendSyncVariance"]
 bug_classes = ["SendSyncVariance"]
 
 [report]
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/579"
 issue_url = "https://github.com/oliver-giersch/conquer-once/issues/3"
 issue_date = 2020-12-22
 unique_bugs = 1

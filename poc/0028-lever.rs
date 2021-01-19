@@ -13,6 +13,7 @@ analyzers = ["SendSyncVariance"]
 bug_classes = ["SendSyncVariance"]
 
 [report]
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/589"
 issue_url = "https://github.com/vertexclique/lever/issues/15"
 issue_date = 2020-11-10
 unique_bugs = 1

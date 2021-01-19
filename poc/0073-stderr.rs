@@ -9,6 +9,7 @@ analyzers = ["Manual", "SendSyncVariance"]
 bug_classes = ["SendSyncVariance", "Other"]
 
 [report]
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/585"
 issue_url = "https://github.com/biluohc/stderr/issues/5"
 issue_date = 2020-12-22
 unique_bugs = 2
