@@ -124,10 +124,17 @@ def format_number_abreviation(x):
         return str(int(x / 100) * 100)
     return str(int(x))
 
+def append_extra_bug_identifiers(row):
+    if not pd.isnull(row['Extra Bug Identifiers']):
+        row['Bug Identifiers'].append(row['Extra Bug Identifiers'])
+    return row['Bug Identifiers']
+
 def print_table(table):
     # Contract "RUSTSEC-" to "RSC-" in bug identifiers.
     table['Bug Identifiers'] = table['Bug Identifiers'].apply(
         lambda bug_list: [x.replace('RUSTSEC-', 'R-').replace('CVE-', 'C-') for x in bug_list])
+
+    table['Bug Identifiers'] = table.apply(append_extra_bug_identifiers, axis=1)
 
     # Apply any formatting touches and print the table.
     table['Bug Location'] = table['Bug Location'].apply(format_list_for_latex_table)
