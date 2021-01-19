@@ -15,6 +15,7 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/buttplugio/buttplug-rs/issues/225"
 issue_date = 2020-12-18
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/592"
 unique_bugs = 1
 additional_send_sync_violations = 1
 ```
