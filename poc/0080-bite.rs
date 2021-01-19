@@ -12,6 +12,7 @@ cargo_toolchain = "nightly"
 [report]
 issue_url = "https://github.com/hinaria/bite/issues/1"
 issue_date = 2020-12-31
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/593"
 unique_bugs = 1
 ```
 !*/
