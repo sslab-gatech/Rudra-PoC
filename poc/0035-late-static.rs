@@ -11,6 +11,7 @@ bug_classes = ["SendSyncVariance"]
 [report]
 issue_url = "https://github.com/Richard-W/late-static/issues/1"
 issue_date = 2020-11-10
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/611"
 unique_bugs = 1
 additional_send_sync_violations = 1
 ```
