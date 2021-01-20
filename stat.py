@@ -23,6 +23,7 @@ TARGET_START_PREFIX = "Running rudra for target "
 class AnalyzerField(str, Enum):
     TIME = "time",
     NUM_REPORTS = "num_reports",
+    SPAN_SET = "span_set",
 
 class Status(Enum):
     OKAY = auto()
@@ -82,6 +83,7 @@ for log_file_name in os.listdir(log_dir):
         cur_stat[analyzer] = {
             AnalyzerField.TIME: datetime.timedelta(),
             AnalyzerField.NUM_REPORTS: 0,
+            AnalyzerField.SPAN_SET: set(),
         }
 
     with open(os.path.join(log_dir, log_file_name)) as log_file:
@@ -165,6 +167,7 @@ for log_file_name in os.listdir(log_dir):
 
                         # Report counting is done later
                         target_stat[analyzer][AnalyzerField.NUM_REPORTS] = 0
+                        target_stat[analyzer][AnalyzerField.SPAN_SET] = set()
 
                     if "Rudra finished" in line:
                         target_end_time = datetime.datetime.strptime(line[:TIME_LEN], TIME_FORMAT)
@@ -178,6 +181,7 @@ for log_file_name in os.listdir(log_dir):
                                 report_dict = tomlkit.loads(report_file_str)
                             for report in report_dict["reports"]:
                                 target_stat[report["analyzer"]][AnalyzerField.NUM_REPORTS] += 1
+                                target_stat[report["analyzer"]][AnalyzerField.SPAN_SET].add(report["location"])
 
                         # Accumulate target stat to crate stat
                         if crate_status == Status.OKAY:
@@ -187,7 +191,10 @@ for log_file_name in os.listdir(log_dir):
                             for analyzer in ANALYZERS:
                                 if analyzer in target_stat:
                                     for field in AnalyzerField:
-                                        cur_stat[analyzer][field] += target_stat[analyzer][field]
+                                        if isinstance(target_stat[analyzer][field], set):
+                                            cur_stat[analyzer][field] |= target_stat[analyzer][field]
+                                        else:
+                                            cur_stat[analyzer][field] += target_stat[analyzer][field]
                         target_stat = None
 
             prev_line = line
@@ -214,6 +221,7 @@ with open(f"stat-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
     for analyzer in ANALYZERS:
         header_row.append(f"{analyzer}-time")
         header_row.append(f"{analyzer}-num-reports")
+        header_row.append(f"{analyzer}-num-span")
     csv_writer.writerow(header_row)
 
     for (i, name) in enumerate(crate_stat["names"]):
@@ -228,6 +236,7 @@ with open(f"stat-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
             for analyzer in ANALYZERS:
                 crate_row.append(stat[analyzer][AnalyzerField.TIME] / one_ms)  # ms taken
                 crate_row.append(stat[analyzer][AnalyzerField.NUM_REPORTS])
+                crate_row.append(len(stat[analyzer][AnalyzerField.SPAN_SET]))
             csv_writer.writerow(crate_row)
 
 with open(f"status-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
