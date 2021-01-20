@@ -11,6 +11,7 @@ bug_classes = ["PanicSafety"]
 [report]
 issue_url = "https://github.com/rodrimati1992/abi_stable_crates/issues/44"
 issue_date = 2020-12-21
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/609"
 unique_bugs = 2
 ```
 !*/
