@@ -12,6 +12,7 @@ bug_classes = ["PanicSafety"]
 issue_url = "https://github.com/mersinvald/autorand-rs/issues/5"
 issue_date = 2020-12-31
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/612"
+rustsec_id = "RUSTSEC-2020-0103"
 unique_bugs = 1
 ```
 !*/

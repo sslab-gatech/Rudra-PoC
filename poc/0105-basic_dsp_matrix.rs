@@ -12,6 +12,7 @@ bug_classes = ["PanicSafety"]
 issue_url = "https://github.com/liebharc/basic_dsp/issues/47"
 issue_date = 2021-01-10
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/607"
+rustsec_id = "RUSTSEC-2021-0009"
 unique_bugs = 1
 ```
 !*/

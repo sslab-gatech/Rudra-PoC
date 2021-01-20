@@ -12,6 +12,7 @@ bug_classes = ["UninitExposure"]
 issue_url = "https://github.com/Enet4/bra-rs/issues/1"
 issue_date = 2021-01-02
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/586"
+rustsec_id = "RUSTSEC-2021-0008"
 unique_bugs = 1
 ```
 !*/

@@ -10,6 +10,7 @@ bug_classes = ["PanicSafety"]
 
 [report]
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/587"
+rutsec_id = "RUSTSEC-2021-0011"
 issue_url = "https://github.com/cogciprocate/ocl/issues/194"
 issue_date = 2021-01-04
 unique_bugs = 2

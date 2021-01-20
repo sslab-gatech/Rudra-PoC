@@ -16,6 +16,7 @@ bug_classes = ["SendSyncVariance"]
 issue_url = "https://github.com/reem/rust-atomic-option/issues/4"
 issue_date = 2020-10-31
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/588"
+rustsec_id = "RUSTSEC-2020-0113"
 unique_bugs = 1
 ```
 !*/
