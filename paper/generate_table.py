@@ -62,6 +62,9 @@ def main():
     metadata['Bug Identifiers'] = metadata.apply(get_bug_identifiers, axis=1,
         poc_metadata=poc_metadata, rustsec_metadata=rustsec_metadata)
 
+    metadata['Has Unit Tests'] = metadata['Unit Test Coverage'].apply(
+        lambda cov: True if not pd.isnull(cov) and cov > 50 else False)
+
     # Only do the first 34 bugs for now
     metadata = metadata.head(34)
 
@@ -75,6 +78,8 @@ def main():
         #   cloc ~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library
         'Size (LoC)': [282518],
         'L': [['3y', '2y']],
+        # Assume that the stdlib has good coverage, afaik measuring this with tools is hard.
+        'Has Unit Tests': [True],
         'Description': [
             r'The \texttt{join} method can return uninitialized memory when string length changes. '
             r'\texttt{read_to_string} and \texttt{read_to_end} methods '
@@ -106,12 +111,12 @@ def format_algorithm_names(algos):
     short_names = [ALGORITHM_NAMES_SHORT[a] for a in without_manual]
 
     cell = '/'.join(short_names)
-    if 'Manual' in algos:
-        cell += 'ReplaceWithDagger'
+    #if 'Manual' in algos:
+    #    cell += 'ReplaceWithDagger'
     return cell
 
 # Turn numbers into stuff like 10k, 5M, 101k, 200 etc.
-def format_number_abreviation(x):
+def format_number_abreviation(x, round_hundreds=True):
     if pd.isnull(x):
         return "--"
 
@@ -119,7 +124,7 @@ def format_number_abreviation(x):
         return "{}M".format(int(x / 1_000_000))
     elif x > 1_000:
         return "{}K".format(int(x / 1_000))
-    elif x > 100:
+    elif x > 100 and round_hundreds:
         # Round to nearest hundrendth
         return str(int(x / 100) * 100)
     return str(int(x))
@@ -130,6 +135,11 @@ def append_extra_bug_identifiers(row):
     return row['Bug Identifiers']
 
 def print_table(table):
+    # Add dagger to crate name if it has fuzzer
+    table['Crate'] = table.apply(
+        lambda row: row['Crate'] + 'ReplaceWithDagger' if row['Has Fuzzer'] == 'Y' else row['Crate'],
+        axis=1)
+
     # Contract "RUSTSEC-" to "RSC-" in bug identifiers.
     table['Bug Identifiers'] = table['Bug Identifiers'].apply(
         lambda bug_list: [x.replace('RUSTSEC-', 'R-').replace('CVE-', 'C-') for x in bug_list])
@@ -151,41 +161,48 @@ def print_table(table):
     table['Downloads'] = table['Downloads'].apply(format_number_abreviation)
     # Round LoC to nearest hundred
     table['Size (LoC)'] = table['Size (LoC)'].apply(format_number_abreviation)
-    #table['Size (LoC)'] = table['Size (LoC)'].apply(lambda x: '{:,.0f}'.format(int(x / 100) * 100))
+    table['Unsafe Uses'] = table['Unsafe Uses'].apply(
+        format_number_abreviation, round_hundreds=False)
 
     # Drop the ID column
     table = table.drop(columns=['ID'])
 
     # Use short names for the algorithm column
     table['Algorithm'] = table['Algorithm'].apply(format_algorithm_names)
+    # Make unit test columns checkmark.
+    table['Has Unit Tests'] = table['Has Unit Tests'].apply(
+        lambda u: 'ReplaceWithCheckMark' if u else '')
 
     # Abbreviate some column names.
     table = table.rename(columns={
+        'Bug Location': 'Location',
         'Downloads': 'DLs',
         'Size (LoC)': 'LoC',
-        'Algorithm': 'Algo',
-        'L': 'Latent Time'
+        'Algorithm': 'Algorithm Used',
+        'L': 'Latent Time',
     })
 
     as_latex = table.to_latex(na_rep='--', index=False,
-        column_format = 'llrrlp{7.6cm}rl',
+        column_format = 'llcrrlp{7.6cm}rl',
         columns = [
-            'Crate', 'Bug Location', 'DLs', 'LoC',
-            'Algo', 'Description', 'Latent Time', 'Bug Identifiers'
+            'Crate', 'Location', 'Has Unit Tests', 'LoC', 'Unsafe Uses',
+            'Algorithm Used', 'Description', 'Latent Time', 'Bug Identifiers'
         ]
     )
 
     # Add little footnotes to the contracted columns.
-    as_latex = as_latex.replace('DLs', r'DLs\textsuperscript{$1$}')
+    as_latex = as_latex.replace('Has Unit Tests', r'T\textsuperscript{$1$}')
     as_latex = as_latex.replace('LoC', r'LoC\textsuperscript{$2$}')
-    as_latex = as_latex.replace('Algo', r'Algo\textsuperscript{$3$}')
-    as_latex = as_latex.replace('Latent Time', r'L\textsuperscript{$4$}')
+    as_latex = as_latex.replace('Unsafe Uses', r'UU\textsuperscript{$3$}')
+    as_latex = as_latex.replace('Algorithm Used', r'Alg\textsuperscript{$4$}')
+    as_latex = as_latex.replace('Latent Time', r'L\textsuperscript{$5$}')
 
     as_latex = as_latex.replace('ReplaceWithDoubleBackslash', r'\\')
     as_latex = as_latex.replace('ReplaceWithMakeCell', r'\makecell[tl]{')
     as_latex = as_latex.replace('ReplaceWithEndCurly', r'}')
     as_latex = as_latex.replace('ReplaceWithDagger', r'$^\dagger$')
     as_latex = as_latex.replace('ReplaceWithTextTTT', r'\texttt{')
+    as_latex = as_latex.replace('ReplaceWithCheckMark', r'\checkmark')
     print(as_latex)
 
 if __name__ == '__main__':
