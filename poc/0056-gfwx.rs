@@ -13,8 +13,9 @@ analyzers = ["SendSyncVariance"]
 bug_classes = ["SendSyncVariance"]
 
 [report]
-issue_date = 2020-12-08
 issue_url = "https://github.com/Devolutions/gfwx-rs/issues/7"
+issue_date = 2020-12-08
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/610"
 unique_bugs = 1
 additional_send_sync_violations = 1
 ```
