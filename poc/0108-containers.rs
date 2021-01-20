@@ -20,6 +20,7 @@ cargo_toolchain = "nightly"
 [report]
 issue_url = "https://github.com/strake/containers.rs/issues/2"
 issue_date = 2021-01-12
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/606"
 unique_bugs = 2
 ```
 !*/
