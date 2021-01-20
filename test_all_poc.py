@@ -7,6 +7,7 @@ import multiprocessing
 import os
 import sys
 import json
+import signal
 
 
 def run_poc(poc_id):
@@ -61,6 +62,7 @@ if __name__ == '__main__':
     CI = 'CI' in os.environ
     push_files = set()
     if CI:
+        signal.alarm(300)
         event = json.loads(open(os.environ['GITHUB_EVENT_PATH']).read())
         for f in subprocess.check_output(["git", "diff", "--name-only", event["before"], event["after"]]).decode('ascii').splitlines():
             push_files.add(f)
