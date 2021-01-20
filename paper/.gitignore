@@ -1,3 +1,6 @@
 /venv
 /__pycache__
+
 /rustsec_list.csv
+/stat-*.csv
+/status-*.csv
