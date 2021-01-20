@@ -222,6 +222,8 @@ with open(f"stat-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
         header_row.append(f"{analyzer}-time")
         header_row.append(f"{analyzer}-num-reports")
         header_row.append(f"{analyzer}-num-span")
+    header_row.append(f"total-reports")
+    header_row.append(f"total-span")
     csv_writer.writerow(header_row)
 
     for (i, name) in enumerate(crate_stat["names"]):
@@ -233,10 +235,16 @@ with open(f"stat-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
                 stat["e2e_time"] / one_ms,
                 stat["rudra_time"] / one_ms,
             ]
+            total_reports = 0
+            total_span = 0
             for analyzer in ANALYZERS:
                 crate_row.append(stat[analyzer][AnalyzerField.TIME] / one_ms)  # ms taken
                 crate_row.append(stat[analyzer][AnalyzerField.NUM_REPORTS])
                 crate_row.append(len(stat[analyzer][AnalyzerField.SPAN_SET]))
+                total_reports += stat[analyzer][AnalyzerField.NUM_REPORTS]
+                total_span += len(stat[analyzer][AnalyzerField.SPAN_SET])
+            crate_row.append(total_reports)
+            crate_row.append(total_span)
             csv_writer.writerow(crate_row)
 
 with open(f"status-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
