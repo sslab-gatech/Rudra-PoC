@@ -7,6 +7,8 @@ version = "0.4.0"
 [report]
 issue_url = "https://github.com/RusPiRo/ruspiro-singleton/issues/10"
 issue_date = 2020-11-16
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/646"
+rustsec_id = "RUSTSEC-2020-0115"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
