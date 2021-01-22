@@ -8,6 +8,7 @@ version = "0.0.3"
 issue_url = "https://github.com/video-audio/va-ts/issues/4"
 issue_date = 2020-12-22
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/642"
+rustsec_id = "RUSTSEC-2020-0114"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
