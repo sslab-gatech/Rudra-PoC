@@ -50,7 +50,7 @@ def main():
     purely_manual_pocs = set([
         id
         for id, poc in poc_metadata.items()
-        if poc['test']['analyzers'] == ['Manual']
+        if all(map(lambda bug: bug['analyzer'] == 'Manual', poc['bugs']))
     ])
     metadata = metadata[~metadata['ID'].isin(purely_manual_pocs)]
 
@@ -104,7 +104,7 @@ ALGORITHM_NAMES_SHORT = {
     'PanicSafety': 'PS',
     'SendSyncVariance': 'SV',
     'UnsafeDataflow': 'UD',
-    'D': 'UnsafeDestructor'
+    'UnsafeDestructor': 'D',
 }
 def format_algorithm_names(algos):
     without_manual = [a for a in algos if a != 'Manual']

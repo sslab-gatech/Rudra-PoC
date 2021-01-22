@@ -39,25 +39,25 @@ def main():
             backlog_by_year[issue_year] += 1
             backlog_cnt += 1
 
-        num_bugs_in_poc = poc_metadata['report']['unique_bugs']
-        if 'additional_send_sync_violations' in poc_metadata['report']:
-            num_bugs_in_poc += poc_metadata['report']['additional_send_sync_violations']
-
-        total_bugs_cnt += num_bugs_in_poc
-
-        both = False
-
-        if 'SendSyncVariance' in poc_metadata['test']['analyzers']:
+        if any(map(lambda bug: bug['analyzer'] == 'SendSyncVariance', poc_metadata['bugs'])):
             send_sync_variance_crates += 1
-            send_sync_variance_cnt += num_bugs_in_poc
-            assert both == False
-            both = True
 
-        if 'UnsafeDataflow' in poc_metadata['test']['analyzers']:
+        if any(map(lambda bug: bug['analyzer'] == 'UnsafeDataflow', poc_metadata['bugs'])):
             unsafe_dataflow_crates += 1
-            unsafe_dataflow_cnt += num_bugs_in_poc
-            assert both == False
-            both = True
+
+        for bug in poc_metadata['bugs']:
+            # Default bug count is 1
+            if 'bug_count' in bug:
+                bug_count = bug['bug_count']
+            else:
+                bug_count = 1
+
+            if bug['analyzer'] == 'SendSyncVariance':
+                send_sync_variance_cnt += bug_count
+            elif bug['analyzer'] == 'UnsafeDataflow':
+                unsafe_dataflow_cnt += bug_count
+
+            total_bugs_cnt += bug_count
 
     for (bug_id, rustsec_metadata) in sorted(rustsec_metadata.items()):
         ours = bug_id in ours_id_set

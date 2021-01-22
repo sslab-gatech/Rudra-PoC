@@ -48,7 +48,7 @@ def get_poc_metadata():
 
 
 def get_bug_algorithm(poc_id, poc_metadata):
-    return poc_metadata[poc_id]['test']['analyzers']
+    return list(map(lambda bug: bug['analyzer'], poc_metadata[poc_id]['bugs']))
 
 
 def get_bug_identifiers(row, poc_metadata, rustsec_metadata):

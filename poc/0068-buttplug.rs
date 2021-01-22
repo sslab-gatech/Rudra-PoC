@@ -12,7 +12,7 @@ version = "0.3.8"
 issue_url = "https://github.com/buttplugio/buttplug-rs/issues/225"
 issue_date = 2020-12-18
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/592"
-rustsec_id = "RUSTSEC-2020-0110"
+rustsec_id = "RUSTSEC-2020-0112"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
