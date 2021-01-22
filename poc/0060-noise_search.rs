@@ -4,15 +4,14 @@
 crate = "noise_search"
 version = "0.7.0"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://github.com/pipedown/noise/issues/72"
 issue_date = 2020-12-10
-unique_bugs = 1
-additional_send_sync_violations = 1
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

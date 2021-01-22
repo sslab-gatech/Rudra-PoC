@@ -4,16 +4,15 @@
 crate = "rulinalg"
 version = "0.4.2"
 
-[test]
-analyzers = ["Manual"]
-bug_classes = ["Other"]
-
 [report]
 issue_url = "https://github.com/AtheMathmo/rulinalg/issues/201"
 issue_date = 2020-02-11
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/319"
 rustsec_id = "RUSTSEC-2020-0023"
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "Manual"
+bug_class = "Other"
 ```
 !*/
 #![forbid(unsafe_code)]

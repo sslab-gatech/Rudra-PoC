@@ -4,16 +4,16 @@
 crate = "xcb"
 version = "0.9.0"
 
-[test]
-analyzers = ["Manual", "SendSyncVariance"]
-bug_classes = ["Other"]
-
 [report]
 issue_url = "https://github.com/rtbo/rust-xcb/issues/93"
 issue_date = 2020-12-10
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/575"
 rustsec_id = "RUSTSEC-2020-0097"
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "Manual"
+guide = "SendSyncVariance"
+bug_class = "Other"
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -12,16 +12,15 @@ version = "0.5.0"
 crate = "pcap-parser"
 version = "0.9.3"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://github.com/petabi/eventio/issues/33"
 issue_date = 2020-12-20
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/600"
 rustsec_id = "RUSTSEC-2020-0108"
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
 ```
 !*/
 #![forbid(unsafe_code)]

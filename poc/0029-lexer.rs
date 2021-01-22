@@ -8,15 +8,14 @@ version = "0.1.16"
 crate = "crossbeam-utils"
 version = "0.8.0"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://gitlab.com/nathanfaucett/rs-lexer/-/issues/2"
 issue_date = 2020-11-10
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/595"
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
 ```
 !*/
 #![forbid(unsafe_code)]

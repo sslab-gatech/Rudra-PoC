@@ -4,14 +4,13 @@
 crate = "bam"
 version = "0.1.2"
 
-[test]
-analyzers = ["Manual", "UnsafeDataflow"]
-bug_classes = ["UninitExposure", "Other"]
-
 [report]
 issue_url = "https://gitlab.com/tprodanov/bam/-/issues/4"
 issue_date = 2021-01-07
-unique_bugs = 2
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
 ```
 !*/
 #![forbid(unsafe_code)]

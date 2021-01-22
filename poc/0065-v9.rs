@@ -4,14 +4,13 @@
 crate = "v9"
 version = "0.1.41"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://github.com/purpleposeidon/v9/issues/1"
 issue_date = 2020-12-18
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
 ```
 !*/
 #![forbid(unsafe_code)]

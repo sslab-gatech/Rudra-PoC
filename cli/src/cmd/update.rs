@@ -1,6 +1,6 @@
 use std::fs;
 
-use crate::poc::{Analyzer, BugClass, PocMap};
+use crate::poc::{BugMetadata, PocMap};
 use crate::prelude::*;
 
 use askama::Template;
@@ -176,31 +176,17 @@ impl ReadmeTemplate {
 struct ReadmeTemplateLine {
     poc_id: MdLink,
     krate: MdLink,
-    analyzers: Vec<Analyzer>,
-    bug_classes: Vec<BugClass>,
+    bugs: Vec<BugMetadata>,
     issue_url: Option<MdLink>,
     rustsec_link: Option<MdLink>,
 }
 
 mod filters {
-    use crate::poc::{Analyzer, BugClass};
+    use crate::poc::BugMetadata;
 
-    pub fn analyzer_join(vec: &Vec<Analyzer>) -> askama::Result<String> {
-        if vec.is_empty() {
-            Ok(String::from("(empty)"))
-        } else {
-            let initials: Vec<_> = vec.iter().map(|analyzer| analyzer.initial()).collect();
-            Ok(initials.join("/"))
-        }
-    }
-
-    pub fn bug_class_join(vec: &Vec<BugClass>) -> askama::Result<String> {
-        if vec.is_empty() {
-            Ok(String::from("(empty)"))
-        } else {
-            let initials: Vec<_> = vec.iter().map(|bug_class| bug_class.initial()).collect();
-            Ok(initials.join("/"))
-        }
+    pub fn bug_join(vec: &Vec<BugMetadata>) -> askama::Result<String> {
+        let initials: Vec<_> = vec.iter().map(|bug_meta| bug_meta.initial()).collect();
+        Ok(initials.join(" / "))
     }
 
     pub fn unwrap_or(
@@ -229,8 +215,7 @@ pub fn update_readme() -> Result<()> {
             format!("https://crates.io/crates/{}", krate_name),
         );
 
-        let analyzers = metadata.test.analyzers.clone();
-        let bug_classes = metadata.test.bug_classes.clone();
+        let bugs = metadata.bugs.clone();
 
         let issue_url = metadata.report.issue_url.as_ref().map(|s| issue_link(s));
         let rustsec_link = match (
@@ -254,8 +239,7 @@ pub fn update_readme() -> Result<()> {
         let line = ReadmeTemplateLine {
             poc_id: MdLink::text(poc_id, poc_path),
             krate,
-            analyzers,
-            bug_classes,
+            bugs,
             issue_url,
             rustsec_link,
         };

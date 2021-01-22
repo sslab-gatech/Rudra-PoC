@@ -4,12 +4,11 @@
 crate = "{{ krate }}"
 version = "{{ version }}"
 
-[test]
-analyzers = []
-bug_classes = []
-
 [report]
-unique_bugs = 1
+
+[[bugs]]
+analyzer = ""
+bug_class = ""
 ```
 !*/
 #![forbid(unsafe_code)]

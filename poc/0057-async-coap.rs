@@ -9,15 +9,16 @@ crate = "crossbeam-utils"
 version = "0.8.0"
 
 [test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
 cargo_toolchain = "nightly"
 
 [report]
-issue_date = 2020-12-08
 issue_url = "https://github.com/google/rust-async-coap/issues/33"
-unique_bugs = 1
-additional_send_sync_violations = 1
+issue_date = 2020-12-08
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -4,17 +4,16 @@
 crate = "magnetic"
 version = "2.0.0"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://github.com/johnshaw/magnetic/issues/9"
 issue_date = 2020-11-29
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/519"
 rustsec_id = "RUSTSEC-2020-0088"
-unique_bugs = 2
-additional_send_sync_violations = 2
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+bug_count = 4
 ```
 !*/
 #![forbid(unsafe_code)]

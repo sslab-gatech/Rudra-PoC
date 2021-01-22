@@ -4,7 +4,7 @@ This repository contains the list of memory safety and soundness bugs found duri
 
 Contributors: See [REPORTING.md](./REPORTING.md) for the reporting guideline.
 
-Method
+Analyzer
 * M: Manual
 * D: UnsafeDestructor
 * SV: SendSyncVariance
@@ -17,8 +17,8 @@ Bug Class
 * PS: PanicSafety
 * O: Other
 
-| ID | Crate | Method | Bug Class | Issue Report | RustSec ID |
-| -- | ----- | ------ | --------- | ------------ | ---------- |
+| ID | Crate | Bugs | Issue Report | RustSec ID |
+| -- | ----- | ---- | ------------ | ---------- |
 {% for line in lines -%}
-| {{ line.poc_id }} | {{ line.krate }} | {{ line.analyzers|analyzer_join }} | {{ line.bug_classes|bug_class_join }} | {{ line.issue_url|unwrap_or("N/A") }} | {{ line.rustsec_link|unwrap_or("Not Reported Yet") }} |
+| {{ line.poc_id }} | {{ line.krate }} | {{ line.bugs|bug_join }} | {{ line.issue_url|unwrap_or("N/A") }} | {{ line.rustsec_link|unwrap_or("Not Reported Yet") }} |
 {% endfor %}

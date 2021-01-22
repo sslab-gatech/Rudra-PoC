@@ -4,16 +4,16 @@
 crate = "smallvec"
 version = "1.6.0"
 
-[test]
-analyzers = ["Manual", "UnsafeDataflow"]
-bug_classes = ["Other"]
-
 [report]
 issue_url = "https://github.com/servo/rust-smallvec/issues/252"
 issue_date = 2021-01-08
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/552"
 rustsec_id = "RUSTSEC-2021-0003"
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+guide = "Manual"
+bug_class = "Other"
 ```
 !*/
 #![forbid(unsafe_code)]

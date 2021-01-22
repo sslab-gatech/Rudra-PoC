@@ -4,14 +4,14 @@
 crate = "claxon"
 version = "0.4.3"
 
-[test]
-analyzers = ["UnsafeDataflow"]
-bug_classes = ["UninitExposure"]
-
 [report]
 issue_url = "https://github.com/ruuda/claxon/issues/26"
 issue_date = 2021-01-07
-unique_bugs = 2
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

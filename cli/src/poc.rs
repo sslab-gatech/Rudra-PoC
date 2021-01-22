@@ -12,11 +12,17 @@ use toml::value::Datetime;
 static METADATA_HEADER: &str = "/*!\n```rudra-poc\n";
 static METADATA_FOOTER: &str = "```\n!*/\n";
 
+fn empty_test_metadata(metadata: &TestMetadata) -> bool {
+    metadata.cargo_flags.is_empty() && metadata.cargo_toolchain.is_none()
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Metadata {
     pub target: TargetMetadata,
+    #[serde(default, skip_serializing_if = "empty_test_metadata")]
     pub test: TestMetadata,
     pub report: ReportMetadata,
+    pub bugs: Vec<BugMetadata>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -118,17 +124,40 @@ impl BugClass {
     }
 }
 
+fn usize_one() -> usize {
+    1
+}
+
+fn usize_is_one(num: &usize) -> bool {
+    *num == 1
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct BugMetadata {
+    analyzer: Analyzer,
+    guide: Option<Analyzer>,
+    bug_class: BugClass,
+    #[serde(default = "usize_one", skip_serializing_if = "usize_is_one")]
+    bug_count: usize,
+}
+
+impl BugMetadata {
+    pub fn initial(&self) -> String {
+        format!(
+            "{}{}-{} {}",
+            self.analyzer.initial(),
+            if self.guide.is_some() { "*" } else { "" },
+            self.bug_class.initial(),
+            self.bug_count,
+        )
+    }
+}
+
+#[derive(Default, Debug, Clone, Serialize, Deserialize)]
 pub struct TestMetadata {
-    pub analyzers: Vec<Analyzer>,
-    pub bug_classes: Vec<BugClass>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub cargo_flags: Vec<String>,
     pub cargo_toolchain: Option<String>,
-}
-
-fn usize_is_zero(val: &usize) -> bool {
-    *val == 0
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -137,10 +166,6 @@ pub struct ReportMetadata {
     pub issue_date: Option<Datetime>,
     pub rustsec_url: Option<String>,
     pub rustsec_id: Option<String>,
-    // TODO: move this to test section
-    pub unique_bugs: usize,
-    #[serde(default, skip_serializing_if = "usize_is_zero")]
-    pub additional_send_sync_violations: usize,
 }
 
 struct PocData {

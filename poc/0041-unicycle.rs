@@ -8,15 +8,14 @@ version = "0.6.3"
 crate = "crossbeam-utils"
 version = "0.8.0"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://github.com/udoprog/unicycle/issues/8"
 issue_date = 2020-11-15
-unique_bugs = 2
-additional_send_sync_violations = 2
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+bug_count = 4
 ```
 !*/
 #![forbid(unsafe_code)]

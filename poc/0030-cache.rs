@@ -8,15 +8,14 @@ version = "0.2.0"
 crate = "crossbeam-utils"
 version = "0.8.0"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://github.com/krl/cache/issues/1"
 issue_date = 2020-11-24
-unique_bugs = 1
-additional_send_sync_violations = 1
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -4,14 +4,14 @@
 crate = "array_iterator"
 version = "1.2.0"
 
-[test]
-analyzers = ["Manual"]
-bug_classes = ["Other"]
-
 [report]
 issue_url = "https://gitlab.com/kevincox/array_iterator.rs/-/issues/1"
 issue_date = 2020-12-31
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "Manual"
+guide = "UnsafeDataflow"
+bug_class = "Other"
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -4,14 +4,15 @@
 crate = "foreignc"
 version = "0.1.2"
 
-[test]
-analyzers = ["Manual", "UnsafeDataflow"]
-bug_classes = ["Other"]
-
 [report]
 issue_url = "https://github.com/mart368b/foreignc/issues/1"
 issue_date = 2021-01-06
-unique_bugs = 2
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+guide = "Manual"
+bug_class = "Other"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

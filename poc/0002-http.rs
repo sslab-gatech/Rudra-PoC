@@ -4,16 +4,15 @@
 crate = "http"
 version = "0.1.19"
 
-[test]
-analyzers = ["Manual"]
-bug_classes = ["Other"]
-
 [report]
 issue_url = "https://github.com/hyperium/http/issues/352"
 issue_date = 2019-11-16
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/217"
 rustsec_id = "RUSTSEC-2019-0033"
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "Manual"
+bug_class = "Other"
 ```
 !*/
 #![forbid(unsafe_code)]

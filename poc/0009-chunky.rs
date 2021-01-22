@@ -5,8 +5,6 @@ crate = "chunky"
 version = "0.3.7"
 
 [test]
-analyzers = ["Manual", "UnsafeDestructor"]
-bug_classes = ["Other"]
 cargo_toolchain = "nightly"
 
 [report]
@@ -14,7 +12,11 @@ issue_url = "https://github.com/aeplay/chunky/issues/2"
 issue_date = 2020-08-25
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/366"
 rustsec_id = "RUSTSEC-2020-0035"
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "Manual"
+guide = "UnsafeDestructor"
+bug_class = "Other"
 ```
 !*/
 #![forbid(unsafe_code)]

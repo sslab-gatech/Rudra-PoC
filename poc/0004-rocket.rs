@@ -13,8 +13,6 @@ crate = "rocket_http"
 version = "0.4.4"
 
 [test]
-analyzers = ["Manual"]
-bug_classes = ["Other"]
 cargo_toolchain = "nightly"
 
 [report]
@@ -22,7 +20,10 @@ issue_url = "https://github.com/SergioBenitez/Rocket/issues/1312"
 issue_date = 2020-05-27
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/320"
 rustsec_id = "RUSTSEC-2020-0028"
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "Manual"
+bug_class = "Other"
 ```
 !*/
 #![forbid(unsafe_code)]

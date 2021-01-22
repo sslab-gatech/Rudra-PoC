@@ -4,14 +4,14 @@
 crate = "arenavec"
 version = "0.1.1"
 
-[test]
-analyzers = ["UnsafeDataflow"]
-bug_classes = ["PanicSafety"]
-
 [report]
 issue_url = "https://github.com/ibabushkin/arenavec/issues/1"
 issue_date = 2021-01-12
-unique_bugs = 3
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+bug_count = 3
 ```
 !*/
 #![forbid(unsafe_code)]

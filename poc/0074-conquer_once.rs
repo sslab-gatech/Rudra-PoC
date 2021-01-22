@@ -8,16 +8,15 @@ version = "0.2.1"
 crate = "crossbeam-utils"
 version = "0.8.1"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
-rustsec_url = "https://github.com/RustSec/advisory-db/pull/579"
-rustsec_id = "RUSTSEC-2020-0101"
 issue_url = "https://github.com/oliver-giersch/conquer-once/issues/3"
 issue_date = 2020-12-22
-unique_bugs = 1
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/579"
+rustsec_id = "RUSTSEC-2020-0101"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -8,16 +8,15 @@ version = "0.2.0"
 crate = "crossbeam-utils"
 version = "0.8.0"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://github.com/mpdn/try-mutex/issues/2"
 issue_date = 2020-11-17
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/517"
 rustsec_id = "RUSTSEC-2020-0087"
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
 ```
 !*/
 #![forbid(unsafe_code)]

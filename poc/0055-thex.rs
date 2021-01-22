@@ -4,15 +4,15 @@
 crate = "thex"
 version = "0.1.0"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_date = 2020-12-08
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/523"
 rustsec_id = "RUSTSEC-2020-0090"
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

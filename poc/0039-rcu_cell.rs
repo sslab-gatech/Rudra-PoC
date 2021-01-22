@@ -4,15 +4,14 @@
 crate = "rcu_cell"
 version = "0.1.8"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://github.com/Xudong-Huang/rcu_cell/issues/3"
 issue_date = 2020-11-14
-unique_bugs = 1
-additional_send_sync_violations = 1
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

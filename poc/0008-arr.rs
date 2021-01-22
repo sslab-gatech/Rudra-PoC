@@ -9,8 +9,6 @@ crate = "crossbeam-utils"
 version = "0.7.2"
 
 [test]
-analyzers = ["Manual", "UnsafeDestructor", "SendSyncVariance"]
-bug_classes = ["SendSyncVariance", "Other"]
 cargo_flags = ["--release"]
 cargo_toolchain = "nightly"
 
@@ -19,8 +17,17 @@ issue_url = "https://github.com/sjep/array/issues/1"
 issue_date = 2020-08-25
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/364"
 rustsec_id = "RUSTSEC-2020-0034"
-unique_bugs = 3
-additional_send_sync_violations = 1
+
+[[bugs]]
+analyzer = "Manual"
+guide = "UnsafeDestructor"
+bug_class = "Other"
+bug_count = 3
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

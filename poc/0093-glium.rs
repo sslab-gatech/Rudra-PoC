@@ -4,14 +4,13 @@
 crate = "glium"
 version = "0.29.0"
 
-[test]
-analyzers = ["UnsafeDataflow"]
-bug_classes = ["UninitExposure"]
-
 [report]
 issue_url = "https://github.com/glium/glium/issues/1907"
 issue_date = 2021-01-06
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
 ```
 !*/
 #![forbid(unsafe_code)]

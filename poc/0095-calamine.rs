@@ -4,15 +4,19 @@
 crate = "calamine"
 version = "0.16.2"
 
-[test]
-analyzers = ["Manual", "UnsafeDataflow"]
-bug_classes = ["UninitExposure", "Other"]
-
 [report]
 issue_url = "https://github.com/tafia/calamine/issues/199"
 issue_date = 2021-01-06
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/594"
-unique_bugs = 2
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+
+[[bugs]]
+analyzer = "Manual"
+guide = "UnsafeDataflow"
+bug_class = "Other"
 ```
 !*/
 #![forbid(unsafe_code)]

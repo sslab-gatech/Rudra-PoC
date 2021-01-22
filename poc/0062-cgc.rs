@@ -4,15 +4,20 @@
 crate = "cgc"
 version = "0.4.0"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://github.com/playXE/cgc/issues/5"
 issue_date = 2020-12-10
-unique_bugs = 3
-additional_send_sync_violations = 1
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+bug_count = 2
+
+[[bugs]]
+analyzer = "Manual"
+guide = "SendSyncVariance"
+bug_class = "Other"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

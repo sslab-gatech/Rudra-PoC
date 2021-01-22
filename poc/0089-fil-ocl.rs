@@ -9,11 +9,15 @@ analyzers = ["UnsafeDataflow"]
 bug_classes = ["PanicSafety"]
 
 [report]
-rustsec_url = "https://github.com/RustSec/advisory-db/pull/587"
-rustsec_id = "RUSTSEC-2021-0011"
 issue_url = "https://github.com/cogciprocate/ocl/issues/194"
 issue_date = 2021-01-04
-unique_bugs = 2
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/587"
+rustsec_id = "RUSTSEC-2021-0011"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

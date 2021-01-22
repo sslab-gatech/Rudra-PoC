@@ -4,16 +4,17 @@
 crate = "av-data"
 version = "0.2.1"
 
-[test]
-analyzers = ["Manual", "UnsafeDataflow"]
-bug_classes = ["Other"]
-
 [report]
 issue_url = "https://github.com/rust-av/rust-av/issues/136"
 issue_date = 2021-01-07
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/574"
 rustsec_id = "RUSTSEC-2021-0007"
 unique_bugs = 1
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+guide = "Manual"
+bug_class = "Other"
 ```
 !*/
 #![forbid(unsafe_code)]

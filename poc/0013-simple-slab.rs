@@ -4,16 +4,17 @@
 crate = "simple-slab"
 version = "0.3.2"
 
-[test]
-analyzers = ["UnsafeDestructor"]
-bug_classes = ["Other"]
-
 [report]
 issue_url = "https://github.com/nathansizemore/simple-slab/issues/2"
 issue_date = 2020-09-03
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/376"
 rustsec_id = "RUSTSEC-2020-0039"
-unique_bugs = 2
+
+[[bugs]]
+analyzer = "Manual"
+guide = "UnsafeDestructor"
+bug_class = "Other"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

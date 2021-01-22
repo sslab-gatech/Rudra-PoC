@@ -4,14 +4,14 @@
 crate = "endian_trait"
 version = "0.6.0"
 
-[test]
-analyzers = ["UnsafeDataflow"]
-bug_classes = ["PanicSafety"]
-
 [report]
 issue_url = "https://gitlab.com/myrrlyn/endian_trait/-/issues/1"
 issue_date = 2021-01-04
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+bug_count = 4
 ```
 !*/
 #![forbid(unsafe_code)]

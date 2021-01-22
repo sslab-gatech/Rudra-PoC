@@ -5,8 +5,6 @@ crate = "stack"
 version = "0.3.0"
 
 [test]
-analyzers = ["UnsafeDestructor"]
-bug_classes = ["Other"]
 cargo_flags = ["--release"]
 
 [report]
@@ -14,7 +12,12 @@ issue_url = "https://github.com/arcnmx/stack-rs/issues/4"
 issue_date = 2020-09-24
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/392"
 rustsec_id = "RUSTSEC-2020-0042"
-unique_bugs = 2
+
+[[bugs]]
+analyzer = "Manual"
+guide = "UnsafeDestructor"
+bug_class = "Other"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

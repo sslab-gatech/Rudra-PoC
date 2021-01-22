@@ -4,16 +4,20 @@
 crate = "stderr"
 version = "0.8.0"
 
-[test]
-analyzers = ["Manual", "SendSyncVariance"]
-bug_classes = ["SendSyncVariance", "Other"]
-
 [report]
-rustsec_url = "https://github.com/RustSec/advisory-db/pull/585"
-rustsec_id = "RUSTSEC-2020-0109"
 issue_url = "https://github.com/biluohc/stderr/issues/5"
 issue_date = 2020-12-22
-unique_bugs = 2
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/585"
+rustsec_id = "RUSTSEC-2020-0109"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+
+[[bugs]]
+analyzer = "Manual"
+guide = "SendSyncVariance"
+bug_class = "Other"
 ```
 !*/
 #![forbid(unsafe_code)]

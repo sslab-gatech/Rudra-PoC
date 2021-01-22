@@ -9,8 +9,6 @@ crate = "typenum"
 version = "1.11.2"
 
 [test]
-analyzers = ["Manual"]
-bug_classes = ["PanicSafety", "Other"]
 cargo_flags = ["--release"]
 
 [report]
@@ -18,7 +16,18 @@ issue_url = "https://github.com/bodil/sized-chunks/issues/11"
 issue_date = 2020-09-06
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/381"
 rustsec_id = "RUSTSEC-2020-0041"
-unique_bugs = 4
+
+[[bugs]]
+analyzer = "Manual"
+guide = "UnsafeDestructor"
+bug_class = "Other"
+bug_count = 4
+
+[[bugs]]
+analyzer = "Manual"
+guide = "UnsafeDestructor"
+bug_class = "PanicSafety"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

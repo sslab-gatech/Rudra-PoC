@@ -8,14 +8,13 @@ version = "0.3.3"
 crate = "tempdir"
 version = "0.3.7"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://github.com/motoras/kekbit/issues/34"
 issue_date = 2020-12-18
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -5,8 +5,6 @@ crate = "obstack"
 version = "0.1.3"
 
 [test]
-analyzers = ["Manual"]
-bug_classes = ["Other"]
 cargo_flags = ["--release"]
 
 [report]
@@ -14,7 +12,12 @@ issue_url = "https://github.com/petertodd/rust-obstack/issues/4"
 issue_date = 2020-09-03
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/373"
 rustsec_id = "RUSTSEC-2020-0040"
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "Manual"
+guide = "UnsafeDestructor"
+bug_class = "Other"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

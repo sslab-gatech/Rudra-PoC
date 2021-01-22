@@ -4,16 +4,21 @@
 crate = "ordnung"
 version = "0.0.1"
 
-[test]
-analyzers = ["Manual", "UnsafeDestructor"]
-bug_classes = ["PanicSafety", "Other"]
-
 [report]
 issue_url = "https://github.com/maciejhirsz/ordnung/issues/8"
 issue_date = 2020-09-03
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/374"
 rustsec_id = "RUSTSEC-2020-0038"
-unique_bugs = 3
+
+[[bugs]]
+analyzer = "Manual"
+guide = "UnsafeDestructor"
+bug_class = "Other"
+
+[[bugs]]
+analyzer = "Manual"
+guide = "UnsafeDestructor"
+bug_class = "PanicSafety"
 ```
 !*/
 #![forbid(unsafe_code)]

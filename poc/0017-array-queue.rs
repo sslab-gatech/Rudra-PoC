@@ -4,16 +4,17 @@
 crate = "array-queue"
 version = "0.3.3"
 
-[test]
-analyzers = ["Manual"]
-bug_classes = ["Other"]
-
 [report]
 issue_url = "https://github.com/raviqqe/array-queue/issues/2"
 issue_date = 2020-09-26
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/396"
 rustsec_id = "RUSTSEC-2020-0047"
-unique_bugs = 2
+
+[[bugs]]
+analyzer = "Manual"
+guide = "UnsafeDestructor"
+bug_class = "Other"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

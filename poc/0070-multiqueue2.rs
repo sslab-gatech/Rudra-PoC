@@ -8,17 +8,16 @@ version = "0.1.6"
 crate = "futures"
 version = "0.1.27"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://github.com/abbychau/multiqueue2/issues/10"
 issue_date = 2020-12-19
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/608"
 rustsec_id = "RUSTSEC-2020-0106"
-unique_bugs = 2
-additional_send_sync_violations = 2
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+bug_count = 4
 ```
 !*/
 #![forbid(unsafe_code)]

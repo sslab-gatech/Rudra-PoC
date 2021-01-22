@@ -8,14 +8,14 @@ version = "0.2.0"
 crate = "futures"
 version = "0.1.14"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://github.com/kvark/ticketed_lock/issues/7"
 issue_date = 2020-11-17
-unique_bugs = 2
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

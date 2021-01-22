@@ -12,14 +12,14 @@ version = "1.12.0"
 crate = "generic-array"
 version = "0.14.4"
 
-[test]
-analyzers = ["UnsafeDataflow"]
-bug_classes = ["PanicSafety"]
-
 [report]
 issue_url = "https://github.com/charles-r-earp/adtensor/issues/4"
 issue_date = 2021-01-11
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

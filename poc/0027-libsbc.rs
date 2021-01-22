@@ -8,14 +8,13 @@ version = "0.1.4"
 crate = "static_assertions"
 version = "1.1.0"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://github.com/mvertescher/libsbc-rs/issues/4"
 issue_date = 2020-11-10
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
 ```
 !*/
 #![forbid(unsafe_code)]

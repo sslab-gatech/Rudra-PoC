@@ -4,16 +4,16 @@
 crate = "crayon"
 version = "0.7.1"
 
-[test]
-analyzers = ["Manual", "UnsafeDestructor"]
-bug_classes = ["InconsistencyAmplification"]
-
 [report]
 issue_url = "https://github.com/shawnscode/crayon/issues/87"
 issue_date = 2020-08-31
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/371"
 rustsec_id = "RUSTSEC-2020-0037"
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "Manual"
+guide = "UnsafeDestructor"
+bug_class = "InconsistencyAmplification"
 ```
 !*/
 #![forbid(unsafe_code)]

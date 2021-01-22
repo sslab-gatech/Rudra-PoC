@@ -4,16 +4,16 @@
 crate = "dync"
 version = "0.4.0"
 
-[test]
-analyzers = ["Manual"]
-bug_classes = ["Other"]
-
 [report]
 issue_url = "https://github.com/elrnv/dync/issues/4"
 issue_date = 2020-09-27
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/411"
 rustsec_id = "RUSTSEC-2020-0050"
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "Manual"
+guide = "UnsafeDestructor"
+bug_class = "Other"
 ```
 !*/
 #![forbid(unsafe_code)]

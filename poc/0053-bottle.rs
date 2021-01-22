@@ -10,14 +10,17 @@ version = "1.7.0"
 features = ["attributes"]
 
 [test]
-analyzers = ["Manual", "SendSyncVariance"]
-bug_classes = ["Other"]
 cargo_toolchain = "nightly"
 
 [report]
 issue_url = "https://github.com/timothee-haudebourg/bottle/issues/1"
 issue_date = 2020-12-07
-unique_bugs = 2
+
+[[bugs]]
+analyzer = "Manual"
+guide = "SendSyncVariance"
+bug_class = "Other"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

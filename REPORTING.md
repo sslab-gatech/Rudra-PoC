@@ -29,6 +29,12 @@ The format of the metadata is as follows:
 
 [report]
 (...)
+
+[[bugs]]
+(...)
+
+[[bugs]]
+(...)
 ```
 !*/
 ````
@@ -41,11 +47,8 @@ The format of the metadata is as follows:
 - **peer**: (optional object array) peer dependencies, follows the same pattern with target. See `./poc/0024-lock_api.rs` for an example.
   - Ironically, `features` are supported here
 
-### test
+### test (optional)
 
-- **analyzers**: (string array) an array of analyzers that are expected to report bugs for this crate
-  - The name of analyzers should match the corresponding implementation in Rudra. Otherwise, the parsing will fail.
-  - Example: `["manual", "UnsafeDestructor"]`
 - **cargo_flags**: (optional string array) Cargo flags that are appended to cargo commands, e.g., `["--release"]`
 - **cargo_toolchain**: (optional string) Toolchain name that is appended to cargo commands, e.g., `"nightly"`
 
@@ -57,6 +60,19 @@ The format of the metadata is as follows:
 - **rustsec_id**: (optional string) RustSec ID, e.g., `"RUSTSEC-2020-1234"`
 
 Report section is empty when PoC is created. Fill each field as you make progress in reporting.
+
+### bugs
+
+Uses [Array of Tables](https://toml.io/en/v1.0.0#array-of-tables) in TOML format.
+
+- **analyzer**: (string) The name of the analyzer that found the bug. It should match the corresponding implementation in Rudra.
+  - Example: `["Manual", "UnsafeDestructor", "SendSyncVariance", "UnsafeDataflow"]`
+- **guide**: (optional string)
+  - When the analyzer is "Manual" - Which analyzer guided you to audit this crate?
+  - When the analyzer is not "Manual" - This value must be "Manual" if exists. The bug is in the location reported by the primary analyzer, but it didn't match the exact pattern the analyzer was looking for and required additional manual auditing.
+- **bug_class**: (string) The bug class.
+  - Example: `["SendSyncVariance", "UninitExposure", "InconsistencyAmplification", "PanicSafety", "Other"]`
+- **bug_count**: (optional integer) Default to 1, number of bugs that correspond to this pattern.
 
 ## Workflow
 

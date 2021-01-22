@@ -5,15 +5,16 @@ crate = "bite"
 version = "0.0.5"
 
 [test]
-analyzers = ["UnsafeDataflow"]
-bug_classes = ["UninitExposure"]
 cargo_toolchain = "nightly"
 
 [report]
 issue_url = "https://github.com/hinaria/bite/issues/1"
 issue_date = 2020-12-31
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/593"
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
 ```
 !*/
 #![forbid(unsafe_code)]

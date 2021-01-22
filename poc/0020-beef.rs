@@ -8,14 +8,14 @@ version = "0.4.4"
 crate = "crossbeam-utils"
 version = "0.8.0"
 
-[test]
-analyzers = ["Manual", "SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://github.com/maciejhirsz/beef/issues/37"
 issue_date = 2020-10-28
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+guide = "Manual"
+bug_class = "SendSyncVariance"
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -91,6 +91,7 @@ fn issue_data_from_id(poc_map: &PocMap, poc_id: PocId) -> Result<IssueTemplateDa
             },
         test: mut test_metadata,
         report: _,
+        bugs: _,
     } = metadata;
 
     let cargo_flags = test_metadata.cargo_flags.clone();

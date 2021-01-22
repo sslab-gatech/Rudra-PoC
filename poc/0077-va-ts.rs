@@ -4,15 +4,14 @@
 crate = "va-ts"
 version = "0.0.3"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://github.com/video-audio/va-ts/issues/4"
 issue_date = 2020-12-22
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/642"
-unique_bugs = 1
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
 ```
 !*/
 #![forbid(unsafe_code)]

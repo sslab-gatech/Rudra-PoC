@@ -4,15 +4,14 @@
 crate = "dces"
 version = "0.2.0"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
-rustsec_url = "https://github.com/RustSec/advisory-db/pull/590"
-issue_date = 2020-12-09
 issue_url = "https://gitlab.redox-os.org/redox-os/dces-rust/-/issues/8"
-unique_bugs = 1
+issue_date = 2020-12-09
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/590"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
 ```
 !*/
 #![forbid(unsafe_code)]

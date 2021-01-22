@@ -4,15 +4,14 @@
 crate = "tiny_future"
 version = "0.3.2"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
 issue_url = "https://github.com/KizzyCode/tiny_future/issues/1"
 issue_date = 2020-12-08
-unique_bugs = 1
-additional_send_sync_violations = 1
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

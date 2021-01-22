@@ -13,8 +13,6 @@ crate = "rel"
 version = "0.2.0"
 
 [test]
-analyzers = ["UnsafeDataflow"]
-bug_classes = ["PanicSafety"]
 cargo_toolchain = "nightly"
 
 [report]
@@ -22,7 +20,11 @@ issue_url = "https://github.com/strake/containers.rs/issues/2"
 issue_date = 2021-01-12
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/606"
 rustsec_id = "RUSTSEC-2021-0010"
-unique_bugs = 2
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -8,16 +8,15 @@ version = "0.1.1-alpha.11"
 crate = "crossbeam-utils"
 version = "0.8.0"
 
-[test]
-analyzers = ["SendSyncVariance"]
-bug_classes = ["SendSyncVariance"]
-
 [report]
-rustsec_url = "https://github.com/RustSec/advisory-db/pull/589"
 issue_url = "https://github.com/vertexclique/lever/issues/15"
 issue_date = 2020-11-10
-unique_bugs = 1
-additional_send_sync_violations = 1
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/589"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]

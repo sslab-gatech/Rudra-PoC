@@ -4,15 +4,19 @@
 crate = "disrustor"
 version = "0.2.0"
 
-[test]
-analyzers = ["Manual", "SendSyncVariance"]
-bug_classes = ["SendSyncVariance", "Other"]
-
 [report]
 issue_url = "https://github.com/sklose/disrustor/issues/1"
 issue_date = 2020-12-17
-unique_bugs = 2
-additional_send_sync_violations = 1
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+bug_count = 2
+
+[[bugs]]
+analyzer = "Manual"
+guide = "SendSyncVariance"
+bug_class = "Other"
 ```
 !*/
 #![forbid(unsafe_code)]

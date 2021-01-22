@@ -4,14 +4,14 @@
 crate = "acc_reader"
 version = "2.0.0"
 
-[test]
-analyzers = ["UnsafeDataflow"]
-bug_classes = ["UninitExposure"]
-
 [report]
 issue_url = "https://github.com/netvl/acc_reader/issues/1"
 issue_date = 2020-12-27
-unique_bugs = 2
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]
