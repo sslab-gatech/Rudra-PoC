@@ -13,7 +13,9 @@ def main():
 
     # 2 bugs from std not represented in the PoCs
     total_bugs_cnt = 2
+    crate_set = {"std"}
 
+    # TODO: add strict count - those without "guide"
     send_sync_variance_crates = 0
     send_sync_variance_cnt = 0
     unsafe_dataflow_crates = 0
@@ -24,6 +26,8 @@ def main():
 
     ours_id_set = set()
     for poc_metadata in poc_metadata.values():
+        crate_set.add(poc_metadata['target']['crate'])
+
         issue_date = poc_metadata['report']['issue_date']
         issue_year = issue_date.year
         try:
@@ -84,12 +88,12 @@ def main():
         print(f"  {year}: {count}")
 
     print(f"Among {reported_cnt} RustSec advisories, {cve_crates} advisories received {cve_cnt} CVEs")
-    print(f"PoCs contain total of {total_bugs_cnt} bugs")
+    print(f"Total of {total_bugs_cnt} bugs in {len(crate_set)} crates")
 
-    print("Unsafe Dataflow")
+    print("UnsafeDataflow")
     print(f"  Crates: {unsafe_dataflow_crates} / Bugs: {unsafe_dataflow_cnt}")
 
-    print(f"Send Sync Variance")
+    print(f"SendSyncVariance")
     print(f"  Crates: {send_sync_variance_crates} / Bugs: {send_sync_variance_cnt}")
 
 if __name__ == '__main__':
