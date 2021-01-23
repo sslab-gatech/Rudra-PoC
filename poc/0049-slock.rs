@@ -12,6 +12,7 @@ features = ["thread-pool"]
 [report]
 issue_url = "https://github.com/BrokenLamp/slock-rs/issues/2"
 issue_date = 2020-11-17
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/652"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
