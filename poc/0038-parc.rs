@@ -7,6 +7,7 @@ version = "1.0.1"
 [report]
 issue_url = "https://github.com/hyyking/rustracts/pull/6"
 issue_date = 2020-11-14
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/650"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
