@@ -11,6 +11,7 @@ version = "0.8.0"
 [report]
 issue_url = "https://github.com/longshorej/conqueue/issues/9"
 issue_date = 2020-11-24
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/672"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
