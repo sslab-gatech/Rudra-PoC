@@ -11,6 +11,7 @@ version = "0.8.0"
 [report]
 issue_url = "https://github.com/udoprog/unicycle/issues/8"
 issue_date = 2020-11-15
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/655"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
