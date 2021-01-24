@@ -10,3 +10,14 @@ we (Rust group @sslab-gatech) found a memory-safety/soundness issue in this crat
 [This part](https://doc.rust-lang.org/std/io/trait.Read.html#tymethod.read) from the `Read` trait documentation explains the issue:
 
 > It is your responsibility to make sure that `buf` is initialized before calling `read`. Calling read with an uninitialized `buf` (of the kind one obtains via `MaybeUninit<T>`) is not safe, and can lead to undefined behavior.
+
+## How to fix the issue?
+
+The Naive & safe way to fix the issue is to always zero-initialize a buffer before lending it to a user-provided `Read` implementation. Note that this approach will add runtime performance overhead of zero-initializing the buffer.
+
+As of Jan 2021, there is not yet an ideal fix that works in stable Rust with no performance overhead. Below are links to relevant discussions & suggestions for the fix.
+
+* [Neat Article from DropBox regarding the issue](https://paper.dropbox.com/doc/IO-Buffer-Initialization-MvytTgjIOTNpJAS6Mvw38)
+* [Rust RFC 2930](https://github.com/rust-lang/rfcs/blob/master/text/2930-read-buf.md#summary)
+* [nightly feature `std::io::Initializer`](https://doc.rust-lang.org/std/io/struct.Initializer.html)
+* [Discussion in Rust Internals Forum](https://internals.rust-lang.org/t/uninitialized-memory/1652)
