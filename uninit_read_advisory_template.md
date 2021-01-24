@@ -15,4 +15,4 @@ patched = []
 Affected versions of this crate passes an uninitialized buffer to a user-provided `Read` implementation.
 
 Arbitrary `Read` implementations can read from the uninitialized buffer (memory exposure) and also can return incorrect number of bytes written to the buffer.
-Uninitialized memory produces undefined values that can quickly invoke undefined behavior.
+Reading from uninitialized memory produces undefined values that can quickly invoke undefined behavior.
