@@ -8,6 +8,7 @@ version = "0.3.2"
 issue_url = "https://github.com/KizzyCode/tiny_future/issues/1"
 issue_date = 2020-12-08
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/675"
+rustsec_id = "RUSTSEC-2020-0118"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
