@@ -7,6 +7,7 @@ version = "0.1.8"
 [report]
 issue_url = "https://github.com/Xudong-Huang/rcu_cell/issues/3"
 issue_date = 2020-11-14
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/692"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
