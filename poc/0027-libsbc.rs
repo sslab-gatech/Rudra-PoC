@@ -12,6 +12,7 @@ version = "1.1.0"
 issue_url = "https://github.com/mvertescher/libsbc-rs/issues/4"
 issue_date = 2020-11-10
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/679"
+rustsec_id = "RUSTSEC-2020-0120"
 
 [[bugs]]
 analyzer = "SendSyncVariance"

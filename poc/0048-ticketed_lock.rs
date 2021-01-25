@@ -12,6 +12,7 @@ version = "0.1.14"
 issue_url = "https://github.com/kvark/ticketed_lock/issues/7"
 issue_date = 2020-11-17
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/678"
+rustsec_id = "RUSTSEC-2020-0119"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
