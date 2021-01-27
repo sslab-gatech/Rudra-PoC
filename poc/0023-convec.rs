@@ -11,6 +11,7 @@ version = "0.8.0"
 [report]
 issue_url = "https://github.com/krl/convec/issues/2"
 issue_date = 2020-11-24
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/705"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
