@@ -10,7 +10,8 @@ url = "{{ original_issue_url.as_ref().unwrap() }}"
 # Optional: Categories this advisory falls under. Valid categories are:
 # "code-execution", "crypto-failure", "denial-of-service", "file-disclosure"
 # "format-injection", "memory-corruption", "memory-exposure", "privilege-escalation"
-categories = ["memory-corruption"]
+# "thread-safety"
+categories = ["memory-corruption", "thread-safety"]
 # Optional: See "Tips" section in `REPORTING.md` for a guideline
 informational = "unsound"
 
