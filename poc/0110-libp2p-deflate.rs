@@ -16,6 +16,7 @@ features = ["executor"]
 [report]
 issue_url = "https://github.com/libp2p/rust-libp2p/issues/1932"
 issue_date = 2020-01-24
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/700"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
