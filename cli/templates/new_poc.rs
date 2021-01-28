@@ -7,8 +7,10 @@ version = "{{ version }}"
 [report]
 
 [[bugs]]
-analyzer = ""
-bug_class = ""
+# UnsafeDestructor, SendSyncVariance, UnsafeDataflow
+analyzer = "Manual"
+# SendSyncVariance, UninitExposure, InconsistencyAmplification, PanicSafety
+bug_class = "Other"
 ```
 !*/
 #![forbid(unsafe_code)]
