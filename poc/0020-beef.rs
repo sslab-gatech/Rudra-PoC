@@ -12,6 +12,7 @@ version = "0.8.0"
 issue_url = "https://github.com/maciejhirsz/beef/issues/37"
 issue_date = 2020-10-28
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/696"
+rustsec_id = "RUSTSEC-2020-0122"
 
 [[bugs]]
 analyzer = "SendSyncVariance"

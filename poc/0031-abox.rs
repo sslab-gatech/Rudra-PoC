@@ -12,6 +12,7 @@ version = "0.8.0"
 issue_url = "https://github.com/SonicFrog/abox/issues/1"
 issue_date = 2020-11-10
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/688"
+rustsec_id = "RUSTSEC-2020-0121"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
