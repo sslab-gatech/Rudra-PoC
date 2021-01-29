@@ -65,25 +65,27 @@ def main():
     metadata['Has Unit Tests'] = metadata['Unit Test Coverage'].apply(
         lambda cov: True if not pd.isnull(cov) and cov > 50 else False)
 
-    # Only do the first 34 bugs for now
-    metadata = metadata.head(34)
+    # Only do the first 33 bugs for now
+    metadata = metadata.head(33)
 
     # Manually put in the std library bugs.
     std_bug = {
-        'Crate': ['std'],
-        'Bug Location': [['str.rs', 'mod.rs']],
-        'Algorithm': [['UnsafeDataflow']],
-        'Bug Identifiers': [['rust#80335', 'rust#80894']],
+        'Crate': ['std', 'rustc'],
+        'Bug Location': [['str.rs', 'mod.rs'], ['worker_local.rs']],
+        'Algorithm': [['UnsafeDataflow'], ['SendSyncVariance']],
+        'Bug Identifiers': [['rust#80335', 'rust#80894'], ['rust#81425']],
         # Computed with:
         #   cloc ~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library
-        'Size (LoC)': [282518],
-        'L': [['3y', '2y']],
+        'Size (LoC)': [282518, 347739],
+        'L': [['3y', '2y'], ['3y']],
         # Assume that the stdlib has good coverage, afaik measuring this with tools is hard.
-        'Has Unit Tests': [True],
+        'Has Unit Tests': [True, True],
         'Description': [
             r'The \texttt{join} method can return uninitialized memory when string length changes. '
             r'\texttt{read_to_string} and \texttt{read_to_end} methods '
-            r'overflow the heap and read past the provided buffer.'],
+            r'overflow the heap and read past the provided buffer. ',
+
+            r'\texttt{WorkerLocal} used in parallel compilation can cause data races.'],
     }
     metadata = pd.concat([pd.DataFrame.from_dict(std_bug), metadata])
 
