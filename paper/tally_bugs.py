@@ -10,8 +10,8 @@ def main():
     send_sync_violations = 0
     bugs_per_pattern = collections.Counter()
 
-    # 2 bugs from std not represented in the PoCs.
-    bug_count += 2
+    # 2 bugs from std and 1 from rustc not represented in the PoCs.
+    bug_count += 3
 
     unreported_bug_count = 0
 

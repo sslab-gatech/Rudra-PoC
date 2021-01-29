@@ -11,8 +11,8 @@ def main():
     reported_cnt = 0
     backlog_cnt = 0
 
-    # 2 bugs from std not represented in the PoCs
-    total_bugs_cnt = 2
+    # 2 bugs from std and 1 from rustc not represented in the PoCs
+    total_bugs_cnt = 3
     crate_set = {"std"}
 
     # TODO: add strict count - those without "guide"
