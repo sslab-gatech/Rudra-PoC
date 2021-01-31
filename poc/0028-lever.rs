@@ -12,6 +12,7 @@ version = "0.8.0"
 issue_url = "https://github.com/vertexclique/lever/issues/15"
 issue_date = 2020-11-10
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/589"
+rustsec_id = "RUSTSEC-2020-0137"
 
 [[bugs]]
 analyzer = "SendSyncVariance"

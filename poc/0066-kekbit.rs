@@ -12,6 +12,7 @@ version = "0.3.7"
 issue_url = "https://github.com/motoras/kekbit/issues/34"
 issue_date = 2020-12-18
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/706"
+rustsec_id = "RUSTSEC-2020-0129"
 
 [[bugs]]
 analyzer = "SendSyncVariance"

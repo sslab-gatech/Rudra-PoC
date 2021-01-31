@@ -8,6 +8,7 @@ version = "0.16.2"
 issue_url = "https://github.com/tafia/calamine/issues/199"
 issue_date = 2021-01-06
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/594"
+rustsec_id = "RUSTSEC-2021-0015"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"

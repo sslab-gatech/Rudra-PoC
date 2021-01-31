@@ -8,6 +8,7 @@ version = "0.1.2"
 issue_url = "https://github.com/andrewhickman/ms3d/issues/1"
 issue_date = 2021-01-26
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/723"
+rustsec_id = "RUSTSEC-2021-0016"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"

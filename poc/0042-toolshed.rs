@@ -12,6 +12,7 @@ version = "0.8.0"
 issue_url = "https://github.com/ratel-rust/toolshed/issues/12"
 issue_date = 2020-11-15
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/591"
+rustsec_id = "RUSTSEC-2020-0136"
 
 [[bugs]]
 analyzer = "SendSyncVariance"

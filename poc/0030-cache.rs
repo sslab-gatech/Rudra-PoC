@@ -12,6 +12,7 @@ version = "0.8.0"
 issue_url = "https://github.com/krl/cache/issues/1"
 issue_date = 2020-11-24
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/704"
+rustsec_id = "RUSTSEC-2020-0128"
 
 [[bugs]]
 analyzer = "SendSyncVariance"

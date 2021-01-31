@@ -8,6 +8,7 @@ version = "0.2.0"
 issue_url = "https://gitlab.redox-os.org/redox-os/dces-rust/-/issues/8"
 issue_date = 2020-12-09
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/590"
+rustsec_id = "RUSTSEC-2020-0139"
 
 [[bugs]]
 analyzer = "SendSyncVariance"

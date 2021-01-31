@@ -11,6 +11,7 @@ cargo_toolchain = "nightly"
 issue_url = "https://github.com/L117/array-tools/issues/2"
 issue_date = 2020-12-31
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/665"
+rustsec_id = "RUSTSEC-2020-0132"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"

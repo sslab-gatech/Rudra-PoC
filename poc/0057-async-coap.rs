@@ -15,6 +15,7 @@ cargo_toolchain = "nightly"
 issue_url = "https://github.com/google/rust-async-coap/issues/33"
 issue_date = 2020-12-08
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/693"
+rustsec_id = "RUSTSEC-2020-0124"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
