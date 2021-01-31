@@ -8,6 +8,7 @@ version = "0.1.41"
 issue_url = "https://github.com/purpleposeidon/v9/issues/1"
 issue_date = 2020-12-18
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/707"
+rustsec_id = "RUSTSEC-2020-0127"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
