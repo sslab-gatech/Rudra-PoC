@@ -7,6 +7,7 @@ version = "0.13.2"
 [report]
 issue_url = "https://github.com/bodoni/postscript/issues/1"
 issue_date = 2021-01-30
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/728"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
