@@ -10,7 +10,7 @@ issue_date = 2021-01-30
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
-bug_class = "PanicSafety"
+bug_class = "UninitExposure"
 ```
 !*/
 #![forbid(unsafe_code)]
