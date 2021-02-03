@@ -10,6 +10,9 @@ def main():
     backlog_by_year = {}
     ours_id_set = set()
     for poc_metadata in poc_metadata.values():
+        if 'issue_date' not in poc_metadata['report']:
+            continue
+
         try:
             ours_id_set.add(poc_metadata['report']['rustsec_id'])
         except tomlkit.exceptions.NonExistentKey:

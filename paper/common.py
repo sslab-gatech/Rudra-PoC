@@ -35,9 +35,8 @@ def get_poc_metadata():
     poc_dir = PROJECT_DIRECTORY / 'poc'
 
     for poc_file in poc_dir.iterdir():
-        try:
-            identifier = int(poc_file.stem.split('-')[0])
-        except ValueError:
+        identifier = poc_file.stem[:4]
+        if not (poc_file.stem[4] == '-' and poc_file.stem[:4].isnumeric()):
             continue
 
         with poc_file.open() as f:

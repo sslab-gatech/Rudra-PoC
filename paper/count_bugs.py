@@ -25,7 +25,11 @@ def main():
     backlog_by_year = {}
 
     ours_id_set = set()
-    for poc_metadata in poc_metadata.values():
+    for (poc_id, poc_metadata) in poc_metadata.items():
+        if 'issue_date' not in poc_metadata['report']:
+            print(f"Warning: PoC {poc_id} is not reported")
+            continue
+
         crate_set.add(poc_metadata['target']['crate'])
 
         issue_date = poc_metadata['report']['issue_date']
