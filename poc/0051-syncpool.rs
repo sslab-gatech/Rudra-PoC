@@ -8,6 +8,7 @@ version = "0.1.5"
 issue_url = "https://github.com/Chopinsky/byte_buffer/issues/2"
 issue_date = 2020-11-29
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/654"
+rustsec_id = "RUSTSEC-2020-0142"
 
 [[bugs]]
 analyzer = "SendSyncVariance"

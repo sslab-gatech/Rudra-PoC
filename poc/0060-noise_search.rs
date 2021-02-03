@@ -8,6 +8,7 @@ version = "0.7.0"
 issue_url = "https://github.com/pipedown/noise/issues/72"
 issue_date = 2020-12-10
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/731"
+rustsec_id = "RUSTSEC-2020-0141"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
