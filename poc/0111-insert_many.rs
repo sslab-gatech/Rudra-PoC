@@ -10,7 +10,8 @@ issue_date = 2021-01-26
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
-bug_class = "Other"
+bug_class = "PanicSafety"
+bug_count = 2
 ```
 !*/
 #![forbid(unsafe_code)]
