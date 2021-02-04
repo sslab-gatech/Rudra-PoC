@@ -12,6 +12,7 @@ version = "0.1.27"
 issue_url = "https://github.com/schets/multiqueue/issues/31"
 issue_date = 2020-12-25
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/744"
+rustsec_id = "RUSTSEC-2020-0143"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
