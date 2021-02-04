@@ -6,7 +6,7 @@ version = "0.2.0"
 
 [report]
 issue_url = "https://github.com/qwertz19281/rust_utils/issues/3"
-issue_date = 2020-02-03
+issue_date = 2021-02-03
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
