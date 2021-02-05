@@ -14,10 +14,10 @@ rustsec_id = "RUSTSEC-2020-0038"
 analyzer = "Manual"
 guide = "UnsafeDestructor"
 bug_class = "Other"
+bug_count = 2
 
 [[bugs]]
-analyzer = "Manual"
-guide = "UnsafeDestructor"
+analyzer = "UnsafeDataflow"
 bug_class = "PanicSafety"
 ```
 !*/
