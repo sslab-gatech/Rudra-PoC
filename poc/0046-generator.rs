@@ -11,6 +11,7 @@ issue_date = 2020-11-16
 [[bugs]]
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
+rudra_report_locations = ["src/gen_impl.rs:27:1: 27:55"]
 ```
 !*/
 #![forbid(unsafe_code)]

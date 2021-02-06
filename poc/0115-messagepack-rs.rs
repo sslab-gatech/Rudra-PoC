@@ -12,6 +12,12 @@ issue_date = 2021-01-26
 analyzer = "UnsafeDataflow"
 bug_class = "UninitExposure"
 bug_count = 4
+rudra_report_locations = [
+    "src/deserializable.rs:59:5: 64:6",
+    "src/deserializable.rs:66:5: 71:6",
+    "src/deserializable.rs:130:5: 135:6",
+    "src/deserializable.rs:82:9: 93:10",
+]
 ```
 !*/
 #![forbid(unsafe_code)]

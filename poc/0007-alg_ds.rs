@@ -17,11 +17,13 @@ rustsec_id = "RUSTSEC-2020-0033"
 analyzer = "Manual"
 guide = "UnsafeDestructor"
 bug_class = "Other"
+rudra_report_locations = []
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
 guide = "Manual"
 bug_class = "Other"
+rudra_report_locations = []
 ```
 !*/
 #![forbid(unsafe_code)]

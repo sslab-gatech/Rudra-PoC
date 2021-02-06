@@ -13,6 +13,7 @@ rustsec_id = "RUSTSEC-2020-0103"
 [[bugs]]
 analyzer = "UnsafeDataflow"
 bug_class = "PanicSafety"
+rudra_report_locations = ["src/lib.rs:161:13: 169:14"]
 ```
 !*/
 #![forbid(unsafe_code)]

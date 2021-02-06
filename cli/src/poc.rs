@@ -139,6 +139,7 @@ pub struct BugMetadata {
     bug_class: BugClass,
     #[serde(default = "usize_one", skip_serializing_if = "usize_is_one")]
     bug_count: usize,
+    rudra_report_locations: Vec<String>,
 }
 
 impl BugMetadata {

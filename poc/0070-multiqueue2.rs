@@ -18,6 +18,12 @@ rustsec_id = "RUSTSEC-2020-0106"
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 bug_count = 4
+rudra_report_locations = [
+    "src/multiqueue.rs:1097:1: 1097:60",
+    "src/multiqueue.rs:1098:1: 1098:60",
+    "src/multiqueue.rs:1099:1: 1099:63",
+    "src/multiqueue.rs:1100:1: 1100:63",
+]
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -15,6 +15,7 @@ unique_bugs = 1
 analyzer = "UnsafeDataflow"
 guide = "Manual"
 bug_class = "Other"
+rudra_report_locations = ["src/frame.rs:369:5: 398:6"]
 ```
 !*/
 #![forbid(unsafe_code)]

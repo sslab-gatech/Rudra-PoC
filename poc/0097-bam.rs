@@ -14,11 +14,13 @@ issue_date = 2021-01-07
 [[bugs]]
 analyzer = "UnsafeDataflow"
 bug_class = "UninitExposure"
+rudra_report_locations = ["src/bgzip/mod.rs:296:5: 332:6"]
 
 [[bugs]]
 analyzer = "Manual"
 guide = "UnsafeDataflow"
 bug_class = "Other"
+rudra_report_locations = []
 ```
 !*/
 #![forbid(unsafe_code)]

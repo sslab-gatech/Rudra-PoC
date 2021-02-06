@@ -11,6 +11,7 @@ issue_date = 2021-01-06
 [[bugs]]
 analyzer = "UnsafeDataflow"
 bug_class = "UninitExposure"
+rudra_report_locations = ["src/buffer/mod.rs:145:5: 154:6"]
 ```
 !*/
 #![forbid(unsafe_code)]

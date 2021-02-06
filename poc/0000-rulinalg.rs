@@ -13,6 +13,7 @@ rustsec_id = "RUSTSEC-2020-0023"
 [[bugs]]
 analyzer = "Manual"
 bug_class = "Other"
+rudra_report_locations = []
 ```
 !*/
 #![forbid(unsafe_code)]

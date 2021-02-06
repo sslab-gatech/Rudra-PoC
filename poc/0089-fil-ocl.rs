@@ -18,6 +18,7 @@ rustsec_id = "RUSTSEC-2021-0011"
 analyzer = "UnsafeDataflow"
 bug_class = "PanicSafety"
 bug_count = 2
+rudra_report_locations = ["src/standard/event.rs:1038:13: 1049:14"]
 ```
 !*/
 #![forbid(unsafe_code)]

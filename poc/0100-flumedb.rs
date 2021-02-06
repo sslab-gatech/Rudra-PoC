@@ -13,6 +13,7 @@ rustsec_url = "https://github.com/RustSec/advisory-db/pull/661"
 analyzer = "UnsafeDataflow"
 bug_class = "UninitExposure"
 bug_count = 2
+rudra_report_locations = ["src/go_offset_log.rs:212:1: 263:2", "src/offset_log.rs:330:1: 358:2"]
 ```
 !*/
 #![forbid(unsafe_code)]

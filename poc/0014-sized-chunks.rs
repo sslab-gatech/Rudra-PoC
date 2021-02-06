@@ -22,12 +22,14 @@ analyzer = "Manual"
 guide = "UnsafeDestructor"
 bug_class = "Other"
 bug_count = 4
+rudra_report_locations = []
 
 [[bugs]]
 analyzer = "Manual"
 guide = "UnsafeDestructor"
 bug_class = "PanicSafety"
 bug_count = 2
+rudra_report_locations = []
 ```
 !*/
 #![forbid(unsafe_code)]

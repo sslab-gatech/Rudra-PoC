@@ -14,6 +14,10 @@ rustsec_id = "RUSTSEC-2020-0092"
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 bug_count = 2
+rudra_report_locations = [
+    "src/cache/arc/mod.rs:153:1: 153:88",
+    "src/cache/arc/mod.rs:154:1: 154:88",
+]
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -12,6 +12,11 @@ issue_url = "https://github.com/mikkyang/rust-blas/issues/26"
 analyzer = "UnsafeDataflow"
 bug_class = "UninitExposure"
 bug_count = 3
+rudra_report_locations = [
+    "src/vector/mod.rs:30:5: 38:6",
+    "src/math/matrix_vector.rs:21:5: 31:6",
+    "src/math/mat.rs:111:5: 125:6",
+]
 ```
 !*/
 #![forbid(unsafe_code)]

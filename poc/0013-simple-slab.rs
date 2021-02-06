@@ -15,6 +15,7 @@ analyzer = "Manual"
 guide = "UnsafeDestructor"
 bug_class = "Other"
 bug_count = 2
+rudra_report_locations = []
 ```
 !*/
 #![forbid(unsafe_code)]

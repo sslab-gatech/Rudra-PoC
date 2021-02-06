@@ -13,7 +13,22 @@ rustsec_id = "RUSTSEC-2020-0088"
 [[bugs]]
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
-bug_count = 4
+bug_count = 13
+rudra_report_locations = [
+    "src/spsc.rs:35:1: 35:60",
+    "src/spsc.rs:42:1: 42:60",
+    "src/mpsc.rs:37:1: 37:60",
+    "src/mpsc.rs:44:1: 44:60",
+    "src/spmc.rs:37:1: 37:60",
+    "src/spmc.rs:45:1: 45:60",
+    "src/mpmc.rs:37:1: 37:60",
+    "src/mpmc.rs:45:1: 45:60",
+    "src/mpsc.rs:45:1: 45:60",
+    "src/spmc.rs:38:1: 38:60",
+    "src/spmc.rs:46:1: 46:60",
+    "src/mpmc.rs:38:1: 38:60",
+    "src/mpmc.rs:46:1: 46:60"
+]
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -11,6 +11,7 @@ version = "{{ version }}"
 analyzer = "Manual"
 # SendSyncVariance, UninitExposure, InconsistencyAmplification, PanicSafety
 bug_class = "Other"
+# `location` field from Rudra report or empty if Manual. 
 ```
 !*/
 #![forbid(unsafe_code)]

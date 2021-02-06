@@ -12,12 +12,14 @@ issue_date = 2020-12-10
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 bug_count = 2
+rudra_report_locations = ["src/mem.rs:829:1: 829:34", "src/mem.rs:830:1: 830:34"]
 
 [[bugs]]
 analyzer = "Manual"
 guide = "SendSyncVariance"
 bug_class = "Other"
 bug_count = 2
+rudra_report_locations = []
 ```
 !*/
 #![forbid(unsafe_code)]

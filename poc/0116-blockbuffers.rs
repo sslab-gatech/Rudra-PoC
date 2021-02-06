@@ -9,6 +9,7 @@ version = "0.1.0"
 [[bugs]]
 analyzer = "UnsafeDataflow"
 bug_class = "PanicSafety"
+rudra_report_locations = ["src/le.rs:21:5: 27:6"]
 ```
 !*/
 #![forbid(unsafe_code)]

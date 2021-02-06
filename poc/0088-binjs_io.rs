@@ -16,6 +16,12 @@ rustsec_url = "https://github.com/RustSec/advisory-db/pull/660"
 analyzer = "UnsafeDataflow"
 bug_class = "UninitExposure"
 bug_count = 4
+rudra_report_locations = [
+    "src/bytes/compress.rs:183:5: 262:6",
+    "src/util.rs:36:5: 50:6",
+    "src/multipart/read.rs:30:5: 36:6",
+    "src/multipart/read.rs:42:5: 56:6",
+]
 ```
 !*/
 fn main() {

@@ -13,7 +13,8 @@ rustsec_id = "RUSTSEC-2020-0102"
 [[bugs]]
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
-bug_count = 2
+bug_count = 1
+rudra_report_locations = ["src/lib.rs:30:1: 30:61"]
 ```
 !*/
 use late_static::LateStatic;

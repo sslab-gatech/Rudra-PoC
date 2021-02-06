@@ -14,6 +14,7 @@ rustsec_id = "RUSTSEC-2021-0003"
 analyzer = "UnsafeDataflow"
 guide = "Manual"
 bug_class = "Other"
+rudra_report_locations = ["lib.rs:939:5: 985:6"]
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -19,6 +19,17 @@ issue_date = 2020-12-23
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 bug_count = 9
+rudra_report_locations = [
+    "src/hashstore.rs:184:1: 184:60",
+    "src/hashstore.rs:186:1: 186:60",
+    "src/store.rs:162:1: 162:36",
+    "src/store.rs:164:1: 164:36",
+    "src/hashstore.rs:22:1: 22:56",
+    "src/hashstore.rs:20:1: 20:56",
+    "src/store.rs:12:1: 12:36",
+    "src/store.rs:14:1: 14:36",
+    "src/spscstate.rs:25:1: 25:43",
+]
 ```
 !*/
 #![forbid(unsafe_code)]

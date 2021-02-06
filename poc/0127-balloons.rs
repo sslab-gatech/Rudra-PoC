@@ -11,6 +11,7 @@ issue_url = "https://github.com/yangby-cryptape/rust-balloons/issues/1"
 [[bugs]]
 analyzer = "UnsafeDataflow"
 bug_class = "UninitExposure"
+rudra_report_locations = ["src/balloon.rs:88:5: 162:6"]
 ```
 !*/
 #![forbid(unsafe_code)]

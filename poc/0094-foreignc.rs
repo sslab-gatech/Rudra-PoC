@@ -13,6 +13,7 @@ analyzer = "UnsafeDataflow"
 guide = "Manual"
 bug_class = "Other"
 bug_count = 2
+rudra_report_locations = ["src/ffi_util.rs:77:5: 84:6"]
 ```
 !*/
 #![forbid(unsafe_code)]

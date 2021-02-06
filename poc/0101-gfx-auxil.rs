@@ -12,6 +12,7 @@ rustsec_url = "https://github.com/RustSec/advisory-db/pull/681"
 [[bugs]]
 analyzer = "UnsafeDataflow"
 bug_class = "UninitExposure"
+rudra_report_locations = ["src/auxil/auxil/src/lib.rs:60:1: 96:2"]
 ```
 !*/
 #![forbid(unsafe_code)]

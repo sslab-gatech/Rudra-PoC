@@ -13,6 +13,7 @@ rustsec_id = "RUSTSEC-2020-0114"
 [[bugs]]
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
+rudra_report_locations = ["src/demuxer.rs:265:1: 265:61"]
 ```
 !*/
 #![forbid(unsafe_code)]

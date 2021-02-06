@@ -12,6 +12,7 @@ issue_date = 2021-01-19
 analyzer = "UnsafeDataflow"
 guide = "Manual"
 bug_class = "InconsistencyAmplification"
+rudra_report_locations = ["src/rr_iterator.rs:189:5: 254:6"]
 ```
 !*/
 #![forbid(unsafe_code)]

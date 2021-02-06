@@ -12,6 +12,7 @@ issue_date = 2021-01-05
 analyzer = "UnsafeDataflow"
 bug_class = "UninitExposure"
 bug_count = 2
+rudra_report_locations = ["src/frame/parser_async.rs:19:1: 97:2"]
 ```
 !*/
 #![forbid(unsafe_code)]

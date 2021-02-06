@@ -12,6 +12,10 @@ issue_date = 2020-12-18
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 bug_count = 2
+rudra_report_locations = [
+    "src/expander/immediate.rs:23:1: 28:2",
+    "src/expander/transactional.rs:65:1: 70:2",
+]
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -12,6 +12,7 @@ issue_date = 2020-12-31
 analyzer = "Manual"
 guide = "UnsafeDataflow"
 bug_class = "Other"
+rudra_report_locations = []
 ```
 !*/
 #![forbid(unsafe_code)]

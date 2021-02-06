@@ -19,11 +19,19 @@ issue_date = 2020-12-23
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 bug_count = 5
+rudra_report_locations = [
+    "src/namedstore.rs:131:1: 131:42",
+    "src/namedstore.rs:133:1: 133:42",
+    "src/unnamedstore.rs:93:1: 93:36",
+    "src/unnamedstore.rs:94:1: 94:36",
+    "src/spscstate.rs:25:1: 25:43",
+]
 
 [[bugs]]
 analyzer = "Manual"
 guide = "SendSyncVariance"
 bug_class = "Other"
+rudra_report_locations = []
 ```
 !*/
 #![forbid(unsafe_code)]

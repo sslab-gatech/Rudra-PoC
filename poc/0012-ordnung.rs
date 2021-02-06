@@ -15,10 +15,12 @@ analyzer = "Manual"
 guide = "UnsafeDestructor"
 bug_class = "Other"
 bug_count = 2
+rudra_report_locations = []
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
 bug_class = "PanicSafety"
+rudra_report_locations = ["src/compact.rs:144:5: 156:6"]
 ```
 !*/
 #![forbid(unsafe_code)]

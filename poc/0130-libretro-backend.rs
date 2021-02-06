@@ -11,6 +11,7 @@ issue_date = 2021-02-05
 [[bugs]]
 analyzer = "UnsafeDataflow"
 bug_class = "PanicSafety"
+rudra_report_locations = ["src/lib.rs:327:5: 381:6"]
 ```
 !*/
 #![forbid(unsafe_code)]

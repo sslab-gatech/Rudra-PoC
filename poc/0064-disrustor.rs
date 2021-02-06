@@ -12,11 +12,13 @@ issue_date = 2020-12-17
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 bug_count = 2
+rudra_report_locations = ["src/ringbuffer.rs:48:1: 48:41", "src/ringbuffer.rs:49:1: 49:41"]
 
 [[bugs]]
 analyzer = "Manual"
 guide = "SendSyncVariance"
 bug_class = "Other"
+rudra_report_locations = []
 ```
 !*/
 #![forbid(unsafe_code)]
