@@ -49,7 +49,7 @@ def main():
         if len(sys.argv) > 1 and poc['target']['crate'] != sys.argv[1]:
             continue
 
-        if poc['target']['crate'] in ['slock', 'containers']:
+        if poc['target']['crate'] in NON_COMPILING_CRATES:
             print('WARNING: Skipping crate.')
             continue
 
