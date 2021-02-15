@@ -1,5 +1,6 @@
 .vscode/
 /poc-debug/
+/rudra-recreate/
 
 # local files
 /advisory-db
