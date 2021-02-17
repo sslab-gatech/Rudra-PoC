@@ -15,9 +15,7 @@ we (Rust group @sslab-gatech) found a memory-safety/soundness issue in this crat
 
 The Naive & safe way to fix the issue is to always zero-initialize a buffer before lending it to a user-provided `Read` implementation. Note that this approach will add runtime performance overhead of zero-initializing the buffer.
 
-As of Jan 2021, there is not yet an ideal fix that works in stable Rust with no performance overhead. Below are links to relevant discussions & suggestions for the fix.
+As of Feb 2021, there is not yet an ideal fix that works with no performance overhead. Below are links to relevant discussions & suggestions for the fix.
 
-* [Well-written document regarding the issue](https://paper.dropbox.com/doc/IO-Buffer-Initialization-MvytTgjIOTNpJAS6Mvw38)
 * [Rust RFC 2930](https://github.com/rust-lang/rfcs/blob/master/text/2930-read-buf.md#summary)
-* [nightly feature `std::io::Initializer`](https://doc.rust-lang.org/std/io/struct.Initializer.html)
 * [Discussion in Rust Internals Forum](https://internals.rust-lang.org/t/uninitialized-memory/1652)
