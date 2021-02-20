@@ -7,6 +7,8 @@ we (Rust group @sslab-gatech) found a memory-safety/soundness issue in this crat
 
 `foo()` method creates an uninitialized buffer and passes it to user-provided `Read` implementation. This is unsound, because it allows safe Rust code to exhibit an undefined behavior (read from uninitialized memory).
 
+In case a user-provided `Read` reads from the given buffer, uninitialized buffer can make safe Rust code to cause memory safety errors by miscompilation. Uninitialized values are lowered to LLVM as [`llvm::UndefValue`](https://llvm.org/doxygen/classllvm_1_1UndefValue.html#details) which may take different random values for each read. Propagation of `UndefValue` can quickly cause safe Rust code to exhibit undefined behavior.
+
 [This part](https://doc.rust-lang.org/std/io/trait.Read.html#tymethod.read) from the `Read` trait documentation explains the issue:
 
 > It is your responsibility to make sure that `buf` is initialized before calling `read`. Calling read with an uninitialized `buf` (of the kind one obtains via `MaybeUninit<T>`) is not safe, and can lead to undefined behavior.
