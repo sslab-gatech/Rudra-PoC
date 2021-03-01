@@ -3,6 +3,7 @@
 [target]
 crate = "rusb"
 version = "0.6.5"
+indexed_version = "0.6.0"
 
 [report]
 issue_url = "https://github.com/a1ien/rusb/issues/44"

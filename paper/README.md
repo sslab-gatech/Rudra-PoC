@@ -21,4 +21,4 @@ This folder contains convenience scripts for the Rudra paper. Crates in
 * `recreate_bugs.py` - Verify the current version of Rudra still detects the previously found bugs.
 * `rustsec_list.py` - Generate `rustsec_list.csv`. Add manual triage information to the generated file,
     copy that file to the paper repository, and run `rustsec_list_counter.py` there.
-* `verify_poc_version.py` - Check crate versions in `poc` exist in the frozen index.
+* `verify.py` - Sanity checker for PoCs.

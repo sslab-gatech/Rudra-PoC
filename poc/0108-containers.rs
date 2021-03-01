@@ -3,6 +3,7 @@
 [target]
 crate = "containers"
 version = "0.9.10"
+indexed_version = "0.9.6"
 
 [[target.peer]]
 crate = "default_allocator"

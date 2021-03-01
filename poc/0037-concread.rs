@@ -3,6 +3,7 @@
 [target]
 crate = "concread"
 version = "0.2.5"
+indexed_version = "0.1.18"
 
 [report]
 issue_url = "https://github.com/kanidm/concread/issues/48"

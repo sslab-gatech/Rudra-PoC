@@ -3,6 +3,8 @@
 [target]
 crate = "futures"
 version = "0.3.6"
+indexed_name = "futures-util"
+indexed_version = "0.3.5"
 
 [[target.peer]]
 crate = "crossbeam-utils"

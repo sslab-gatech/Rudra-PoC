@@ -3,6 +3,7 @@
 [target]
 crate = "flumedb"
 version = "0.1.4"
+indexed_version = "0.1.3"
 
 [report]
 issue_url = "https://github.com/sunrise-choir/flumedb-rs/issues/10"

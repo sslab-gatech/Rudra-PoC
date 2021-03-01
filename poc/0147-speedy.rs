@@ -3,6 +3,7 @@
 [target]
 crate = "speedy"
 version = "0.7.1"
+indexed_version = "0.6.0"
 
 [report]
 issue_url = "https://github.com/koute/speedy/issues/10"

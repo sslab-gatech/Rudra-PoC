@@ -3,6 +3,7 @@
 [target]
 crate = "conquer-once"
 version = "0.2.1"
+indexed_version = "0.2.0"
 
 [[target.peer]]
 crate = "crossbeam-utils"

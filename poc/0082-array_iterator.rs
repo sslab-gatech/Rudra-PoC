@@ -3,6 +3,7 @@
 [target]
 crate = "array_iterator"
 version = "1.2.0"
+indexed_version = "0.2.4"
 
 [report]
 issue_url = "https://gitlab.com/kevincox/array_iterator.rs/-/issues/1"

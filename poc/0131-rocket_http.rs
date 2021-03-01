@@ -3,6 +3,7 @@
 [target]
 crate = "rocket_http"
 version = "0.4.6"
+indexed_version = "0.4.5"
 
 [test]
 cargo_toolchain = "nightly"

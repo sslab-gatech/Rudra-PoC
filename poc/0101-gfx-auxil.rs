@@ -3,6 +3,8 @@
 [target]
 crate = "gfx-auxil"
 version = "0.7.0"
+indexed_name = "gfx-hal"
+indexed_version = "0.5.3"
 
 [report]
 issue_url = "https://github.com/gfx-rs/gfx/issues/3567"
@@ -12,7 +14,7 @@ rustsec_url = "https://github.com/RustSec/advisory-db/pull/681"
 [[bugs]]
 analyzer = "UnsafeDataflow"
 bug_class = "UninitExposure"
-rudra_report_locations = ["src/auxil/auxil/src/lib.rs:60:1: 96:2"]
+rudra_report_locations = ["src/pso/mod.rs:275:1: 311:2"]
 ```
 !*/
 #![forbid(unsafe_code)]

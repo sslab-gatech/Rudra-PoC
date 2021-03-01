@@ -3,6 +3,7 @@
 [target]
 crate = "quick-protobuf"
 version = "0.8.0"
+indexed_version = "0.7.0"
 
 [report]
 issue_url = "https://github.com/tafia/quick-protobuf/issues/186"

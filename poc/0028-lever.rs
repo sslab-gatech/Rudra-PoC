@@ -3,6 +3,7 @@
 [target]
 crate = "lever"
 version = "0.1.1-alpha.11"
+indexed_version = "0.1.1-alpha.4"
 
 [[target.peer]]
 crate = "crossbeam-utils"

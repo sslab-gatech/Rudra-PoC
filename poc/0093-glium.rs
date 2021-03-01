@@ -3,6 +3,7 @@
 [target]
 crate = "glium"
 version = "0.29.0"
+indexed_version = "0.27.0"
 
 [report]
 issue_url = "https://github.com/glium/glium/issues/1907"

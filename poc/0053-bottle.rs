@@ -21,7 +21,7 @@ analyzer = "Manual"
 guide = "SendSyncVariance"
 bug_class = "Other"
 bug_count = 2
-rudra_report_locations = ["src/demux.rs:12:1: 12:46", "src/remote.rs:58:1: 58:45"]
+rudra_report_locations = []
 ```
 !*/
 #![forbid(unsafe_code)]

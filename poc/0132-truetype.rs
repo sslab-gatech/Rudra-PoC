@@ -3,6 +3,7 @@
 [target]
 crate = "truetype"
 version = "0.30.0"
+indexed_version = "0.29.0"
 
 [report]
 issue_url = "https://github.com/bodoni/truetype/issues/11"

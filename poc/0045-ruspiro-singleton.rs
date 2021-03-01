@@ -3,6 +3,7 @@
 [target]
 crate = "ruspiro-singleton"
 version = "0.4.0"
+indexed_version = "0.3.0"
 
 [report]
 issue_url = "https://github.com/RusPiRo/ruspiro-singleton/issues/10"

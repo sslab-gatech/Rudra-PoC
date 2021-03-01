@@ -3,6 +3,7 @@
 [target]
 crate = "libp2p-deflate"
 version = "0.27.0"
+indexed_version = "0.20.0"
 
 [[target.peer]]
 crate = "libp2p-core"

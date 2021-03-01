@@ -3,6 +3,7 @@
 [target]
 crate = "concread"
 version = "0.2.6"
+indexed_version = "0.1.18"
 
 [report]
 issue_url = "https://github.com/kanidm/concread/issues/55"
@@ -35,7 +36,7 @@ impl Drop for DropDetector {
 }
 
 fn main() {
-    let tree : BptreeMap<DropDetector, i32> = BptreeMap::new();
+    let tree: BptreeMap<DropDetector, i32> = BptreeMap::new();
     let mut writer = tree.write();
 
     writer.insert(DropDetector(1), 1);

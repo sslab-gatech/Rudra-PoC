@@ -3,6 +3,7 @@
 [target]
 crate = "try-mutex"
 version = "0.2.0"
+indexed_version = "0.1.1"
 
 [[target.peer]]
 crate = "crossbeam-utils"

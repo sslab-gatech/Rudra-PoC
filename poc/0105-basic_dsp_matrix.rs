@@ -3,6 +3,7 @@
 [target]
 crate = "basic_dsp_matrix"
 version = "0.9.0"
+indexed_version = "0.8.1"
 
 [report]
 issue_url = "https://github.com/liebharc/basic_dsp/issues/47"

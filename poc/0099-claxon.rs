@@ -3,6 +3,7 @@
 [target]
 crate = "claxon"
 version = "0.4.3"
+indexed_version = "0.4.2"
 
 [report]
 issue_url = "https://github.com/ruuda/claxon/issues/26"

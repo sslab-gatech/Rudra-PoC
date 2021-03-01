@@ -3,6 +3,7 @@
 [target]
 crate = "calamine"
 version = "0.16.2"
+indexed_version = "0.16.1"
 
 [report]
 issue_url = "https://github.com/tafia/calamine/issues/199"

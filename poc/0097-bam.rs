@@ -3,6 +3,7 @@
 [target]
 crate = "bam"
 version = "0.1.2"
+indexed_version = "0.1.0"
 
 [test]
 cargo_flags = ["--release"]

@@ -3,6 +3,7 @@
 [target]
 crate = "eventio"
 version = "0.4.0"
+indexed_version = "0.3.5"
 
 [[target.peer]]
 crate = "crossbeam-channel"

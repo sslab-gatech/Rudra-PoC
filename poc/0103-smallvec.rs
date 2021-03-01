@@ -3,6 +3,7 @@
 [target]
 crate = "smallvec"
 version = "1.6.0"
+indexed_version = "1.4.0"
 
 [report]
 issue_url = "https://github.com/servo/rust-smallvec/issues/252"

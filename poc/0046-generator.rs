@@ -3,6 +3,7 @@
 [target]
 crate = "generator"
 version = "0.6.23"
+indexed_version = "0.6.21"
 
 [report]
 issue_url = "https://github.com/Xudong-Huang/generator-rs/issues/27"

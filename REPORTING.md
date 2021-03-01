@@ -43,6 +43,11 @@ The format of the metadata is as follows:
 
 - **crate**: (string) the name of the target crate
 - **version**: (string) the version of the target crate to test the poc
+  - The latest version at the time of reporting
+- **indexed_name**: (optional string) the name of the target crate in the index
+  - This option is only needed when the crate is renamed or the bug was moved to another subcrate
+- **indexed_version**: (optional string) the version of the target in the index
+  - The latest version at the time of 2020-07-04
 - **features**: (optional string array) list of features to enable (TODO: not supported yet)
 - **peer**: (optional object array) peer dependencies, follows the same pattern with target. See `./poc/0024-lock_api.rs` for an example.
   - Ironically, `features` are supported here
@@ -73,6 +78,7 @@ Uses [Array of Tables](https://toml.io/en/v1.0.0#array-of-tables) in TOML format
 - **bug_class**: (string) The bug class.
   - Example: `["SendSyncVariance", "UninitExposure", "InconsistencyAmplification", "PanicSafety", "Other"]`
 - **bug_count**: (optional integer) Default to 1, number of bugs that correspond to this pattern.
+- **rudra_report_locations**: (string array) The location of the bug in the `indexed_version`
 
 ## Workflow
 

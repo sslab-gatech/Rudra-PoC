@@ -3,6 +3,7 @@
 [target]
 crate = "abi_stable"
 version = "0.9.0"
+indexed_version = "0.8.3"
 
 [report]
 issue_url = "https://github.com/rodrimati1992/abi_stable_crates/issues/44"

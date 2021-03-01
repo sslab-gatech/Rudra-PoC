@@ -3,6 +3,7 @@
 [target]
 crate = "buttplug"
 version = "0.10.0"
+indexed_version = "0.4.0"
 
 [[target.peer]]
 crate = "futures"

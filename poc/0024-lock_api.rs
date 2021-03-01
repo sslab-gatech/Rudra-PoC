@@ -3,6 +3,7 @@
 [target]
 crate = "lock_api"
 version = "0.4.1"
+indexed_version = "0.4.0"
 
 [[target.peer]]
 crate = "parking_lot"
