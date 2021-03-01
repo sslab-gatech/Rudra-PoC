@@ -7,6 +7,8 @@ version = "0.2.1"
 [report]
 issue_date = 2021-02-19
 issue_url = "https://github.com/antonmarsden/toodee/issues/13"
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/784"
+rustsec_id = "RUSTSEC-2021-0028"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
