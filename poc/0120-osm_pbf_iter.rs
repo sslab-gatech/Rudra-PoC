@@ -11,7 +11,6 @@ issue_date = 2021-01-30
 [[bugs]]
 analyzer = "UnsafeDataflow"
 bug_class = "UninitExposure"
-bug_count = 2
 rudra_report_locations = ["src/blob_reader.rs:30:5: 69:6"]
 ```
 !*/

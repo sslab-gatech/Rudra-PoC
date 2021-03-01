@@ -79,18 +79,22 @@ def main():
         crate_name = poc['target']['crate']
 
         for bug in poc['bugs']:
+            if 'bug_count' in bug:
+                bug_count = int(bug['bug_count'])
+            else:
+                bug_count = 1
+            bug_locations = len(bug['rudra_report_locations'])
             if bug['analyzer'] != 'Manual':
-                if 'bug_count' in bug:
-                    bug_count = int(bug['bug_count'])
-                else:
-                    bug_count = 1
-                bug_locations = len(bug['rudra_report_locations'])
-
                 if bug_count != bug_locations:
                     print(f"PoC {poc_id} - {crate_name} bug count mismatch")
                     print(f"  bug count: {bug_count}")
                     print(f"  bug locations: {bug_locations}")
                     print()
+            else:
+                if bug_locations > 0:
+                    print(f"PoC {poc_id} - {crate_name} contains bug locations for manual bugs")
+                    print()
+
 
 if __name__ == "__main__":
     main()

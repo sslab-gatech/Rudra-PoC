@@ -11,7 +11,6 @@ issue_date = 2021-01-31
 [[bugs]]
 analyzer = "UnsafeDataflow"
 bug_class = "UninitExposure"
-bug_count = 2
 rudra_report_locations = ["src/fcgi.rs:172:5: 208:6"]
 ```
 !*/

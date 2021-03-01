@@ -15,7 +15,10 @@ rustsec_id = "RUSTSEC-2020-0105"
 analyzer = "UnsafeDataflow"
 bug_class = "PanicSafety"
 bug_count = 2
-rudra_report_locations = ["src/std_types/string.rs:613:5: 646:6"]
+rudra_report_locations = [
+    "src/std_types/vec/iters.rs:294:5: 312:6",
+    "src/std_types/string.rs:613:5: 646:6",
+]
 ```
 !*/
 #![forbid(unsafe_code)]

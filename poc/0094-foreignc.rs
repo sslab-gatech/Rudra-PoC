@@ -12,8 +12,14 @@ issue_date = 2021-01-06
 analyzer = "UnsafeDataflow"
 guide = "Manual"
 bug_class = "Other"
-bug_count = 2
 rudra_report_locations = ["src/ffi_util.rs:77:5: 84:6"]
+
+
+[[bugs]]
+analyzer = "Manual"
+guide = "UnsafeDataflow"
+bug_class = "Other"
+rudra_report_locations = []
 ```
 !*/
 #![forbid(unsafe_code)]

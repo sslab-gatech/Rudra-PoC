@@ -12,7 +12,6 @@ issue_date = 2021-02-25
 [[bugs]]
 analyzer = "UnsafeDataflow"
 bug_class = "PanicSafety"
-bug_count = 2
 rudra_report_locations = ["src/collections/bptree/node.rs:376:5: 543:6"]
 ```
 !*/

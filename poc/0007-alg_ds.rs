@@ -23,7 +23,7 @@ rudra_report_locations = []
 analyzer = "UnsafeDataflow"
 guide = "Manual"
 bug_class = "Other"
-rudra_report_locations = []
+rudra_report_locations = ["src/ds/matrix.rs:97:5: 104:6"]
 ```
 !*/
 #![forbid(unsafe_code)]
