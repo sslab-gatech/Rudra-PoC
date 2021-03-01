@@ -42,6 +42,7 @@ ansi_escape_8bit = re.compile(
 NON_COMPILING_CRATES = {'containers', 'slock'}
 
 
+# TODO: compare `bug_count` and `rudra_report_locations` for non-manual bugs
 def main():
     poc_metadata = get_poc_metadata()
 
@@ -100,4 +101,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
