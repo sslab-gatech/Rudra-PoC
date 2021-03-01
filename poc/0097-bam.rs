@@ -10,6 +10,8 @@ cargo_flags = ["--release"]
 [report]
 issue_url = "https://gitlab.com/tprodanov/bam/-/issues/4"
 issue_date = 2021-01-07
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/782"
+rustsec_id = "RUSTSEC-2021-0027"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
