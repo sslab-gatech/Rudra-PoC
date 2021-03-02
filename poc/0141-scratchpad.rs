@@ -7,6 +7,8 @@ version = "1.3.0"
 [report]
 issue_url = "https://github.com/okready/scratchpad/issues/1"
 issue_date = 2021-02-18
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/793"
+rustsec_id = "RUSTSEC-2021-0030"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"

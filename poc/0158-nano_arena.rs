@@ -7,6 +7,8 @@ version = "0.5.1"
 [report]
 issue_url = "https://github.com/bennetthardwick/nano-arena/issues/1"
 issue_date = 2021-03-01
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/795"
+rustsec_id = "RUSTSEC-2021-0031"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"

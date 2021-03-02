@@ -7,6 +7,8 @@ version = "0.6.0"
 [report]
 issue_url = "https://github.com/wwylele/byte-struct-rs/issues/1"
 issue_date = 2021-03-01
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/796"
+rustsec_id = "RUSTSEC-2021-0032"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
