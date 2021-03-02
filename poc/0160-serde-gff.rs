@@ -11,7 +11,7 @@ issue_date = 2021-03-02
 [[bugs]]
 analyzer = "UnsafeDataflow"
 bug_class = "UninitExposure"
-bug_count = 2
+bug_count = 3
 rudra_report_locations = ["src/parser/mod.rs:248:3: 257:4", "src/parser/mod.rs:336:3: 343:4", "src/raw.rs:315:3: 337:4"]
 ```
 !*/
