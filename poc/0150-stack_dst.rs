@@ -7,6 +7,8 @@ version = "0.6.0"
 [report]
 issue_url = "https://github.com/thepowersgang/stack_dst-rs/issues/5"
 issue_date = 2021-02-22
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/799"
+rustsec_id = "RUSTSEC-2021-0033"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
