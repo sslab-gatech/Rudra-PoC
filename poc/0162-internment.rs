@@ -8,6 +8,7 @@ version = "0.3.13"
 issue_url = "https://github.com/droundy/internment/issues/20"
 issue_date = 2021-03-03
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/807"
+rustsec_id = "RUSTSEC-2021-0036"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
