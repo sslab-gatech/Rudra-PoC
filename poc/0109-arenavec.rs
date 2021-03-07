@@ -7,16 +7,13 @@ version = "0.1.1"
 [report]
 issue_url = "https://github.com/ibabushkin/arenavec/issues/1"
 issue_date = 2021-01-12
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/815"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
 bug_class = "PanicSafety"
 bug_count = 3
-rudra_report_locations = [
-    "src/common.rs:75:5: 89:6",
-    "src/common.rs:418:5: 443:6",
-    "src/common.rs:446:5: 471:6",
-]
+rudra_report_locations = ["src/common.rs:75:5: 89:6", "src/common.rs:418:5: 443:6", "src/common.rs:446:5: 471:6"]
 ```
 !*/
 #![forbid(unsafe_code)]
