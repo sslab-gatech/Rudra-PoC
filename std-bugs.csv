@@ -9,3 +9,4 @@ N,N,82291,82292,Y,N,Zip may call __iterator_get_unchecked twice with the same in
 N,Y,82282,82289,Y,N,Side effect handling in specialized zip implementation causes buffer overflow,1.14.0,1.52.0,
 N,N,79808,79814,Y,N,"VecDeque: length 0 underflow and bogus values from pop_front(), triggered by a certain sequence of reserve(), push_back(), make_contiguous(), pop_front()",1.48.0,1.49.0,
 Y,N,60977,62360,Y,N/A,Double drop in Vec::drain_filter,N/A,N/A,"Was not on stable, but worth it to mention in the paper"
+N,N,41622,41624,Y,N,MutexGuard<Cell<i32>> must not be Sync,TODO,TODO,
