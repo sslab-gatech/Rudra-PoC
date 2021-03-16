@@ -1,12 +1,12 @@
 Found by Rudra,First Found,Issue #,Fix PR #,Merged,CVE Requested,Title,Introduced,Fixed,Note
-N,N,25842,25856,Y,N,BinaryHeap is not exception safe,1.0.0,1.2.0,
+N,N,25842,25856,Y,Y,BinaryHeap is not exception safe,1.0.0,1.2.0,
 Y,Y,80335,81728,N,N,API soundness issue in join() implementation of [Borrow<str>],1.28.0,N/A,The fix has not yet been merged
-Y,Y,80894,80895,Y,N,Heap buffer overflow in `read_to_end_with_reservation()`,1.20.0,1.50.0,
-Y,N,78498,78499,Y,N,String::retain allows safely creating invalid (non-utf8) strings when abusing panic,1.26.0,1.49.0,The latest stable version was affected stable when Rudra detected it
-N,N,80670,80670,Y,N,TrustedRandomAaccess specialization composes incorrectly for nested iter::Zips,1.11.0,1.51.0,
-N,Y,81740,81741,Y,N,Soundness issue in `Zip::next()` specialization,1.14.0,1.52.0,
-N,N,82291,82292,Y,N,Zip may call __iterator_get_unchecked twice with the same index,1.14.0,1.52.0,
-N,Y,82282,82289,Y,N,Side effect handling in specialized zip implementation causes buffer overflow,1.14.0,1.52.0,
-N,N,79808,79814,Y,N,"VecDeque: length 0 underflow and bogus values from pop_front(), triggered by a certain sequence of reserve(), push_back(), make_contiguous(), pop_front()",1.48.0,1.49.0,
+Y,Y,80894,80895,Y,Y,Heap buffer overflow in `read_to_end_with_reservation()`,1.20.0,1.50.0,
+Y,N,78498,78499,Y,Y,String::retain allows safely creating invalid (non-utf8) strings when abusing panic,1.26.0,1.49.0,The latest stable version was affected stable when Rudra detected it
+N,N,80670,80670,Y,Y,TrustedRandomAaccess specialization composes incorrectly for nested iter::Zips,1.11.0,1.51.0,
+N,Y,81740,81741,Y,Y,Soundness issue in `Zip::next()` specialization,1.14.0,1.52.0,
+N,N,82291,82292,Y,Y,Zip may call __iterator_get_unchecked twice with the same index,1.14.0,1.52.0,
+N,Y,82282,82289,Y,Y,Side effect handling in specialized zip implementation causes buffer overflow,1.14.0,1.52.0,
+N,N,79808,79814,Y,Y,"VecDeque: length 0 underflow and bogus values from pop_front(), triggered by a certain sequence of reserve(), push_back(), make_contiguous(), pop_front()",1.48.0,1.49.0,
 Y,N,60977,62360,Y,N/A,Double drop in Vec::drain_filter,N/A,N/A,"Was not on stable, but worth it to mention in the paper"
 N,N,41622,41624,Y,N,MutexGuard<Cell<i32>> must not be Sync,TODO,TODO,
