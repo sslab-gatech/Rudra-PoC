@@ -8,6 +8,7 @@ version = "0.1.1"
 issue_url = "https://github.com/ibabushkin/arenavec/issues/1"
 issue_date = 2021-01-12
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/815"
+rustsec_id = "RUSTSEC-2021-0040"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
@@ -20,10 +21,7 @@ rudra_report_locations = ["src/common.rs:75:5: 89:6", "src/common.rs:418:5: 443:
 // tested with rustc 1.50.0-nightly (7f9c43cf9 2020-12-23) on Ubuntu 18.04
 use arenavec::rc::{Arena, SliceVec};
 use arenavec::ArenaBacking;
-use std::sync::atomic::{
-    AtomicBool,
-    Ordering::SeqCst,
-};
+use std::sync::atomic::{AtomicBool, Ordering::SeqCst};
 
 #[derive(Clone)]
 struct Foo(usize, Option<u64>);

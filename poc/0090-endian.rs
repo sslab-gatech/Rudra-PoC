@@ -8,6 +8,7 @@ version = "0.6.0"
 issue_url = "https://gitlab.com/myrrlyn/endian_trait/-/issues/1"
 issue_date = 2021-01-04
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/814"
+rustsec_id = "RUSTSEC-2021-0039"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
