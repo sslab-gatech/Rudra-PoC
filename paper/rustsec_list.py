@@ -13,9 +13,12 @@ def main():
         if 'issue_date' not in poc_metadata['report']:
             continue
 
-        try:
-            ours_id_set.add(poc_metadata['report']['rustsec_id'])
-        except tomlkit.exceptions.NonExistentKey:
+        if 'rustsec_id' in poc_metadata['report']:
+            # Put non-manual bugs into ID set
+            if any(map(lambda bug: bug['analyzer'] != "Manual", poc_metadata['bugs'])):
+                ours_id_set.add(poc_metadata['report']['rustsec_id'])
+        else:
+            # Count non-reported bugs
             issue_date = poc_metadata['report']['issue_date']
             issue_year = issue_date.year
             if issue_year not in backlog_by_year:
