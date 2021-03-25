@@ -12,15 +12,19 @@ def main():
     backlog_cnt = 0
 
     # 2 bugs from std and 1 from rustc not represented in the PoCs
-    total_bugs_cnt = 3
-    crate_set = {"std"}
+    analyzer_bug_cnt = 3
+    manual_bug_cnt = 0
+
+    analyzer_crate_set = {"std"}
+    manual_crate_set = set()
 
     # TODO: add strict count - those without "guide"
-    send_sync_variance_crates = 0
-    send_sync_variance_cnt = 0
-    unsafe_dataflow_crates = 0
-    unsafe_dataflow_cnt = 0
+    send_sync_variance_crate_set = {"std"}
+    send_sync_variance_cnt = 1
+    unsafe_dataflow_crate_set = {"std"}
+    unsafe_dataflow_cnt = 2
 
+    # TODO: Add three std/rustc bugs to year set
     reported_by_year = {}
     backlog_by_year = {}
 
@@ -30,11 +34,12 @@ def main():
             print(f"Warning: PoC {poc_id} is not reported")
             continue
 
-        crate_set.add(poc_metadata['target']['crate'])
+        crate_name = poc_metadata['target']['crate']
 
         issue_date = poc_metadata['report']['issue_date']
         issue_year = issue_date.year
         try:
+            # TODO: exclude manually found bugs
             ours_id_set.add(poc_metadata['report']['rustsec_id'])
 
             if issue_year not in reported_by_year:
@@ -48,10 +53,10 @@ def main():
             backlog_cnt += 1
 
         if any(map(lambda bug: bug['analyzer'] == 'SendSyncVariance', poc_metadata['bugs'])):
-            send_sync_variance_crates += 1
+            send_sync_variance_crate_set.add(crate_name)
 
         if any(map(lambda bug: bug['analyzer'] == 'UnsafeDataflow', poc_metadata['bugs'])):
-            unsafe_dataflow_crates += 1
+            unsafe_dataflow_crate_set.add(crate_name)
 
         for bug in poc_metadata['bugs']:
             # Default bug count is 1
@@ -65,7 +70,12 @@ def main():
             elif bug['analyzer'] == 'UnsafeDataflow':
                 unsafe_dataflow_cnt += bug_count
 
-            total_bugs_cnt += bug_count
+            if bug['analyzer'] == 'Manual':
+                manual_bug_cnt += bug_count
+                manual_crate_set.add(crate_name)
+            else:
+                analyzer_bug_cnt += bug_count
+                analyzer_crate_set.add(crate_name)
 
     for (bug_id, rustsec_metadata) in sorted(rustsec_metadata.items()):
         ours = bug_id in ours_id_set
@@ -92,13 +102,14 @@ def main():
         print(f"  {year}: {count}")
 
     print(f"Among {reported_cnt} RustSec advisories, {cve_crates} advisories received {cve_cnt} CVEs")
-    print(f"Total of {total_bugs_cnt} bugs in {len(crate_set)} crates")
+    print(f"Total of {analyzer_bug_cnt} bugs in {len(analyzer_crate_set)} crates")
+    print(f"Additional {manual_bug_cnt} bugs in {len(manual_crate_set)} crates that are manually found")
 
     print("UnsafeDataflow")
-    print(f"  Crates: {unsafe_dataflow_crates} / Bugs: {unsafe_dataflow_cnt}")
+    print(f"  Crates: {len(send_sync_variance_crate_set)} / Bugs: {unsafe_dataflow_cnt}")
 
     print(f"SendSyncVariance")
-    print(f"  Crates: {send_sync_variance_crates} / Bugs: {send_sync_variance_cnt}")
+    print(f"  Crates: {len(unsafe_dataflow_crate_set)} / Bugs: {send_sync_variance_cnt}")
 
 if __name__ == '__main__':
     main()
