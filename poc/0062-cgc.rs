@@ -7,6 +7,7 @@ version = "0.4.0"
 [report]
 issue_url = "https://github.com/playXE/cgc/issues/5"
 issue_date = 2020-12-10
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/839"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
