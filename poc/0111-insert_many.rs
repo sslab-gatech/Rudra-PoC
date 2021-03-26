@@ -8,6 +8,7 @@ version = "0.1.1"
 issue_url = "https://github.com/rphmeier/insert_many/issues/1"
 issue_date = 2021-01-26
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/832"
+rustsec_id = "RUSTSEC-2021-0042"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"

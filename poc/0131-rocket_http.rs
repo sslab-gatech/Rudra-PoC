@@ -11,6 +11,7 @@ cargo_toolchain = "nightly"
 [report]
 issue_url = "https://github.com/SergioBenitez/Rocket/issues/1534"
 issue_date = 2021-02-09
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/834"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
