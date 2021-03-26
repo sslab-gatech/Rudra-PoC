@@ -8,6 +8,7 @@ version = "0.0.1"
 issue_url = "https://github.com/uutils/coreutils/issues/1729"
 issue_date = 2021-02-17
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/836"
+rustsec_id = "RUSTSEC-2021-0043"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
