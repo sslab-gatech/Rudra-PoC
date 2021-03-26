@@ -7,6 +7,8 @@ version = "0.8.1"
 [report]
 issue_date = 2021-02-04
 issue_url = "https://github.com/RustSec/advisory-db/issues/742"
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/802"
+rustsec_id = "RUSTSEC-2021-0034"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
