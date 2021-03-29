@@ -7,6 +7,7 @@ version = "1.0.8"
 [report]
 issue_date = 2021-02-19
 issue_url = "https://github.com/Alexhuszagh/rust-stackvector/issues/2"
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/847"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
