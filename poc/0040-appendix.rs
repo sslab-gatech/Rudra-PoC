@@ -7,6 +7,7 @@ version = "0.2.0"
 [report]
 issue_url = "https://github.com/krl/appendix/issues/6"
 issue_date = 2020-11-15
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/848"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
