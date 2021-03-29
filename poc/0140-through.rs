@@ -7,6 +7,7 @@ version = "0.1.0"
 [report]
 issue_url = "https://github.com/gretchenfrage/through/issues/1"
 issue_date = 2021-02-18
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/850"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
