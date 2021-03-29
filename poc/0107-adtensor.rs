@@ -16,6 +16,7 @@ version = "0.14.4"
 issue_url = "https://github.com/charles-r-earp/adtensor/issues/4"
 issue_date = 2021-01-11
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/841"
+rustsec_id = "RUSTSEC-2021-0045"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
