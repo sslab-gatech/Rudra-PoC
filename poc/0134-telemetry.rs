@@ -8,6 +8,7 @@ version = "0.1.1"
 issue_url = "https://github.com/Yoric/telemetry.rs/issues/45"
 issue_date = 2021-02-17
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/843"
+rustsec_id = "RUSTSEC-2021-0046"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
