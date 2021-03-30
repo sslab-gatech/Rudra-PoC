@@ -8,6 +8,7 @@ indexed_version = "0.6.21"
 [report]
 issue_url = "https://github.com/Xudong-Huang/generator-rs/issues/27"
 issue_date = 2020-11-16
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/855"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
