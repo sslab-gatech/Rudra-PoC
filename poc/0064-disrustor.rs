@@ -8,6 +8,7 @@ version = "0.2.0"
 issue_url = "https://github.com/sklose/disrustor/issues/1"
 issue_date = 2020-12-17
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/849"
+rustsec_id = "RUSTSEC-2020-0150"
 
 [[bugs]]
 analyzer = "SendSyncVariance"

@@ -8,6 +8,7 @@ version = "0.3.0"
 issue_date = 2021-02-19
 issue_url = "https://github.com/gnzlbg/slice_deque/issues/90"
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/846"
+rustsec_id = "RUSTSEC-2021-0047"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
