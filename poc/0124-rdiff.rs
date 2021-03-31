@@ -7,7 +7,7 @@ version = "0.1.2"
 [report]
 issue_url = "https://github.com/dyule/rdiff/issues/3"
 issue_date = 2021-02-03
-rustsec_url = "https://github.com/dyule/rdiff/issues/3"
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/862"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
