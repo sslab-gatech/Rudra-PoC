@@ -7,6 +7,7 @@ version = "1.0.3"
 [report]
 issue_url = "https://github.com/tiby312/reorder/issues/1"
 issue_date = 2021-02-24
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/860"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
