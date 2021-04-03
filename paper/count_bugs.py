@@ -111,5 +111,22 @@ def main():
     print(f"SendSyncVariance")
     print(f"  Crates: {len(unsafe_dataflow_crate_set)} / Bugs: {send_sync_variance_cnt}")
 
+    print("""
+Paste this in cmds.tex:
+\\newcommand{\\bugcount}{%d\\xspace}
+\\newcommand{\\buggycratecount}{%d\\xspace}
+\\newcommand{\\rustseccount}{%d\\xspace}
+\\newcommand{\\cvecount}{%d\\xspace}
+
+\\newcommand{\\udbugcount}{%d\\xspace}
+\\newcommand{\\svbugcount}{%d\\xspace}""" % (
+        analyzer_bug_cnt,
+        len(analyzer_crate_set),
+        reported_cnt,
+        cve_cnt,
+        unsafe_dataflow_cnt,
+        send_sync_variance_cnt,
+    ))
+
 if __name__ == '__main__':
     main()
