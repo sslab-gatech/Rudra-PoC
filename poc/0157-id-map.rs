@@ -12,6 +12,7 @@ version = "0.2.1"
 issue_url = "https://github.com/andrewhickman/id-map/issues/3"
 issue_date = 2021-02-26
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/863"
+rustsec_id = "RUSTSEC-2021-0052"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"

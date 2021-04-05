@@ -8,6 +8,7 @@ version = "0.1.0"
 issue_url = "https://github.com/edarc/max7301/issues/1"
 issue_date = 2020-12-18
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/857"
+rustsec_id = "RUSTSEC-2020-0152"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
