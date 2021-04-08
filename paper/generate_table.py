@@ -69,8 +69,8 @@ def main():
     metadata['Has Unit Tests'] = metadata['Unit Test Coverage'].apply(
         lambda cov: True if not pd.isnull(cov) and cov > 50 else False)
 
-    # Only do the first 33 bugs for now
-    metadata = metadata.head(33)
+    # Only do the first 25 bugs for now
+    metadata = metadata.head(25)
 
     # Manually put in the std library bugs.
     std_bug = {
@@ -79,8 +79,9 @@ def main():
         'Algorithm': [['UnsafeDataflow'], ['SendSyncVariance']],
         'Bug Identifiers': [['rust#80335', 'rust#80894'], ['rust#81425']],
         # Computed with:
-        #   cloc ~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library
-        'Size (LoC)': [282518, 347739],
+        #   cloc ~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std
+        'Size (LoC)': [60836, 347739],
+        'Unsafe Uses': [1925, 1574],
         'L': [['3y', '2y'], ['3y']],
         # Assume that the stdlib has good coverage, afaik measuring this with tools is hard.
         'Has Unit Tests': [True, True],
@@ -127,9 +128,9 @@ def format_number_abreviation(x, round_hundreds=True):
         return "--"
 
     if x > 1_000_000:
-        return "{}M".format(int(x / 1_000_000))
+        return "{}M".format(int(round(x, -6) / 1_000_000))
     elif x > 1_000:
-        return "{}K".format(int(x / 1_000))
+        return "{}K".format(int(round(x, -3) / 1_000))
     elif x > 100 and round_hundreds:
         # Round to nearest hundrendth
         return str(int(x / 100) * 100)
