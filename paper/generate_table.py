@@ -10,6 +10,7 @@ pd.set_option('display.max_colwidth', 10000)
 # As per https://crates.io/policies
 #   > limit their request rate to 1 request per second or less
 # So we limit ourselves to 1 request every 2 seconds.
+@ratelimit.sleep_and_retry
 @ratelimit.limits(calls=30, period=60)
 def get_downloads_for_crate_from_cargo_api(crate):
     headers = {'User-Agent': 'Download-Stats (github.com/ammaraskar)'}
@@ -26,6 +27,9 @@ def fetch_missing_download_counts(row):
 
 def main():
     metadata = pd.read_csv(PROJECT_DIRECTORY / 'paper' / 'metadata.csv')
+
+    # Pad poc ids to 4-digits with leading zeroes. 8 -> 0008
+    metadata['ID'] = metadata['ID'].apply(lambda x: "{:04d}".format(x))
 
     # Fetch any missing download entries and then save the csv back.
     metadata['Downloads'] = metadata.apply(fetch_missing_download_counts, axis=1)
