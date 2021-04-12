@@ -11,3 +11,4 @@ N,N,79808,79814,Y,Y,"VecDeque: length 0 underflow and bogus values from pop_fron
 Y,N,60977,62360,Y,N/A,Double drop in Vec::drain_filter,N/A,N/A,"Was not on stable, but worth it to mention in the paper"
 N,N,41622,41624,Y,N,MutexGuard<Cell<i32>> must not be Sync,TODO,TODO,
 N,Y,83618,83629,Y,N,Double free in Vec::from_iter specialization when drop panics,TODO,TODO,
+N,N,51780,52031,Y,N,Insufficient synchronization in `Arc::get_mut`,TODO,TODO,
