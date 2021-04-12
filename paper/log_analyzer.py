@@ -38,18 +38,19 @@ TIME_FORMAT = '%Y-%m-%d %H:%M:%S.%f'
 TIME_LEN = len("2020-01-01 12:34:56.123456")
 
 
-report_dir = os.environ["RUDRA_REPORT_DIR"]
+runner_home_dir = os.environ["RUDRA_RUNNER_HOME"]
+campaign_dir = os.path.join(runner_home_dir, "campaign")
 
 if len(sys.argv) < 2:
     print(f"Usage: {sys.argv[0]} <experiment-date>")
 
     print("List:")
-    for entry in sorted(os.listdir(report_dir)):
+    for entry in sorted(os.listdir(campaign_dir)):
         print(f"- {entry}")
     exit(1)
 
 experiment_ver = sys.argv[1]
-experiment_dir = os.path.join(report_dir, sys.argv[1])
+experiment_dir = os.path.join(campaign_dir, sys.argv[1])
 if not os.path.exists(experiment_dir):
     print(f"`{experiment_dir}` does not exist")
     exit(1)
