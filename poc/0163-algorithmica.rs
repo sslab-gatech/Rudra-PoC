@@ -7,6 +7,7 @@ version = "0.1.8"
 [report]
 issue_url = "https://github.com/AbrarNitk/algorithmica/issues/1"
 issue_date = 2021-03-07
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/872"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
