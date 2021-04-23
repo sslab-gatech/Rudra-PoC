@@ -138,6 +138,9 @@ Paste this in cmds.tex:
 \\newcommand{\\rustsecCount}{%d\\xspace}
 \\newcommand{\\cveCount}{%d\\xspace}
 
+\\newcommand{\\udCrateCount}{%d\\xspace}
+\\newcommand{\\svCrateCount}{%d\\xspace}
+
 \\newcommand{\\udBugCount}{%d\\xspace}
 \\newcommand{\\svBugCount}{%d\\xspace}
 
@@ -146,16 +149,18 @@ Paste this in cmds.tex:
 \\newcommand{\\udPanicSafetyCount}{%d\\xspace}
 \\newcommand{\\udOtherCount}{%d\\xspace}
 
-\\newcommand{\\bugCountTwenty}{%d\\xspace}
-\\newcommand{\\bugCountTwentyOne}{%d\\xspace}
+\\newcommand{\\rustsecCountTwenty}{%d\\xspace}
+\\newcommand{\\rustsecCountTwentyOne}{%d\\xspace}
 
-\\newcommand{\\bugPendingTwenty}{%d\\xspace}
-\\newcommand{\\bugPendingTwentyOne}{%d\\xspace}
+\\newcommand{\\rustsecPendingTwenty}{%d\\xspace}
+\\newcommand{\\rustsecPendingTwentyOne}{%d\\xspace}
 """ % (
         analyzer_bug_cnt,
         len(analyzer_crate_set),
         reported_cnt,
         cve_cnt,
+        len(unsafe_dataflow_crate_set),
+        len(send_sync_variance_crate_set),
         unsafe_dataflow_cnt_all,
         send_sync_variance_cnt_all,
         unsafe_dataflow_cnt["InconsistencyAmplification"],
