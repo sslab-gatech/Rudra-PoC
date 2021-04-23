@@ -144,23 +144,23 @@ def main():
 
     print("""
 Paste this in `data/count_bugs.tex`:
-\\newcommand{\\bugCount}{%d\\xspace}
+\\newcommand{\\newBugCount}{%d\\xspace}
 \\newcommand{\\buggyCrateCount}{%d\\xspace}
 \\newcommand{\\rustsecCount}{%d\\xspace}
 \\newcommand{\\cveCount}{%d\\xspace}
 
 \\newcommand{\\udCrateCount}{%d\\xspace}
-\\newcommand{\\udBugCount}{%d\\xspace}
+\\newcommand{\\udNewBugCount}{%d\\xspace}
 \\newcommand{\\udRustsecCount}{%d\\xspace}
 \\newcommand{\\udCveCount}{%d\\xspace}
 
 \\newcommand{\\svCrateCount}{%d\\xspace}
-\\newcommand{\\svBugCount}{%d\\xspace}
+\\newcommand{\\svNewBugCount}{%d\\xspace}
 \\newcommand{\\svRustsecCount}{%d\\xspace}
 \\newcommand{\\svCveCount}{%d\\xspace}
 
 \\newcommand{\\manualCrateCount}{%d\\xspace}
-\\newcommand{\\manualBugCount}{%d\\xspace}
+\\newcommand{\\manualNewBugCount}{%d\\xspace}
 \\newcommand{\\manualRustsecCount}{%d\\xspace}
 \\newcommand{\\manualCveCount}{%d\\xspace}
 
