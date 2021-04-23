@@ -21,11 +21,14 @@ def main():
     analyzer_crate_set = {"std"}
     manual_crate_set = set()
 
-    # Add strict count? - those without "guide"
     send_sync_variance_crate_set = {"std"}
-    send_sync_variance_cnt = 1
+    send_sync_variance_cnt = {
+        "SendSyncVariance": 1,
+    }
     unsafe_dataflow_crate_set = {"std"}
-    unsafe_dataflow_cnt = 2
+    unsafe_dataflow_cnt = {
+        "InconsistencyAmplification": 2,
+    }
 
     # Add three std/rustc bugs to year set
     reported_by_year = {
@@ -74,10 +77,15 @@ def main():
             else:
                 bug_count = 1
 
+            bug_type = bug['bug_class']
             if bug['analyzer'] == 'SendSyncVariance':
-                send_sync_variance_cnt += bug_count
+                if bug_type not in send_sync_variance_cnt:
+                    send_sync_variance_cnt[bug_type] = 0
+                send_sync_variance_cnt[bug_type] += bug_count
             elif bug['analyzer'] == 'UnsafeDataflow':
-                unsafe_dataflow_cnt += bug_count
+                if bug_type not in unsafe_dataflow_cnt:
+                    unsafe_dataflow_cnt[bug_type] = 0
+                unsafe_dataflow_cnt[bug_type] += bug_count
 
             if bug['analyzer'] == 'Manual':
                 manual_bug_cnt += bug_count
@@ -120,21 +128,44 @@ def main():
     print(f"SendSyncVariance")
     print(f"  Crates: {len(unsafe_dataflow_crate_set)} / Bugs: {send_sync_variance_cnt}")
 
+    unsafe_dataflow_cnt_all = sum(unsafe_dataflow_cnt.values())
+    send_sync_variance_cnt_all = sum(send_sync_variance_cnt.values())
+
     print("""
 Paste this in cmds.tex:
-\\newcommand{\\bugcount}{%d\\xspace}
-\\newcommand{\\buggycratecount}{%d\\xspace}
-\\newcommand{\\rustseccount}{%d\\xspace}
-\\newcommand{\\cvecount}{%d\\xspace}
+\\newcommand{\\bugCount}{%d\\xspace}
+\\newcommand{\\buggyCrateCount}{%d\\xspace}
+\\newcommand{\\rustsecCount}{%d\\xspace}
+\\newcommand{\\cveCount}{%d\\xspace}
 
-\\newcommand{\\udbugcount}{%d\\xspace}
-\\newcommand{\\svbugcount}{%d\\xspace}""" % (
+\\newcommand{\\udBugCount}{%d\\xspace}
+\\newcommand{\\svBugCount}{%d\\xspace}
+
+\\newcommand{\\udHigherorderCount}{%d\\xspace}
+\\newcommand{\\udUninitCount}{%d\\xspace}
+\\newcommand{\\udPanicSafetyCount}{%d\\xspace}
+\\newcommand{\\udOtherCount}{%d\\xspace}
+
+\\newcommand{\\bugCountTwenty}{%d\\xspace}
+\\newcommand{\\bugCountTwentyOne}{%d\\xspace}
+
+\\newcommand{\\bugPendingTwenty}{%d\\xspace}
+\\newcommand{\\bugPendingTwentyOne}{%d\\xspace}
+""" % (
         analyzer_bug_cnt,
         len(analyzer_crate_set),
         reported_cnt,
         cve_cnt,
-        unsafe_dataflow_cnt,
-        send_sync_variance_cnt,
+        unsafe_dataflow_cnt_all,
+        send_sync_variance_cnt_all,
+        unsafe_dataflow_cnt["InconsistencyAmplification"],
+        unsafe_dataflow_cnt["UninitExposure"],
+        unsafe_dataflow_cnt["PanicSafety"],
+        unsafe_dataflow_cnt["Other"],
+        reported_by_year[2020],
+        reported_by_year[2021],
+        backlog_by_year[2020],
+        backlog_by_year[2021],
     ))
 
 if __name__ == '__main__':
