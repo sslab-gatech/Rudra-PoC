@@ -143,7 +143,7 @@ def main():
     print("  " + str(manual))
 
     print("""
-Paste this in p.tex:
+Paste this in `data/count_bugs.tex`:
 \\newcommand{\\bugCount}{%d\\xspace}
 \\newcommand{\\buggyCrateCount}{%d\\xspace}
 \\newcommand{\\rustsecCount}{%d\\xspace}
