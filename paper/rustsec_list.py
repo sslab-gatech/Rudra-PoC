@@ -17,13 +17,6 @@ def main():
             # Put non-manual bugs into ID set
             if any(map(lambda bug: bug['analyzer'] != "Manual", poc_metadata['bugs'])):
                 ours_id_set.add(poc_metadata['report']['rustsec_id'])
-        else:
-            # Count non-reported bugs
-            issue_date = poc_metadata['report']['issue_date']
-            issue_year = issue_date.year
-            if issue_year not in backlog_by_year:
-                backlog_by_year[issue_year] = 0
-            backlog_by_year[issue_year] += 1
 
     with open("rustsec_list.csv", "w", newline="") as csvfile:
         COLUMN_NAMES = ["id", "year", "type", "ours"]
@@ -48,10 +41,6 @@ def main():
 
             ours = bug_id in ours_id_set
             csv_writer.writerow([bug_id, year, bug_type, ours])
-
-    print("Not yet reported")
-    for (year, count) in backlog_by_year.items():
-        print(f"{year}: {count}")
 
 if __name__ == '__main__':
     main()
