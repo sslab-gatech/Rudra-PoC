@@ -12,20 +12,26 @@ def main():
     backlog_cnt = 0
 
     # 2 bugs from std and 1 from rustc not represented in the PoCs
+    # https://github.com/rust-lang/rust/issues/80894
+    # https://github.com/rust-lang/rust/issues/80335
+    # https://github.com/rust-lang/rust/issues/81425
     analyzer_bug_cnt = 3
     manual_bug_cnt = 0
 
     analyzer_crate_set = {"std"}
     manual_crate_set = set()
 
-    # TODO: add strict count - those without "guide"
+    # Add strict count? - those without "guide"
     send_sync_variance_crate_set = {"std"}
     send_sync_variance_cnt = 1
     unsafe_dataflow_crate_set = {"std"}
     unsafe_dataflow_cnt = 2
 
-    # TODO: Add three std/rustc bugs to year set
-    reported_by_year = {}
+    # Add three std/rustc bugs to year set
+    reported_by_year = {
+        2020: 1,
+        2021: 2,
+    }
     backlog_by_year = {}
 
     ours_id_set = set()
@@ -36,27 +42,30 @@ def main():
 
         crate_name = poc_metadata['target']['crate']
 
-        issue_date = poc_metadata['report']['issue_date']
-        issue_year = issue_date.year
-        try:
-            # TODO: exclude manually found bugs
-            ours_id_set.add(poc_metadata['report']['rustsec_id'])
-
-            if issue_year not in reported_by_year:
-                reported_by_year[issue_year] = 0
-            reported_by_year[issue_year] += 1
-            reported_cnt += 1
-        except tomlkit.exceptions.NonExistentKey:
-            if issue_year not in backlog_by_year:
-                backlog_by_year[issue_year] = 0
-            backlog_by_year[issue_year] += 1
-            backlog_cnt += 1
-
+        non_manual_exists = False
         if any(map(lambda bug: bug['analyzer'] == 'SendSyncVariance', poc_metadata['bugs'])):
             send_sync_variance_crate_set.add(crate_name)
+            non_manual_exists = True
 
         if any(map(lambda bug: bug['analyzer'] == 'UnsafeDataflow', poc_metadata['bugs'])):
             unsafe_dataflow_crate_set.add(crate_name)
+            non_manual_exists = True
+
+        if non_manual_exists:
+            issue_date = poc_metadata['report']['issue_date']
+            issue_year = issue_date.year
+            try:
+                ours_id_set.add(poc_metadata['report']['rustsec_id'])
+
+                if issue_year not in reported_by_year:
+                    reported_by_year[issue_year] = 0
+                reported_by_year[issue_year] += 1
+                reported_cnt += 1
+            except tomlkit.exceptions.NonExistentKey:
+                if issue_year not in backlog_by_year:
+                    backlog_by_year[issue_year] = 0
+                backlog_by_year[issue_year] += 1
+                backlog_cnt += 1
 
         for bug in poc_metadata['bugs']:
             # Default bug count is 1
