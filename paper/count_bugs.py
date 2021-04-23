@@ -39,14 +39,9 @@ def main():
     reported_by_year[2021] = 2
     backlog_by_year = defaultdict(int)
 
-    analyzer_bug_cnt = 3
-    manual_bug_cnt = 0
-
-    analyzer_crate_set = {"rustc", "std"}
-
     manual = BugCounter()
-    send_sync = BugCounter()  # SendSyncVariance
-    unsafe_dataflow = BugCounter()  # UnsafeDataflow
+    send_sync = BugCounter()
+    unsafe_dataflow = BugCounter()
 
     send_sync.crate_set.add("rustc")
     send_sync.bugs["SendSyncVariance"] = 1
