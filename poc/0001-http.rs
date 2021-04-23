@@ -13,6 +13,7 @@ rustsec_id = "RUSTSEC-2019-0034"
 [[bugs]]
 analyzer = "Manual"
 bug_class = "Other"
+bug_count = 2
 rudra_report_locations = []
 ```
 !*/

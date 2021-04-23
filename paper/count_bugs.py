@@ -1,43 +1,59 @@
 #!/usr/bin/env python3
 from common import *
+from collections import defaultdict
+
+
+class BugCounter:
+    def __init__(self):
+        self.cve_count = 0
+        self.rustsec_id_set = set()
+        self.crate_set = set()
+        # bug class -> count
+        self.bugs = defaultdict(int)
+
+
+    def bug_count(self):
+        return sum(self.bugs.values())
+
+
+    def __str__(self):
+        crate_count = len(self.crate_set)
+        bugs_count = self.bug_count()
+        rustsec_count = len(self.rustsec_id_set)
+        return f"Crate: {crate_count}, Bugs: {bugs_count}, RustSec: {rustsec_count}, CVE: {self.cve_count}"
+
 
 def main():
     rustsec_metadata = get_rustsec_metadata()
     poc_metadata = get_poc_metadata()
 
-    cve_crates = 0
-    cve_cnt = 0
-
-    reported_cnt = 0
-    backlog_cnt = 0
-
     # 2 bugs from std and 1 from rustc not represented in the PoCs
     # https://github.com/rust-lang/rust/issues/80894
     # https://github.com/rust-lang/rust/issues/80335
     # https://github.com/rust-lang/rust/issues/81425
+    rustsec_reported = 3
+    rustsec_backlog = 0
+
+    reported_by_year = defaultdict(int)
+    reported_by_year[2020] = 1
+    reported_by_year[2021] = 2
+    backlog_by_year = defaultdict(int)
+
     analyzer_bug_cnt = 3
     manual_bug_cnt = 0
 
-    analyzer_crate_set = {"std"}
-    manual_crate_set = set()
+    analyzer_crate_set = {"rustc", "std"}
 
-    send_sync_variance_crate_set = {"std"}
-    send_sync_variance_cnt = {
-        "SendSyncVariance": 1,
-    }
-    unsafe_dataflow_crate_set = {"std"}
-    unsafe_dataflow_cnt = {
-        "InconsistencyAmplification": 2,
-    }
+    manual = BugCounter()
+    send_sync = BugCounter()  # SendSyncVariance
+    unsafe_dataflow = BugCounter()  # UnsafeDataflow
 
-    # Add three std/rustc bugs to year set
-    reported_by_year = {
-        2020: 1,
-        2021: 2,
-    }
-    backlog_by_year = {}
+    send_sync.crate_set.add("rustc")
+    send_sync.bugs["SendSyncVariance"] = 1
 
-    ours_id_set = set()
+    unsafe_dataflow.crate_set.add("std")
+    unsafe_dataflow.bugs["InconsistencyAmplification"] = 2
+
     for (poc_id, poc_metadata) in poc_metadata.items():
         if 'issue_date' not in poc_metadata['report']:
             print(f"Warning: PoC {poc_id} is not reported")
@@ -45,30 +61,42 @@ def main():
 
         crate_name = poc_metadata['target']['crate']
 
-        non_manual_exists = False
-        if any(map(lambda bug: bug['analyzer'] == 'SendSyncVariance', poc_metadata['bugs'])):
-            send_sync_variance_crate_set.add(crate_name)
-            non_manual_exists = True
+        contains_sv_bug = any(map(lambda bug: bug['analyzer'] == 'SendSyncVariance', poc_metadata['bugs']))
+        contains_ud_bug = any(map(lambda bug: bug['analyzer'] == 'UnsafeDataflow', poc_metadata['bugs']))
 
-        if any(map(lambda bug: bug['analyzer'] == 'UnsafeDataflow', poc_metadata['bugs'])):
-            unsafe_dataflow_crate_set.add(crate_name)
-            non_manual_exists = True
+        issue_date = poc_metadata['report']['issue_date']
+        issue_year = issue_date.year
 
+        if contains_sv_bug and contains_ud_bug:
+            print(f"Error: PoC {poc_id} contains both SV and UD bugs")
+            exit(1)
+        elif contains_sv_bug:
+            send_sync.crate_set.add(crate_name)
+        elif contains_ud_bug:
+            unsafe_dataflow.crate_set.add(crate_name)
+        else:
+            manual.crate_set.add(crate_name)
+
+        non_manual_exists = contains_sv_bug or contains_ud_bug
         if non_manual_exists:
-            issue_date = poc_metadata['report']['issue_date']
-            issue_year = issue_date.year
             try:
-                ours_id_set.add(poc_metadata['report']['rustsec_id'])
+                rustsec_id = poc_metadata['report']['rustsec_id']
 
-                if issue_year not in reported_by_year:
-                    reported_by_year[issue_year] = 0
+                if contains_sv_bug:
+                    send_sync.rustsec_id_set.add(rustsec_id)
+                elif contains_ud_bug:
+                    unsafe_dataflow.rustsec_id_set.add(rustsec_id)
+
                 reported_by_year[issue_year] += 1
-                reported_cnt += 1
+                rustsec_reported += 1
             except tomlkit.exceptions.NonExistentKey:
-                if issue_year not in backlog_by_year:
-                    backlog_by_year[issue_year] = 0
                 backlog_by_year[issue_year] += 1
-                backlog_cnt += 1
+                rustsec_backlog += 1
+        else:
+            try:
+                manual.rustsec_id_set.add(poc_metadata['report']['rustsec_id'])
+            except tomlkit.exceptions.NonExistentKey:
+                pass
 
         for bug in poc_metadata['bugs']:
             # Default bug count is 1
@@ -77,72 +105,69 @@ def main():
             else:
                 bug_count = 1
 
-            bug_type = bug['bug_class']
-            if bug['analyzer'] == 'SendSyncVariance':
-                if bug_type not in send_sync_variance_cnt:
-                    send_sync_variance_cnt[bug_type] = 0
-                send_sync_variance_cnt[bug_type] += bug_count
-            elif bug['analyzer'] == 'UnsafeDataflow':
-                if bug_type not in unsafe_dataflow_cnt:
-                    unsafe_dataflow_cnt[bug_type] = 0
-                unsafe_dataflow_cnt[bug_type] += bug_count
-
-            if bug['analyzer'] == 'Manual':
-                manual_bug_cnt += bug_count
-                manual_crate_set.add(crate_name)
+            analyzer_name = bug['analyzer']
+            bug_class = bug['bug_class']
+            if analyzer_name == 'SendSyncVariance':
+                send_sync.bugs[bug_class] += bug_count
+            elif analyzer_name == 'UnsafeDataflow':
+                unsafe_dataflow.bugs[bug_class] += bug_count
+            elif analyzer_name == 'Manual':
+                manual.bugs[bug_class] += bug_count
             else:
-                analyzer_bug_cnt += bug_count
-                analyzer_crate_set.add(crate_name)
+                print(f"Error: Unknown analyzer {analyzer_name} in PoC {poc_id}")
+                exit(1)
 
     for (bug_id, rustsec_metadata) in sorted(rustsec_metadata.items()):
-        ours = bug_id in ours_id_set
-        if ours:
-            cve_found = False
-            if 'aliases' in rustsec_metadata:
-                for alias in rustsec_metadata['aliases']:
-                    if alias.startswith("CVE"):
-                        cve_found = True
-                        cve_cnt += 1
-            if cve_found:
-                cve_crates += 1
-            else:
-                # package = rustsec_metadata['package']
-                # print(f"Bug {bug_id} ({package}) does not have a CVE number!")
-                pass
+        if 'aliases' in rustsec_metadata:
+            for alias in rustsec_metadata['aliases']:
+                if alias.startswith("CVE"):
+                    if bug_id in send_sync.rustsec_id_set:
+                        send_sync.cve_count += 1
+                    elif bug_id in unsafe_dataflow.rustsec_id_set:
+                        unsafe_dataflow.cve_count += 1
+                    elif bug_id in manual.rustsec_id_set:
+                        manual.cve_count += 1
 
-    print(f"Not yet reported PoC: {backlog_cnt}")
+
+    print(f"Not yet reported PoC: {rustsec_backlog}")
     for (year, count) in backlog_by_year.items():
         print(f"  {year}: {count}")
 
-    print(f"Reported PoC: {reported_cnt}")
+    print(f"Reported PoC: {rustsec_reported}")
     for (year, count) in reported_by_year.items():
         print(f"  {year}: {count}")
 
-    print(f"Among {reported_cnt} RustSec advisories, {cve_crates} advisories received {cve_cnt} CVEs")
-    print(f"Total of {analyzer_bug_cnt} bugs in {len(analyzer_crate_set)} crates")
-    print(f"Additional {manual_bug_cnt} bugs in {len(manual_crate_set)} crates that are manually found")
 
     print("UnsafeDataflow")
-    print(f"  Crates: {len(send_sync_variance_crate_set)} / Bugs: {unsafe_dataflow_cnt}")
-
-    print(f"SendSyncVariance")
-    print(f"  Crates: {len(unsafe_dataflow_crate_set)} / Bugs: {send_sync_variance_cnt}")
-
-    unsafe_dataflow_cnt_all = sum(unsafe_dataflow_cnt.values())
-    send_sync_variance_cnt_all = sum(send_sync_variance_cnt.values())
+    print("  " + str(unsafe_dataflow))
+    
+    print("SendSyncVariance")
+    print("  " + str(send_sync))
+    
+    print("Manual")
+    print("  " + str(manual))
 
     print("""
-Paste this in cmds.tex:
+Paste this in p.tex:
 \\newcommand{\\bugCount}{%d\\xspace}
 \\newcommand{\\buggyCrateCount}{%d\\xspace}
 \\newcommand{\\rustsecCount}{%d\\xspace}
 \\newcommand{\\cveCount}{%d\\xspace}
 
 \\newcommand{\\udCrateCount}{%d\\xspace}
-\\newcommand{\\svCrateCount}{%d\\xspace}
-
 \\newcommand{\\udBugCount}{%d\\xspace}
+\\newcommand{\\udRustsecCount}{%d\\xspace}
+\\newcommand{\\udCveCount}{%d\\xspace}
+
+\\newcommand{\\svCrateCount}{%d\\xspace}
 \\newcommand{\\svBugCount}{%d\\xspace}
+\\newcommand{\\svRustsecCount}{%d\\xspace}
+\\newcommand{\\svCveCount}{%d\\xspace}
+
+\\newcommand{\\manualCrateCount}{%d\\xspace}
+\\newcommand{\\manualBugCount}{%d\\xspace}
+\\newcommand{\\manualRustsecCount}{%d\\xspace}
+\\newcommand{\\manualCveCount}{%d\\xspace}
 
 \\newcommand{\\udHigherorderCount}{%d\\xspace}
 \\newcommand{\\udUninitCount}{%d\\xspace}
@@ -151,22 +176,33 @@ Paste this in cmds.tex:
 
 \\newcommand{\\rustsecCountTwenty}{%d\\xspace}
 \\newcommand{\\rustsecCountTwentyOne}{%d\\xspace}
-
 \\newcommand{\\rustsecPendingTwenty}{%d\\xspace}
 \\newcommand{\\rustsecPendingTwentyOne}{%d\\xspace}
 """ % (
-        analyzer_bug_cnt,
-        len(analyzer_crate_set),
-        reported_cnt,
-        cve_cnt,
-        len(unsafe_dataflow_crate_set),
-        len(send_sync_variance_crate_set),
-        unsafe_dataflow_cnt_all,
-        send_sync_variance_cnt_all,
-        unsafe_dataflow_cnt["InconsistencyAmplification"],
-        unsafe_dataflow_cnt["UninitExposure"],
-        unsafe_dataflow_cnt["PanicSafety"],
-        unsafe_dataflow_cnt["Other"],
+        unsafe_dataflow.bug_count() + send_sync.bug_count(),
+        len(unsafe_dataflow.crate_set.union(send_sync.crate_set)),
+        len(unsafe_dataflow.rustsec_id_set) + len(send_sync.rustsec_id_set),
+        unsafe_dataflow.cve_count + send_sync.cve_count,
+        #
+        len(unsafe_dataflow.crate_set),
+        unsafe_dataflow.bug_count(),
+        len(unsafe_dataflow.rustsec_id_set),
+        unsafe_dataflow.cve_count,
+        #
+        len(send_sync.crate_set),
+        send_sync.bug_count(),
+        len(send_sync.rustsec_id_set),
+        send_sync.cve_count,
+        #
+        len(manual.crate_set),
+        manual.bug_count(),
+        len(manual.rustsec_id_set),
+        manual.cve_count,
+        #
+        unsafe_dataflow.bugs["InconsistencyAmplification"],
+        unsafe_dataflow.bugs["UninitExposure"],
+        unsafe_dataflow.bugs["PanicSafety"],
+        unsafe_dataflow.bugs["Other"],
         reported_by_year[2020],
         reported_by_year[2021],
         backlog_by_year[2020],
