@@ -1,0 +1,9 @@
+[target]
+crate = "eiz"
+version = "0.3.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/rt_queue.rs:87:1: 87:47"

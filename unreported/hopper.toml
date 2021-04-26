@@ -1,0 +1,15 @@
+[target]
+crate = "hopper"
+version = "0.4.2"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/deque.rs:17:1: 17:42"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/deque.rs:18:1: 18:42"

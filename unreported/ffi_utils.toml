@@ -1,0 +1,9 @@
+[target]
+crate = "ffi_utils"
+version = "0.16.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/test_utils.rs:333:1: 333:42"

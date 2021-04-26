@@ -1,0 +1,9 @@
+[target]
+crate = "patricia_tree"
+version = "0.1.1.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "independently fixed"
+location = "src/node.rs:56:1: 56:35"

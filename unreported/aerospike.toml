@@ -1,0 +1,15 @@
+[target]
+crate = "aerospike"
+version = "0.4.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/batch/batch_executor.rs:121:1: 121:42"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/batch/batch_executor.rs:123:1: 123:42"

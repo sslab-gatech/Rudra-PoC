@@ -43,7 +43,7 @@ The format of the metadata is as follows:
 
 - **crate**: (string) the name of the target crate
 - **version**: (string) the version of the target crate to test the poc
-  - The latest version at the time of reporting
+  - The latest version in the index
 - **indexed_name**: (optional string) the name of the target crate in the index
   - This option is only needed when the crate is renamed or the bug was moved to another subcrate
 - **indexed_version**: (optional string) the version of the target in the index
@@ -79,6 +79,30 @@ Uses [Array of Tables](https://toml.io/en/v1.0.0#array-of-tables) in TOML format
   - Example: `["SendSyncVariance", "UninitExposure", "InconsistencyAmplification", "PanicSafety", "Other"]`
 - **bug_count**: (optional integer) Default to 1, number of bugs that correspond to this pattern.
 - **rudra_report_locations**: (string array) The location of the bug in the `indexed_version`
+
+## Unreported Metadata
+
+Unreported directory tracks valid bugs that are not reported for various reasons.
+It has very similar format to the poc metadata, but there are some minor differences.
+
+### target
+
+- **crate**: (string) the name of the target crate
+- **version**: (string) the version of the target crate to test the poc
+  - The latest version in the index
+
+### bugs
+
+Uses [Array of Tables](https://toml.io/en/v1.0.0#array-of-tables) in TOML format.
+
+- **analyzer**: (string) The name of the analyzer that found the bug. It should match the corresponding implementation in Rudra.
+  - "Manual" analyzer is not allowed
+- **bug_class**: (string) The bug class.
+  - Example: `["SendSyncVariance", "UninitExposure", "InconsistencyAmplification", "PanicSafety", "Other"]`
+- **reason**: `["internal", "experimental", "unobservable", "independently fixed"]`
+- **location**: (string) The location of the bug in the `indexed_version`
+
+Note: no `bug_count`, `rudra_report_locations` (string array) -> `location` (string)
 
 ## Workflow
 
