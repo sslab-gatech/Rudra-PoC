@@ -13,6 +13,28 @@ ANALYZERS = [
     "UnsafeDataflow",
 ]
 
+SUBCATEGORY = {
+    "SendSyncVariance": [
+        "ApiSendForSync",
+        "ApiSyncforSync",
+        "PhantomSendForSend",
+        "NaiveSendForSend",
+        "NaiveSyncForSync",
+        "RelaxSend",
+        "RelaxSync"
+    ],
+    "UnsafeDataflow": [
+        "ReadFlow",
+        "CopyFlow",
+        "VecFromRaw",
+        "Transmute",
+        "WriteFlow",
+        "PtrAsRef",
+        "SliceUnchecked",
+        "SliceFromRaw"
+    ],
+}
+
 EXCLUDED_CRATES = [
     "sarekt",
     "xss-probe",
@@ -87,6 +109,14 @@ for log_file_name in os.listdir(log_dir):
             AnalyzerField.SPAN_SET: set(),
         }
 
+        if analyzer in SUBCATEGORY:
+            for subcategory in SUBCATEGORY[analyzer]:
+                cur_stat[subcategory] = {
+                    AnalyzerField.TIME: datetime.timedelta(),
+                    AnalyzerField.NUM_REPORTS: 0,
+                    AnalyzerField.SPAN_SET: set(),
+                }
+
     with open(os.path.join(log_dir, log_file_name)) as log_file:
         crate_name = log_file_name[4:]
         target_stat = None
@@ -94,6 +124,7 @@ for log_file_name in os.listdir(log_dir):
         # I'm sorry for the quick and dirty code structure...
         prev_line = None
         for line in log_file.readlines():
+            # The loop should break before reaching [stdout] line
             assert line.strip() != "[stdout]", assert_message
 
             if target_stat is None:
@@ -106,6 +137,8 @@ for log_file_name in os.listdir(log_dir):
                         or "overflow representing the type" in full_log):
                         crate_status = Status.TYPE_COMPILE_ERROR
                     elif "on by default" in full_log:
+                        crate_status = Status.LINT_COMPILE_ERROR
+                    elif "error: trait objects without an explicit `dyn` are deprecated" in full_log:
                         crate_status = Status.LINT_COMPILE_ERROR
                     else:
                         assert False, assert_message
@@ -147,6 +180,7 @@ for log_file_name in os.listdir(log_dir):
                     analyzer_idx = 0
                 else:
                     if "Finished with non-zero exit code" in line:
+                        # Analysis must not panic or timeout
                         log_file.seek(0)
                         assert False, assert_message
 
@@ -170,6 +204,16 @@ for log_file_name in os.listdir(log_dir):
                         target_stat[analyzer][AnalyzerField.NUM_REPORTS] = 0
                         target_stat[analyzer][AnalyzerField.SPAN_SET] = set()
 
+                        # Initialize metadata for analyzer subcategories
+                        if analyzer in SUBCATEGORY:
+                            for subcategory in SUBCATEGORY[analyzer]:
+                                # Time elapsed for subcategory is not counted.
+                                target_stat[subcategory] = {
+                                    AnalyzerField.TIME: datetime.timedelta(),
+                                    AnalyzerField.NUM_REPORTS: 0,
+                                    AnalyzerField.SPAN_SET: set()
+                                }
+
                     if "Rudra finished" in line:
                         target_end_time = datetime.datetime.strptime(line[:TIME_LEN], TIME_FORMAT)
 
@@ -181,8 +225,14 @@ for log_file_name in os.listdir(log_dir):
                                 report_file_str = report_file.read().replace("\t", "\\t").replace("\u001B", "\\u001B")
                                 report_dict = tomlkit.loads(report_file_str)
                             for report in report_dict["reports"]:
-                                target_stat[report["analyzer"]][AnalyzerField.NUM_REPORTS] += 1
-                                target_stat[report["analyzer"]][AnalyzerField.SPAN_SET].add(report["location"])
+                                analyzer = report['analyzer'].split(':')[0]
+                                target_stat[analyzer][AnalyzerField.NUM_REPORTS] += 1
+                                target_stat[analyzer][AnalyzerField.SPAN_SET].add(report["location"])
+
+                                if analyzer in SUBCATEGORY:
+                                    for subcategory in filter(lambda x: x in report["analyzer"], SUBCATEGORY[analyzer]):
+                                        target_stat[subcategory][AnalyzerField.NUM_REPORTS] += 1
+                                        target_stat[subcategory][AnalyzerField.SPAN_SET].add(report["location"])
 
                         # Accumulate target stat to crate stat
                         if crate_status == Status.OKAY:
@@ -196,6 +246,13 @@ for log_file_name in os.listdir(log_dir):
                                             cur_stat[analyzer][field] |= target_stat[analyzer][field]
                                         else:
                                             cur_stat[analyzer][field] += target_stat[analyzer][field]
+                                if analyzer in SUBCATEGORY:
+                                    for subcategory in SUBCATEGORY[analyzer]:
+                                        for field in AnalyzerField:
+                                            if isinstance(target_stat[subcategory][field], set):
+                                                cur_stat[subcategory][field] |= target_stat[subcategory][field]
+                                            else:
+                                                cur_stat[subcategory][field] += target_stat[subcategory][field]
                         target_stat = None
 
             prev_line = line
@@ -223,6 +280,13 @@ with open(f"stat-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
         header_row.append(f"{analyzer}-time")
         header_row.append(f"{analyzer}-num-reports")
         header_row.append(f"{analyzer}-num-span")
+
+        if analyzer in SUBCATEGORY:
+            for subcategory in SUBCATEGORY[analyzer]:
+                # header_row.append(f"{subcategory}-time")
+                header_row.append(f"{subcategory}-num-reports")
+                header_row.append(f"{subcategory}-num-span")
+
     header_row.append(f"total-reports")
     header_row.append(f"total-span")
     csv_writer.writerow(header_row)
@@ -242,6 +306,13 @@ with open(f"stat-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
                 crate_row.append(stat[analyzer][AnalyzerField.TIME] / one_ms)  # ms taken
                 crate_row.append(stat[analyzer][AnalyzerField.NUM_REPORTS])
                 crate_row.append(len(stat[analyzer][AnalyzerField.SPAN_SET]))
+
+                if analyzer in SUBCATEGORY:
+                    for subcategory in SUBCATEGORY[analyzer]:
+                        # crate_row.append(stat[subcategory][AnalyzerField.TIME] / one_ms)  # ms taken
+                        crate_row.append(stat[subcategory][AnalyzerField.NUM_REPORTS])
+                        crate_row.append(len(stat[subcategory][AnalyzerField.SPAN_SET]))
+
                 total_reports += stat[analyzer][AnalyzerField.NUM_REPORTS]
                 total_span += len(stat[analyzer][AnalyzerField.SPAN_SET])
             crate_row.append(total_reports)
