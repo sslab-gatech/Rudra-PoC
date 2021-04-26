@@ -11,6 +11,7 @@ issue_date = 2021-04-07
 [[bugs]]
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
+bug_count = 2
 rudra_report_locations = ["src/bucket.rs:80:1: 80:36", "src/bucket.rs:81:1: 81:36"]
 ```
 !*/
