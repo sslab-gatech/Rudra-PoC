@@ -1,0 +1,15 @@
+[target]
+crate = "ticketed_lock"
+version = "0.2.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "independently fixed"
+location = "src/lib.rs:158:1: 158:43"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "independently fixed"
+location = "src/lib.rs:159:1: 159:43"

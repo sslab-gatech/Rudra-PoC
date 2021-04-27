@@ -1,0 +1,15 @@
+[target]
+crate = "scoped_threads"
+version = "0.1.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "independently fixed"
+location = "src/lib.rs:339:1: 339:45"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "independently fixed"
+location = "src/lib.rs:81:1: 81:41"

@@ -1,0 +1,9 @@
+[target]
+crate = "tokio-global"
+version = "0.4.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "unobservable"
+location = "src/global.rs:126:1: 126:34"
