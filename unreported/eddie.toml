@@ -1,0 +1,9 @@
+[target]
+crate = "eddie"
+version = "0.4.2"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+reason = "internal"
+location = "src/utils/buffer.rs:15:5: 32:6"

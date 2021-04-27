@@ -1,0 +1,9 @@
+[target]
+crate = "foco"
+version = "0.1.4"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+reason = "independently fixed"
+location = "/tmp/rudra-runner-home/cargo_home/registry/src/github.com-21fcde9f85bb8b3e/array-macro-1.0.5/src/lib.rs:80:9: 101:10"

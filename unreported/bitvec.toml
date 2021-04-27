@@ -1,0 +1,9 @@
+[target]
+crate = "bitvec"
+version = "0.17.4"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+reason = "independently fixed"
+location = "src/boxed.rs:364:2: 374:3"

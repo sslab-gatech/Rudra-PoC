@@ -1,0 +1,9 @@
+[target]
+crate = "euphrates_virtual_memory"
+version = "0.1.0"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "InconsistencyAmplification"
+reason = "internal"
+location = "src/traits.rs:62:5: 72:6"

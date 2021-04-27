@@ -1,0 +1,9 @@
+[target]
+crate = "hash_ord"
+version = "0.1.10"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+reason = "internal"
+location = "src/hash_map.rs:914:5: 931:6"
