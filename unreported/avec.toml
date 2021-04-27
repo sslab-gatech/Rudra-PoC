@@ -1,0 +1,15 @@
+[target]
+crate = "avec"
+version = "0.1.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/avec.rs:102:1: 102:36"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/avec.rs:101:1: 101:36"

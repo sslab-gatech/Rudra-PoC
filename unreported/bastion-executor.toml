@@ -1,0 +1,9 @@
+[target]
+crate = "bastion-executor"
+version = "0.3.5"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/run_queue.rs:84:1: 84:37"

@@ -1,0 +1,9 @@
+[target]
+crate = "async-lock"
+version = "1.1.4"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "independently fixed"
+location = "src/lib.rs:76:1: 76:41"
