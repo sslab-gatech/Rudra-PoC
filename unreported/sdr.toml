@@ -1,0 +1,21 @@
+[target]
+crate = "sdr"
+version = "0.7.0"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "unobservable"
+location = "src/cic.rs:132:5: 198:6"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "unobservable"
+location = "src/fir.rs:323:5: 439:6"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "unobservable"
+location = "src/fm.rs:91:5: 131:6"

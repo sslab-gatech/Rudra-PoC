@@ -1,0 +1,21 @@
+[target]
+crate = "rwlock2"
+version = "0.2.5"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "InconsistencyAmplificaiton"
+reason = "experimental"
+location = "src/mutex.rs:351:5: 376:6"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "InconsistencyAmplificaiton"
+reason = "experimental"
+location = "src/rwlock.rs:393:5: 414:6"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "InconsistencyAmplificaiton"
+reason = "experimental"
+location = "src/rwlock.rs:418:5: 443:6"

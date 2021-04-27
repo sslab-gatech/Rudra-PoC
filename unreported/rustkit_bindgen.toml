@@ -1,0 +1,9 @@
+[target]
+crate = "rustkit_bindgen"
+version = "0.0.1"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "InconsistencyAmplification"
+reason = "internal"
+location = "src/common/stream.rs:139:5: 161:6"

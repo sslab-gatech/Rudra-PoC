@@ -1,0 +1,9 @@
+[target]
+crate = "shared-mutex"
+version = "0.3.1"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "unobservable"
+location = "src/lib.rs:360:5: 381:6"
