@@ -1,0 +1,15 @@
+[target]
+crate = "sbert"
+version = "0.1.2"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "independently fixed"
+location = "src/sbert.rs:37:1: 37:64"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "independently fixed"
+location = "src/sbert.rs:36:1: 36:64"

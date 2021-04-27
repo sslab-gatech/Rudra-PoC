@@ -1,0 +1,15 @@
+[target]
+crate = "rusturn"
+version = "0.0.3"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/client/allocate.rs:176:1: 176:94"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/server/core.rs:407:1: 412:2"

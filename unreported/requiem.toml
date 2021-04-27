@@ -1,0 +1,15 @@
+[target]
+crate = "actix"
+version = "0.9.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/address/channel.rs:885:1: 885:43"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/address/channel.rs:886:1: 886:43"
