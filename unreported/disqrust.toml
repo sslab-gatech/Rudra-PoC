@@ -1,0 +1,15 @@
+[target]
+crate = "disqrust"
+version = "0.1.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/lib.rs:70:1: 70:54"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/lib.rs:71:1: 71:54"

@@ -1,0 +1,15 @@
+[target]
+crate = "libpulse-binding"
+version = "2.16.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/operation.rs:39:1: 39:70"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/operation.rs:40:1: 40:70"

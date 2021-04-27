@@ -1,0 +1,15 @@
+[target]
+crate = "crossbeam-utils"
+version = "0.7.2"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/thread.rs:451:1: 451:63"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/thread.rs:452:1: 452:63"

@@ -1,0 +1,15 @@
+[target]
+crate = "geos"
+version = "5.0.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/context_handle.rs:47:1: 47:38"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/context_handle.rs:48:1: 48:38"

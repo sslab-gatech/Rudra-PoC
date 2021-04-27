@@ -1,0 +1,9 @@
+[target]
+crate = "bus"
+version = "2.2.3"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/lib.rs:122:1: 122:43"
