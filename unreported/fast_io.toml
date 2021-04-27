@@ -1,0 +1,27 @@
+[target]
+crate = "fast_io"
+version = "1.2.2"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+reason = "experimental"
+location = "src/copy_io.rs:7:5: 13:6"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+reason = "experimental"
+location = "src/copy_io.rs:15:5: 22:6"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+reason = "experimental"
+location = "src/copy_io.rs:24:5: 32:6"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+reason = "experimental"
+location = "src/copy_io.rs:34:5: 44:6"

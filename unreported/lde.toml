@@ -1,0 +1,9 @@
+[target]
+crate = "lde"
+version = "0.3.0"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "unobservable"
+location = "src/iter_mut.rs:30:2: 40:3"

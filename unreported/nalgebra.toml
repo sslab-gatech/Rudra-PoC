@@ -1,0 +1,15 @@
+[target]
+crate = "nalgebra"
+version = "0.21.1"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "internal"
+location = "src/base/blas.rs:519:1: 540:2"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "internal"
+location = "src/base/blas.rs:542:1: 553:2"
