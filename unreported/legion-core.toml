@@ -1,0 +1,9 @@
+[target]
+crate = "legion-core"
+version = "0.2.4"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "independently fixed"
+location = "src/storage.rs:1685:5: 1729:6"

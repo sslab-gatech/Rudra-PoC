@@ -1,0 +1,15 @@
+[target]
+crate = "rowcol"
+version = "0.3.3"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "experimental"
+location = "src/vector.rs:751:5: 755:6"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+reason = "experimental"
+location = "src/vector.rs:692:5: 727:6"

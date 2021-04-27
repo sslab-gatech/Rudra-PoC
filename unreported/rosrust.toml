@@ -1,0 +1,21 @@
+[target]
+crate = "rosrust"
+version = "0.9.4"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+reason = "internal"
+location = "src/rosmsg.rs:192:1: 203:2"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+reason = "internal"
+location = "src/rosmsg.rs:218:1: 237:2"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+reason = "internal"
+location = "src/tcpros/subscriber.rs:203:1: 231:2"

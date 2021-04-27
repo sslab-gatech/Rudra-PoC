@@ -1,0 +1,9 @@
+[target]
+crate = "rql"
+version = "0.5.2"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "unobservable"
+location = "src/lib.rs:404:5: 417:6"

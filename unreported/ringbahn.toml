@@ -1,0 +1,9 @@
+[target]
+crate = "ringbahn"
+version = "0.0.0-experimental.3"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+reason = "independently fixed"
+location = "src/buf.rs:52:5: 73:6"
