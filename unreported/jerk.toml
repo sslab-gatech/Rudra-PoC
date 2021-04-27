@@ -1,0 +1,15 @@
+[target]
+crate = "jerk"
+version = "0.2.1"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/test.rs:133:1: 133:41"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/test.rs:134:1: 134:41"

@@ -1,0 +1,9 @@
+[target]
+crate = "fallible_collections"
+version = "0.1.3"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+reason = "internal"
+location = "src/vec.rs:618:5: 636:6"

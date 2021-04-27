@@ -1,0 +1,9 @@
+[target]
+crate = "cortex-m-funnel"
+version = "0.1.0-alpha.1"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/lib.rs:213:1: 213:52"

@@ -1,0 +1,15 @@
+[target]
+crate = "git-trim"
+version = "0.3.2"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/lib.rs:742:1: 742:44"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/lib.rs:741:1: 741:44"

@@ -1,0 +1,15 @@
+[target]
+crate = "inert"
+version = "0.3.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/lib.rs:71:1: 71:52"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/lib.rs:150:1: 150:58"
