@@ -1,0 +1,15 @@
+[target]
+crate = "task_kit"
+version = "0.2.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/task/task.rs:394:1: 394:49"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/task/task.rs:395:1: 395:49"

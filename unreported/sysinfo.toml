@@ -1,0 +1,15 @@
+[target]
+crate = "sysinfo"
+version = "0.14.9"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/linux/system.rs:521:1: 521:43"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/linux/system.rs:522:1: 522:43"

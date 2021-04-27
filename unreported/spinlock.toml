@@ -1,0 +1,9 @@
+[target]
+crate = "spinlock"
+version = "0.1.2"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/lib.rs:102:1: 102:39"

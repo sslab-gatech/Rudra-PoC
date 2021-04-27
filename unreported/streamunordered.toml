@@ -1,0 +1,15 @@
+[target]
+crate = "streamunordered"
+version = "0.5.1"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/task.rs:47:1: 47:35"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/task.rs:48:1: 48:35"

@@ -1,0 +1,27 @@
+[target]
+crate = "slipstream"
+version = "0.1.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/iterators.rs:385:1: 385:55"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/iterators.rs:451:1: 451:56"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/iterators.rs:386:1: 386:55"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/iterators.rs:452:1: 452:56"
