@@ -1,0 +1,15 @@
+[target]
+crate = "pso"
+version = "0.1.2"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/optimizer.rs:189:1: 189:56"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/optimizer.rs:190:1: 190:56"

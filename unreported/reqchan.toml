@@ -1,0 +1,9 @@
+[target]
+crate = "reqchan"
+version = "0.5.8"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/lib.rs:564:1: 564:36"

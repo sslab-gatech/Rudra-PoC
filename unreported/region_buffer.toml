@@ -1,0 +1,9 @@
+[target]
+crate = "region_buffer"
+version = "0.1.5"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/lib.rs:223:1: 223:43"

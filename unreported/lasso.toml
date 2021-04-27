@@ -1,0 +1,9 @@
+[target]
+crate = "lasso"
+version = "0.2.3"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "independently fixed"
+location = "src/single_threaded.rs:536:1: 536:68"
