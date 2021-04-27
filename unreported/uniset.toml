@@ -1,0 +1,9 @@
+[target]
+crate = "uniset"
+version = "0.2.0"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+reason = "internal"
+location = "src/lib.rs:1430:9: 1441:10"

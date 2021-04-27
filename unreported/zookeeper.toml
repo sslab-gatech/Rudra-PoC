@@ -1,0 +1,9 @@
+[target]
+crate = "zookeeper"
+version = "0.5.9"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+reason = "internal"
+location = "src/try_io.rs:65:5: 69:6"

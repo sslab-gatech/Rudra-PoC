@@ -1,0 +1,9 @@
+[target]
+crate = "snzip"
+version = "0.1.0"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+reason = "experimental"
+location = "src/framing.rs:68:5: 120:6"

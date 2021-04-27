@@ -1,0 +1,15 @@
+[target]
+crate = "vec-utils"
+version = "0.2.0"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+reason = "internal"
+location = "src/vec.rs:210:5: 237:6"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+reason = "internal"
+location = "src/vec.rs:287:5: 345:6"

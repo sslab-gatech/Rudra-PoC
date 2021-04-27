@@ -1,0 +1,9 @@
+[target]
+crate = "wgpu-types"
+version = "0.5.1"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+reason = "independently fixed"
+location = "src/lib.rs:93:1: 129:2"
