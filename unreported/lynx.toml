@@ -1,0 +1,9 @@
+[target]
+crate = "lynx"
+version = "0.2.0"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+reason = "internal"
+location = "src/parsing/buffers.rs:36:5: 80:6"

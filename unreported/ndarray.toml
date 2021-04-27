@@ -1,0 +1,9 @@
+[target]
+crate = "ndarray"
+version = "0.13.1"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "PanicSafety"
+reason = "unobservable"
+location = "src/linalg/impl_linalg.rs:260:5: 280:6"

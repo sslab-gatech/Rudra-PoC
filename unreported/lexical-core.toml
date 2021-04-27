@@ -1,0 +1,9 @@
+[target]
+crate = "lexical-core"
+version = "0.7.4"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "internal"
+location = "src/util/sequence.rs:47:1: 92:2"

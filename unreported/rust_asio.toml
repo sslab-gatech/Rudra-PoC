@@ -1,0 +1,39 @@
+[target]
+crate = "rust_asio"
+version = "0.6.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/async/strand.rs:32:1: 33:2"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/stream_socket.rs:143:1: 143:44"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/dgram_socket.rs:143:1: 143:43"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/raw_socket.rs:142:1: 142:41"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/seq_packet_socket.rs:121:1: 122:2"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/socket_listener.rs:92:1: 92:52"

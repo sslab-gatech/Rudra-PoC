@@ -1,0 +1,21 @@
+[target]
+crate = "mqtt-protocol"
+version = "0.8.1"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+reason = "independently fixed"
+location = "src/encodable.rs:113:5: 129:6"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+reason = "independently fixed"
+location = "src/encodable.rs:82:5: 94:6"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+reason = "independently fixed"
+location = "src/encodable.rs:175:5: 183:6"
