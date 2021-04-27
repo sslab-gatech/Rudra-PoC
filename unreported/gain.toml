@@ -1,0 +1,33 @@
+[target]
+crate = "gain"
+version = "0.2.1"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "wasm only"
+location = "src/threadunsafe.rs:12:1: 12:47"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "wasm only"
+location = "src/threadunsafe.rs:13:1: 13:47"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "wasm only"
+location = "src/threadunsafe.rs:39:1: 39:50"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "wasm only"
+location = "src/threadunsafe.rs:40:1: 40:50"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "wasm only"
+location = "src/threadunsafe.rs:68:1: 68:93"

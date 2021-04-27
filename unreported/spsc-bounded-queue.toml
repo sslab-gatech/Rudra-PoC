@@ -1,0 +1,9 @@
+[target]
+crate = "spsc-bounded-queue"
+version = "0.0.1"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/lib.rs:53:1: 53:43"

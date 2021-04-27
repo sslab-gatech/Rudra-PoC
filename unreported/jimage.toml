@@ -1,0 +1,15 @@
+[target]
+crate = "jimage"
+version = "0.2.3"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/lib.rs:238:5: 238:51"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/lib.rs:239:5: 239:51"
