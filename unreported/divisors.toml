@@ -1,0 +1,9 @@
+[target]
+crate = "divisors"
+version = "0.2.1"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "internal"
+location = "src/lib.rs:109:1: 113:2"

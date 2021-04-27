@@ -1,0 +1,9 @@
+[target]
+crate = "coolq-sdk-rust"
+version = "0.1.21"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+reason = "internal"
+location = "src/iconv.rs:169:5: 190:6"

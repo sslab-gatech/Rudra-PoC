@@ -1,0 +1,9 @@
+[target]
+crate = "cowvec"
+version = "0.1.2"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+reason = "internal"
+location = "src/lib.rs:134:5: 148:6"
