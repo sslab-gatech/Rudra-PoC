@@ -1,0 +1,27 @@
+[target]
+crate = "kayrx-karx"
+version = "0.1.1"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/join_handle.rs:26:1: 26:53"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/task.rs:221:1: 221:35"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/join_handle.rs:27:1: 27:47"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/task.rs:222:1: 222:35"

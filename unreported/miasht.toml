@@ -1,0 +1,9 @@
+[target]
+crate = "miasht"
+version = "0.0.5"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "independently fixed"
+location = "src/builtin/router.rs:45:1: 45:37"

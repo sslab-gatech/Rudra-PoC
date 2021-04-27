@@ -1,0 +1,15 @@
+[target]
+crate = "mycelium_experimental"
+version = "0.1.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/crossbeam_skiplist/mod.rs:1844:1: 1850:2"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/crossbeam_skiplist/mod.rs:1852:1: 1858:2"
