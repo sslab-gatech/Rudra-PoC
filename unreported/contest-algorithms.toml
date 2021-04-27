@@ -1,0 +1,9 @@
+[target]
+crate = "contest-algorithms"
+version = "0.1.4"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "InconsistencyAmplification"
+reason = "experimental"
+location = "src/scanner.rs:56:5: 70:6"

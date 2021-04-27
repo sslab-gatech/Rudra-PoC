@@ -1,0 +1,9 @@
+[target]
+crate = "array_cow"
+version = "0.1.0"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "InconsistencyAmplification"
+reason = "experimental"
+location = "src/mempool_elem.rs:60:5: 81:6"

@@ -1,0 +1,9 @@
+[target]
+crate = "desync"
+version = "0.6.2"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "unobservable"
+location = "src/desync.rs:32:1: 32:49"
