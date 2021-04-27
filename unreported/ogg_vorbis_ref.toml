@@ -1,0 +1,9 @@
+[target]
+crate = "ogg_vorbis_ref"
+version = "0.0.3"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+reason = "internal"
+location = "src/lib.rs:99:5: 111:6"

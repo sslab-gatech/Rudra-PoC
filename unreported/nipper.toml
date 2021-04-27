@@ -1,0 +1,21 @@
+[target]
+crate = "nipper"
+version = "0.1.8"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "internal"
+location = "src/dom_tree.rs:532:5: 540:6"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "internal"
+location = "src/dom_tree.rs:542:5: 550:6"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "internal"
+location = "src/dom_tree.rs:552:5: 563:6"

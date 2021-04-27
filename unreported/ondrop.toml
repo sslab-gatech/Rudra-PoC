@@ -1,0 +1,9 @@
+[target]
+crate = "ondrop"
+version = "0.1.0"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "unobservable"
+location = "src/lib.rs:50:5: 55:6"
