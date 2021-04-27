@@ -1,0 +1,9 @@
+[target]
+crate = "skia-safe"
+version = "0.29.3"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/interop/stream.rs:16:1: 16:55"

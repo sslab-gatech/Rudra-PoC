@@ -1,15 +1,15 @@
 [target]
-crate = "actix"
-version = "0.10.0"
+crate = "scrappy-actor"
+version = "0.0.1"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 reason = "internal"
-location = "src/address/channel.rs:887:1: 887:43"
+location = "src/address/channel.rs:885:1: 885:43"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 reason = "internal"
-location = "src/address/channel.rs:888:1: 888:43"
+location = "src/address/channel.rs:886:1: 886:43"

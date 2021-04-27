@@ -1,15 +1,15 @@
 [target]
-crate = "actix"
-version = "0.10.0"
+crate = "secp256k1"
+version = "0.17.2"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 reason = "internal"
-location = "src/address/channel.rs:887:1: 887:43"
+location = "src/lib.rs:540:1: 540:49"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 reason = "internal"
-location = "src/address/channel.rs:888:1: 888:43"
+location = "src/lib.rs:542:1: 542:49"

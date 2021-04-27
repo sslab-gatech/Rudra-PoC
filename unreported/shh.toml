@@ -1,0 +1,9 @@
+[target]
+crate = "shh"
+version = "1.0.1"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/lib.rs:218:1: 218:51"

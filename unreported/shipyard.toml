@@ -1,15 +1,15 @@
 [target]
-crate = "actix"
-version = "0.10.0"
+crate = "shipyard"
+version = "0.4.1"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 reason = "internal"
-location = "src/address/channel.rs:887:1: 887:43"
+location = "src/atomic_refcell.rs:23:1: 23:52"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 reason = "internal"
-location = "src/address/channel.rs:888:1: 888:43"
+location = "src/atomic_refcell.rs:25:1: 25:52"
