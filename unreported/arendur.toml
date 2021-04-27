@@ -1,9 +1,9 @@
 [target]
-crate = "amadeus"
-version = "0.2.5"
+crate = "arendur"
+version = "0.0.5"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
-reason = "internal"
-location = "src/pool/thread.rs:82:1: 82:39"
+reason = "experimental"
+location = "src/filming/film.rs:290:1: 290:48"
