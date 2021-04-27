@@ -1,0 +1,9 @@
+[target]
+crate = "shrev"
+version = "1.1.1"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/util.rs:119:1: 119:91"

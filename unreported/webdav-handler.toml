@@ -1,0 +1,15 @@
+[target]
+crate = "webdav-handler"
+version = "0.2.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/async_stream.rs:81:1: 81:43"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/async_stream.rs:80:1: 80:43"

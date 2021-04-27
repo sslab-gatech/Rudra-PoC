@@ -1,0 +1,15 @@
+[target]
+crate = "locklessness"
+version = "0.2.1"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/containers/storage.rs:35:1: 35:44"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/containers/scratch.rs:9:1: 9:63"

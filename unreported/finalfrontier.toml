@@ -1,0 +1,27 @@
+[target]
+crate = "finalfrontier"
+version = "0.9.1"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/hogwild.rs:77:1: 77:49"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/hogwild.rs:118:1: 118:38"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/hogwild.rs:79:1: 79:49"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/hogwild.rs:120:1: 120:38"

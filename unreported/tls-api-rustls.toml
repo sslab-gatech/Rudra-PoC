@@ -1,0 +1,9 @@
+[target]
+crate = "tls-api-rustls"
+version = "0.4.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/lib.rs:46:1: 51:2"
