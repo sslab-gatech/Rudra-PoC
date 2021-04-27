@@ -1,0 +1,9 @@
+[target]
+crate = "regalloc"
+version = "0.0.27"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "internal"
+location = "src/sparse_set.rs:178:1: 190:2"

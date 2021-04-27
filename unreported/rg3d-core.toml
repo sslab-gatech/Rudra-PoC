@@ -1,0 +1,21 @@
+[target]
+crate = "rg3d-core"
+version = "0.7.0"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "independently fixed"
+location = "src/math/vec3.rs:27:5: 34:6"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "independently fixed"
+location = "src/math/vec2.rs:23:5: 30:6"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "Other"
+reason = "independently fixed"
+location = "src/math/vec4.rs:22:5: 29:6"

@@ -1,0 +1,9 @@
+[target]
+crate = "pandora-api"
+version = "0.1.7"
+
+[[bugs]]
+analyzer = "UnsafeDataflow"
+bug_class = "UninitExposure"
+reason = "internal"
+location = "src/crypt.rs:63:1: 86:2"
