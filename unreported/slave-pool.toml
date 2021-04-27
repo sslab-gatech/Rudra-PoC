@@ -1,0 +1,15 @@
+[target]
+crate = "slave-pool"
+version = "0.2.2"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/oneshot.rs:26:1: 26:38"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/oneshot.rs:27:1: 27:38"

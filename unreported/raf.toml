@@ -1,0 +1,15 @@
+[target]
+crate = "raf"
+version = "0.1.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "wasm only"
+location = "src/lib.rs:96:1: 96:56"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "wasm only"
+location = "src/lib.rs:97:1: 97:56"

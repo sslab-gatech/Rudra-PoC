@@ -1,0 +1,9 @@
+[target]
+crate = "amethyst_nphysics"
+version = "0.2.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/storage.rs:112:1: 112:38"

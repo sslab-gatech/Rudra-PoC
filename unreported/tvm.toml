@@ -1,0 +1,15 @@
+[target]
+crate = "tvm"
+version = "0.1.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/runtime/threading.rs:192:1: 192:39"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/runtime/threading.rs:193:1: 193:39"

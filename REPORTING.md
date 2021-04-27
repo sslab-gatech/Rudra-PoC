@@ -99,7 +99,7 @@ Uses [Array of Tables](https://toml.io/en/v1.0.0#array-of-tables) in TOML format
   - "Manual" analyzer is not allowed
 - **bug_class**: (string) The bug class.
   - Example: `["SendSyncVariance", "UninitExposure", "InconsistencyAmplification", "PanicSafety", "Other"]`
-- **reason**: `["internal", "experimental", "unobservable", "independently fixed"]`
+- **reason**: `["internal", "experimental", "unobservable", "independently fixed", "wasm only"]`
 - **location**: (string) The location of the bug in the `indexed_version`
 
 Note: no `bug_count`, `rudra_report_locations` (string array) -> `location` (string)
