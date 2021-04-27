@@ -1,0 +1,15 @@
+[target]
+crate = "lightproc"
+version = "0.3.5"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/proc_handle.rs:29:1: 29:41"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/proc_handle.rs:30:1: 30:41"

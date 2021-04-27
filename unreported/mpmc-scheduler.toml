@@ -1,0 +1,9 @@
+[target]
+crate = "mpmc-scheduler"
+version = "0.3.1"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/lib.rs:120:1: 120:37"

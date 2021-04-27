@@ -1,0 +1,15 @@
+[target]
+crate = "may"
+version = "0.3.18"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/join.rs:76:1: 76:41"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/join.rs:77:1: 77:41"

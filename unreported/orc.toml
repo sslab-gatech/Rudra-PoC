@@ -1,0 +1,15 @@
+[target]
+crate = "orc"
+version = "0.0.1"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/lib.rs:89:1: 89:42"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/lib.rs:40:1: 40:42"

@@ -1,0 +1,15 @@
+[target]
+crate = "lockless"
+version = "0.2.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "independently fixed"
+location = "src/containers/atomic_cell.rs:17:1: 17:62"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "independently fixed"
+location = "src/containers/atomic_cell_array.rs:17:1: 17:67"
