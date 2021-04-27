@@ -1,0 +1,9 @@
+[target]
+crate = "amadeus"
+version = "0.2.5"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/pool/thread.rs:82:1: 82:39"

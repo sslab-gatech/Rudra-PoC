@@ -1,0 +1,9 @@
+[target]
+crate = "arendur"
+version = "0.0.5"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/filming/film.rs:290:1: 290:48"
