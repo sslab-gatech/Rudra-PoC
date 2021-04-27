@@ -1,0 +1,15 @@
+[target]
+crate = "tract-linalg"
+version = "0.9.2"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "independently fixed"
+location = "src/align.rs:9:1: 9:37"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "independently fixed"
+location = "src/align.rs:10:1: 10:37"

@@ -1,0 +1,15 @@
+[target]
+crate = "string-interner"
+version = "0.7.1"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "independently fixed"
+location = "src/lib.rs:248:1: 253:2"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "independently fixed"
+location = "src/lib.rs:254:1: 259:2"

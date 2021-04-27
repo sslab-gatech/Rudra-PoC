@@ -1,0 +1,21 @@
+[target]
+crate = "zdd"
+version = "0.3.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/wrapped.rs:238:1: 238:61"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/factory.rs:157:1: 157:65"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "experimental"
+location = "src/wrapped.rs:237:1: 237:61"

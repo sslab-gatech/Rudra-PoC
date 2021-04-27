@@ -1,0 +1,15 @@
+[target]
+crate = "tokio-lk"
+version = "0.2.2"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/lib.rs:469:1: 469:64"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/lib.rs:470:1: 470:64"

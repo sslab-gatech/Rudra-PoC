@@ -1,0 +1,15 @@
+[target]
+crate = "assets"
+version = "0.3.0"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/storage.rs:11:1: 11:38"
+
+[[bugs]]
+analyzer = "SendSyncVariance"
+bug_class = "SendSyncVariance"
+reason = "internal"
+location = "src/storage.rs:12:1: 12:38"
