@@ -22,6 +22,7 @@ rudra_report_locations = [
     "src/processing/image.rs:160:1: 160:48",
     "src/processing/image.rs:161:1: 161:48",
 ]
+sendsync_details = ["NeedSend", "NeedSync"]
 ```
 !*/
 #![forbid(unsafe_code)]

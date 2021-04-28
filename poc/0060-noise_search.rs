@@ -15,6 +15,7 @@ analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 bug_count = 2
 rudra_report_locations = ["src/index.rs:419:1: 419:41", "src/index.rs:420:1: 420:41"]
+sendsync_details = ["NeedSend", "NeedSync"]
 ```
 !*/
 #![forbid(unsafe_code)]

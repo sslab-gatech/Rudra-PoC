@@ -15,6 +15,7 @@ analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 bug_count = 1
 rudra_report_locations = ["src/lib.rs:30:1: 30:61"]
+sendsync_details = ["NeedSync"]
 ```
 !*/
 use late_static::LateStatic;

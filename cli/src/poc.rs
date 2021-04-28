@@ -99,6 +99,15 @@ pub enum BugClass {
     Other,
 }
 
+// Used to count subcategories for ranking system
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum SendSyncDetails {
+    // SendSyncVariance
+    NeedSend,
+    NeedSync,
+    NeedBoth,
+}
+
 impl std::fmt::Display for BugClass {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let name = match self {
@@ -140,6 +149,8 @@ pub struct BugMetadata {
     #[serde(default = "usize_one", skip_serializing_if = "usize_is_one")]
     bug_count: usize,
     rudra_report_locations: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    sendsync_details: Vec<SendSyncDetails>
 }
 
 impl BugMetadata {

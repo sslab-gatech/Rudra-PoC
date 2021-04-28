@@ -19,6 +19,7 @@ rudra_report_locations = [
     "src/cache/arc/mod.rs:153:1: 153:88",
     "src/cache/arc/mod.rs:154:1: 154:88",
 ]
+sendsync_details = ["NeedSend", "NeedSync"]
 ```
 !*/
 #![forbid(unsafe_code)]

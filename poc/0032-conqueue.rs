@@ -23,6 +23,7 @@ rudra_report_locations = [
     "src/lib.rs:184:1: 184:44",
     "src/lib.rs:79:1: 79:42"
 ]
+sendsync_details = ["NeedSend", "NeedSend", "NeedSend"]
 ```
 !*/
 #![forbid(unsafe_code)]

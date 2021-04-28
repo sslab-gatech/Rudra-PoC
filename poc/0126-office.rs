@@ -3,6 +3,7 @@
 [target]
 crate = "office"
 version = "0.8.1"
+indexed_version = "0.8.2"
 
 [report]
 issue_date = 2021-02-04

@@ -15,6 +15,7 @@ analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 bug_count = 2
 rudra_report_locations = ["src/mem.rs:829:1: 829:34", "src/mem.rs:830:1: 830:34"]
+sendsync_details = ["NeedSend", "NeedSync"]
 
 [[bugs]]
 analyzer = "Manual"

@@ -21,6 +21,7 @@ rudra_report_locations = [
     "src/device_handle.rs:39:1: 39:55",
     "src/device_handle.rs:40:1: 40:55",
 ]
+sendsync_details = ["NeedSend", "NeedSync", "NeedSend", "NeedSync"]
 ```
 !*/
 #![forbid(unsafe_code)]

@@ -2,7 +2,7 @@
 ```rudra-poc
 [target]
 crate = "metrics-util"
-version = "0.6.2"
+version = "0.4.0-alpha.1"
 
 [report]
 issue_url = "https://github.com/metrics-rs/metrics/issues/190"

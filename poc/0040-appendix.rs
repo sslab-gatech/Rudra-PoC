@@ -3,6 +3,7 @@
 [target]
 crate = "appendix"
 version = "0.2.0"
+indexed_version = '2.0.0'
 
 [report]
 issue_url = "https://github.com/krl/appendix/issues/6"
@@ -15,6 +16,7 @@ analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 bug_count = 2
 rudra_report_locations = ["src/lib.rs:61:1: 61:42", "src/lib.rs:62:1: 62:42"]
+sendsync_details = ["NeedSend", "NeedSync"]
 ```
 !*/
 #![forbid(unsafe_code)]

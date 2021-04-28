@@ -1,5 +1,5 @@
 [target]
-crate = "actix"
+crate = "requiem"
 version = "0.9.0"
 
 [[bugs]]

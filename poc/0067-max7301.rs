@@ -18,6 +18,7 @@ rudra_report_locations = [
     "src/expander/immediate.rs:23:1: 28:2",
     "src/expander/transactional.rs:65:1: 70:2",
 ]
+sendsync_details = ["NeedSync", "NeedSync"]
 ```
 !*/
 #![forbid(unsafe_code)]

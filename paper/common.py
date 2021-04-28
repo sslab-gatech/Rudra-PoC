@@ -1,5 +1,6 @@
 import tomlkit
 
+from collections import defaultdict
 from pathlib import Path
 
 PROJECT_DIRECTORY = Path(__file__).resolve().parent.parent
@@ -45,6 +46,52 @@ def get_poc_metadata():
 
     return poc_metadata
 
+def get_poc_detailed_metadata():
+    """Scan pocs to collect (bug_type, crate_id, bug_span)"""
+    poc_metadata = get_poc_metadata()
+    
+    metadata = {
+        # crate_id => set(bug_span)
+        'SendSyncVariance': defaultdict(lambda: set()),
+        # crate_id => set(bug_span)
+        'UnsafeDataflow': defaultdict(lambda: set()),
+    }
+
+    for key, item in poc_metadata.items():
+        crate_key = 'indexed_name' if 'indexed_name' in item['target'] else 'crate'
+        version_key = 'indexed_version' if 'indexed_version' in item['target'] else 'version'
+        crate_id = f"{item['target'][crate_key]}-{item['target'][version_key]}"
+        
+        for bug in filter(lambda x: x['analyzer'] in ['SendSyncVariance', 'UnsafeDataflow'], item['bugs']):
+            for bug_span in bug['rudra_report_locations']:
+                metadata[bug['analyzer']][crate_id].add(bug_span)
+
+    return metadata
+
+def get_unreported_metadata():
+    """Scan unreported bugs to collect (bug_type, crate_id, bug_span)"""
+    unreported_dir = PROJECT_DIRECTORY / 'unreported'
+
+    metadata = {
+        # crate_id => set(bug_span)
+        'SendSyncVariance': defaultdict(lambda: set()),
+        # crate_id => set(bug_span)
+        'UnsafeDataflow': defaultdict(lambda: set()),
+    }
+
+    for unreported_file in unreported_dir.iterdir():
+        with unreported_file.open() as f:
+            report_file_str = f.read()
+            report_dict = tomlkit.loads(report_file_str)
+            
+            version_key = 'indexed_version' if 'indexed_version' in report_dict['target'] else 'version'
+            crate_id = f"{report_dict['target']['crate']}-{report_dict['target'][version_key]}"
+            
+            for bug in report_dict['bugs']:
+                if bug['analyzer'] in ['UnsafeDataflow', 'SendSyncVariance']:
+                    metadata[bug['analyzer']][crate_id].add(bug['location'])
+    
+    return metadata
 
 def get_bug_algorithm(poc_id, poc_metadata):
     return list(map(lambda bug: bug['analyzer'], poc_metadata[poc_id]['bugs']))

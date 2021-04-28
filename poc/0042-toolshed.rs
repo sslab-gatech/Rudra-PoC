@@ -18,6 +18,7 @@ rustsec_id = "RUSTSEC-2020-0136"
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
 rudra_report_locations = ["src/cell.rs:22:1: 22:39"]
+sendsync_details = ["NeedSend"]
 ```
 !*/
 #![forbid(unsafe_code)]

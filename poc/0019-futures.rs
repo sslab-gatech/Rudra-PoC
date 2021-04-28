@@ -19,7 +19,9 @@ rustsec_id = "RUSTSEC-2020-0059"
 [[bugs]]
 analyzer = "SendSyncVariance"
 bug_class = "SendSyncVariance"
-rudra_report_locations = ["src/lock/mutex.rs:405:1: 405:80"]
+bug_count = 2
+rudra_report_locations = ["src/lock/mutex.rs:404:1: 404:80", "src/lock/mutex.rs:405:1: 405:80"]
+sendsync_details = ["NeedSend", "NeedSync"]
 ```
 !*/
 #![forbid(unsafe_code)]

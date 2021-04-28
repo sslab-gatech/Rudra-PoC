@@ -24,6 +24,7 @@ rudra_report_locations = [
     "src/mpsc_list_v1.rs:147:1: 147:36",
     "src/mpsc_list_v1.rs:148:1: 148:36",
 ]
+sendsync_details = ["NeedSend", "NeedSend", "NeedSend", "NeedSend"]
 ```
 !*/
 #![forbid(unsafe_code)]
