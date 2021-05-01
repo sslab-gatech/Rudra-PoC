@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import csv
 import datetime
+import glob
 import os
 import sys
 import tomlkit
@@ -31,7 +32,8 @@ SUBCATEGORY = {
         "WriteFlow",
         "PtrAsRef",
         "SliceUnchecked",
-        "SliceFromRaw"
+        "SliceFromRaw",
+        "VecSetLen"
     ],
 }
 
@@ -218,8 +220,8 @@ for log_file_name in os.listdir(log_dir):
                         target_end_time = datetime.datetime.strptime(line[:TIME_LEN], TIME_FORMAT)
 
                         # Report counting
-                        report_file_path = os.path.join(report_dir, report_file_name)
-                        if os.path.exists(report_file_path):
+                        report_file_paths = glob.glob(f"{os.path.join(report_dir, report_file_name)}-*")
+                        for report_file_path in report_file_paths:
                             with open(report_file_path, "r") as report_file:
                                 # match this with Rudra implementation
                                 report_file_str = report_file.read().replace("\t", "\\t").replace("\u001B", "\\u001B")
