@@ -3,6 +3,7 @@ from common import *
 from collections import defaultdict
 import glob
 import os
+import sys
 
 NeedSend = {
     "ApiSendForSync",
@@ -35,7 +36,8 @@ def create_counter() -> dict:
             "WriteFlow": 0,
             "PtrAsRef": 0,
             "SliceUnchecked": 0,
-            "SliceFromRaw": 0
+            "SliceFromRaw": 0,
+            "VecSetLen": 0,
         },
     }
     return cnt
@@ -162,10 +164,10 @@ if __name__ == "__main__":
     print('TP (Reported) Count...')
     tp_cnt = count_reported_tp(
         detailed_poc_metadata,
-        '/home/youngsuk/rudra-runner-home/campaign/20210425_185630/report'
+        f'/home/youngsuk/rudra-runner-home/campaign/{sys.argv[1]}/report'
     )
     print(tp_cnt)
     
-    unreported_tp_cnt = count_unreported_tp('/home/youngsuk/rudra-runner-home/campaign/20210425_185630/report')
+    unreported_tp_cnt = count_unreported_tp(f'/home/youngsuk/rudra-runner-home/campaign/{sys.argv[1]}/report')
     print('TP (Unreported) Count')
     print(unreported_tp_cnt)
