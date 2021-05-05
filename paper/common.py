@@ -73,10 +73,10 @@ def get_unreported_metadata():
     unreported_dir = PROJECT_DIRECTORY / 'unreported'
 
     metadata = {
-        # crate_id => set(bug_span)
-        'SendSyncVariance': defaultdict(lambda: set()),
-        # crate_id => set(bug_span)
-        'UnsafeDataflow': defaultdict(lambda: set()),
+        # crate_id => dict(bug_span => is_internal)
+        'SendSyncVariance': defaultdict(lambda: dict()),
+        # crate_id => dict(bug_span => is_internal)
+        'UnsafeDataflow': defaultdict(lambda: dict()),
     }
 
     for unreported_file in unreported_dir.iterdir():
@@ -89,7 +89,7 @@ def get_unreported_metadata():
             
             for bug in report_dict['bugs']:
                 if bug['analyzer'] in ['UnsafeDataflow', 'SendSyncVariance']:
-                    metadata[bug['analyzer']][crate_id].add(bug['location'])
+                    metadata[bug['analyzer']][crate_id][bug['location']] = (bug['reason'] == 'internal')
     
     return metadata
 

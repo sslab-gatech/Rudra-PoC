@@ -97,65 +97,42 @@ def count_reported_tp(
 def count_unreported_tp(report_dir):
     assert (os.path.isdir(report_dir)), "invalid report directory"
 
-    cnt = create_counter()
+    cnt = {
+        "internal": create_counter(),
+        "other": create_counter(),
+    }
 
     unreported_metadata = get_unreported_metadata()
 
-    # UnsafeDataflow
-    for crate_id, metadata in unreported_metadata['UnsafeDataflow'].items():
-        report_file_paths = list(glob.glob(f"{report_dir}/report-{crate_id}-*"))
-        assert len(report_file_paths) >= 1, crate_id
+    analyzers = ['SendSyncVariance', 'UnsafeDataflow']
+    for analyzer in analyzers:
+        for crate_id, metadata in unreported_metadata[analyzer].items():
+            report_file_paths = list(glob.glob(f"{report_dir}/report-{crate_id}-*"))
+            assert len(report_file_paths) >= 1, crate_id
 
-        for report_file_path in report_file_paths:
-            with open(report_file_path, "r") as report_file:
-                # match this with Rudra implementation
-                report_file_str = report_file.read().replace("\t", "\\t").replace("\u001B", "\\u001B")
-                report_dict = tomlkit.loads(report_file_str)
+            for report_file_path in report_file_paths:
+                with open(report_file_path, "r") as report_file:
+                    # match this with Rudra implementation
+                    report_file_str = report_file.read().replace("\t", "\\t").replace("\u001B", "\\u001B")
+                    report_dict = tomlkit.loads(report_file_str)
 
-                # Used to get rid of duplicate reports for the same bug-type & span (macro deduplication)
-                visited = dict()
+                    # Used to get rid of duplicate reports for the same bug-type & span (macro deduplication)
+                    visited = dict()
 
-                for report in filter(lambda x: x['analyzer'].startswith('UnsafeDataflow'), report_dict['reports']):
-                    if report['location'] in metadata:
-                        analyzer_subcategories = report['analyzer'][16:].split('/')
-                        for subcategory in analyzer_subcategories:
-                            key = report['location']
-                            if key not in visited or visited[key] < HASHER[subcategory]:
-                                visited[key] = HASHER[subcategory]
-                # Update TP counts
-                for loc, highest_reached_rank in visited.items():
-                    for rank in Rank:
-                        if highest_reached_rank >= rank:
-                            cnt['UnsafeDataflow'][rank] += 1
-
-    # SendSyncVariance
-    for crate_id, metadata in unreported_metadata['SendSyncVariance'].items():
-        report_file_paths = list(glob.glob(f"{report_dir}/report-{crate_id}-*"))
-        assert len(report_file_paths) >= 1, crate_id
-
-        for report_file_path in report_file_paths:
-            with open(report_file_path, "r") as report_file:
-                # match this with Rudra implementation
-                report_file_str = report_file.read().replace("\t", "\\t").replace("\u001B", "\\u001B")
-                report_dict = tomlkit.loads(report_file_str)
-
-                # Get rid of duplicate reports for the same span (macro deduplication)
-                visited = dict()
-
-                for report in filter(lambda x: x['analyzer'].startswith('SendSyncVariance'), report_dict['reports']):
-                    if report['location'] in metadata:
-                        analyzer_subcategories = report['analyzer'][18:].split('/')
-                        for subcategory in analyzer_subcategories:
-                            key = report['location']
-                            if key not in visited or visited[key] < HASHER[subcategory]:
-                                visited[key] = HASHER[subcategory]
-                # Update TP counts
-                for loc, highest_reached_rank in visited.items():
-                    for rank in Rank:
-                        if highest_reached_rank >= rank:
-                            cnt['SendSyncVariance'][rank] += 1
+                    for report in filter(lambda x: x['analyzer'].startswith(analyzer), report_dict['reports']):
+                        if report['location'] in metadata:
+                            analyzer_subcategories = report['analyzer'][len(analyzer)+2:].split('/')
+                            for subcategory in analyzer_subcategories:
+                                key = report['location']
+                                if key not in visited or visited[key][0] < HASHER[subcategory]:
+                                    is_internal = metadata[report['location']]
+                                    visited[key] = (HASHER[subcategory], is_internal)
+                    # Update TP counts
+                    for (highest_reached_rank, is_internal) in visited.values():
+                        for rank in Rank:
+                            if highest_reached_rank >= rank:
+                                cnt['internal' if is_internal else "other"][analyzer][rank] += 1
     return cnt
-
 
 if __name__ == "__main__":
     detailed_poc_metadata = get_poc_detailed_metadata()

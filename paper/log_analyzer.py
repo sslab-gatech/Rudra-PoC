@@ -377,6 +377,11 @@ tp_cnt = count_by_rank.count_reported_tp(
 unreported_tp_cnt = count_by_rank.count_unreported_tp(
     f'{campaign_dir}/{experiment_ver}/report',
 )
+# Move the non-internal bug counts from `unreported_tp_cnt` to `tp_cnt`
+for analyzer in ['SendSyncVariance', 'UnsafeDataflow']:
+    for rank in Rank:
+        tp_cnt[analyzer][rank] += unreported_tp_cnt['other'][analyzer][rank]
+unreported_tp_cnt = unreported_tp_cnt['internal']
 
 stat = pd.read_csv(f'stat-{experiment_ver}-rank.csv')
 
@@ -411,10 +416,10 @@ print("""
 \\newcommand{\\compileEmpty}{\\num{%d}\\xspace}
 \\newcommand{\\compileMetadataError}{\\num{%d}\\xspace}
 
-\\newcommand{\\elapsedTotalAverage}{\\num{%d}~sec\\xspace}
-\\newcommand{\\elapsedRudraAverage}{\\num{%d}~ms\\xspace}
-\\newcommand{\\elapsedSvAverage}{\\num{%d}~ms\\xspace}
-\\newcommand{\\elapsedUdAverage}{\\num{%d}~ms\\xspace}
+\\newcommand{\\elapsedTotalAverage}{\\num{%.1f}~sec\\xspace}
+\\newcommand{\\elapsedRudraAverage}{\\num{%.1f}~ms\\xspace}
+\\newcommand{\\elapsedSvAverage}{\\num{%.3f}~ms\\xspace}
+\\newcommand{\\elapsedUdAverage}{\\num{%.3f}~ms\\xspace}
 
 \\newcommand{\\reportsAll}{\\num{%d}\\xspace}
 
@@ -428,30 +433,30 @@ print("""
 \\newcommand{\\udBugsMed}{\\num{%d}\\xspace}
 \\newcommand{\\udBugsLow}{\\num{%d}\\xspace}
 
-\\newcommand{\\udBugsAllPercentage}{%d\\%%\\xspace}
-\\newcommand{\\udBugsHighPercentage}{%d\\%%\\xspace}
-\\newcommand{\\udBugsMedPercentage}{%d\\%%\\xspace}
-\\newcommand{\\udBugsLowPercentage}{%d\\%%\\xspace}
+\\newcommand{\\udBugsAllPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\udBugsHighPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\udBugsMedPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\udBugsLowPercentage}{%.1f\\%%\\xspace}
 
 \\newcommand{\\udInternalAll}{\\num{%d}\\xspace}
 \\newcommand{\\udInternalHigh}{\\num{%d}\\xspace}
 \\newcommand{\\udInternalMed}{\\num{%d}\\xspace}
 \\newcommand{\\udInternalLow}{\\num{%d}\\xspace}
 
-\\newcommand{\\udInternalAllPercentage}{%d\\%%\\xspace}
-\\newcommand{\\udInternalHighPercentage}{%d\\%%\\xspace}
-\\newcommand{\\udInternalMedPercentage}{%d\\%%\\xspace}
-\\newcommand{\\udInternalLowPercentage}{%d\\%%\\xspace}
+\\newcommand{\\udInternalAllPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\udInternalHighPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\udInternalMedPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\udInternalLowPercentage}{%.1f\\%%\\xspace}
 
 \\newcommand{\\udBugSumAll}{\\num{%d}\\xspace}
 \\newcommand{\\udBugSumHigh}{\\num{%d}\\xspace}
 \\newcommand{\\udBugSumMed}{\\num{%d}\\xspace}
 \\newcommand{\\udBugSumLow}{\\num{%d}\\xspace}
 
-\\newcommand{\\udBugSumAllPercentage}{%d\\%%\\xspace}
-\\newcommand{\\udBugSumHighPercentage}{%d\\%%\\xspace}
-\\newcommand{\\udBugSumMedPercentage}{%d\\%%\\xspace}
-\\newcommand{\\udBugSumLowPercentage}{%d\\%%\\xspace}
+\\newcommand{\\udBugSumAllPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\udBugSumHighPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\udBugSumMedPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\udBugSumLowPercentage}{%.1f\\%%\\xspace}
 
 \\newcommand{\\svReportsAll}{\\num{%d}\\xspace}
 \\newcommand{\\svReportsHigh}{\\num{%d}\\xspace}
@@ -463,33 +468,33 @@ print("""
 \\newcommand{\\svBugsMed}{\\num{%d}\\xspace}
 \\newcommand{\\svBugsLow}{\\num{%d}\\xspace}
 
-\\newcommand{\\svBugsAllPercentage}{%d\\%%\\xspace}
-\\newcommand{\\svBugsHighPercentage}{%d\\%%\\xspace}
-\\newcommand{\\svBugsMedPercentage}{%d\\%%\\xspace}
-\\newcommand{\\svBugsLowPercentage}{%d\\%%\\xspace}
+\\newcommand{\\svBugsAllPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\svBugsHighPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\svBugsMedPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\svBugsLowPercentage}{%.1f\\%%\\xspace}
 
 \\newcommand{\\svInternalAll}{\\num{%d}\\xspace}
 \\newcommand{\\svInternalHigh}{\\num{%d}\\xspace}
 \\newcommand{\\svInternalMed}{\\num{%d}\\xspace}
 \\newcommand{\\svInternalLow}{\\num{%d}\\xspace}
 
-\\newcommand{\\svInternalAllPercentage}{%d\\%%\\xspace}
-\\newcommand{\\svInternalHighPercentage}{%d\\%%\\xspace}
-\\newcommand{\\svInternalMedPercentage}{%d\\%%\\xspace}
-\\newcommand{\\svInternalLowPercentage}{%d\\%%\\xspace}
+\\newcommand{\\svInternalAllPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\svInternalHighPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\svInternalMedPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\svInternalLowPercentage}{%.1f\\%%\\xspace}
 
 \\newcommand{\\svBugSumAll}{\\num{%d}\\xspace}
 \\newcommand{\\svBugSumHigh}{\\num{%d}\\xspace}
 \\newcommand{\\svBugSumMed}{\\num{%d}\\xspace}
 \\newcommand{\\svBugSumLow}{\\num{%d}\\xspace}
 
-\\newcommand{\\svBugSumAllPercentage}{%d\\%%\\xspace}
-\\newcommand{\\svBugSumHighPercentage}{%d\\%%\\xspace}
-\\newcommand{\\svBugSumMedPercentage}{%d\\%%\\xspace}
-\\newcommand{\\svBugSumLowPercentage}{%d\\%%\\xspace}
+\\newcommand{\\svBugSumAllPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\svBugSumHighPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\svBugSumMedPercentage}{%.1f\\%%\\xspace}
+\\newcommand{\\svBugSumLowPercentage}{%.1f\\%%\\xspace}
 """ % (
-    len(stat['name']), # Total Crates
-    len(stat['name']) // 1000, # 1000,
+    len(crate_stat["names"]), # Total Crates
+    round(len(crate_stat["names"]) / 1000), # 1000,
 
     round(stat['e2e-time'].sum() / (3600000), 1), # milliseconds to hour conversion
     
@@ -543,7 +548,7 @@ print("""
     round((tp_cnt['UnsafeDataflow'][Rank.LOW] + unreported_tp_cnt['UnsafeDataflow'][Rank.LOW]) / stat['UnsafeDataflow-num-span'].sum() * 100, 1),
     round((tp_cnt['UnsafeDataflow'][Rank.HIGH] + unreported_tp_cnt['UnsafeDataflow'][Rank.HIGH]) / stat['UnsafeDataflow/2-num-span'].sum() * 100, 1),
     round((tp_cnt['UnsafeDataflow'][Rank.MID] + unreported_tp_cnt['UnsafeDataflow'][Rank.MID]) / stat['UnsafeDataflow/1-num-span'].sum() * 100, 1),
-    round((tp_cnt['UnsafeDataflow'][Rank.LOW] + unreported_tp_cnt['UnsafeDataflow'][Rank.HIGH]) / stat['UnsafeDataflow/0-num-span'].sum() * 100, 1),
+    round((tp_cnt['UnsafeDataflow'][Rank.LOW] + unreported_tp_cnt['UnsafeDataflow'][Rank.LOW]) / stat['UnsafeDataflow/0-num-span'].sum() * 100, 1),
 
     # SV Count
     stat['SendSyncVariance-num-span'].sum(),
