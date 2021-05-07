@@ -39,7 +39,8 @@ def main():
     reported_by_year[2021] = 2
     backlog_by_year = defaultdict(int)
 
-    total_pending = 0
+    total_pending_bugs = 0
+    pending_bugs_by_year = defaultdict(int)
 
     manual = BugCounter()
     send_sync = BugCounter()
@@ -110,7 +111,8 @@ def main():
                 manual.bugs[bug_class] += bug_count
             else:
                 if is_pending:
-                    total_pending += bug_count
+                    total_pending_bugs += bug_count
+                    pending_bugs_by_year[issue_year] += bug_count
 
                 if analyzer_name == 'SendSyncVariance':
                     send_sync.bugs[bug_class] += bug_count
@@ -179,11 +181,14 @@ Paste this in `data/count_bugs.tex`:
 
 \\newcommand{\\rustsecCountTwenty}{%d\\xspace}
 \\newcommand{\\rustsecCountTwentyOne}{%d\\xspace}
-\\newcommand{\\rustsecPendingTwenty}{%d\\xspace}
-\\newcommand{\\rustsecPendingTwentyOne}{%d\\xspace}
 
-\\newcommand{\\rustsecPendingTotal}{%d\\xspace}
-\\newcommand{\\pendingBugsSum}{%d\\xspace}
+\\newcommand{\\pocPendingTwenty}{%d\\xspace}
+\\newcommand{\\pocPendingTwentyOne}{%d\\xspace}
+\\newcommand{\\pocPendingTotal}{%d\\xspace}
+
+\\newcommand{\\bugPendingTwenty}{%d\\xspace}
+\\newcommand{\\bugPendingTwentyOne}{%d\\xspace}
+\\newcommand{\\bugPendingTotal}{%d\\xspace}
 """ % (
         unsafe_dataflow.bug_count() + send_sync.bug_count(),
         len(unsafe_dataflow.crate_set.union(send_sync.crate_set)),
@@ -209,13 +214,17 @@ Paste this in `data/count_bugs.tex`:
         unsafe_dataflow.bugs["UninitExposure"],
         unsafe_dataflow.bugs["PanicSafety"],
         unsafe_dataflow.bugs["Other"],
+        #
         reported_by_year[2020],
         reported_by_year[2021],
+        #
         backlog_by_year[2020],
         backlog_by_year[2021],
-        #
         rustsec_backlog,
-        total_pending,
+        #
+        pending_bugs_by_year[2020],
+        pending_bugs_by_year[2021],
+        total_pending_bugs,
     ))
 
 if __name__ == '__main__':
