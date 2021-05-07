@@ -39,6 +39,8 @@ def main():
     reported_by_year[2021] = 2
     backlog_by_year = defaultdict(int)
 
+    total_pending = 0
+
     manual = BugCounter()
     send_sync = BugCounter()
     unsafe_dataflow = BugCounter()
@@ -72,6 +74,7 @@ def main():
         else:
             manual.crate_set.add(crate_name)
 
+        is_pending = False
         non_manual_exists = contains_sv_bug or contains_ud_bug
         if non_manual_exists:
             try:
@@ -87,6 +90,7 @@ def main():
             except tomlkit.exceptions.NonExistentKey:
                 backlog_by_year[issue_year] += 1
                 rustsec_backlog += 1
+                is_pending = True
         else:
             try:
                 manual.rustsec_id_set.add(poc_metadata['report']['rustsec_id'])
@@ -102,15 +106,19 @@ def main():
 
             analyzer_name = bug['analyzer']
             bug_class = bug['bug_class']
-            if analyzer_name == 'SendSyncVariance':
-                send_sync.bugs[bug_class] += bug_count
-            elif analyzer_name == 'UnsafeDataflow':
-                unsafe_dataflow.bugs[bug_class] += bug_count
-            elif analyzer_name == 'Manual':
+            if analyzer_name == 'Manual':
                 manual.bugs[bug_class] += bug_count
             else:
-                print(f"Error: Unknown analyzer {analyzer_name} in PoC {poc_id}")
-                exit(1)
+                if is_pending:
+                    total_pending += bug_count
+
+                if analyzer_name == 'SendSyncVariance':
+                    send_sync.bugs[bug_class] += bug_count
+                elif analyzer_name == 'UnsafeDataflow':
+                    unsafe_dataflow.bugs[bug_class] += bug_count
+                else:
+                    print(f"Error: Unknown analyzer {analyzer_name} in PoC {poc_id}")
+                    exit(1)
 
     for (bug_id, rustsec_metadata) in sorted(rustsec_metadata.items()):
         if 'aliases' in rustsec_metadata:
@@ -173,6 +181,9 @@ Paste this in `data/count_bugs.tex`:
 \\newcommand{\\rustsecCountTwentyOne}{%d\\xspace}
 \\newcommand{\\rustsecPendingTwenty}{%d\\xspace}
 \\newcommand{\\rustsecPendingTwentyOne}{%d\\xspace}
+
+\\newcommand{\\rustsecPendingTotal}{%d\\xspace}
+\\newcommand{\\pendingBugsSum}{%d\\xspace}
 """ % (
         unsafe_dataflow.bug_count() + send_sync.bug_count(),
         len(unsafe_dataflow.crate_set.union(send_sync.crate_set)),
@@ -202,6 +213,9 @@ Paste this in `data/count_bugs.tex`:
         reported_by_year[2021],
         backlog_by_year[2020],
         backlog_by_year[2021],
+        #
+        rustsec_backlog,
+        total_pending,
     ))
 
 if __name__ == '__main__':
