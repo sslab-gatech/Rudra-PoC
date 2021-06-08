@@ -7,6 +7,7 @@ version = "0.6.2"
 [report]
 issue_url = "https://github.com/metrics-rs/metrics/issues/190"
 issue_date = 2021-04-07
+rustsec_url = "https://github.com/RustSec/advisory-db/pull/936"
 
 [[bugs]]
 analyzer = "SendSyncVariance"
