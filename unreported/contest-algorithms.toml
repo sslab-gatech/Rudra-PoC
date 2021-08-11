@@ -4,6 +4,6 @@ version = "0.1.4"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
-bug_class = "InconsistencyAmplification"
+bug_class = "HigherOrderInvariant"
 reason = "experimental"
 location = "src/scanner.rs:56:5: 70:6"

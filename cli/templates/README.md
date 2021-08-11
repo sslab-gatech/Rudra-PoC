@@ -13,7 +13,7 @@ Analyzer
 Bug Class
 * SV: SendSyncVariance
 * UE: UninitExposure
-* IA: InconsistencyAmplification
+* HO: HigherOrderInvariant
 * PS: PanicSafety
 * O: Other
 

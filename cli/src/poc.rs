@@ -94,7 +94,7 @@ impl Analyzer {
 pub enum BugClass {
     SendSyncVariance,
     UninitExposure,
-    InconsistencyAmplification,
+    HigherOrderInvariant,
     PanicSafety,
     Other,
 }
@@ -104,7 +104,7 @@ impl std::fmt::Display for BugClass {
         let name = match self {
             BugClass::SendSyncVariance => "SendSyncVariance",
             BugClass::UninitExposure => "UninitExposure",
-            BugClass::InconsistencyAmplification => "InconsistencyAmplification",
+            BugClass::HigherOrderInvariant => "HigherOrderInvariant",
             BugClass::PanicSafety => "PanicSafety",
             BugClass::Other => "Other",
         };
@@ -117,7 +117,7 @@ impl BugClass {
         match self {
             BugClass::SendSyncVariance => "SV",
             BugClass::UninitExposure => "UE",
-            BugClass::InconsistencyAmplification => "IA",
+            BugClass::HigherOrderInvariant => "HO",
             BugClass::PanicSafety => "PS",
             BugClass::Other => "O",
         }

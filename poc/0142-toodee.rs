@@ -17,7 +17,7 @@ rudra_report_locations = ['src/toodee.rs:561:5: 590:6']
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
-bug_class = "InconsistencyAmplification"
+bug_class = "HigherOrderInvariant"
 rudra_report_locations = ['src/toodee.rs:561:5: 590:6']
 ```
 !*/
@@ -40,11 +40,15 @@ struct PanickingIterator();
 impl Iterator for PanickingIterator {
     type Item = DropDetector;
 
-    fn next(&mut self) -> Option<Self::Item> { panic!("Iterator panicked"); }
+    fn next(&mut self) -> Option<Self::Item> {
+        panic!("Iterator panicked");
+    }
 }
 
 impl ExactSizeIterator for PanickingIterator {
-    fn len(&self) -> usize { 1 }
+    fn len(&self) -> usize {
+        1
+    }
 }
 // -----
 
@@ -57,22 +61,25 @@ fn main() {
     //toodee.insert_row(0, PanickingIterator());
 }
 
-
 struct IteratorWithWrongLength();
 
 impl Iterator for IteratorWithWrongLength {
     type Item = Box<u8>;
 
-    fn next(&mut self) -> Option<Self::Item> { None }
+    fn next(&mut self) -> Option<Self::Item> {
+        None
+    }
 }
 
 impl ExactSizeIterator for IteratorWithWrongLength {
-    fn len(&self) -> usize { 1 }
+    fn len(&self) -> usize {
+        1
+    }
 }
 
 fn reserves_based_on_iterator_length() {
     let vec = vec![Box::<u8>::new(1)];
-    let mut toodee : TooDee<_> = TooDee::from_vec(1, 1, vec);
+    let mut toodee: TooDee<_> = TooDee::from_vec(1, 1, vec);
 
     toodee.insert_row(1, IteratorWithWrongLength());
 

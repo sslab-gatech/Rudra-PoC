@@ -4,6 +4,6 @@ version = "2.0.0"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
-bug_class = "InconsistencyAmplification"
+bug_class = "HigherOrderInvariant"
 reason = "experimetal"
 location = "src/codec.rs:578:5: 605:6"

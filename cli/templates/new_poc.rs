@@ -9,7 +9,7 @@ version = "{{ version }}"
 [[bugs]]
 # UnsafeDestructor, SendSyncVariance, UnsafeDataflow
 analyzer = "Manual"
-# SendSyncVariance, UninitExposure, InconsistencyAmplification, PanicSafety
+# SendSyncVariance, UninitExposure, HigherOrderInvariant, PanicSafety
 bug_class = "Other"
 # `location` field from Rudra report or empty if Manual.
 rudra_report_locations = []

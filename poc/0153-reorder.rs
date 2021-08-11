@@ -12,7 +12,7 @@ rustsec_id = "RUSTSEC-2021-0050"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
-bug_class = "InconsistencyAmplification"
+bug_class = "HigherOrderInvariant"
 rudra_report_locations = ["src/lib.rs:45:1: 57:2"]
 ```
 !*/
@@ -24,10 +24,14 @@ struct IteratorWithWrongLength();
 
 impl Iterator for IteratorWithWrongLength {
     type Item = u32;
-    fn next(&mut self) -> Option<Self::Item> { None }
+    fn next(&mut self) -> Option<Self::Item> {
+        None
+    }
 }
 impl ExactSizeIterator for IteratorWithWrongLength {
-    fn len(&self) -> usize { 1024 }
+    fn len(&self) -> usize {
+        1024
+    }
 }
 
 fn main() {

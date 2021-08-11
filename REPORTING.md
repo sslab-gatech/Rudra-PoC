@@ -76,7 +76,7 @@ Uses [Array of Tables](https://toml.io/en/v1.0.0#array-of-tables) in TOML format
   - When the analyzer is "Manual" - Which analyzer guided you to audit this crate?
   - When the analyzer is not "Manual" - This value must be "Manual" if exists. The bug is in the location reported by the primary analyzer, but it didn't match the exact pattern the analyzer was looking for and required additional manual auditing.
 - **bug_class**: (string) The bug class.
-  - Example: `["SendSyncVariance", "UninitExposure", "InconsistencyAmplification", "PanicSafety", "Other"]`
+  - Example: `["SendSyncVariance", "UninitExposure", "HigherOrderInvariant", "PanicSafety", "Other"]`
 - **bug_count**: (optional integer) Default to 1, number of bugs that correspond to this pattern.
 - **rudra_report_locations**: (string array) The location of the bug in the `indexed_version`
 
@@ -98,7 +98,7 @@ Uses [Array of Tables](https://toml.io/en/v1.0.0#array-of-tables) in TOML format
 - **analyzer**: (string) The name of the analyzer that found the bug. It should match the corresponding implementation in Rudra.
   - "Manual" analyzer is not allowed
 - **bug_class**: (string) The bug class.
-  - Example: `["SendSyncVariance", "UninitExposure", "InconsistencyAmplification", "PanicSafety", "Other"]`
+  - Example: `["SendSyncVariance", "UninitExposure", "HigherOrderInvariant", "PanicSafety", "Other"]`
 - **reason**: `["internal", "experimental", "unobservable", "independently fixed", "wasm only"]`
 - **location**: (string) The location of the bug in the `indexed_version`
 

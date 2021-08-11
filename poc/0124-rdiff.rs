@@ -11,7 +11,7 @@ rustsec_url = "https://github.com/RustSec/advisory-db/pull/862"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
-bug_class = "InconsistencyAmplification"
+bug_class = "HigherOrderInvariant"
 rudra_report_locations = ["src/window.rs:8:5: 27:6"]
 ```
 !*/

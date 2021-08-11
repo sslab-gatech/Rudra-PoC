@@ -12,7 +12,7 @@ rustsec_id = "RUSTSEC-2021-0048"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
-bug_class = "InconsistencyAmplification"
+bug_class = "HigherOrderInvariant"
 rudra_report_locations = ["src/lib.rs:896:5: 920:6"]
 ```
 !*/
@@ -25,7 +25,9 @@ use stackvector::StackVec;
 struct IncorrectIterator(u32);
 
 impl IncorrectIterator {
-    pub fn new() -> Self { IncorrectIterator(0) }
+    pub fn new() -> Self {
+        IncorrectIterator(0)
+    }
 }
 
 impl Iterator for IncorrectIterator {
@@ -50,7 +52,7 @@ impl Iterator for IncorrectIterator {
 
 fn main() {
     let mut stack_vec = StackVec::<[u8; 4]>::new();
-    let i : i32 = 42;
+    let i: i32 = 42;
 
     // Causes a stack overflow overwriting i.
     stack_vec.extend(IncorrectIterator::new());

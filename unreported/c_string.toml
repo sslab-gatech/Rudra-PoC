@@ -4,6 +4,6 @@ version = "0.7.1-obsolete"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
-bug_class = "InconsistencyAmplification"
+bug_class = "HigherOrderInvariant"
 reason = "experimental"
 location = "src/c_str.rs:316:5: 393:6"

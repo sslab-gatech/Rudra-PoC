@@ -11,7 +11,7 @@ issue_date = 2021-01-19
 [[bugs]]
 analyzer = "UnsafeDataflow"
 guide = "Manual"
-bug_class = "InconsistencyAmplification"
+bug_class = "HigherOrderInvariant"
 rudra_report_locations = ["src/rr_iterator.rs:189:5: 254:6"]
 ```
 !*/

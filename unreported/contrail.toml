@@ -4,36 +4,36 @@ version = "0.3.0"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
-bug_class = "InconsistencyAmplification"
+bug_class = "HigherOrderInvariant"
 reason = "experimental"
 location = "src/mem.rs:243:5: 262:6"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
-bug_class = "InconsistencyAmplification"
+bug_class = "HigherOrderInvariant"
 reason = "experimental"
 location = "src/mem.rs:278:5: 286:6"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
-bug_class = "InconsistencyAmplification"
+bug_class = "HigherOrderInvariant"
 reason = "experimental"
 location = "src/mem.rs:303:5: 311:6"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
-bug_class = "InconsistencyAmplification"
+bug_class = "HigherOrderInvariant"
 reason = "experimental"
 location = "src/mem.rs:406:5: 432:6"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
-bug_class = "InconsistencyAmplification"
+bug_class = "HigherOrderInvariant"
 reason = "experimental"
 location = "src/mem.rs:496:5: 506:6"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
-bug_class = "InconsistencyAmplification"
+bug_class = "HigherOrderInvariant"
 reason = "experimental"
 location = "src/mem.rs:529:5: 539:6"

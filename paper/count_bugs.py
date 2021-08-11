@@ -50,7 +50,7 @@ def main():
     send_sync.bugs["SendSyncVariance"] = 1
 
     unsafe_dataflow.crate_set.add("std")
-    unsafe_dataflow.bugs["InconsistencyAmplification"] = 2
+    unsafe_dataflow.bugs["HigherOrderInvariant"] = 2
 
     for (poc_id, poc_metadata) in poc_metadata.items():
         if 'issue_date' not in poc_metadata['report']:
@@ -210,7 +210,7 @@ Paste this in `data/count_bugs.tex`:
         len(manual.rustsec_id_set),
         manual.cve_count,
         #
-        unsafe_dataflow.bugs["InconsistencyAmplification"],
+        unsafe_dataflow.bugs["HigherOrderInvariant"],
         unsafe_dataflow.bugs["UninitExposure"],
         unsafe_dataflow.bugs["PanicSafety"],
         unsafe_dataflow.bugs["Other"],

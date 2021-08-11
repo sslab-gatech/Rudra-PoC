@@ -13,7 +13,7 @@ rustsec_id = "RUSTSEC-2020-0037"
 [[bugs]]
 analyzer = "Manual"
 guide = "UnsafeDestructor"
-bug_class = "InconsistencyAmplification"
+bug_class = "HigherOrderInvariant"
 rudra_report_locations = []
 ```
 !*/
