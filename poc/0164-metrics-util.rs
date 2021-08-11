@@ -2,7 +2,7 @@
 ```rudra-poc
 [target]
 crate = "metrics-util"
-version = "0.6.2"
+version = "0.3.1"
 
 [report]
 issue_url = "https://github.com/metrics-rs/metrics/issues/190"
@@ -57,7 +57,7 @@ fn main() {
         for cell in arr.iter() {
             loop {
                 if let RefOrInt::Ref(addr) = cell.get() {
-                    if addr as *const u64  == &SOME_INT as *const u64 {
+                    if addr as *const u64 == &SOME_INT as *const u64 {
                         continue;
                     }
                     println!("Pointer is now {:p}", addr);
