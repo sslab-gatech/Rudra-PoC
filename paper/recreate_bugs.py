@@ -77,14 +77,15 @@ def process(poc):
         new_env['CARGO_HOME'] = str(CARGO_HOME_PATH)
 
     print(f"Start running Rudra for {crate_and_version}")
-    try:
-        subprocess.check_call(
-            ['cargo', 'rudra', '-Zno-index-update', '--locked', '-j', '1'],
-            cwd=crate_folder, env=new_env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
-        )
-    except subprocess.CalledProcessError:
+    result = subprocess.run(
+        ['cargo', 'rudra', '-Zno-index-update', '--locked', '-j', '1'],
+        cwd=crate_folder, env=new_env, capture_output=True
+    )
+    if result.returncode != 0:
         print('=============================================================')
         print(f'ERROR: Cargo rudra returned non-zero return value for {crate_and_version}')
+        print(f"stdout {crate_and_version}: {result.stdout}")
+        print(f"stderr {crate_and_version}: {result.stderr}")
         return
 
     bug_locations = set()

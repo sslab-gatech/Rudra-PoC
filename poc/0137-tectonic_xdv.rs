@@ -2,7 +2,7 @@
 ```rudra-poc
 [target]
 crate = "tectonic_xdv"
-version = "0.1.11"
+version = "0.1.8"
 
 [report]
 issue_url = "https://github.com/tectonic-typesetting/tectonic/issues/752"
