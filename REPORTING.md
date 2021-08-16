@@ -74,7 +74,8 @@ Uses [Array of Tables](https://toml.io/en/v1.0.0#array-of-tables) in TOML format
   - Example: `["Manual", "UnsafeDestructor", "SendSyncVariance", "UnsafeDataflow"]`
 - **guide**: (optional string)
   - When the analyzer is "Manual" - Which analyzer guided you to audit this crate?
-  - When the analyzer is not "Manual" - This value must be "Manual" if exists. The bug is in the location reported by the primary analyzer, but it didn't match the exact pattern the analyzer was looking for and required additional manual auditing.
+  - When the analyzer is not "Manual" - This value must be "Manual" if exists. The bug is in the location reported by the primary analyzer,
+    but it requires additional steps to trigger (reasoning on buffer length, pointer alignment, etc.).
 - **bug_class**: (string) The bug class.
   - Example: `["SendSyncVariance", "UninitExposure", "HigherOrderInvariant", "PanicSafety", "Other"]`
 - **bug_count**: (optional integer) Default to 1, number of bugs that correspond to this pattern.

@@ -4,8 +4,8 @@ Usage recreate_bugs.py [optional_crate_name]
 
 Prerequisites:
 
-- `cargo install cargo-download`
-- Have `cargo-rudra` in PATH.
+- `rudra:latest` image exists.
+- Have `docker-cargo-rudra` in PATH.
 """
 from common import *
 
@@ -75,10 +75,11 @@ def process(poc):
     new_env['RUSTUP_TOOLCHAIN'] = TOOLCHAIN_VERSION
     if CARGO_HOME_PATH is not None:
         new_env['CARGO_HOME'] = str(CARGO_HOME_PATH)
+    new_env['CARGO_ARGS'] = "--locked -j 1"
 
     print(f"Start running Rudra for {crate_and_version}")
     result = subprocess.run(
-        ['cargo', 'rudra', '-Zno-index-update', '--locked', '-j', '1'],
+        ['docker-cargo-rudra', str(crate_folder)],
         cwd=crate_folder, env=new_env, capture_output=True
     )
     if result.returncode != 0:
