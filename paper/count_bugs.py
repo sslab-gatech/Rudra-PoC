@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from common import *
 from collections import defaultdict
+import sys
 
 
 class BugCounter:
@@ -24,6 +25,8 @@ class BugCounter:
 
 
 def main():
+    simple = len(sys.argv) > 1 and sys.argv[1] == "--simple"
+
     rustsec_metadata = get_rustsec_metadata()
     poc_metadata = get_poc_metadata()
 
@@ -54,7 +57,8 @@ def main():
 
     for (poc_id, poc_metadata) in poc_metadata.items():
         if 'issue_date' not in poc_metadata['report']:
-            print(f"Warning: PoC {poc_id} is not reported")
+            if not simple:
+                print(f"Warning: PoC {poc_id} is not reported")
             continue
 
         crate_name = poc_metadata['target']['crate']
@@ -134,15 +138,6 @@ def main():
                         manual.cve_count += 1
 
 
-    print(f"Not yet reported PoC: {rustsec_backlog}")
-    for (year, count) in backlog_by_year.items():
-        print(f"  {year}: {count}")
-
-    print(f"Reported PoC: {rustsec_reported}")
-    for (year, count) in reported_by_year.items():
-        print(f"  {year}: {count}")
-
-
     print("UnsafeDataflow")
     print("  " + str(unsafe_dataflow))
     
@@ -151,6 +146,22 @@ def main():
     
     print("Manual")
     print("  " + str(manual))
+
+    if simple:
+        return
+
+
+    # Some bug reports are pending because there is no fix available for them,
+    # i.e., they are waiting for either the maintainer’s fix
+    # or an RFC in the standard library.
+    print(f"Not yet reported PoC: {rustsec_backlog}")
+    for (year, count) in backlog_by_year.items():
+        print(f"  {year}: {count}")
+
+    print(f"Reported PoC: {rustsec_reported}")
+    for (year, count) in reported_by_year.items():
+        print(f"  {year}: {count}")
+
 
     print("""
 Paste this in `data/count_bugs.tex`:
