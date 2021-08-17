@@ -298,9 +298,20 @@ print(crate_stat["status_acc"])
 
 one_ms = datetime.timedelta(milliseconds=1)
 
-total_high = 0
-total_med = 0
-total_low = 0
+total_count = {
+    AnalyzerField.SPAN_HIGH: 0,
+    AnalyzerField.SPAN_MED: 0,
+    AnalyzerField.SPAN_LOW: 0,
+}
+
+analyzer_count = {}
+
+for analyzer in ANALYZERS:
+    analyzer_count[analyzer] = {
+        AnalyzerField.SPAN_HIGH: 0,
+        AnalyzerField.SPAN_MED: 0,
+        AnalyzerField.SPAN_LOW: 0,
+    }
 
 # CSV export of successful crates
 with open(f"stat-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
@@ -338,11 +349,15 @@ with open(f"stat-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
                 crate_row.append(stat[analyzer][AnalyzerField.NUM_REPORTS])
                 crate_row.append(len(stat[analyzer][AnalyzerField.SPAN_SET]))
 
-                total_high += len(stat[analyzer][AnalyzerField.SPAN_HIGH])
-                total_med += len(stat[analyzer][AnalyzerField.SPAN_MED])
-                total_low += len(stat[analyzer][AnalyzerField.SPAN_LOW])
+                total_count[AnalyzerField.SPAN_HIGH] += len(stat[analyzer][AnalyzerField.SPAN_HIGH])
+                total_count[AnalyzerField.SPAN_MED] += len(stat[analyzer][AnalyzerField.SPAN_MED])
+                total_count[AnalyzerField.SPAN_LOW] += len(stat[analyzer][AnalyzerField.SPAN_LOW])
 
                 if analyzer in SUBCATEGORY:
+                    analyzer_count[analyzer][AnalyzerField.SPAN_HIGH] += len(stat[analyzer][AnalyzerField.SPAN_HIGH])
+                    analyzer_count[analyzer][AnalyzerField.SPAN_MED] += len(stat[analyzer][AnalyzerField.SPAN_MED])
+                    analyzer_count[analyzer][AnalyzerField.SPAN_LOW] += len(stat[analyzer][AnalyzerField.SPAN_LOW])
+
                     for subcategory in SUBCATEGORY[analyzer]:
                         # crate_row.append(stat[subcategory][AnalyzerField.TIME] / one_ms)  # ms taken
                         crate_row.append(stat[subcategory][AnalyzerField.NUM_REPORTS])
@@ -361,6 +376,13 @@ with open(f"status-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
     for (i, name) in enumerate(crate_stat["names"]):
         csv_writer.writerow((name, crate_stat["status"][i]))
 
-print(f"Total reports on High: {total_high}")
-print(f"Total reports on Med: {total_high + total_med}")
-print(f"Total reports on Low: {total_high + total_med + total_low}")
+for analyzer in ANALYZERS:
+    print(f"Reports for analyzer {analyzer}")
+
+    high_count = analyzer_count[analyzer][AnalyzerField.SPAN_HIGH]
+    med_count = analyzer_count[analyzer][AnalyzerField.SPAN_MED]
+    low_count = analyzer_count[analyzer][AnalyzerField.SPAN_LOW]
+
+    print(f"  On high: {high_count}")
+    print(f"  On med: {high_count + med_count}")
+    print(f"  On low: {high_count + med_count + low_count}")
