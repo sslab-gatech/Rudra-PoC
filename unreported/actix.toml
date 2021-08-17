@@ -1,6 +1,6 @@
 [target]
 crate = "actix"
-version = "0.10.0"
+version = "0.10.0-alpha.3"
 
 [[bugs]]
 analyzer = "SendSyncVariance"

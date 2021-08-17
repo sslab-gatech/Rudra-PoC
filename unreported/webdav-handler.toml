@@ -1,6 +1,6 @@
 [target]
 crate = "webdav-handler"
-version = "0.2.0"
+version = "0.2.0-alpha.4"
 
 [[bugs]]
 analyzer = "SendSyncVariance"

@@ -46,6 +46,21 @@ def get_poc_metadata():
     return poc_metadata
 
 
+# Returns a dict of crate name -> Unreported metadata
+def get_unreported_metadata():
+    unreported_metadata = {}
+    unreported_dir = PROJECT_DIRECTORY / 'unreported'
+
+    for metadata_file in unreported_dir.iterdir():
+        crate_name = metadata_file.stem
+
+        with metadata_file.open() as f:
+            metadata = tomlkit.parse(f.read())
+            unreported_metadata[crate_name] = metadata
+
+    return unreported_metadata
+
+
 def get_bug_algorithm(poc_id, poc_metadata):
     return list(map(lambda bug: bug['analyzer'], poc_metadata[poc_id]['bugs']))
 

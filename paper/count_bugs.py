@@ -30,16 +30,16 @@ def main():
     rustsec_metadata = get_rustsec_metadata()
     poc_metadata = get_poc_metadata()
 
-    # 2 bugs from std and 1 from rustc not represented in the PoCs
-    # https://github.com/rust-lang/rust/issues/80894
+    # 2 bugs from std and 2 from rustc not represented in the PoCs
     # https://github.com/rust-lang/rust/issues/80335
+    # https://github.com/rust-lang/rust/issues/80894
     # https://github.com/rust-lang/rust/issues/81425
-    rustsec_reported = 3
+    rustsec_reported = 4
     rustsec_backlog = 0
 
     reported_by_year = defaultdict(int)
     reported_by_year[2020] = 1
-    reported_by_year[2021] = 2
+    reported_by_year[2021] = 3
     backlog_by_year = defaultdict(int)
 
     total_pending_bugs = 0
@@ -50,10 +50,11 @@ def main():
     unsafe_dataflow = BugCounter()
 
     send_sync.crate_set.add("rustc")
-    send_sync.bugs["SendSyncVariance"] = 1
+    send_sync.bugs["SendSyncVariance"] = 2
 
     unsafe_dataflow.crate_set.add("std")
     unsafe_dataflow.bugs["HigherOrderInvariant"] = 2
+    unsafe_dataflow.cve_count += 2
 
     for (poc_id, poc_metadata) in poc_metadata.items():
         if 'issue_date' not in poc_metadata['report']:
