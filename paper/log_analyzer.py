@@ -52,7 +52,6 @@ class AnalyzerField(str, Enum):
 class Status(Enum):
     OKAY = auto()
     EARLY_COMPILE_ERROR = auto()
-    TYPE_COMPILE_ERROR = auto()  # late compile error related to deep type
     LINT_COMPILE_ERROR = auto()  # late compile error related to linting
     EMPTY_TARGET = auto()
     METADATA_ERROR = auto()
@@ -141,9 +140,6 @@ for log_file_name in os.listdir(log_dir):
                     full_log = log_file.read()
                     if "native frameworks are only available on macOS targets" in full_log:
                         crate_status = Status.ONLY_MAC_OS_ERROR
-                    elif ("reached the type-length limit while instantiating" in full_log
-                        or "overflow representing the type" in full_log):
-                        crate_status = Status.TYPE_COMPILE_ERROR
                     elif "on by default" in full_log:
                         crate_status = Status.LINT_COMPILE_ERROR
                     elif "error: trait objects without an explicit `dyn` are deprecated" in full_log:
