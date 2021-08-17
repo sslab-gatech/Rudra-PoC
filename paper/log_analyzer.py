@@ -8,7 +8,6 @@ from enum import Enum, auto
 
 # The order here should exactly match the actual analysis order of Rudra
 ANALYZERS = [
-    "UnsafeDestructor",
     "SendSyncVariance",
     "UnsafeDataflow",
 ]
@@ -46,6 +45,9 @@ class AnalyzerField(str, Enum):
     TIME = "time",
     NUM_REPORTS = "num_reports",
     SPAN_SET = "span_set",
+    SPAN_HIGH = "span_high",
+    SPAN_MED = "span_med",
+    SPAN_LOW = "span_low",
 
 class Status(Enum):
     OKAY = auto()
@@ -107,6 +109,9 @@ for log_file_name in os.listdir(log_dir):
             AnalyzerField.TIME: datetime.timedelta(),
             AnalyzerField.NUM_REPORTS: 0,
             AnalyzerField.SPAN_SET: set(),
+            AnalyzerField.SPAN_HIGH: set(),
+            AnalyzerField.SPAN_MED: set(),
+            AnalyzerField.SPAN_LOW: set(),
         }
 
         if analyzer in SUBCATEGORY:
@@ -115,6 +120,9 @@ for log_file_name in os.listdir(log_dir):
                     AnalyzerField.TIME: datetime.timedelta(),
                     AnalyzerField.NUM_REPORTS: 0,
                     AnalyzerField.SPAN_SET: set(),
+                    AnalyzerField.SPAN_HIGH: set(),
+                    AnalyzerField.SPAN_MED: set(),
+                    AnalyzerField.SPAN_LOW: set(),
                 }
 
     with open(os.path.join(log_dir, log_file_name)) as log_file:
@@ -155,7 +163,8 @@ for log_file_name in os.listdir(log_dir):
                 if idx != -1:
                     # target analysis started
                     target_name = line[idx + len(TARGET_START_PREFIX):-1].replace(":", "-")
-                    report_file_name = f"report-{crate_name}-{target_name}"
+                    package_name = line[idx + len(TARGET_START_PREFIX):-1].split(":")[1]
+                    report_file_name = f"report-{crate_name}-{target_name}-{package_name}"
                     analyzer_idx = -1
                     target_stat = {}
 
@@ -203,6 +212,9 @@ for log_file_name in os.listdir(log_dir):
                         # Report counting is done later
                         target_stat[analyzer][AnalyzerField.NUM_REPORTS] = 0
                         target_stat[analyzer][AnalyzerField.SPAN_SET] = set()
+                        target_stat[analyzer][AnalyzerField.SPAN_HIGH] = set()
+                        target_stat[analyzer][AnalyzerField.SPAN_MED] = set()
+                        target_stat[analyzer][AnalyzerField.SPAN_LOW] = set()
 
                         # Initialize metadata for analyzer subcategories
                         if analyzer in SUBCATEGORY:
@@ -211,7 +223,10 @@ for log_file_name in os.listdir(log_dir):
                                 target_stat[subcategory] = {
                                     AnalyzerField.TIME: datetime.timedelta(),
                                     AnalyzerField.NUM_REPORTS: 0,
-                                    AnalyzerField.SPAN_SET: set()
+                                    AnalyzerField.SPAN_SET: set(),
+                                    AnalyzerField.SPAN_HIGH: set(),
+                                    AnalyzerField.SPAN_MED: set(),
+                                    AnalyzerField.SPAN_LOW: set(),
                                 }
 
                     if "Rudra finished" in line:
@@ -224,15 +239,27 @@ for log_file_name in os.listdir(log_dir):
                                 # match this with Rudra implementation
                                 report_file_str = report_file.read().replace("\t", "\\t").replace("\u001B", "\\u001B")
                                 report_dict = tomlkit.loads(report_file_str)
+
                             for report in report_dict["reports"]:
                                 analyzer = report['analyzer'].split(':')[0]
+                                
+                                assert report["level"] in ["Error", "Warning", "Info"], f"Unknown report level {report['level']}"
+                                if report["level"] == "Error":
+                                    report_set_field = AnalyzerField.SPAN_HIGH
+                                elif report["level"] == "Warning":
+                                    report_set_field = AnalyzerField.SPAN_MED
+                                elif report["level"] == "Info":
+                                    report_set_field = AnalyzerField.SPAN_LOW
+
                                 target_stat[analyzer][AnalyzerField.NUM_REPORTS] += 1
                                 target_stat[analyzer][AnalyzerField.SPAN_SET].add(report["location"])
+                                target_stat[analyzer][report_set_field].add(report["location"])
 
                                 if analyzer in SUBCATEGORY:
                                     for subcategory in filter(lambda x: x in report["analyzer"], SUBCATEGORY[analyzer]):
                                         target_stat[subcategory][AnalyzerField.NUM_REPORTS] += 1
                                         target_stat[subcategory][AnalyzerField.SPAN_SET].add(report["location"])
+                                        target_stat[subcategory][report_set_field].add(report["location"])
 
                         # Accumulate target stat to crate stat
                         if crate_status == Status.OKAY:
@@ -271,6 +298,10 @@ print(crate_stat["status_acc"])
 
 one_ms = datetime.timedelta(milliseconds=1)
 
+total_high = 0
+total_med = 0
+total_low = 0
+
 # CSV export of successful crates
 with open(f"stat-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
     csv_writer = csv.writer(csvfile, quoting=csv.QUOTE_MINIMAL)
@@ -307,6 +338,10 @@ with open(f"stat-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
                 crate_row.append(stat[analyzer][AnalyzerField.NUM_REPORTS])
                 crate_row.append(len(stat[analyzer][AnalyzerField.SPAN_SET]))
 
+                total_high += len(stat[analyzer][AnalyzerField.SPAN_HIGH])
+                total_med += len(stat[analyzer][AnalyzerField.SPAN_MED])
+                total_low += len(stat[analyzer][AnalyzerField.SPAN_LOW])
+
                 if analyzer in SUBCATEGORY:
                     for subcategory in SUBCATEGORY[analyzer]:
                         # crate_row.append(stat[subcategory][AnalyzerField.TIME] / one_ms)  # ms taken
@@ -325,3 +360,7 @@ with open(f"status-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
     csv_writer.writerow(("name", "status"))
     for (i, name) in enumerate(crate_stat["names"]):
         csv_writer.writerow((name, crate_stat["status"][i]))
+
+print(f"Total reports on High: {total_high}")
+print(f"Total reports on Med: {total_high + total_med}")
+print(f"Total reports on Low: {total_high + total_med + total_low}")
