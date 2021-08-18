@@ -1,0 +1,181 @@
+[[reports]]
+level = 'Error'
+analyzer = 'SendSyncVariance:/PhantomSendForSend/NaiveSendForSend/RelaxSend'
+description = 'Suspicious impl of `Send` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/sync/rwlock.rs:89:1: 89:52'
+source = '''impl<T: ?Sized> !Send for RwLockReadGuard<'_, T> {}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'SendSyncVariance:/NaiveSyncForSync/RelaxSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/sync/mpsc/mpsc_queue.rs:49:1: 49:42'
+source = 'unsafe impl<T: Send> Sync for Queue<T> {}'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'SendSyncVariance:/ApiSyncforSync/NaiveSyncForSync/RelaxSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/lazy.rs:451:1: 451:79'
+source = 'unsafe impl<T, F: Send> Sync for SyncLazy<T, F> where SyncOnceCell<T>: Sync {}'
+
+[[reports]]
+level = 'Error'
+analyzer = 'SendSyncVariance:/PhantomSendForSend/NaiveSendForSend/RelaxSend'
+description = 'Suspicious impl of `Send` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/sys_common/remutex.rs:42:1: 42:56'
+source = '''impl<T> !marker::Send for ReentrantMutexGuard<'_, T> {}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'SendSyncVariance:/ApiSyncforSync/NaiveSyncForSync/RelaxSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/sys_common/remutex.rs:18:1: 18:51'
+source = 'unsafe impl<T: Send> Sync for ReentrantMutex<T> {}'
+
+[[reports]]
+level = 'Error'
+analyzer = 'SendSyncVariance:/PhantomSendForSend/NaiveSendForSend/RelaxSend'
+description = 'Suspicious impl of `Send` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/sync/rwlock.rs:110:1: 110:53'
+source = '''impl<T: ?Sized> !Send for RwLockWriteGuard<'_, T> {}'''
+
+[[reports]]
+level = 'Warning'
+analyzer = 'SendSyncVariance:/NaiveSyncForSync/RelaxSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/sync/mpsc/sync.rs:49:1: 49:43'
+source = 'unsafe impl<T: Send> Sync for Packet<T> {}'
+
+[[reports]]
+level = 'Error'
+analyzer = 'SendSyncVariance:/ApiSendForSync/NaiveSyncForSync/RelaxSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/sync/mpsc/mod.rs:317:1: 317:33'
+source = 'impl<T> !Sync for Receiver<T> {}'
+
+[[reports]]
+level = 'Info'
+analyzer = 'SendSyncVariance:/NaiveSyncForSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/thread/local.rs:487:5: 487:38'
+source = 'unsafe impl<T> Sync for Key<T> {}'
+
+[[reports]]
+level = 'Error'
+analyzer = 'SendSyncVariance:/PhantomSendForSend/NaiveSendForSend/RelaxSend'
+description = 'Suspicious impl of `Send` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/thread/mod.rs:1387:1: 1387:41'
+source = 'unsafe impl<T> Send for JoinHandle<T> {}'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'SendSyncVariance:/NaiveSyncForSync/RelaxSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/thread/mod.rs:1389:1: 1389:41'
+source = 'unsafe impl<T> Sync for JoinHandle<T> {}'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'SendSyncVariance:/NaiveSyncForSync/RelaxSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/sync/mutex.rs:181:1: 181:51'
+source = 'unsafe impl<T: ?Sized + Send> Sync for Mutex<T> {}'
+
+[[reports]]
+level = 'Error'
+analyzer = 'SendSyncVariance:/ApiSendForSync/NaiveSyncForSync/RelaxSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/sync/mpsc/mod.rs:470:1: 470:31'
+source = 'impl<T> !Sync for Sender<T> {}'
+
+[[reports]]
+level = 'Info'
+analyzer = 'SendSyncVariance:/NaiveSyncForSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/sync/mpsc/spsc_queue.rs:56:1: 56:80'
+source = 'unsafe impl<T: Send, P: Send + Sync, C: Send + Sync> Sync for Queue<T, P, C> {}'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'SendSyncVariance:/NaiveSyncForSync/RelaxSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/io/lazy.rs:18:1: 18:35'
+source = 'unsafe impl<T> Sync for Lazy<T> {}'
+
+[[reports]]
+level = 'Error'
+analyzer = 'SendSyncVariance:/PhantomSendForSend/NaiveSendForSend/RelaxSend'
+description = 'Suspicious impl of `Send` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/sync/mutex.rs:202:1: 202:47'
+source = '''impl<T: ?Sized> !Send for MutexGuard<'_, T> {}'''
+
+[[reports]]
+level = 'Error'
+analyzer = 'UnsafeDataflow:/VecSetLen'
+description = 'Potential unsafe dataflow issue in `io::read_to_end_with_reservation`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/io/mod.rs:354:1: 399:2'
+source = """
+fn read_to_end_with_reservation<R, F>(
+    r: &mut R,
+    buf: &mut Vec<u8>,
+    mut reservation_size: F,
+) -> Result<usize>
+where
+    R: Read + ?Sized,
+    F: FnMut(&R) -> usize,
+{
+    let start_len = buf.len();
+    let mut g = Guard { len: buf.len(), buf };
+    let ret;
+    loop {
+        if g.len == g.buf.len() {
+            unsafe {
+                // FIXME(danielhenrymantilla): #42788
+                //
+                //   - This creates a (mut) reference to a slice of
+                //     _uninitialized_ integers, which is **undefined behavior**
+                //
+                //   - Only the standard library gets to soundly \"ignore\" this,
+                //     based on its privileged knowledge of unstable rustc
+                //     internals;
+                g.buf.reserve([0m[36mreservation_size(r)[0m);
+                let capacity = g.buf.capacity();
+                [0m[31mg.buf.set_len(capacity)[0m;
+                r.initializer().initialize(&mut g.buf[g.len..]);
+            }
+        }
+
+        match [0m[36mr.read(&mut g.buf[g.len..])[0m {
+            Ok(0) => {
+                ret = Ok(g.len - start_len);
+                break;
+            }
+            Ok(n) => g.len += n,
+            Err(ref e) if e.kind() == ErrorKind::Interrupted => {}
+            Err(e) => {
+                ret = Err(e);
+                break;
+            }
+        }
+    }
+
+    ret
+}
+[0m"""
+
+[[reports]]
+level = 'Error'
+analyzer = 'UnsafeDataflow:/VecSetLen'
+description = 'Potential unsafe dataflow issue in `io::buffered::BufReader::<R>::with_capacity`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/io/buffered.rs:98:5: 105:6'
+source = """
+pub fn with_capacity(capacity: usize, inner: R) -> BufReader<R> {
+        unsafe {
+            let mut buffer = Vec::with_capacity(capacity);
+            [0m[31mbuffer.set_len(capacity)[0m;
+            [0m[36minner.initializer()[0m.initialize(&mut buffer);
+            BufReader { inner, buf: buffer.into_boxed_slice(), pos: 0, cap: 0 }
+        }
+    }
+[0m"""

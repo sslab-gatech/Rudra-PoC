@@ -12,7 +12,6 @@ from common import *
 import os
 import multiprocessing
 import pathlib
-import re
 import shutil
 import subprocess
 import sys
@@ -31,10 +30,6 @@ RECREATE_DIRECTORY.mkdir(exist_ok=True)
 
 # Match this with Rudra
 TOOLCHAIN_VERSION = "nightly-2020-08-26"
-
-ansi_escape_8bit = re.compile(
-    r'(?:\x1B[@-Z\\-_]|[\x80-\x9A\x9C-\x9F]|(?:\x1B\[|\x9B)[0-?]*[ -/]*[@-~])'
-)
 
 if "RUDRA_RUNNER_HOME" in os.environ:
     RUNNER_HOME_PATH = pathlib.Path(os.environ["RUDRA_RUNNER_HOME"])
@@ -131,7 +126,7 @@ def process(poc):
             report_content = f.read()
             # tomlkit doesn't like the ANSI escape codes in the UD reports.
             # strip them out before parsing.
-            report_content = ansi_escape_8bit.sub('', report_content)
+            report_content = ansi_escape_8bit.sub('', report_content).replace("\t", "\\t")
 
             report = tomlkit.parse(report_content)
             for report in report['reports']:

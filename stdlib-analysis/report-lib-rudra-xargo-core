@@ -1,0 +1,1025 @@
+[[reports]]
+level = 'Error'
+analyzer = 'SendSyncVariance:/PhantomSendForSend/NaiveSendForSend/RelaxSend'
+description = 'Suspicious impl of `Send` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/ptr/non_null.rs:50:1: 50:40'
+source = 'impl<T: ?Sized> !Send for NonNull<T> {}'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'SendSyncVariance:/NaiveSyncForSync/RelaxSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/ptr/non_null.rs:55:1: 55:40'
+source = 'impl<T: ?Sized> !Sync for NonNull<T> {}'
+
+[[reports]]
+level = 'Error'
+analyzer = 'SendSyncVariance:/PhantomSendForSend/NaiveSendForSend/RelaxSend'
+description = 'Suspicious impl of `Send` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/sync/atomic.rs:207:1: 207:40'
+source = 'unsafe impl<T> Send for AtomicPtr<T> {}'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'SendSyncVariance:/NaiveSyncForSync/RelaxSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/sync/atomic.rs:210:1: 210:40'
+source = 'unsafe impl<T> Sync for AtomicPtr<T> {}'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'SendSyncVariance:/ApiSyncforSync/NaiveSyncForSync/RelaxSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/cell.rs:1051:1: 1051:40'
+source = 'impl<T: ?Sized> !Sync for RefCell<T> {}'
+
+[[reports]]
+level = 'Info'
+analyzer = 'SendSyncVariance:/NaiveSendForSend'
+description = 'Suspicious impl of `Send` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/sources.rs:211:1: 211:36'
+source = 'unsafe impl<T> Send for Empty<T> {}'
+
+[[reports]]
+level = 'Info'
+analyzer = 'SendSyncVariance:/NaiveSyncForSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/iter/sources.rs:213:1: 213:36'
+source = 'unsafe impl<T> Sync for Empty<T> {}'
+
+[[reports]]
+level = 'Error'
+analyzer = 'SendSyncVariance:/ApiSendForSync/NaiveSyncForSync/RelaxSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/cell.rs:1599:1: 1599:43'
+source = 'impl<T: ?Sized> !Sync for UnsafeCell<T> {}'
+
+[[reports]]
+level = 'Error'
+analyzer = 'SendSyncVariance:/ApiSendForSync/NaiveSyncForSync/RelaxSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/cell.rs:240:1: 240:37'
+source = 'impl<T: ?Sized> !Sync for Cell<T> {}'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/ReadFlow/CopyFlow/SliceUnchecked'
+description = 'Potential unsafe dataflow issue in `slice::sort::shift_head`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/slice/sort.rs:33:1: 75:2'
+source = """
+fn shift_head<T, F>(v: &mut [T], is_less: &mut F)
+where
+    F: FnMut(&T, &T) -> bool,
+{
+    let len = v.len();
+    // SAFETY: The unsafe operations below involves indexing without a bound check (`get_unchecked` and `get_unchecked_mut`)
+    // and copying memory (`ptr::copy_nonoverlapping`).
+    //
+    // a. Indexing:
+    //  1. We checked the size of the array to >=2.
+    //  2. All the indexing that we will do is always between {0 <= index < len} at most.
+    //
+    // b. Memory copying
+    //  1. We are obtaining pointers to references which are guaranteed to be valid.
+    //  2. They cannot overlap because we obtain pointers to difference indices of the slice.
+    //     Namely, `i` and `i-1`.
+    //  3. If the slice is properly aligned, the elements are properly aligned.
+    //     It is the caller's responsibility to make sure the slice is properly aligned.
+    //
+    // See comments below for further detail.
+    unsafe {
+        // If the first two elements are out-of-order...
+        if len >= 2 && [0m[36mis_less([0m[33mv.get_unchecked(1)[0m[36m, [0m[33mv.get_unchecked(0)[0m[36m)[0m {
+            // Read the first element into a stack-allocated variable. If a following comparison
+            // operation panics, `hole` will get dropped and automatically write the element back
+            // into the slice.
+            let mut tmp = mem::ManuallyDrop::new([0m[31mptr::read([0m[33mv.get_unchecked(0)[0m[31m)[0m);
+            let mut hole = CopyOnDrop { src: &mut *tmp, dest: [0m[33mv.get_unchecked_mut(1)[0m };
+            [0m[31mptr::copy_nonoverlapping([0m[33mv.get_unchecked(1)[0m[31m, [0m[33mv.get_unchecked_mut(0)[0m[31m, 1)[0m;
+
+            for i in 2..len {
+                if ![0m[36mis_less([0m[33mv.get_unchecked(i)[0m[36m, &*tmp)[0m {
+                    break;
+                }
+
+                // Move `i`-th element one place to the left, thus shifting the hole to the right.
+                [0m[31mptr::copy_nonoverlapping([0m[33mv.get_unchecked(i)[0m[31m, [0m[33mv.get_unchecked_mut(i - 1)[0m[31m, 1)[0m;
+                hole.dest = [0m[33mv.get_unchecked_mut(i)[0m;
+            }
+            // `hole` gets dropped and thus copies `tmp` into the remaining hole in `v`.
+        }
+    }
+}
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/ReadFlow/CopyFlow/SliceUnchecked'
+description = 'Potential unsafe dataflow issue in `slice::sort::shift_tail`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/slice/sort.rs:78:1: 120:2'
+source = """
+fn shift_tail<T, F>(v: &mut [T], is_less: &mut F)
+where
+    F: FnMut(&T, &T) -> bool,
+{
+    let len = v.len();
+    // SAFETY: The unsafe operations below involves indexing without a bound check (`get_unchecked` and `get_unchecked_mut`)
+    // and copying memory (`ptr::copy_nonoverlapping`).
+    //
+    // a. Indexing:
+    //  1. We checked the size of the array to >= 2.
+    //  2. All the indexing that we will do is always between `0 <= index < len-1` at most.
+    //
+    // b. Memory copying
+    //  1. We are obtaining pointers to references which are guaranteed to be valid.
+    //  2. They cannot overlap because we obtain pointers to difference indices of the slice.
+    //     Namely, `i` and `i+1`.
+    //  3. If the slice is properly aligned, the elements are properly aligned.
+    //     It is the caller's responsibility to make sure the slice is properly aligned.
+    //
+    // See comments below for further detail.
+    unsafe {
+        // If the last two elements are out-of-order...
+        if len >= 2 && [0m[36mis_less([0m[33mv.get_unchecked(len - 1)[0m[36m, [0m[33mv.get_unchecked(len - 2)[0m[36m)[0m {
+            // Read the last element into a stack-allocated variable. If a following comparison
+            // operation panics, `hole` will get dropped and automatically write the element back
+            // into the slice.
+            let mut tmp = mem::ManuallyDrop::new([0m[31mptr::read([0m[33mv.get_unchecked(len - 1)[0m[31m)[0m);
+            let mut hole = CopyOnDrop { src: &mut *tmp, dest: [0m[33mv.get_unchecked_mut(len - 2)[0m };
+            [0m[31mptr::copy_nonoverlapping([0m[33mv.get_unchecked(len - 2)[0m[31m, [0m[33mv.get_unchecked_mut(len - 1)[0m[31m, 1)[0m;
+
+            for i in (0..len - 2).rev() {
+                if ![0m[36mis_less(&*tmp, [0m[33mv.get_unchecked(i)[0m[36m)[0m {
+                    break;
+                }
+
+                // Move `i`-th element one place to the right, thus shifting the hole to the left.
+                [0m[31mptr::copy_nonoverlapping([0m[33mv.get_unchecked(i)[0m[31m, [0m[33mv.get_unchecked_mut(i + 1)[0m[31m, 1)[0m;
+                hole.dest = [0m[33mv.get_unchecked_mut(i)[0m;
+            }
+            // `hole` gets dropped and thus copies `tmp` into the remaining hole in `v`.
+        }
+    }
+}
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceUnchecked'
+description = 'Potential unsafe dataflow issue in `slice::sort::partial_insertion_sort`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/slice/sort.rs:126:1: 169:2'
+source = """
+fn partial_insertion_sort<T, F>(v: &mut [T], is_less: &mut F) -> bool
+where
+    F: FnMut(&T, &T) -> bool,
+{
+    // Maximum number of adjacent out-of-order pairs that will get shifted.
+    const MAX_STEPS: usize = 5;
+    // If the slice is shorter than this, don't shift any elements.
+    const SHORTEST_SHIFTING: usize = 50;
+
+    let len = v.len();
+    let mut i = 1;
+
+    for _ in 0..MAX_STEPS {
+        // SAFETY: We already explicitly did the bound checking with `i < len`.
+        // All our subsequent indexing is only in the range `0 <= index < len`
+        unsafe {
+            // Find the next pair of adjacent out-of-order elements.
+            while i < len && ![0m[36mis_less([0m[33mv.get_unchecked(i)[0m[36m, [0m[33mv.get_unchecked(i - 1)[0m[36m)[0m {
+                i += 1;
+            }
+        }
+
+        // Are we done?
+        if i == len {
+            return true;
+        }
+
+        // Don't shift elements on short arrays, that has a performance cost.
+        if len < SHORTEST_SHIFTING {
+            return false;
+        }
+
+        // Swap the found pair of elements. This puts them in correct order.
+        v.swap(i - 1, i);
+
+        // Shift the smaller element to the left.
+        shift_tail(&mut v[..i], is_less);
+        // Shift the greater element to the right.
+        shift_head(&mut v[i..], is_less);
+    }
+
+    // Didn't manage to sort the slice in the limited number of steps.
+    false
+}
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/ReadFlow/CopyFlow'
+description = 'Potential unsafe dataflow issue in `slice::sort::partition_in_blocks`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/slice/sort.rs:230:1: 436:2'
+source = """
+fn partition_in_blocks<T, F>(v: &mut [T], pivot: &T, is_less: &mut F) -> usize
+where
+    F: FnMut(&T, &T) -> bool,
+{
+    // Number of elements in a typical block.
+    const BLOCK: usize = 128;
+
+    // The partitioning algorithm repeats the following steps until completion:
+    //
+    // 1. Trace a block from the left side to identify elements greater than or equal to the pivot.
+    // 2. Trace a block from the right side to identify elements smaller than the pivot.
+    // 3. Exchange the identified elements between the left and right side.
+    //
+    // We keep the following variables for a block of elements:
+    //
+    // 1. `block` - Number of elements in the block.
+    // 2. `start` - Start pointer into the `offsets` array.
+    // 3. `end` - End pointer into the `offsets` array.
+    // 4. `offsets - Indices of out-of-order elements within the block.
+
+    // The current block on the left side (from `l` to `l.add(block_l)`).
+    let mut l = v.as_mut_ptr();
+    let mut block_l = BLOCK;
+    let mut start_l = ptr::null_mut();
+    let mut end_l = ptr::null_mut();
+    let mut offsets_l = [MaybeUninit::<u8>::uninit(); BLOCK];
+
+    // The current block on the right side (from `r.sub(block_r)` to `r`).
+    // SAFETY: The documentation for .add() specifically mention that `vec.as_ptr().add(vec.len())` is always safe`
+    let mut r = unsafe { l.add(v.len()) };
+    let mut block_r = BLOCK;
+    let mut start_r = ptr::null_mut();
+    let mut end_r = ptr::null_mut();
+    let mut offsets_r = [MaybeUninit::<u8>::uninit(); BLOCK];
+
+    // FIXME: When we get VLAs, try creating one array of length `min(v.len(), 2 * BLOCK)` rather
+    // than two fixed-size arrays of length `BLOCK`. VLAs might be more cache-efficient.
+
+    // Returns the number of elements between pointers `l` (inclusive) and `r` (exclusive).
+    fn width<T>(l: *mut T, r: *mut T) -> usize {
+        assert!(mem::size_of::<T>() > 0);
+        (r as usize - l as usize) / mem::size_of::<T>()
+    }
+
+    loop {
+        // We are done with partitioning block-by-block when `l` and `r` get very close. Then we do
+        // some patch-up work in order to partition the remaining elements in between.
+        let is_done = width(l, r) <= 2 * BLOCK;
+
+        if is_done {
+            // Number of remaining elements (still not compared to the pivot).
+            let mut rem = width(l, r);
+            if start_l < end_l || start_r < end_r {
+                rem -= BLOCK;
+            }
+
+            // Adjust block sizes so that the left and right block don't overlap, but get perfectly
+            // aligned to cover the whole remaining gap.
+            if start_l < end_l {
+                block_r = rem;
+            } else if start_r < end_r {
+                block_l = rem;
+            } else {
+                block_l = rem / 2;
+                block_r = rem - block_l;
+            }
+            debug_assert!(block_l <= BLOCK && block_r <= BLOCK);
+            debug_assert!(width(l, r) == block_l + block_r);
+        }
+
+        if start_l == end_l {
+            // Trace `block_l` elements from the left side.
+            start_l = MaybeUninit::first_ptr_mut(&mut offsets_l);
+            end_l = MaybeUninit::first_ptr_mut(&mut offsets_l);
+            let mut elem = l;
+
+            for i in 0..block_l {
+                // SAFETY: The unsafety operations below involve the usage of the `offset`.
+                //         According to the conditions required by the function, we satisfy them because:
+                //         1. `offsets_l` is stack-allocated, and thus considered separate allocated object.
+                //         2. The function `is_less` returns a `bool`.
+                //            Casting a `bool` will never overflow `isize`.
+                //         3. We have guaranteed that `block_l` will be `<= BLOCK`.
+                //            Plus, `end_l` was initially set to the begin pointer of `offsets_` which was declared on the stack.
+                //            Thus, we know that even in the worst case (all invocations of `is_less` returns false) we will only be at most 1 byte pass the end.
+                //        Another unsafety operation here is dereferencing `elem`.
+                //        However, `elem` was initially the begin pointer to the slice which is always valid.
+                unsafe {
+                    // Branchless comparison.
+                    *end_l = i as u8;
+                    end_l = end_l.offset(![0m[36mis_less(&*elem, pivot)[0m as isize);
+                    elem = elem.offset(1);
+                }
+            }
+        }
+
+        if start_r == end_r {
+            // Trace `block_r` elements from the right side.
+            start_r = MaybeUninit::first_ptr_mut(&mut offsets_r);
+            end_r = MaybeUninit::first_ptr_mut(&mut offsets_r);
+            let mut elem = r;
+
+            for i in 0..block_r {
+                // SAFETY: The unsafety operations below involve the usage of the `offset`.
+                //         According to the conditions required by the function, we satisfy them because:
+                //         1. `offsets_r` is stack-allocated, and thus considered separate allocated object.
+                //         2. The function `is_less` returns a `bool`.
+                //            Casting a `bool` will never overflow `isize`.
+                //         3. We have guaranteed that `block_r` will be `<= BLOCK`.
+                //            Plus, `end_r` was initially set to the begin pointer of `offsets_` which was declared on the stack.
+                //            Thus, we know that even in the worst case (all invocations of `is_less` returns true) we will only be at most 1 byte pass the end.
+                //        Another unsafety operation here is dereferencing `elem`.
+                //        However, `elem` was initially `1 * sizeof(T)` past the end and we decrement it by `1 * sizeof(T)` before accessing it.
+                //        Plus, `block_r` was asserted to be less than `BLOCK` and `elem` will therefore at most be pointing to the beginning of the slice.
+                unsafe {
+                    // Branchless comparison.
+                    elem = elem.offset(-1);
+                    *end_r = i as u8;
+                    end_r = end_r.offset([0m[36mis_less(&*elem, pivot)[0m as isize);
+                }
+            }
+        }
+
+        // Number of out-of-order elements to swap between the left and right side.
+        let count = cmp::min(width(start_l, end_l), width(start_r, end_r));
+
+        if count > 0 {
+            macro_rules! left {
+                () => {
+                    l.offset(*start_l as isize)
+                };
+            }
+            macro_rules! right {
+                () => {
+                    r.offset(-(*start_r as isize) - 1)
+                };
+            }
+
+            // Instead of swapping one pair at the time, it is more efficient to perform a cyclic
+            // permutation. This is not strictly equivalent to swapping, but produces a similar
+            // result using fewer memory operations.
+            unsafe {
+                let tmp = [0m[31mptr::read(left!())[0m;
+                [0m[31mptr::copy_nonoverlapping(right!(), left!(), 1)[0m;
+
+                for _ in 1..count {
+                    start_l = start_l.offset(1);
+                    [0m[31mptr::copy_nonoverlapping(left!(), right!(), 1)[0m;
+                    start_r = start_r.offset(1);
+                    [0m[31mptr::copy_nonoverlapping(right!(), left!(), 1)[0m;
+                }
+
+                [0m[31mptr::copy_nonoverlapping(&tmp, right!(), 1)[0m;
+                mem::forget(tmp);
+                start_l = start_l.offset(1);
+                start_r = start_r.offset(1);
+            }
+        }
+
+        if start_l == end_l {
+            // All out-of-order elements in the left block were moved. Move to the next block.
+            l = unsafe { l.offset(block_l as isize) };
+        }
+
+        if start_r == end_r {
+            // All out-of-order elements in the right block were moved. Move to the previous block.
+            r = unsafe { r.offset(-(block_r as isize)) };
+        }
+
+        if is_done {
+            break;
+        }
+    }
+
+    // All that remains now is at most one block (either the left or the right) with out-of-order
+    // elements that need to be moved. Such remaining elements can be simply shifted to the end
+    // within their block.
+
+    if start_l < end_l {
+        // The left block remains.
+        // Move its remaining out-of-order elements to the far right.
+        debug_assert_eq!(width(l, r), block_l);
+        while start_l < end_l {
+            unsafe {
+                end_l = end_l.offset(-1);
+                ptr::swap(l.offset(*end_l as isize), r.offset(-1));
+                r = r.offset(-1);
+            }
+        }
+        width(v.as_mut_ptr(), r)
+    } else if start_r < end_r {
+        // The right block remains.
+        // Move its remaining out-of-order elements to the far left.
+        debug_assert_eq!(width(l, r), block_r);
+        while start_r < end_r {
+            unsafe {
+                end_r = end_r.offset(-1);
+                ptr::swap(l, r.offset(-(*end_r as isize) - 1));
+                l = l.offset(1);
+            }
+        }
+        width(v.as_mut_ptr(), l)
+    } else {
+        // Nothing else to do, we're done.
+        width(v.as_mut_ptr(), l)
+    }
+}
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/ReadFlow/SliceUnchecked'
+description = 'Potential unsafe dataflow issue in `slice::sort::partition`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/slice/sort.rs:445:1: 492:2'
+source = """
+fn partition<T, F>(v: &mut [T], pivot: usize, is_less: &mut F) -> (usize, bool)
+where
+    F: FnMut(&T, &T) -> bool,
+{
+    let (mid, was_partitioned) = {
+        // Place the pivot at the beginning of slice.
+        v.swap(0, pivot);
+        let (pivot, v) = v.split_at_mut(1);
+        let pivot = &mut pivot[0];
+
+        // Read the pivot into a stack-allocated variable for efficiency. If a following comparison
+        // operation panics, the pivot will be automatically written back into the slice.
+        let mut tmp = mem::ManuallyDrop::new(unsafe { [0m[31mptr::read(pivot)[0m });
+        let _pivot_guard = CopyOnDrop { src: &mut *tmp, dest: pivot };
+        let pivot = &*tmp;
+
+        // Find the first pair of out-of-order elements.
+        let mut l = 0;
+        let mut r = v.len();
+
+        // SAFETY: The unsafety below involves indexing an array.
+        // For the first one: We already do the bounds checking here with `l < r`.
+        // For the second one: We initially have `l == 0` and `r == v.len()` and we checked that `l < r` at every indexing operation.
+        //                     From here we know that `r` must be at least `r == l` which was shown to be valid from the first one.
+        unsafe {
+            // Find the first element greater than or equal to the pivot.
+            while l < r && [0m[36mis_less([0m[33mv.get_unchecked(l)[0m[36m, pivot)[0m {
+                l += 1;
+            }
+
+            // Find the last element smaller that the pivot.
+            while l < r && ![0m[36mis_less([0m[33mv.get_unchecked(r - 1)[0m[36m, pivot)[0m {
+                r -= 1;
+            }
+        }
+
+        (l + partition_in_blocks(&mut v[l..r], pivot, is_less), l >= r)
+
+        // `_pivot_guard` goes out of scope and writes the pivot (which is a stack-allocated
+        // variable) back into the slice where it originally was. This step is critical in ensuring
+        // safety!
+    };
+
+    // Place the pivot between the two partitions.
+    v.swap(0, mid);
+
+    (mid, was_partitioned)
+}
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/ReadFlow/SliceUnchecked'
+description = 'Potential unsafe dataflow issue in `slice::sort::partition_equal`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/slice/sort.rs:498:1: 550:2'
+source = """
+fn partition_equal<T, F>(v: &mut [T], pivot: usize, is_less: &mut F) -> usize
+where
+    F: FnMut(&T, &T) -> bool,
+{
+    // Place the pivot at the beginning of slice.
+    v.swap(0, pivot);
+    let (pivot, v) = v.split_at_mut(1);
+    let pivot = &mut pivot[0];
+
+    // Read the pivot into a stack-allocated variable for efficiency. If a following comparison
+    // operation panics, the pivot will be automatically written back into the slice.
+    // SAFETY: The pointer here is valid because it is obtained from a reference to a slice.
+    let mut tmp = mem::ManuallyDrop::new(unsafe { [0m[31mptr::read(pivot)[0m });
+    let _pivot_guard = CopyOnDrop { src: &mut *tmp, dest: pivot };
+    let pivot = &*tmp;
+
+    // Now partition the slice.
+    let mut l = 0;
+    let mut r = v.len();
+    loop {
+        // SAFETY: The unsafety below involves indexing an array.
+        // For the first one: We already do the bounds checking here with `l < r`.
+        // For the second one: We initially have `l == 0` and `r == v.len()` and we checked that `l < r` at every indexing operation.
+        //                     From here we know that `r` must be at least `r == l` which was shown to be valid from the first one.
+        unsafe {
+            // Find the first element greater than the pivot.
+            while l < r && ![0m[36mis_less(pivot, [0m[33mv.get_unchecked(l)[0m[36m)[0m {
+                l += 1;
+            }
+
+            // Find the last element equal to the pivot.
+            while l < r && [0m[36mis_less(pivot, [0m[33mv.get_unchecked(r - 1)[0m[36m)[0m {
+                r -= 1;
+            }
+
+            // Are we done?
+            if l >= r {
+                break;
+            }
+
+            // Swap the found pair of out-of-order elements.
+            r -= 1;
+            ptr::swap([0m[33mv.get_unchecked_mut(l)[0m, [0m[33mv.get_unchecked_mut(r)[0m);
+            l += 1;
+        }
+    }
+
+    // We found `l` elements equal to the pivot. Add 1 to account for the pivot itself.
+    l + 1
+
+    // `_pivot_guard` goes out of scope and writes the pivot (which is a stack-allocated variable)
+    // back into the slice where it originally was. This step is critical in ensuring safety!
+}
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/CopyFlow'
+description = 'Potential unsafe dataflow issue in `alloc::global::GlobalAlloc::realloc`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/alloc/global.rs:192:5: 207:6'
+source = """
+unsafe fn realloc(&self, ptr: *mut u8, layout: Layout, new_size: usize) -> *mut u8 {
+        // SAFETY: the caller must ensure that the `new_size` does not overflow.
+        // `layout.align()` comes from a `Layout` and is thus guaranteed to be valid.
+        let new_layout = unsafe { Layout::from_size_align_unchecked(new_size, layout.align()) };
+        // SAFETY: the caller must ensure that `new_layout` is greater than zero.
+        let new_ptr = unsafe { [0m[36mself.alloc(new_layout)[0m };
+        if !new_ptr.is_null() {
+            // SAFETY: the previously allocated block cannot overlap the newly allocated block.
+            // The safety contract for `dealloc` must be upheld by the caller.
+            unsafe {
+                [0m[31mptr::copy_nonoverlapping(ptr, new_ptr, cmp::min(layout.size(), new_size))[0m;
+                [0m[36mself.dealloc(ptr, layout)[0m;
+            }
+        }
+        new_ptr
+    }
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/CopyFlow'
+description = 'Potential unsafe dataflow issue in `alloc::AllocRef::grow`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/alloc/mod.rs:188:5: 216:6'
+source = """
+unsafe fn grow(
+        &mut self,
+        ptr: NonNull<u8>,
+        layout: Layout,
+        new_size: usize,
+    ) -> Result<NonNull<[u8]>, AllocErr> {
+        let size = layout.size();
+        debug_assert!(
+            new_size >= size,
+            \"`new_size` must be greater than or equal to `layout.size()`\"
+        );
+
+        // SAFETY: the caller must ensure that the `new_size` does not overflow.
+        // `layout.align()` comes from a `Layout` and is thus guaranteed to be valid for a Layout.
+        let new_layout = unsafe { Layout::from_size_align_unchecked(new_size, layout.align()) };
+        let new_ptr = [0m[36mself.alloc(new_layout)[0m?;
+
+        // SAFETY: because `new_size` must be greater than or equal to `size`, both the old and new
+        // memory allocation are valid for reads and writes for `size` bytes. Also, because the old
+        // allocation wasn't yet deallocated, it cannot overlap `new_ptr`. Thus, the call to
+        // `copy_nonoverlapping` is safe.
+        // The safety contract for `dealloc` must be upheld by the caller.
+        unsafe {
+            [0m[31mptr::copy_nonoverlapping(ptr.as_ptr(), new_ptr.as_mut_ptr(), size)[0m;
+            [0m[36mself.dealloc(ptr, layout)[0m;
+        }
+
+        Ok(new_ptr)
+    }
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/CopyFlow'
+description = 'Potential unsafe dataflow issue in `alloc::AllocRef::grow_zeroed`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/alloc/mod.rs:255:5: 283:6'
+source = """
+unsafe fn grow_zeroed(
+        &mut self,
+        ptr: NonNull<u8>,
+        layout: Layout,
+        new_size: usize,
+    ) -> Result<NonNull<[u8]>, AllocErr> {
+        let size = layout.size();
+        debug_assert!(
+            new_size >= size,
+            \"`new_size` must be greater than or equal to `layout.size()`\"
+        );
+
+        // SAFETY: the caller must ensure that the `new_size` does not overflow.
+        // `layout.align()` comes from a `Layout` and is thus guaranteed to be valid for a Layout.
+        let new_layout = unsafe { Layout::from_size_align_unchecked(new_size, layout.align()) };
+        let new_ptr = [0m[36mself.alloc_zeroed(new_layout)[0m?;
+
+        // SAFETY: because `new_size` must be greater than or equal to `size`, both the old and new
+        // memory allocation are valid for reads and writes for `size` bytes. Also, because the old
+        // allocation wasn't yet deallocated, it cannot overlap `new_ptr`. Thus, the call to
+        // `copy_nonoverlapping` is safe.
+        // The safety contract for `dealloc` must be upheld by the caller.
+        unsafe {
+            [0m[31mptr::copy_nonoverlapping(ptr.as_ptr(), new_ptr.as_mut_ptr(), size)[0m;
+            [0m[36mself.dealloc(ptr, layout)[0m;
+        }
+
+        Ok(new_ptr)
+    }
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/CopyFlow'
+description = 'Potential unsafe dataflow issue in `alloc::AllocRef::shrink`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/alloc/mod.rs:324:5: 352:6'
+source = """
+unsafe fn shrink(
+        &mut self,
+        ptr: NonNull<u8>,
+        layout: Layout,
+        new_size: usize,
+    ) -> Result<NonNull<[u8]>, AllocErr> {
+        let size = layout.size();
+        debug_assert!(
+            new_size <= size,
+            \"`new_size` must be smaller than or equal to `layout.size()`\"
+        );
+
+        // SAFETY: the caller must ensure that the `new_size` does not overflow.
+        // `layout.align()` comes from a `Layout` and is thus guaranteed to be valid for a Layout.
+        let new_layout = unsafe { Layout::from_size_align_unchecked(new_size, layout.align()) };
+        let new_ptr = [0m[36mself.alloc(new_layout)[0m?;
+
+        // SAFETY: because `new_size` must be lower than or equal to `size`, both the old and new
+        // memory allocation are valid for reads and writes for `new_size` bytes. Also, because the
+        // old allocation wasn't yet deallocated, it cannot overlap `new_ptr`. Thus, the call to
+        // `copy_nonoverlapping` is safe.
+        // The safety contract for `dealloc` must be upheld by the caller.
+        unsafe {
+            [0m[31mptr::copy_nonoverlapping(ptr.as_ptr(), new_ptr.as_mut_ptr(), size)[0m;
+            [0m[36mself.dealloc(ptr, layout)[0m;
+        }
+
+        Ok(new_ptr)
+    }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `hash::impls::<impl hash::Hash for u16>::hash_slice`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/hash/mod.rs:570:17: 578:18'
+source = """
+fn hash_slice<H: Hasher>(data: &[$ty], state: &mut H) {
+                    let newlen = data.len() * mem::size_of::<$ty>();
+                    let ptr = data.as_ptr() as *const u8;
+                    // SAFETY: `ptr` is valid and aligned, as this macro is only used
+                    // for numeric primitives which have no padding. The new slice only
+                    // spans across `data` and is never mutated, and its total size is the
+                    // same as the original `data` so it can't be over `isize::MAX`.
+                    [0m[36mstate.write(unsafe { [0m[33mslice::from_raw_parts(ptr, newlen)[0m[36m })[0m
+                }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `hash::impls::<impl hash::Hash for i128>::hash_slice`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/hash/mod.rs:570:17: 578:18'
+source = """
+fn hash_slice<H: Hasher>(data: &[$ty], state: &mut H) {
+                    let newlen = data.len() * mem::size_of::<$ty>();
+                    let ptr = data.as_ptr() as *const u8;
+                    // SAFETY: `ptr` is valid and aligned, as this macro is only used
+                    // for numeric primitives which have no padding. The new slice only
+                    // spans across `data` and is never mutated, and its total size is the
+                    // same as the original `data` so it can't be over `isize::MAX`.
+                    [0m[36mstate.write(unsafe { [0m[33mslice::from_raw_parts(ptr, newlen)[0m[36m })[0m
+                }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `hash::impls::<impl hash::Hash for u128>::hash_slice`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/hash/mod.rs:570:17: 578:18'
+source = """
+fn hash_slice<H: Hasher>(data: &[$ty], state: &mut H) {
+                    let newlen = data.len() * mem::size_of::<$ty>();
+                    let ptr = data.as_ptr() as *const u8;
+                    // SAFETY: `ptr` is valid and aligned, as this macro is only used
+                    // for numeric primitives which have no padding. The new slice only
+                    // spans across `data` and is never mutated, and its total size is the
+                    // same as the original `data` so it can't be over `isize::MAX`.
+                    [0m[36mstate.write(unsafe { [0m[33mslice::from_raw_parts(ptr, newlen)[0m[36m })[0m
+                }
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/CopyFlow/SliceUnchecked'
+description = 'Potential unsafe dataflow issue in `<hash::sip::Hasher<S> as hash::Hasher>::write`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/hash/sip.rs:262:5: 306:6'
+source = """
+fn write(&mut self, msg: &[u8]) {
+        let length = msg.len();
+        self.length += length;
+
+        let mut needed = 0;
+
+        if self.ntail != 0 {
+            needed = 8 - self.ntail;
+            // SAFETY: `cmp::min(length, needed)` is guaranteed to not be over `length`
+            self.tail |= unsafe { u8to64_le(msg, 0, cmp::min(length, needed)) } << (8 * self.ntail);
+            if length < needed {
+                self.ntail += length;
+                return;
+            } else {
+                self.state.v3 ^= self.tail;
+                [0m[36mS::c_rounds(&mut self.state)[0m;
+                self.state.v0 ^= self.tail;
+                self.ntail = 0;
+            }
+        }
+
+        // Buffered tail is now flushed, process new input.
+        let len = length - needed;
+        let left = len & 0x7; // len % 8
+
+        let mut i = needed;
+        while i < len - left {
+            // SAFETY: because `len - left` is the biggest multiple of 8 under
+            // `len`, and because `i` starts at `needed` where `len` is `length - needed`,
+            // `i + 8` is guaranteed to be less than or equal to `length`.
+            let mi = unsafe { load_int_le!(msg, i, u64) };
+
+            self.state.v3 ^= mi;
+            [0m[36mS::c_rounds(&mut self.state)[0m;
+            self.state.v0 ^= mi;
+
+            i += 8;
+        }
+
+        // SAFETY: `i` is now `needed + len.div_euclid(8) * 8`,
+        // so `i + left` = `needed + len` = `length`, which is by
+        // definition equal to `msg.len()`.
+        self.tail = unsafe { u8to64_le(msg, i, left) };
+        self.ntail = left;
+    }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `hash::impls::<impl hash::Hash for u8>::hash_slice`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/hash/mod.rs:570:17: 578:18'
+source = """
+fn hash_slice<H: Hasher>(data: &[$ty], state: &mut H) {
+                    let newlen = data.len() * mem::size_of::<$ty>();
+                    let ptr = data.as_ptr() as *const u8;
+                    // SAFETY: `ptr` is valid and aligned, as this macro is only used
+                    // for numeric primitives which have no padding. The new slice only
+                    // spans across `data` and is never mutated, and its total size is the
+                    // same as the original `data` so it can't be over `isize::MAX`.
+                    [0m[36mstate.write(unsafe { [0m[33mslice::from_raw_parts(ptr, newlen)[0m[36m })[0m
+                }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `hash::impls::<impl hash::Hash for u32>::hash_slice`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/hash/mod.rs:570:17: 578:18'
+source = """
+fn hash_slice<H: Hasher>(data: &[$ty], state: &mut H) {
+                    let newlen = data.len() * mem::size_of::<$ty>();
+                    let ptr = data.as_ptr() as *const u8;
+                    // SAFETY: `ptr` is valid and aligned, as this macro is only used
+                    // for numeric primitives which have no padding. The new slice only
+                    // spans across `data` and is never mutated, and its total size is the
+                    // same as the original `data` so it can't be over `isize::MAX`.
+                    [0m[36mstate.write(unsafe { [0m[33mslice::from_raw_parts(ptr, newlen)[0m[36m })[0m
+                }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `hash::impls::<impl hash::Hash for i8>::hash_slice`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/hash/mod.rs:570:17: 578:18'
+source = """
+fn hash_slice<H: Hasher>(data: &[$ty], state: &mut H) {
+                    let newlen = data.len() * mem::size_of::<$ty>();
+                    let ptr = data.as_ptr() as *const u8;
+                    // SAFETY: `ptr` is valid and aligned, as this macro is only used
+                    // for numeric primitives which have no padding. The new slice only
+                    // spans across `data` and is never mutated, and its total size is the
+                    // same as the original `data` so it can't be over `isize::MAX`.
+                    [0m[36mstate.write(unsafe { [0m[33mslice::from_raw_parts(ptr, newlen)[0m[36m })[0m
+                }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `hash::impls::<impl hash::Hash for usize>::hash_slice`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/hash/mod.rs:570:17: 578:18'
+source = """
+fn hash_slice<H: Hasher>(data: &[$ty], state: &mut H) {
+                    let newlen = data.len() * mem::size_of::<$ty>();
+                    let ptr = data.as_ptr() as *const u8;
+                    // SAFETY: `ptr` is valid and aligned, as this macro is only used
+                    // for numeric primitives which have no padding. The new slice only
+                    // spans across `data` and is never mutated, and its total size is the
+                    // same as the original `data` so it can't be over `isize::MAX`.
+                    [0m[36mstate.write(unsafe { [0m[33mslice::from_raw_parts(ptr, newlen)[0m[36m })[0m
+                }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `hash::impls::<impl hash::Hash for i16>::hash_slice`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/hash/mod.rs:570:17: 578:18'
+source = """
+fn hash_slice<H: Hasher>(data: &[$ty], state: &mut H) {
+                    let newlen = data.len() * mem::size_of::<$ty>();
+                    let ptr = data.as_ptr() as *const u8;
+                    // SAFETY: `ptr` is valid and aligned, as this macro is only used
+                    // for numeric primitives which have no padding. The new slice only
+                    // spans across `data` and is never mutated, and its total size is the
+                    // same as the original `data` so it can't be over `isize::MAX`.
+                    [0m[36mstate.write(unsafe { [0m[33mslice::from_raw_parts(ptr, newlen)[0m[36m })[0m
+                }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceUnchecked'
+description = 'Potential unsafe dataflow issue in `slice::<impl [T]>::binary_search_by`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/slice/mod.rs:1721:5: 1744:6'
+source = """
+pub fn binary_search_by<'a, F>(&'a self, mut f: F) -> Result<usize, usize>
+    where
+        F: FnMut(&'a T) -> Ordering,
+    {
+        let s = self;
+        let mut size = s.len();
+        if size == 0 {
+            return Err(0);
+        }
+        let mut base = 0usize;
+        while size > 1 {
+            let half = size / 2;
+            let mid = base + half;
+            // SAFETY: the call is made safe by the following inconstants:
+            // - `mid >= 0`: by definition
+            // - `mid < size`: `mid = size / 2 + size / 4 + size / 8 ...`
+            let cmp = [0m[36mf(unsafe { [0m[33ms.get_unchecked(mid)[0m[36m })[0m;
+            base = if cmp == Greater { base } else { mid };
+            size -= half;
+        }
+        // SAFETY: base is always in [0, size) because base <= mid.
+        let cmp = [0m[36mf(unsafe { [0m[33ms.get_unchecked(base)[0m[36m })[0m;
+        if cmp == Equal { Ok(base) } else { Err(base + (cmp == Less) as usize) }
+    }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceUnchecked'
+description = 'Potential unsafe dataflow issue in `slice::<impl [T]>::partition_point`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/slice/mod.rs:2933:5: 2958:6'
+source = """
+pub fn partition_point<P>(&self, mut pred: P) -> usize
+    where
+        P: FnMut(&T) -> bool,
+    {
+        let mut left = 0;
+        let mut right = self.len();
+
+        while left != right {
+            let mid = left + (right - left) / 2;
+            // SAFETY: When `left < right`, `left <= mid < right`.
+            // Therefore `left` always increases and `right` always decreases,
+            // and either of them is selected. In both cases `left <= right` is
+            // satisfied. Therefore if `left < right` in a step, `left <= right`
+            // is satisfied in the next step. Therefore as long as `left != right`,
+            // `0 <= left < right <= len` is satisfied and if this case
+            // `0 <= mid < len` is satisfied too.
+            let value = unsafe { [0m[33mself.get_unchecked(mid)[0m };
+            if [0m[36mpred(value)[0m {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+
+        left
+    }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `hash::impls::<impl hash::Hash for i64>::hash_slice`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/hash/mod.rs:570:17: 578:18'
+source = """
+fn hash_slice<H: Hasher>(data: &[$ty], state: &mut H) {
+                    let newlen = data.len() * mem::size_of::<$ty>();
+                    let ptr = data.as_ptr() as *const u8;
+                    // SAFETY: `ptr` is valid and aligned, as this macro is only used
+                    // for numeric primitives which have no padding. The new slice only
+                    // spans across `data` and is never mutated, and its total size is the
+                    // same as the original `data` so it can't be over `isize::MAX`.
+                    [0m[36mstate.write(unsafe { [0m[33mslice::from_raw_parts(ptr, newlen)[0m[36m })[0m
+                }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `<array::<impl [T; N]>::map::Guard<T, N> as ops::drop::Drop>::drop`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/array/mod.rs:400:13: 410:14'
+source = """
+fn drop(&mut self) {
+                debug_assert!(self.initialized <= N);
+
+                let initialized_part =
+                    [0m[33mcrate::ptr::slice_from_raw_parts_mut(self.dst, self.initialized)[0m;
+                // SAFETY: this raw slice will contain only initialized objects
+                // that's why, it is allowed to drop it.
+                unsafe {
+                    [0m[36mcrate::ptr::drop_in_place(initialized_part)[0m;
+                }
+            }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `hash::impls::<impl hash::Hash for isize>::hash_slice`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/hash/mod.rs:570:17: 578:18'
+source = """
+fn hash_slice<H: Hasher>(data: &[$ty], state: &mut H) {
+                    let newlen = data.len() * mem::size_of::<$ty>();
+                    let ptr = data.as_ptr() as *const u8;
+                    // SAFETY: `ptr` is valid and aligned, as this macro is only used
+                    // for numeric primitives which have no padding. The new slice only
+                    // spans across `data` and is never mutated, and its total size is the
+                    // same as the original `data` so it can't be over `isize::MAX`.
+                    [0m[36mstate.write(unsafe { [0m[33mslice::from_raw_parts(ptr, newlen)[0m[36m })[0m
+                }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `hash::impls::<impl hash::Hash for i32>::hash_slice`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/hash/mod.rs:570:17: 578:18'
+source = """
+fn hash_slice<H: Hasher>(data: &[$ty], state: &mut H) {
+                    let newlen = data.len() * mem::size_of::<$ty>();
+                    let ptr = data.as_ptr() as *const u8;
+                    // SAFETY: `ptr` is valid and aligned, as this macro is only used
+                    // for numeric primitives which have no padding. The new slice only
+                    // spans across `data` and is never mutated, and its total size is the
+                    // same as the original `data` so it can't be over `isize::MAX`.
+                    [0m[36mstate.write(unsafe { [0m[33mslice::from_raw_parts(ptr, newlen)[0m[36m })[0m
+                }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `hash::impls::<impl hash::Hash for u64>::hash_slice`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/hash/mod.rs:570:17: 578:18'
+source = """
+fn hash_slice<H: Hasher>(data: &[$ty], state: &mut H) {
+                    let newlen = data.len() * mem::size_of::<$ty>();
+                    let ptr = data.as_ptr() as *const u8;
+                    // SAFETY: `ptr` is valid and aligned, as this macro is only used
+                    // for numeric primitives which have no padding. The new slice only
+                    // spans across `data` and is never mutated, and its total size is the
+                    // same as the original `data` so it can't be over `isize::MAX`.
+                    [0m[36mstate.write(unsafe { [0m[33mslice::from_raw_parts(ptr, newlen)[0m[36m })[0m
+                }
+[0m"""

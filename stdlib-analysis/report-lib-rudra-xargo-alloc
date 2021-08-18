@@ -1,0 +1,934 @@
+[[reports]]
+level = 'Error'
+analyzer = 'SendSyncVariance:/PhantomSendForSend/NaiveSendForSend/RelaxSend'
+description = 'Suspicious impl of `Send` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/rc.rs:287:1: 287:43'
+source = 'impl<T: ?Sized> !marker::Send for Rc<T> {}'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'SendSyncVariance:/ApiSyncforSync/NaiveSyncForSync/RelaxSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/rc.rs:289:1: 289:43'
+source = 'impl<T: ?Sized> !marker::Sync for Rc<T> {}'
+
+[[reports]]
+level = 'Info'
+analyzer = 'SendSyncVariance:/NaiveSendForSend'
+description = 'Suspicious impl of `Send` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/collections/btree/node.rs:283:1: 283:101'
+source = '''unsafe impl<'a, K: Sync + 'a, V: Sync + 'a, Type> Send for NodeRef<marker::Immut<'a>, K, V, Type> {}'''
+
+[[reports]]
+level = 'Info'
+analyzer = 'SendSyncVariance:/NaiveSendForSend'
+description = 'Suspicious impl of `Send` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/collections/btree/node.rs:284:1: 284:99'
+source = '''unsafe impl<'a, K: Send + 'a, V: Send + 'a, Type> Send for NodeRef<marker::Mut<'a>, K, V, Type> {}'''
+
+[[reports]]
+level = 'Info'
+analyzer = 'SendSyncVariance:/NaiveSendForSend'
+description = 'Suspicious impl of `Send` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/collections/btree/node.rs:285:1: 285:83'
+source = 'unsafe impl<K: Send, V: Send, Type> Send for NodeRef<marker::Owned, K, V, Type> {}'
+
+[[reports]]
+level = 'Info'
+analyzer = 'SendSyncVariance:/NaiveSyncForSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/collections/btree/node.rs:281:1: 281:92'
+source = 'unsafe impl<BorrowType, K: Sync, V: Sync, Type> Sync for NodeRef<BorrowType, K, V, Type> {}'
+
+[[reports]]
+level = 'Error'
+analyzer = 'SendSyncVariance:/PhantomSendForSend/NaiveSendForSend/RelaxSend'
+description = 'Suspicious impl of `Send` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/rc.rs:1643:1: 1643:45'
+source = 'impl<T: ?Sized> !marker::Send for Weak<T> {}'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'SendSyncVariance:/ApiSyncforSync/NaiveSyncForSync/RelaxSync'
+description = 'Suspicious impl of `Sync` found'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/rc.rs:1645:1: 1645:45'
+source = 'impl<T: ?Sized> !marker::Sync for Weak<T> {}'
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/ReadFlow'
+description = 'Potential unsafe dataflow issue in `<collections::btree::map::BTreeMap<K, V> as core::clone::Clone>::clone::clone_subtree`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/collections/btree/map.rs:142:9: 204:10'
+source = """
+fn clone_subtree<'a, K: Clone, V: Clone>(
+            node: node::NodeRef<marker::Immut<'a>, K, V, marker::LeafOrInternal>,
+        ) -> BTreeMap<K, V>
+        where
+            K: 'a,
+            V: 'a,
+        {
+            match node.force() {
+                Leaf(leaf) => {
+                    let mut out_tree = BTreeMap { root: Some(node::Root::new_leaf()), length: 0 };
+
+                    {
+                        let root = out_tree.root.as_mut().unwrap(); // unwrap succeeds because we just wrapped
+                        let mut out_node = match root.node_as_mut().force() {
+                            Leaf(leaf) => leaf,
+                            Internal(_) => unreachable!(),
+                        };
+
+                        let mut in_edge = leaf.first_edge();
+                        while let Ok(kv) = in_edge.right_kv() {
+                            let (k, v) = kv.into_kv();
+                            in_edge = kv.right_edge();
+
+                            out_node.push([0m[36mk.clone()[0m, [0m[36mv.clone()[0m);
+                            out_tree.length += 1;
+                        }
+                    }
+
+                    out_tree
+                }
+                Internal(internal) => {
+                    let mut out_tree = clone_subtree(internal.first_edge().descend());
+
+                    {
+                        let out_root = BTreeMap::ensure_is_owned(&mut out_tree.root);
+                        let mut out_node = out_root.push_internal_level();
+                        let mut in_edge = internal.first_edge();
+                        while let Ok(kv) = in_edge.right_kv() {
+                            let (k, v) = kv.into_kv();
+                            in_edge = kv.right_edge();
+
+                            let k = [0m[36m(*k).clone()[0m;
+                            let v = [0m[36m(*v).clone()[0m;
+                            let subtree = clone_subtree(in_edge.descend());
+
+                            // We can't destructure subtree directly
+                            // because BTreeMap implements Drop
+                            let (subroot, sublength) = unsafe {
+                                let subtree = ManuallyDrop::new(subtree);
+                                let root = [0m[31mptr::read(&subtree.root)[0m;
+                                let length = subtree.length;
+                                (root, length)
+                            };
+
+                            out_node.push(k, v, subroot.unwrap_or_else(node::Root::new_leaf));
+                            out_tree.length += 1 + sublength;
+                        }
+                    }
+
+                    out_tree
+                }
+            }
+        }
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/ReadFlow'
+description = 'Potential unsafe dataflow issue in `collections::btree::map::range_search`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/collections/btree/map.rs:2077:1: 2160:2'
+source = """
+fn range_search<BorrowType, K, V, Q: ?Sized, R: RangeBounds<Q>>(
+    root: NodeRef<BorrowType, K, V, marker::LeafOrInternal>,
+    range: R,
+) -> (
+    Handle<NodeRef<BorrowType, K, V, marker::Leaf>, marker::Edge>,
+    Handle<NodeRef<BorrowType, K, V, marker::Leaf>, marker::Edge>,
+)
+where
+    Q: Ord,
+    K: Borrow<Q>,
+{
+    match ([0m[36mrange.start_bound()[0m, [0m[36mrange.end_bound()[0m) {
+        (Excluded(s), Excluded(e)) if s == e => {
+            panic!(\"range start and end are equal and excluded in BTreeMap\")
+        }
+        (Included(s) | Excluded(s), Included(e) | Excluded(e)) if s > e => {
+            panic!(\"range start is greater than range end in BTreeMap\")
+        }
+        _ => {}
+    };
+
+    // We duplicate the root NodeRef here -- we will never access it in a way
+    // that overlaps references obtained from the root.
+    let mut min_node = unsafe { [0m[31mptr::read(&root)[0m };
+    let mut max_node = root;
+    let mut min_found = false;
+    let mut max_found = false;
+
+    loop {
+        let front = match (min_found, [0m[36mrange.start_bound()[0m) {
+            (false, Included(key)) => match search::search_node(min_node, key) {
+                Found(kv) => {
+                    min_found = true;
+                    kv.left_edge()
+                }
+                GoDown(edge) => edge,
+            },
+            (false, Excluded(key)) => match search::search_node(min_node, key) {
+                Found(kv) => {
+                    min_found = true;
+                    kv.right_edge()
+                }
+                GoDown(edge) => edge,
+            },
+            (true, Included(_)) => min_node.last_edge(),
+            (true, Excluded(_)) => min_node.first_edge(),
+            (_, Unbounded) => min_node.first_edge(),
+        };
+
+        let back = match (max_found, [0m[36mrange.end_bound()[0m) {
+            (false, Included(key)) => match search::search_node(max_node, key) {
+                Found(kv) => {
+                    max_found = true;
+                    kv.right_edge()
+                }
+                GoDown(edge) => edge,
+            },
+            (false, Excluded(key)) => match search::search_node(max_node, key) {
+                Found(kv) => {
+                    max_found = true;
+                    kv.left_edge()
+                }
+                GoDown(edge) => edge,
+            },
+            (true, Included(_)) => max_node.first_edge(),
+            (true, Excluded(_)) => max_node.last_edge(),
+            (_, Unbounded) => max_node.last_edge(),
+        };
+
+        if front.partial_cmp(&back) == Some(Ordering::Greater) {
+            panic!(\"Ord is ill-defined in BTreeMap range\");
+        }
+        match (front.force(), back.force()) {
+            (Leaf(f), Leaf(b)) => {
+                return (f, b);
+            }
+            (Internal(min_int), Internal(max_int)) => {
+                min_node = min_int.descend();
+                max_node = max_int.descend();
+            }
+            _ => unreachable!(\"BTreeMap has different depths\"),
+        };
+    }
+}
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/ReadFlow'
+description = 'Potential unsafe dataflow issue in `collections::btree::navigate::replace`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/collections/btree/navigate.rs:111:1: 126:2'
+source = """
+fn replace<T, R>(v: &mut T, change: impl FnOnce(T) -> (T, R)) -> R {
+    struct PanicGuard;
+    impl Drop for PanicGuard {
+        fn drop(&mut self) {
+            intrinsics::abort()
+        }
+    }
+    let guard = PanicGuard;
+    let value = unsafe { [0m[31mptr::read(v)[0m };
+    let (new_value, ret) = [0m[36mchange(value)[0m;
+    unsafe {
+        [0m[33mptr::write(v, new_value)[0m;
+    }
+    mem::forget(guard);
+    ret
+}
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/ReadFlow/CopyFlow'
+description = 'Potential unsafe dataflow issue in `slice::insert_head`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/slice.rs:753:1: 815:2'
+source = """
+fn insert_head<T, F>(v: &mut [T], is_less: &mut F)
+where
+    F: FnMut(&T, &T) -> bool,
+{
+    if v.len() >= 2 && [0m[36mis_less(&v[1], &v[0])[0m {
+        unsafe {
+            // There are three ways to implement insertion here:
+            //
+            // 1. Swap adjacent elements until the first one gets to its final destination.
+            //    However, this way we copy data around more than is necessary. If elements are big
+            //    structures (costly to copy), this method will be slow.
+            //
+            // 2. Iterate until the right place for the first element is found. Then shift the
+            //    elements succeeding it to make room for it and finally place it into the
+            //    remaining hole. This is a good method.
+            //
+            // 3. Copy the first element into a temporary variable. Iterate until the right place
+            //    for it is found. As we go along, copy every traversed element into the slot
+            //    preceding it. Finally, copy data from the temporary variable into the remaining
+            //    hole. This method is very good. Benchmarks demonstrated slightly better
+            //    performance than with the 2nd method.
+            //
+            // All methods were benchmarked, and the 3rd showed best results. So we chose that one.
+            let mut tmp = mem::ManuallyDrop::new([0m[31mptr::read(&v[0])[0m);
+
+            // Intermediate state of the insertion process is always tracked by `hole`, which
+            // serves two purposes:
+            // 1. Protects integrity of `v` from panics in `is_less`.
+            // 2. Fills the remaining hole in `v` in the end.
+            //
+            // Panic safety:
+            //
+            // If `is_less` panics at any point during the process, `hole` will get dropped and
+            // fill the hole in `v` with `tmp`, thus ensuring that `v` still holds every object it
+            // initially held exactly once.
+            let mut hole = InsertionHole { src: &mut *tmp, dest: &mut v[1] };
+            [0m[31mptr::copy_nonoverlapping(&v[1], &mut v[0], 1)[0m;
+
+            for i in 2..v.len() {
+                if ![0m[36mis_less(&v[i], &*tmp)[0m {
+                    break;
+                }
+                [0m[31mptr::copy_nonoverlapping(&v[i], &mut v[i - 1], 1)[0m;
+                hole.dest = &mut v[i];
+            }
+            // `hole` gets dropped and thus copies `tmp` into the remaining hole in `v`.
+        }
+    }
+
+    // When dropped, copies from `src` into `dest`.
+    struct InsertionHole<T> {
+        src: *mut T,
+        dest: *mut T,
+    }
+
+    impl<T> Drop for InsertionHole<T> {
+        fn drop(&mut self) {
+            unsafe {
+                ptr::copy_nonoverlapping(self.src, self.dest, 1);
+            }
+        }
+    }
+}
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/CopyFlow'
+description = 'Potential unsafe dataflow issue in `slice::merge`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/slice.rs:824:1: 930:2'
+source = """
+unsafe fn merge<T, F>(v: &mut [T], mid: usize, buf: *mut T, is_less: &mut F)
+where
+    F: FnMut(&T, &T) -> bool,
+{
+    let len = v.len();
+    let v = v.as_mut_ptr();
+    let (v_mid, v_end) = unsafe { (v.add(mid), v.add(len)) };
+
+    // The merge process first copies the shorter run into `buf`. Then it traces the newly copied
+    // run and the longer run forwards (or backwards), comparing their next unconsumed elements and
+    // copying the lesser (or greater) one into `v`.
+    //
+    // As soon as the shorter run is fully consumed, the process is done. If the longer run gets
+    // consumed first, then we must copy whatever is left of the shorter run into the remaining
+    // hole in `v`.
+    //
+    // Intermediate state of the process is always tracked by `hole`, which serves two purposes:
+    // 1. Protects integrity of `v` from panics in `is_less`.
+    // 2. Fills the remaining hole in `v` if the longer run gets consumed first.
+    //
+    // Panic safety:
+    //
+    // If `is_less` panics at any point during the process, `hole` will get dropped and fill the
+    // hole in `v` with the unconsumed range in `buf`, thus ensuring that `v` still holds every
+    // object it initially held exactly once.
+    let mut hole;
+
+    if mid <= len - mid {
+        // The left run is shorter.
+        unsafe {
+            [0m[31mptr::copy_nonoverlapping(v, buf, mid)[0m;
+            hole = MergeHole { start: buf, end: buf.add(mid), dest: v };
+        }
+
+        // Initially, these pointers point to the beginnings of their arrays.
+        let left = &mut hole.start;
+        let mut right = v_mid;
+        let out = &mut hole.dest;
+
+        while *left < hole.end && right < v_end {
+            // Consume the lesser side.
+            // If equal, prefer the left run to maintain stability.
+            unsafe {
+                let to_copy = if [0m[36mis_less(&*right, &**left)[0m {
+                    get_and_increment(&mut right)
+                } else {
+                    get_and_increment(left)
+                };
+                [0m[31mptr::copy_nonoverlapping(to_copy, get_and_increment(out), 1)[0m;
+            }
+        }
+    } else {
+        // The right run is shorter.
+        unsafe {
+            [0m[31mptr::copy_nonoverlapping(v_mid, buf, len - mid)[0m;
+            hole = MergeHole { start: buf, end: buf.add(len - mid), dest: v_mid };
+        }
+
+        // Initially, these pointers point past the ends of their arrays.
+        let left = &mut hole.dest;
+        let right = &mut hole.end;
+        let mut out = v_end;
+
+        while v < *left && buf < *right {
+            // Consume the greater side.
+            // If equal, prefer the right run to maintain stability.
+            unsafe {
+                let to_copy = if [0m[36mis_less(&*right.offset(-1), &*left.offset(-1))[0m {
+                    decrement_and_get(left)
+                } else {
+                    decrement_and_get(right)
+                };
+                [0m[31mptr::copy_nonoverlapping(to_copy, decrement_and_get(&mut out), 1)[0m;
+            }
+        }
+    }
+    // Finally, `hole` gets dropped. If the shorter run was not fully consumed, whatever remains of
+    // it will now be copied into the hole in `v`.
+
+    unsafe fn get_and_increment<T>(ptr: &mut *mut T) -> *mut T {
+        let old = *ptr;
+        *ptr = unsafe { ptr.offset(1) };
+        old
+    }
+
+    unsafe fn decrement_and_get<T>(ptr: &mut *mut T) -> *mut T {
+        *ptr = unsafe { ptr.offset(-1) };
+        *ptr
+    }
+
+    // When dropped, copies the range `start..end` into `dest..`.
+    struct MergeHole<T> {
+        start: *mut T,
+        end: *mut T,
+        dest: *mut T,
+    }
+
+    impl<T> Drop for MergeHole<T> {
+        fn drop(&mut self) {
+            // `T` is not a zero-sized type, so it's okay to divide by its size.
+            let len = (self.end as usize - self.start as usize) / mem::size_of::<T>();
+            unsafe {
+                ptr::copy_nonoverlapping(self.start, self.dest, len);
+            }
+        }
+    }
+}
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceUnchecked'
+description = 'Potential unsafe dataflow issue in `slice::merge_sort`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/slice.rs:944:1: 1067:2'
+source = """
+fn merge_sort<T, F>(v: &mut [T], mut is_less: F)
+where
+    F: FnMut(&T, &T) -> bool,
+{
+    // Slices of up to this length get sorted using insertion sort.
+    const MAX_INSERTION: usize = 20;
+    // Very short runs are extended using insertion sort to span at least this many elements.
+    const MIN_RUN: usize = 10;
+
+    // Sorting has no meaningful behavior on zero-sized types.
+    if size_of::<T>() == 0 {
+        return;
+    }
+
+    let len = v.len();
+
+    // Short arrays get sorted in-place via insertion sort to avoid allocations.
+    if len <= MAX_INSERTION {
+        if len >= 2 {
+            for i in (0..len - 1).rev() {
+                insert_head(&mut v[i..], &mut is_less);
+            }
+        }
+        return;
+    }
+
+    // Allocate a buffer to use as scratch memory. We keep the length 0 so we can keep in it
+    // shallow copies of the contents of `v` without risking the dtors running on copies if
+    // `is_less` panics. When merging two sorted runs, this buffer holds a copy of the shorter run,
+    // which will always have length at most `len / 2`.
+    let mut buf = Vec::with_capacity(len / 2);
+
+    // In order to identify natural runs in `v`, we traverse it backwards. That might seem like a
+    // strange decision, but consider the fact that merges more often go in the opposite direction
+    // (forwards). According to benchmarks, merging forwards is slightly faster than merging
+    // backwards. To conclude, identifying runs by traversing backwards improves performance.
+    let mut runs = vec![];
+    let mut end = len;
+    while end > 0 {
+        // Find the next natural run, and reverse it if it's strictly descending.
+        let mut start = end - 1;
+        if start > 0 {
+            start -= 1;
+            unsafe {
+                if [0m[36mis_less([0m[33mv.get_unchecked(start + 1)[0m[36m, [0m[33mv.get_unchecked(start)[0m[36m)[0m {
+                    while start > 0 && [0m[36mis_less([0m[33mv.get_unchecked(start)[0m[36m, [0m[33mv.get_unchecked(start - 1)[0m[36m)[0m {
+                        start -= 1;
+                    }
+                    v[start..end].reverse();
+                } else {
+                    while start > 0 && ![0m[36mis_less([0m[33mv.get_unchecked(start)[0m[36m, [0m[33mv.get_unchecked(start - 1)[0m[36m)[0m
+                    {
+                        start -= 1;
+                    }
+                }
+            }
+        }
+
+        // Insert some more elements into the run if it's too short. Insertion sort is faster than
+        // merge sort on short sequences, so this significantly improves performance.
+        while start > 0 && end - start < MIN_RUN {
+            start -= 1;
+            insert_head(&mut v[start..end], &mut is_less);
+        }
+
+        // Push this run onto the stack.
+        runs.push(Run { start, len: end - start });
+        end = start;
+
+        // Merge some pairs of adjacent runs to satisfy the invariants.
+        while let Some(r) = collapse(&runs) {
+            let left = runs[r + 1];
+            let right = runs[r];
+            unsafe {
+                merge(
+                    &mut v[left.start..right.start + right.len],
+                    left.len,
+                    buf.as_mut_ptr(),
+                    &mut is_less,
+                );
+            }
+            runs[r] = Run { start: left.start, len: left.len + right.len };
+            runs.remove(r + 1);
+        }
+    }
+
+    // Finally, exactly one run must remain in the stack.
+    debug_assert!(runs.len() == 1 && runs[0].start == 0 && runs[0].len == len);
+
+    // Examines the stack of runs and identifies the next pair of runs to merge. More specifically,
+    // if `Some(r)` is returned, that means `runs[r]` and `runs[r + 1]` must be merged next. If the
+    // algorithm should continue building a new run instead, `None` is returned.
+    //
+    // TimSort is infamous for its buggy implementations, as described here:
+    // http://envisage-project.eu/timsort-specification-and-verification/
+    //
+    // The gist of the story is: we must enforce the invariants on the top four runs on the stack.
+    // Enforcing them on just top three is not sufficient to ensure that the invariants will still
+    // hold for *all* runs in the stack.
+    //
+    // This function correctly checks invariants for the top four runs. Additionally, if the top
+    // run starts at index 0, it will always demand a merge operation until the stack is fully
+    // collapsed, in order to complete the sort.
+    #[inline]
+    fn collapse(runs: &[Run]) -> Option<usize> {
+        let n = runs.len();
+        if n >= 2
+            && (runs[n - 1].start == 0
+                || runs[n - 2].len <= runs[n - 1].len
+                || (n >= 3 && runs[n - 3].len <= runs[n - 2].len + runs[n - 1].len)
+                || (n >= 4 && runs[n - 4].len <= runs[n - 3].len + runs[n - 2].len))
+        {
+            if n >= 3 && runs[n - 3].len < runs[n - 1].len { Some(n - 3) } else { Some(n - 2) }
+        } else {
+            None
+        }
+    }
+
+    #[derive(Clone, Copy)]
+    struct Run {
+        start: usize,
+        len: usize,
+    }
+}
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceUnchecked'
+description = 'Potential unsafe dataflow issue in `str::join_generic_copy`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/str.rs:137:1: 182:2'
+source = """
+fn join_generic_copy<B, T, S>(slice: &[S], sep: &[T]) -> Vec<T>
+where
+    T: Copy,
+    B: AsRef<[T]> + ?Sized,
+    S: Borrow<B>,
+{
+    let sep_len = sep.len();
+    let mut iter = slice.iter();
+
+    // the first slice is the only one without a separator preceding it
+    let first = match iter.next() {
+        Some(first) => first,
+        None => return vec![],
+    };
+
+    // compute the exact total length of the joined Vec
+    // if the `len` calculation overflows, we'll panic
+    // we would have run out of memory anyway and the rest of the function requires
+    // the entire Vec pre-allocated for safety
+    let len = sep_len
+        .checked_mul(iter.len())
+        .and_then(|n| {
+            slice.iter().map(|s| s.borrow().as_ref().len()).try_fold(n, usize::checked_add)
+        })
+        .expect(\"attempt to join into collection with len > usize::MAX\");
+
+    // crucial for safety
+    let mut result = Vec::with_capacity(len);
+    assert!(result.capacity() >= len);
+
+    result.extend_from_slice([0m[36m[0m[36mfirst.borrow()[0m[36m.as_ref()[0m);
+
+    unsafe {
+        {
+            let pos = result.len();
+            let target = [0m[33mresult.get_unchecked_mut(pos..len)[0m;
+
+            // copy separator and slices over without bounds checks
+            // generate loops with hardcoded offsets for small separators
+            // massive improvements possible (~ x2)
+            spezialize_for_lengths!(sep, target, iter; 0, 1, 2, 3, 4);
+        }
+        [0m[31mresult.set_len(len)[0m;
+    }
+    result
+}
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `<rc::Rc<[T]>::from_iter_exact::Guard<T> as core::ops::Drop>::drop`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/rc.rs:1056:13: 1063:14'
+source = """
+fn drop(&mut self) {
+                unsafe {
+                    let slice = [0m[33mfrom_raw_parts_mut(self.elems, self.n_elems)[0m;
+                    [0m[36mptr::drop_in_place(slice)[0m;
+
+                    Global.dealloc(self.mem, self.layout);
+                }
+            }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `vec::Vec::<T>::truncate`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/vec.rs:731:5: 748:6'
+source = """
+pub fn truncate(&mut self, len: usize) {
+        // This is safe because:
+        //
+        // * the slice passed to `drop_in_place` is valid; the `len > self.len`
+        //   case avoids creating an invalid slice, and
+        // * the `len` of the vector is shrunk before calling `drop_in_place`,
+        //   such that no value will be dropped twice in case `drop_in_place`
+        //   were to panic once (if it panics twice, the program aborts).
+        unsafe {
+            if len > self.len {
+                return;
+            }
+            let remaining_len = self.len - len;
+            let s = [0m[33mptr::slice_from_raw_parts_mut(self.as_mut_ptr().add(len), remaining_len)[0m;
+            self.len = len;
+            [0m[36mptr::drop_in_place(s)[0m;
+        }
+    }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `<sync::Arc<[T]>::from_iter_exact::Guard<T> as core::ops::Drop>::drop`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/sync.rs:1083:13: 1090:14'
+source = """
+fn drop(&mut self) {
+                unsafe {
+                    let slice = [0m[33mfrom_raw_parts_mut(self.elems, self.n_elems)[0m;
+                    [0m[36mptr::drop_in_place(slice)[0m;
+
+                    Global.dealloc(self.mem, self.layout);
+                }
+            }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceFromRaw'
+description = 'Potential unsafe dataflow issue in `<vec::Vec<T> as core::ops::Drop>::drop`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/vec.rs:2442:5: 2450:6'
+source = """
+fn drop(&mut self) {
+        unsafe {
+            // use drop for [T]
+            // use a raw slice to refer to the elements of the vector as weakest necessary type;
+            // could avoid questions of validity in certain cases
+            [0m[36mptr::drop_in_place([0m[33mptr::slice_from_raw_parts_mut(self.as_mut_ptr(), self.len)[0m[36m)[0m
+        }
+        // RawVec handles deallocation
+    }
+[0m"""
+
+[[reports]]
+level = 'Info'
+analyzer = 'UnsafeDataflow:/SliceUnchecked'
+description = 'Potential unsafe dataflow issue in `collections::vec_deque::VecDeque::<T>::truncate`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/collections/vec_deque.rs:899:5: 941:6'
+source = """
+pub fn truncate(&mut self, len: usize) {
+        /// Runs the destructor for all items in the slice when it gets dropped (normally or
+        /// during unwinding).
+        struct Dropper<'a, T>(&'a mut [T]);
+
+        impl<'a, T> Drop for Dropper<'a, T> {
+            fn drop(&mut self) {
+                unsafe {
+                    ptr::drop_in_place(self.0);
+                }
+            }
+        }
+
+        // Safe because:
+        //
+        // * Any slice passed to `drop_in_place` is valid; the second case has
+        //   `len <= front.len()` and returning on `len > self.len()` ensures
+        //   `begin <= back.len()` in the first case
+        // * The head of the VecDeque is moved before calling `drop_in_place`,
+        //   so no value is dropped twice if `drop_in_place` panics
+        unsafe {
+            if len > self.len() {
+                return;
+            }
+            let num_dropped = self.len() - len;
+            let (front, back) = self.as_mut_slices();
+            if len > front.len() {
+                let begin = len - front.len();
+                let drop_back = [0m[33mback.get_unchecked_mut(begin..)[0m as *mut _;
+                self.head = self.wrap_sub(self.head, num_dropped);
+                [0m[36mptr::drop_in_place(drop_back)[0m;
+            } else {
+                let drop_back = back as *mut _;
+                let drop_front = [0m[33mfront.get_unchecked_mut(len..)[0m as *mut _;
+                self.head = self.wrap_sub(self.head, num_dropped);
+
+                // Make sure the second half is dropped even when a destructor
+                // in the first one panics.
+                let _back_dropper = Dropper(&mut *drop_back);
+                [0m[36mptr::drop_in_place(drop_front)[0m;
+            }
+        }
+    }
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/WriteFlow'
+description = 'Potential unsafe dataflow issue in `vec::Vec::<T>::extend_with`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/vec.rs:1705:5: 1731:6'
+source = """
+fn extend_with<E: ExtendWith<T>>(&mut self, n: usize, mut value: E) {
+        self.reserve(n);
+
+        unsafe {
+            let mut ptr = self.as_mut_ptr().add(self.len());
+            // Use SetLenOnDrop to work around bug where compiler
+            // may not realize the store through `ptr` through self.set_len()
+            // don't alias.
+            let mut local_len = SetLenOnDrop::new(&mut self.len);
+
+            // Write all elements except the last one
+            for _ in 1..n {
+                [0m[33mptr::write(ptr, [0m[36mvalue.next()[0m[33m)[0m;
+                ptr = ptr.offset(1);
+                // Increment the length in every step in case next() panics
+                local_len.increment_len(1);
+            }
+
+            if n > 0 {
+                // We can write the last element directly without cloning needlessly
+                [0m[33mptr::write(ptr, [0m[36mvalue.last()[0m[33m)[0m;
+                local_len.increment_len(1);
+            }
+
+            // len set by scope guard
+        }
+    }
+[0m"""
+
+[[reports]]
+level = 'Error'
+analyzer = 'UnsafeDataflow:/WriteFlow/VecSetLen'
+description = 'Potential unsafe dataflow issue in `vec::Vec::<T>::extend_desugared`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/vec.rs:2234:5: 2254:6'
+source = """
+fn extend_desugared<I: Iterator<Item = T>>(&mut self, mut iterator: I) {
+        // This is the case for a general iterator.
+        //
+        // This function should be the moral equivalent of:
+        //
+        //      for item in iterator {
+        //          self.push(item);
+        //      }
+        while let Some(element) = [0m[36miterator.next()[0m {
+            let len = self.len();
+            if len == self.capacity() {
+                let (lower, _) = [0m[36miterator.size_hint()[0m;
+                self.reserve(lower.saturating_add(1));
+            }
+            unsafe {
+                [0m[33mptr::write(self.as_mut_ptr().add(len), element)[0m;
+                // NB can't overflow since we would have had to alloc the address space
+                [0m[31mself.set_len(len + 1)[0m;
+            }
+        }
+    }
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/CopyFlow'
+description = 'Potential unsafe dataflow issue in `string::String::retain`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/string.rs:1230:5: 1263:6'
+source = """
+pub fn retain<F>(&mut self, mut f: F)
+    where
+        F: FnMut(char) -> bool,
+    {
+        let len = self.len();
+        let mut del_bytes = 0;
+        let mut idx = 0;
+
+        while idx < len {
+            let ch = unsafe { self.get_unchecked(idx..len).chars().next().unwrap() };
+            let ch_len = ch.len_utf8();
+
+            if ![0m[36mf(ch)[0m {
+                del_bytes += ch_len;
+            } else if del_bytes > 0 {
+                unsafe {
+                    [0m[31mptr::copy(
+                        self.vec.as_ptr().add(idx),
+                        self.vec.as_mut_ptr().add(idx - del_bytes),
+                        ch_len,
+                    )[0m;
+                }
+            }
+
+            // Point idx to the next char
+            idx += ch_len;
+        }
+
+        if del_bytes > 0 {
+            unsafe {
+                [0m[31mself.vec.set_len(len - del_bytes)[0m;
+            }
+        }
+    }
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/CopyFlow/SliceFromRaw'
+description = '''Potential unsafe dataflow issue in `<vec::DrainFilter<'_, T, F> as core::iter::Iterator>::next`'''
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/vec.rs:3062:5: 3086:6'
+source = """
+fn next(&mut self) -> Option<T> {
+        unsafe {
+            while self.idx < self.old_len {
+                let i = self.idx;
+                let v = [0m[33mslice::from_raw_parts_mut(self.vec.as_mut_ptr(), self.old_len)[0m;
+                self.panic_flag = true;
+                let drained = [0m[36m(self.pred)(&mut v[i])[0m;
+                self.panic_flag = false;
+                // Update the index *after* the predicate is called. If the index
+                // is updated prior and the predicate panics, the element at this
+                // index would be leaked.
+                self.idx += 1;
+                if drained {
+                    self.del += 1;
+                    return Some([0m[31mptr::read(&v[i])[0m);
+                } else if self.del > 0 {
+                    let del = self.del;
+                    let src: *const T = &v[i];
+                    let dst: *mut T = &mut v[i - del];
+                    [0m[31mptr::copy_nonoverlapping(src, dst, 1)[0m;
+                }
+            }
+            None
+        }
+    }
+[0m"""
+
+[[reports]]
+level = 'Warning'
+analyzer = 'UnsafeDataflow:/WriteFlow/SliceFromRaw'
+description = '''Potential unsafe dataflow issue in `vec::Drain::<'_, T>::fill`'''
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/vec.rs:2996:5: 3013:6'
+source = """
+unsafe fn fill<I: Iterator<Item = T>>(&mut self, replace_with: &mut I) -> bool {
+        let vec = unsafe { self.vec.as_mut() };
+        let range_start = vec.len;
+        let range_end = self.tail_start;
+        let range_slice = unsafe {
+            [0m[33mslice::from_raw_parts_mut(vec.as_mut_ptr().add(range_start), range_end - range_start)[0m
+        };
+
+        for place in range_slice {
+            if let Some(new_item) = [0m[36mreplace_with.next()[0m {
+                unsafe { [0m[33mptr::write(place, new_item)[0m };
+                vec.len += 1;
+            } else {
+                return false;
+            }
+        }
+        true
+    }
+[0m"""
+
+[[reports]]
+level = 'Error'
+analyzer = 'UnsafeDataflow:/WriteFlow/VecSetLen'
+description = 'Potential unsafe dataflow issue in `<vec::Vec<T> as vec::SpecExtend<T, I>>::from_iter`'
+location = '/home/yechan/.rustup/toolchains/nightly-2020-08-26-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc/src/vec.rs:2112:5: 2132:6'
+source = """
+default fn from_iter(mut iterator: I) -> Self {
+        // Unroll the first iteration, as the vector is going to be
+        // expanded on this iteration in every case when the iterable is not
+        // empty, but the loop in extend_desugared() is not going to see the
+        // vector being full in the few subsequent loop iterations.
+        // So we get better branch prediction.
+        let mut vector = match [0m[36miterator.next()[0m {
+            None => return Vec::new(),
+            Some(element) => {
+                let (lower, _) = [0m[36miterator.size_hint()[0m;
+                let mut vector = Vec::with_capacity(lower.saturating_add(1));
+                unsafe {
+                    [0m[33mptr::write(vector.as_mut_ptr(), element)[0m;
+                    [0m[31mvector.set_len(1)[0m;
+                }
+                vector
+            }
+        };
+        [0m[36m<Vec<T> as SpecExtend<T, I>>::spec_extend(&mut vector, iterator)[0m;
+        vector
+    }
+[0m"""

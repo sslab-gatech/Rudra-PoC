@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
+from common import *
+
 import csv
 import datetime
 import os
+import pathlib
 import sys
 import tomlkit
 from enum import Enum, auto
@@ -232,8 +235,7 @@ for log_file_name in os.listdir(log_dir):
                         report_file_path = os.path.join(report_dir, report_file_name)
                         if os.path.exists(report_file_path):
                             with open(report_file_path, "r") as report_file:
-                                # match this with Rudra implementation
-                                report_file_str = report_file.read().replace("\t", "\\t").replace("\u001B", "\\u001B")
+                                report_file_str = ansi_escape_8bit.sub("", report_file.read()).replace("\t", "\\t")
                                 report_dict = tomlkit.loads(report_file_str)
 
                             for report in report_dict["reports"]:
@@ -371,6 +373,31 @@ with open(f"status-{sys.argv[1]}.csv", 'w', newline='') as csvfile:
     csv_writer.writerow(("name", "status"))
     for (i, name) in enumerate(crate_stat["names"]):
         csv_writer.writerow((name, crate_stat["status"][i]))
+
+
+# Standard library analysis
+std_location_set = set()
+
+for report_file_path in (PROJECT_DIRECTORY / "stdlib-analysis").glob("report-*"):
+    with open(report_file_path, "r") as report_file:
+        report_file_str = ansi_escape_8bit.sub("", report_file.read())
+        report_dict = tomlkit.loads(report_file_str)
+
+    for report in report_dict["reports"]:
+        analyzer = report['analyzer'].split(':')[0]
+
+        assert report["level"] in ["Error", "Warning", "Info"], f"Unknown report level {report['level']}"
+        if report["level"] == "Error":
+            report_set_field = AnalyzerField.SPAN_HIGH
+        elif report["level"] == "Warning":
+            report_set_field = AnalyzerField.SPAN_MED
+        elif report["level"] == "Info":
+            report_set_field = AnalyzerField.SPAN_LOW
+
+        if report["location"] not in std_location_set:
+            std_location_set.add(report["location"])
+            analyzer_count[analyzer][report_set_field] += 1
+
 
 for analyzer in ANALYZERS:
     print(f"Reports for analyzer {analyzer}")
