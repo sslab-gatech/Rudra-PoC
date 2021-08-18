@@ -8,14 +8,20 @@ bug_class = "HigherOrderInvariant"
 reason = "experimental"
 location = "src/mutex.rs:351:5: 376:6"
 
-[[bugs]]
-analyzer = "UnsafeDataflow"
-bug_class = "HigherOrderInvariant"
-reason = "experimental"
-location = "src/rwlock.rs:393:5: 414:6"
+# These bugs are caused by incorrect use of UnsafeCell::get(),
+# which is currently not modeled by Rudra.
+#
+# An old version of Rudra detected them with naive reasoning on pointer read,
+# which is safe by itself.
 
-[[bugs]]
-analyzer = "UnsafeDataflow"
-bug_class = "HigherOrderInvariant"
-reason = "experimental"
-location = "src/rwlock.rs:418:5: 443:6"
+# [[bugs]]
+# analyzer = "UnsafeDataflow"
+# bug_class = "HigherOrderInvariant"
+# reason = "experimental"
+# location = "src/rwlock.rs:393:5: 414:6"
+
+# [[bugs]]
+# analyzer = "UnsafeDataflow"
+# bug_class = "HigherOrderInvariant"
+# reason = "experimental"
+# location = "src/rwlock.rs:418:5: 443:6"
