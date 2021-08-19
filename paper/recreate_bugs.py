@@ -75,14 +75,17 @@ def process(poc):
     # Run rudra inside the folder.
     new_env = os.environ.copy()
     new_env['CARGO_ARGS'] = "--locked -j 1"
+    new_env['RUDRA_REPORT_PATH'] = str(crate_report_dir / "report")
 
     if crate_report_dir.exists():
         shutil.rmtree(crate_report_dir)
 
+    crate_report_dir.mkdir(exist_ok=True)
+
     print(f"Start running Rudra for {crate_and_version}")
     result = subprocess.run(
-        ['docker-cargo-rudra', str(crate_folder), str(crate_report_dir)],
-        env=new_env, capture_output=True
+        ['cargo', 'rudra'],
+        env=new_env, capture_output=True, cwd=str(crate_folder),
     )
     if result.returncode != 0:
         # Some target in the target crate may fail to build, but we still get report
