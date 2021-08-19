@@ -1,8 +1,12 @@
 # Rudra-PoC
 
-This repository contains the list of memory safety and soundness bugs found during the Rudra project.
+This repository contains the list of memory safety and soundness bugs found in Rust
+by [Rudra](https://github.com/sslab-gatech/Rudra) project.
 
-Contributors: See [REPORTING.md](./REPORTING.md) for the reporting guideline.
+You can find all new bugs found during the research under `poc/` directory.
+All unreported but valid bugs are listed in `unreported/` directory (independently fixed, maintainers are already aware of the issue, etc.).
+Note that this list includes manually found bugs and the bugs from earlier experimental pattern (UnsafeDestructor) that wasn't included in the Rudra paper.
+These are not included in the number of bugs found by Rudra in the paper but left here for the completeness.
 
 Analyzer
 * M: Manual
