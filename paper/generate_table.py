@@ -128,9 +128,9 @@ def format_number_abreviation(x, round_hundreds=True):
         return "--"
 
     if x > 1_000_000:
-        return "{}M".format(int(round(x, -6) / 1_000_000))
+        return "{}m".format(int(round(x, -6) / 1_000_000))
     elif x > 1_000:
-        return "{}K".format(int(round(x, -3) / 1_000))
+        return "{}k".format(int(round(x, -3) / 1_000))
     elif x > 100 and round_hundreds:
         # Round to nearest hundrendth
         return str(int(x / 100) * 100)
