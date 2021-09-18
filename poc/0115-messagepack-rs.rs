@@ -8,6 +8,7 @@ version = "0.8.0"
 issue_url = "https://github.com/otake84/messagepack-rs/issues/2"
 issue_date = 2021-01-26
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/835"
+rustsec_id = "RUSTSEC-2021-0092"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"

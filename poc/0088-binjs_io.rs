@@ -11,6 +11,7 @@ cargo_toolchain = "nightly"
 issue_url = "https://github.com/binast/binjs-ref/issues/460"
 issue_date = 2021-01-03
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/660"
+rustsec_id = "RUSTSEC-2021-0085"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"

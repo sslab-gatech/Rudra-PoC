@@ -8,6 +8,7 @@ version = "2.0.0"
 issue_url = "https://github.com/netvl/acc_reader/issues/1"
 issue_date = 2020-12-27
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/664"
+rustsec_id = "RUSTSEC-2020-0155"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"

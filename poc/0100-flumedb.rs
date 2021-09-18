@@ -9,6 +9,7 @@ indexed_version = "0.1.3"
 issue_url = "https://github.com/sunrise-choir/flumedb-rs/issues/10"
 issue_date = 2021-01-07
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/661"
+rustsec_id = "RUSTSEC-2021-0086"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"

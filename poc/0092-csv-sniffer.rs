@@ -8,6 +8,7 @@ version = "0.1.1"
 issue_url = "https://github.com/jblondin/csv-sniffer/issues/1"
 issue_date = 2021-01-05
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/666"
+rustsec_id = "RUSTSEC-2021-0088"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"

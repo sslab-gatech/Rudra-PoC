@@ -10,6 +10,7 @@ indexed_version = "0.5.3"
 issue_url = "https://github.com/gfx-rs/gfx/issues/3567"
 issue_date = 2021-01-07
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/681"
+rustsec_id = "RUSTSEC-2021-0091"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"

@@ -8,6 +8,7 @@ version = "0.5.0"
 issue_url = "https://github.com/carllerche/buffoon/issues/2"
 issue_date = 2020-12-31
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/663"
+rustsec_id = "RUSTSEC-2020-0154"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
