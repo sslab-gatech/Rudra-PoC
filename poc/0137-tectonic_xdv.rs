@@ -8,6 +8,7 @@ version = "0.1.8"
 issue_url = "https://github.com/tectonic-typesetting/tectonic/issues/752"
 issue_date = 2021-02-17
 rustsec_url = "https://github.com/RustSec/advisory-db/pull/935"
+rustsec_id = "RUSTSEC-2021-0112"
 
 [[bugs]]
 analyzer = "UnsafeDataflow"
