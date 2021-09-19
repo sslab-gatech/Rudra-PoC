@@ -77,7 +77,7 @@ def main():
         'Crate': ['std', 'rustc'],
         'Bug Location': [['str.rs', 'mod.rs'], ['worker_local.rs']],
         'Algorithm': [['UnsafeDataflow'], ['SendSyncVariance']],
-        'Bug Identifiers': [['rust#80335', 'rust#80894'], ['rust#81425']],
+        'Bug Identifiers': [['CVE-2020-36323', 'CVE-2021-28875'], ['rust#81425']],
         # Computed with:
         #   cloc ~/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std
         'Size (LoC)': [60836, 347739],
