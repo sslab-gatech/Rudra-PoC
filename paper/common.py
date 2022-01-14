@@ -9,13 +9,21 @@ RUSTSEC_FRONTMATTER = "```toml"
 POC_FRONTMATTER = "```rudra-poc"
 
 
-def get_frontmatter(file, header):
-    contents = file.read()
+def get_frontmatter(contents, header):
     frontmatter_start = contents.index(header)
     frontmatter_end = contents.index("```", frontmatter_start + 1)
 
     metadata = contents[frontmatter_start + len(header) : frontmatter_end]
     return tomlkit.parse(metadata)
+
+
+def get_rustsec_title(contents):
+    frontmatter_end = contents.index("\n```\n")
+
+    title_start = contents.index("\n# ", frontmatter_end + 1) + 3
+    title_end = contents.index("\n", title_start)
+
+    return contents[title_start:title_end]
 
 
 # Returns a dict of RUSTSEC ids -> RUSTSEC metadata.
@@ -25,7 +33,9 @@ def get_rustsec_metadata():
     rustsec_dir = PROJECT_DIRECTORY / "advisory-db" / "crates"
     for advisory_file in rustsec_dir.glob("**/*.md"):
         with advisory_file.open() as f:
-            metadata = get_frontmatter(f, RUSTSEC_FRONTMATTER)["advisory"]
+            contents = f.read()
+            metadata = get_frontmatter(contents, RUSTSEC_FRONTMATTER)["advisory"]
+            metadata["title"] = get_rustsec_title(contents)
             rustsec_metadata[metadata["id"]] = metadata
 
     return rustsec_metadata
@@ -42,7 +52,8 @@ def get_poc_metadata():
             continue
 
         with poc_file.open() as f:
-            metadata = get_frontmatter(f, POC_FRONTMATTER)
+            contents = f.read()
+            metadata = get_frontmatter(contents, POC_FRONTMATTER)
             poc_metadata[identifier] = metadata
 
     return poc_metadata
