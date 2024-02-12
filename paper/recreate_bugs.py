@@ -4,8 +4,8 @@ Usage recreate_bugs.py [optional_crate_name]
 
 Prerequisites:
 
-- `rudra:latest` image exists.
-- Have `docker-cargo-rudra` in PATH.
+- `RUDRA_RUNNER_HOME` is initialized with `setup_rudra_runner_home_fixed.py` command.
+- `cargo-download` and `cargo-rudra` in PATH.
 """
 from common import *
 
@@ -28,16 +28,13 @@ ANALYZERS = [
 RECREATE_DIRECTORY = PROJECT_DIRECTORY / 'rudra-recreate'
 RECREATE_DIRECTORY.mkdir(exist_ok=True)
 
-# Match this with Rudra
-TOOLCHAIN_VERSION = "nightly-2020-08-26"
-
 if "RUDRA_RUNNER_HOME" in os.environ:
     RUNNER_HOME_PATH = pathlib.Path(os.environ["RUDRA_RUNNER_HOME"])
-    CARGO_HOME_PATH = RUNNER_HOME_PATH / "cargo_home"
+    os.environ["CARGO_HOME"] = str(RUNNER_HOME_PATH / "cargo_home")
     print("RUDRA_RUNNER_HOME found, frozen index will be used")
 else:
-    CARGO_HOME_PATH = None
-    print("RUDRA_RUNNER_HOME not found, system cargo index will be used")
+    print("RUDRA_RUNNER_HOME not found, please set it up with `setup_rudra_runner_home_fixed.py`")
+    exit(1)
 
 
 def process(poc):
@@ -135,7 +132,7 @@ def process(poc):
             for report in report['reports']:
                 analyzer = report["analyzer"].split(":")[0]
                 level = report["level"]
-                
+
                 report_span = report["location"]
                 if report_span in visible_bug_set:
                     count[analyzer]["visible"][level] += 1
